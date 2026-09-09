@@ -1,0 +1,18 @@
+{
+  "batch_id": "GEOMETRY",
+  "config_sha256": "7df33c84904648feeb49d08f481127915bdd1bd7ef54e8a8b1d744f397c9f407",
+  "data_manifest_sha256": "fb25297cedd77e19837af3cb89b3d189d0de22ce77b98c484bbc8063eb6f5274",
+  "environment_sha256": "3fbcad60dd4586c80b94e509a03397b21d533ea5586bf152fb6529db2e2d00e7",
+  "execution_protocol_sha256": "176bd7a35e640e300940580dbabc83f9c04403ca7e64963a3a8e2ded482b3c52",
+  "experiment_id": "E0-GEOMETRY",
+  "finished_at_utc": "2026-09-09T09:47:19Z",
+  "freeze_identity_sha256": null,
+  "git_commit": "5328e0ad42f1b530041a2391f1cd044b01fdd59b",
+  "level": "L1",
+  "protocol_sha256": "3b43acc35374e0e29783ea6d62014259ecfb85c04f465e316c63b6154e44215b",
+  "run_id": "20260909T094718Z_E0-GEOMETRY_7df33c84_f11ad132",
+  "seed_manifest_sha256": "5486df1436733c8659cfc4a8eafdb96c67a111e78221f515fa72c1b6046adf76",
+  "source_tree_sha256": "23b5736300256f93fb4d1083f2f78f75df5aad7eb1c8bc772ed69b4144910ce5",
+  "started_at_utc": "2026-09-09T09:47:18Z",
+  "status": "FINISHED"
+}

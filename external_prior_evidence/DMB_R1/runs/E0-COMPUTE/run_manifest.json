@@ -1,0 +1,18 @@
+{
+  "batch_id": "BENCHMARK",
+  "config_sha256": "920a9726a2afe95aee8e7672c2bb21a7e59c995a3ca5dcda805bbaada27f8319",
+  "data_manifest_sha256": "d4ffe233182b1f35b1b073ea0599c54a58598f3d18b98dc610e42e7821509da9",
+  "environment_sha256": "3fbcad60dd4586c80b94e509a03397b21d533ea5586bf152fb6529db2e2d00e7",
+  "execution_protocol_sha256": "176bd7a35e640e300940580dbabc83f9c04403ca7e64963a3a8e2ded482b3c52",
+  "experiment_id": "E0-COMPUTE",
+  "finished_at_utc": "2026-09-09T09:45:08Z",
+  "freeze_identity_sha256": null,
+  "git_commit": "5328e0ad42f1b530041a2391f1cd044b01fdd59b",
+  "level": "L1",
+  "protocol_sha256": "3b43acc35374e0e29783ea6d62014259ecfb85c04f465e316c63b6154e44215b",
+  "run_id": "20260909T094448Z_E0-COMPUTE_920a9726_42a2dfd2",
+  "seed_manifest_sha256": "efa827469298f13a537575d8a425bb982e039dd7563fbeb15acb41068bef273a",
+  "source_tree_sha256": "23b5736300256f93fb4d1083f2f78f75df5aad7eb1c8bc772ed69b4144910ce5",
+  "started_at_utc": "2026-09-09T09:44:48Z",
+  "status": "FINISHED"
+}

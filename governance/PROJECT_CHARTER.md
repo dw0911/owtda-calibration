@@ -60,8 +60,9 @@ registry、seed、统计对象一律禁止混入。
 
 - DMB-R1 终止记录：`NO_IMPLEMENTATION_DEFECT`、R4 未达、归档 SHA256
   `38790d48a044bde41fd21bc31c18142b19e6decd2398cf1c3f3b8640f9df933d`。
-- 旧材料只进 `external_prior_evidence/DMB_R1/`，本批以 `governance/PRIOR_EVIDENCE_SUMMARY.md` 登记披露要点；
-  后续由归档 zip 物化完整 25 对象（含 `archive_manifest.json`、`SHA256SUMS.txt`）。
+- 旧材料只进 `external_prior_evidence/DMB_R1/`（B02 已物化完整 25 对象：
+  23 内容对象逐字节核验 + `SHA256SUMS.txt` + `package_manifest.json` + `archive_manifest.json`；
+  披露要点见该目录 `PRIOR_EVIDENCE_SUMMARY.md`）。
 - 原 R1 的"统一恢复校准"主张不进入本代；R1 数字只属假设形成/历史开发证据（L1）。
 
 ## 6. 状态机与纪律

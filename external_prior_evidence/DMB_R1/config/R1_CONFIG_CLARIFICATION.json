@@ -1,0 +1,8 @@
+{
+  "created_at_utc": "2026-09-09T10:57:36Z",
+  "formula": "T(s) = W + s * (M - 1)",
+  "note": "window.T=3120 is the default-stride value only; every cell derives its own T from the cell stride with M fixed at 192. stride=64 cells therefore run at T=12288 with M=192 and b0=max(q0, ceil(cuberoot(M)))=6. Next version should declare target_M=192 and generate T_by_cell instead of a single global window.T.",
+  "record_type": "R1_CONFIG_CLARIFICATION",
+  "subject": "configs/resolved/e1_dev.yaml window.T",
+  "withdrawn_statement": "s64 -> M=48, b0=4 (retracted: M=192 and b0=6 in the sealed run)"
+}

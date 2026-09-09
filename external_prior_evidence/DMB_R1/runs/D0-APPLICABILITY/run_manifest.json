@@ -1,0 +1,18 @@
+{
+  "batch_id": "DEV",
+  "config_sha256": "6f180d97b5ca017879c7f066aa494ca767e5b02bcab7e2bc66609012f80e7866",
+  "data_manifest_sha256": "946ed17792a4b9f145004f8160a17819f44895813fb56d958f76fac261dcfca4",
+  "environment_sha256": "3fbcad60dd4586c80b94e509a03397b21d533ea5586bf152fb6529db2e2d00e7",
+  "execution_protocol_sha256": "176bd7a35e640e300940580dbabc83f9c04403ca7e64963a3a8e2ded482b3c52",
+  "experiment_id": "D0-APPLICABILITY",
+  "finished_at_utc": "2026-09-09T09:47:48Z",
+  "freeze_identity_sha256": null,
+  "git_commit": "5328e0ad42f1b530041a2391f1cd044b01fdd59b",
+  "level": "L1",
+  "protocol_sha256": "3b43acc35374e0e29783ea6d62014259ecfb85c04f465e316c63b6154e44215b",
+  "run_id": "20260909T094720Z_D0-APPLICABILITY_6f180d97_1e9ab1fe",
+  "seed_manifest_sha256": "38855b69deb6d266f403b4a66280e2e0fce7e0d3a2e6a19f83dd1bdf53ac91c4",
+  "source_tree_sha256": "23b5736300256f93fb4d1083f2f78f75df5aad7eb1c8bc772ed69b4144910ce5",
+  "started_at_utc": "2026-09-09T09:47:20Z",
+  "status": "FINISHED"
+}

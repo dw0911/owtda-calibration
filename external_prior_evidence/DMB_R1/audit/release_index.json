@@ -1,0 +1,125 @@
+{
+  "created_at_utc": "2026-09-09T10:04:09Z",
+  "objects": [
+    {
+      "evaluated_at_utc": "2026-09-09T09:47:49Z",
+      "gate_id": "D0-APPLICABILITY",
+      "gate_object_id": "D0-APPLICABILITY__20260909T094749Z__d8c3afe2__8d03e2b4",
+      "gate_status": "PASS",
+      "json": "artifacts/audit/gates/D0-APPLICABILITY__20260909T094749Z__d8c3afe2__8d03e2b4.json",
+      "markdown": "artifacts/audit/gates/D0-APPLICABILITY__20260909T094749Z__d8c3afe2__8d03e2b4.md",
+      "object_sha256": "51ed8f7ea9a563e1ec3433cc8c847571eb0ef58d7f383878205a0a70cfc98843",
+      "source_run_ids": [
+        "20260909T094720Z_D0-APPLICABILITY_6f180d97_1e9ab1fe"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T09:45:08Z",
+      "gate_id": "E0-COMPUTE",
+      "gate_object_id": "E0-COMPUTE__20260909T094508Z__baaccd37__91c55ec1",
+      "gate_status": "PASS",
+      "json": "artifacts/audit/gates/E0-COMPUTE__20260909T094508Z__baaccd37__91c55ec1.json",
+      "markdown": "artifacts/audit/gates/E0-COMPUTE__20260909T094508Z__baaccd37__91c55ec1.md",
+      "object_sha256": "acf24b861c099abcd3b8b9c9ff05109b0f307a14ea7735eba52eab370e2398c0",
+      "source_run_ids": [
+        "20260909T094448Z_E0-COMPUTE_920a9726_42a2dfd2"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T09:47:19Z",
+      "gate_id": "E0-GEOMETRY",
+      "gate_object_id": "E0-GEOMETRY__20260909T094719Z__445e21dd__15cd9079",
+      "gate_status": "PASS",
+      "json": "artifacts/audit/gates/E0-GEOMETRY__20260909T094719Z__445e21dd__15cd9079.json",
+      "markdown": "artifacts/audit/gates/E0-GEOMETRY__20260909T094719Z__445e21dd__15cd9079.md",
+      "object_sha256": "2e3289c9dc32113dd7c755d9b225102719ca612d07c2c17fbe0aa3bfc43f61b3",
+      "source_run_ids": [
+        "20260909T094718Z_E0-GEOMETRY_7df33c84_f11ad132"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T10:02:46Z",
+      "gate_id": "E1-DEV-DMB",
+      "gate_object_id": "E1-DEV-DMB__20260909T100246Z__1a98b43e__6b07abef",
+      "gate_status": "FAIL",
+      "json": "artifacts/audit/gates/E1-DEV-DMB__20260909T100246Z__1a98b43e__6b07abef.json",
+      "markdown": "artifacts/audit/gates/E1-DEV-DMB__20260909T100246Z__1a98b43e__6b07abef.md",
+      "object_sha256": "54042c6fda539c9f2f08fb3ab9a3de2cbaac75e19ef1fb372c71e321c3e28cda",
+      "source_run_ids": [
+        "20260909T094750Z_E1-DEV_6e85cc43_280d1d35"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T07:44:21Z",
+      "gate_id": "G0-CONTRACT",
+      "gate_object_id": "G0-CONTRACT__20260909T074421Z__07b51dc3__974868e0",
+      "gate_status": "PASS",
+      "json": "artifacts/audit/gates/G0-CONTRACT__20260909T074421Z__07b51dc3__974868e0.json",
+      "markdown": "artifacts/audit/gates/G0-CONTRACT__20260909T074421Z__07b51dc3__974868e0.md",
+      "object_sha256": "0e3c26ae0fedb785922d011f25760d45eab03790fdafd674ee4321d6a35ba9fd",
+      "source_run_ids": [
+        "G0-CONTRACT-DMB-FREEZE"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T07:29:48Z",
+      "gate_id": "G1-BATCH-INTEGRITY",
+      "gate_object_id": "G1-BATCH-INTEGRITY__20260909T072948Z__f220b26c__7771051d",
+      "gate_status": "FAIL",
+      "json": "artifacts/audit/gates/G1-BATCH-INTEGRITY__20260909T072948Z__f220b26c__7771051d.json",
+      "markdown": "artifacts/audit/gates/G1-BATCH-INTEGRITY__20260909T072948Z__f220b26c__7771051d.md",
+      "object_sha256": "f12a16c866d57a7bf0a2c8fccea665583540eddf25aed13b4f51d642f20ecbfe",
+      "source_run_ids": [
+        "20260908T170130Z_E1-CONFIRM_c5fb195f_d3c4524c"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T07:29:44Z",
+      "gate_id": "G1-CALIBRATION-DMB",
+      "gate_object_id": "G1-CALIBRATION-DMB__20260909T072944Z__f220b26c__7771051d",
+      "gate_status": "PASS",
+      "json": "artifacts/audit/gates/G1-CALIBRATION-DMB__20260909T072944Z__f220b26c__7771051d.json",
+      "markdown": "artifacts/audit/gates/G1-CALIBRATION-DMB__20260909T072944Z__f220b26c__7771051d.md",
+      "object_sha256": "a6a60073bca93f5cd2a1bfbdda9cebb2a34dc8ef129833a601af70741072a609",
+      "source_run_ids": [
+        "20260908T170130Z_E1-CONFIRM_c5fb195f_d3c4524c"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T07:29:44Z",
+      "gate_id": "G1-NAIVE-CONTROL",
+      "gate_object_id": "G1-NAIVE-CONTROL__20260909T072944Z__f220b26c__7771051d",
+      "gate_status": "PASS",
+      "json": "artifacts/audit/gates/G1-NAIVE-CONTROL__20260909T072944Z__f220b26c__7771051d.json",
+      "markdown": "artifacts/audit/gates/G1-NAIVE-CONTROL__20260909T072944Z__f220b26c__7771051d.md",
+      "object_sha256": "4fda8fc7492169eeb0751233da0b017bc072ac6b77e14b17eed9fcfb1397fd05",
+      "source_run_ids": [
+        "20260908T170130Z_E1-CONFIRM_c5fb195f_d3c4524c"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T08:41:16Z",
+      "gate_id": "G1-OVERLAP",
+      "gate_object_id": "G1-OVERLAP__20260909T084116Z__1a98b43e__934e7b2a",
+      "gate_status": "FAIL",
+      "json": "artifacts/audit/gates/G1-OVERLAP__20260909T084116Z__1a98b43e__934e7b2a.json",
+      "markdown": "artifacts/audit/gates/G1-OVERLAP__20260909T084116Z__1a98b43e__934e7b2a.md",
+      "object_sha256": "7c228df70aa332a8af4414b773a059e9d552369ff73048ae3cb0174027d41bba",
+      "source_run_ids": [
+        "20260908T215957Z_E1-OVERLAP_56317c52_9d777ca2"
+      ]
+    },
+    {
+      "evaluated_at_utc": "2026-09-09T09:35:25Z",
+      "gate_id": "R4-E2-ADMISSION",
+      "gate_object_id": "R4-E2-ADMISSION__20260909T093525Z__c9310d36__21b95f2e",
+      "gate_status": "FAIL",
+      "json": "artifacts/audit/gates/R4-E2-ADMISSION__20260909T093525Z__c9310d36__21b95f2e.json",
+      "markdown": "artifacts/audit/gates/R4-E2-ADMISSION__20260909T093525Z__c9310d36__21b95f2e.md",
+      "object_sha256": "9eff574351df0cd0d1291319e31c887f8e381bc9d8d671126dd1ebf876133644",
+      "source_run_ids": []
+    }
+  ],
+  "release_index_object": "RELEASE-INDEX",
+  "rule": "Only objects listed here are current. The packager copies index entries only and never uses a gates/* wildcard."
+}

@@ -1,0 +1,18 @@
+{
+  "batch_id": "DEV",
+  "config_sha256": "6e85cc43b0bb3e202d33321f54d60023f2927eb59babf61244eb1001f2c1bc68",
+  "data_manifest_sha256": "946ed17792a4b9f145004f8160a17819f44895813fb56d958f76fac261dcfca4",
+  "environment_sha256": "3fbcad60dd4586c80b94e509a03397b21d533ea5586bf152fb6529db2e2d00e7",
+  "execution_protocol_sha256": "176bd7a35e640e300940580dbabc83f9c04403ca7e64963a3a8e2ded482b3c52",
+  "experiment_id": "E1-DEV",
+  "finished_at_utc": "2026-09-09T10:00:18Z",
+  "freeze_identity_sha256": null,
+  "git_commit": "5328e0ad42f1b530041a2391f1cd044b01fdd59b",
+  "level": "L1",
+  "protocol_sha256": "3b43acc35374e0e29783ea6d62014259ecfb85c04f465e316c63b6154e44215b",
+  "run_id": "20260909T094750Z_E1-DEV_6e85cc43_280d1d35",
+  "seed_manifest_sha256": "b8d57b1175b0ea5227120278dfcd8aa2bd8edcbf7b7752f90493c4e1131dcb40",
+  "source_tree_sha256": "23b5736300256f93fb4d1083f2f78f75df5aad7eb1c8bc772ed69b4144910ce5",
+  "started_at_utc": "2026-09-09T09:47:50Z",
+  "status": "FINISHED"
+}
