@@ -1,0 +1,9 @@
+claim_id,tier,claim_statement_cn,preregistered_support_rule,not_supported_wording,status
+"C1","主理论","即使原始数据 IID，重叠窗口派生的窗口特征也未必可交换。","T2 精确反例成立（含手工数值验证）。","收缩到已证明的特定构造，不宣称一般性。","UNTESTED"
+"C2","主实验","naive permutation 在 fixed-M、rho=0 下，两个注册 DGP（N-AR、N-CIRCLE）等权平均的重叠失真超过 10 个百分点（s=16 对 s=64，M0）。","P1：整簇 bootstrap 单侧 p，Holm-adjusted p<=0.05。","报告估计量与 basic bootstrap CI，改称弱效应或未定。","UNTESTED"
+"C3","主实验","固定采集预算（fixed-T）下，两个注册 DGP 等权平均的 stride/overlap 对比超过 10 个百分点（s=16 对 s=64，M0）。","P2：整簇 bootstrap 单侧 p，Holm-adjusted p<=0.05。","仅当 C2 已支持时保留 fixed-M 结论；否则报告估计量与 CI 并称弱效应或未定。","UNTESTED"
+"C4","主理论","重叠窗口均值例中，真实长期协方差与 naive permutation 保留的边际协方差发生错配（W=qs,q>1 时 Omega=q*Gamma0 != Gamma0）。","T2/T3 给出解析结果且与数值一致；T4 将二者映射到过程极限并按特征谱条件陈述最大统计量分布。","仅保留交换性反例、解析方差放大与实证图谱，不外推 BPI 协方差矩阵。","UNTESTED"
+"C5","次主张","DMB-R1 冻结规则（M1）在 IID、非重叠端（s=64）的两个注册 DGP 等权平均意义下存在实质保守性（超过 1 个百分点）。","P3：整簇 bootstrap 单侧 p，Holm-adjusted p<=0.05。","明示 B5 未获独立复现，不写 DMB 普遍保守。","UNTESTED"
+"C6","次级描述","BPI 与 MOMENTS 在单时点边际均值-协方差匹配形状变化上的 size-standardized detection-power 差。","预注册 size-adjusted power 差及 95% CI（percentile，nearest-rank）。","原样报告持平或方向相反的结果。","UNTESTED"
+"C7","次级描述","mean-shift 反向控制中 BPI 与 MOMENTS 的 size-standardized power 差（期望 MOMENTS 占优）。","预注册 size-adjusted power 差及 95% CI；对应 H0 格须获 POINTWISE_PRACTICALLY_CALIBRATED 才能比较 nominal power。","原样报告，不调整 delta=0.5。","UNTESTED"
+"C8","说明性","PAMAP2 真实数据中，检测决定随 stride/重叠率改变。","受试者等权边际决定率、定向 discordance/agreement、定位与联合端点、LOSO 与探索性 CI 完整报告。","报告稳定或无明显变化的结果。","UNTESTED"
