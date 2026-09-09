@@ -27,8 +27,14 @@
   `dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3`）复制入仓库根，
   作为本代唯一权威计划基线；README 与 `PROTOCOL_v1.0.md` 引用同步。
 
+## 2026-09-10 — 治理修订：取消编辑部咨询环节（用户指令）
+
+- 本轮不再开展编辑部咨询（原 Plan §23 排程 9/11 项取消）；
+- `manuscript/COLUMN_RECORD_20260910.md` 改为"投稿准备期现场核验"基线；
+- 风险登记：专题截止日仅用户口径 2026-10-31（未编辑部核验），投稿日 10-28 早于该口径，
+  冲突处置见 COLUMN_RECORD §3.4/§4。
+
 ## 待登记（未发生）
 
-- 编辑部咨询结果（征稿详情/截止/格式，9/11 起）；
 - 协议正文定稿与 `protocol_content_hash` / `freeze_id` 计算（冻结批）；
-- 后续批次（B03+）：实现、configs、registry、seed commitments 等。
+- 后续批次（B07+）：scope/index、schema、smoke、PAMAP2 数据、攻击套件、冻结、正式运行等。
