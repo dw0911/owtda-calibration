@@ -21,6 +21,12 @@
 - **规格骨架（均 draft）**：`PROTOCOL_v1.0.md`、`METHOD_SPEC_v1.0.md`、`SAP_v1.0.md`、`DATA_SPEC_v1.0.md`、
   `CHANGELOG.md`。开放项逐文件列出，冻结（9/23）前关闭。
 
+## 2026-09-10 — B02 补记：计划基线入库
+
+- `OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2686 行，SHA256
+  `dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3`）复制入仓库根，
+  作为本代唯一权威计划基线；README 与 `PROTOCOL_v1.0.md` 引用同步。
+
 ## 待登记（未发生）
 
 - 编辑部咨询结果（征稿详情/截止/格式，9/11 起）；

@@ -25,7 +25,9 @@ owtda-calibration/
 └── release/
 ```
 
-权威布局与执行合同见 `governance/PROJECT_CHARTER.md` 及 `OWTDA-CAL-R1 COMPLETE_PLAN_v1.0`。
+权威计划：`OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2026-09-09 定稿；
+仓库内副本 SHA256 `dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3`）。
+权威布局与执行合同见 `governance/PROJECT_CHARTER.md`。
 
 ## 立即规则
 

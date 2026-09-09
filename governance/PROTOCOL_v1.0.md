@@ -2,7 +2,8 @@
 
 > 状态：**DRAFT**（B02 建骨架）。2026-09-23 共同冻结时升为正式并只读；
 > 此后变更一律走 `AMENDMENT_REGISTRY.jsonl`（append-only）。
-> 权威基线：`OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2026-09-09 定稿）。
+> 权威基线：`../OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2026-09-09 定稿；
+> 仓库内副本 SHA256 `dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3`）。
 > 本文件是基线计划的治理投影；与基线冲突时以基线为准直到冻结（冻结后以本文件链为准）。
 
 ## 1. 研究对象与主统计量（基线 §3）
