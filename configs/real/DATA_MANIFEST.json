@@ -1,0 +1,107 @@
+{
+  "dataset_hash": "eb0e11f9c20a0498ffc5f69017b5fd7744f4d46232b8adf52f1b9352525fc33b",
+  "dataset_hash_inputs": [
+    {
+      "file_sha256": "80b3fffd089c236ae88098df3b906b8d3c67a858023fe4f75045d78612147266",
+      "path": "Protocol/subject101.dat",
+      "size": 141698539
+    },
+    {
+      "file_sha256": "468f3c6ba3e6e961f383783665265afbcddbbd33a3a84bba0386b7d0d4e3c632",
+      "path": "Protocol/subject102.dat",
+      "size": 207349310
+    },
+    {
+      "file_sha256": "5be64631d085e3efc700728395516da3512ff9de17dab30d253508441a98d3f0",
+      "path": "Protocol/subject103.dat",
+      "size": 117863364
+    },
+    {
+      "file_sha256": "7eb272213cbfe11d9e466a2163b6c9c2ed8d2542fc6f08283fd1bf222cac8994",
+      "path": "Protocol/subject104.dat",
+      "size": 153227482
+    },
+    {
+      "file_sha256": "7837cfede57fe45ec20d553c6c2b0c498ab324daae23bfd202c0ffea9f71a7f6",
+      "path": "Protocol/subject105.dat",
+      "size": 173773599
+    },
+    {
+      "file_sha256": "0da1dda3fa56d75d6413fc9198949d3ebc2102d77574cb5fe0739674687609f2",
+      "path": "Protocol/subject106.dat",
+      "size": 168263273
+    },
+    {
+      "file_sha256": "a02195e9599eb249f79103912d27eb4f62d8a0f59e4763b0dd8250fee5f3f020",
+      "path": "Protocol/subject107.dat",
+      "size": 145823268
+    },
+    {
+      "file_sha256": "81ce6b21b9c1e01dc02099c4f9387699547b08b28b387d09a56e0cb0a8af22fc",
+      "path": "Protocol/subject108.dat",
+      "size": 190019653
+    },
+    {
+      "file_sha256": "5109d5cd8334769566b4ae602adf3e5f4bb7b9ee8ca678f0c481d333114b07c7",
+      "path": "Protocol/subject109.dat",
+      "size": 3891140
+    }
+  ],
+  "dataset_id": "pamap2_protocol_subjects_101_109",
+  "field_mapping_notes": {
+    "activityID": "column 2 (allowed set {1,2,3,4,5,6,7,12,13,16,17,24}; transient 0)",
+    "allowed_activity_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      16,
+      17,
+      24
+    ],
+    "chest_imu_16g_xyz": "columns 22-24",
+    "chest_imu_6g_xyz": "columns 25-27 (DISABLED in this analysis)",
+    "sample_rate_hz": 100,
+    "timestamp": "column 1"
+  },
+  "freeze_target": "REAL_DATA_TASK_GATE (2026-09-17)",
+  "generated_at_utc": "2026-09-09T21:55:38Z",
+  "layout": {
+    "base_dir_abs": "f:/BPI/owtda-data/pamap2",
+    "protocol_relative_dir": "Protocol",
+    "subject_files": [
+      "subject101.dat",
+      "subject102.dat",
+      "subject103.dat",
+      "subject104.dat",
+      "subject105.dat",
+      "subject106.dat",
+      "subject107.dat",
+      "subject108.dat",
+      "subject109.dat"
+    ]
+  },
+  "manifest_kind": "pamap2_data_manifest_v1_rc",
+  "provenance": {
+    "citation": "Reiss, Stricker & Van Laerhoven (2012), UCI PAMAP2 Physical Activity Monitoring",
+    "dataset_page": "https://archive.ics.uci.edu/dataset/231/pamap2+physical+activity+monitoring",
+    "download_probe_manifest_abs": "f:/BPI/owtda-data/pamap2\\download_probe_manifest.json",
+    "download_url": "https://archive.ics.uci.edu/static/public/231/pamap2+physical+activity+monitoring.zip",
+    "inner_zip_sha256": "6c2282b5b52775cd0588d450d10a315260c94fa3228b9fe453f48c47fda106f4",
+    "outer_zip": {
+      "file_sha256": "76b3580bd5a804121f507717cb498c66a312ef5c774f4a78ac470e6558add352",
+      "relative_path": "raw_download/PAMAP2_Dataset.uci_static_231.zip",
+      "size": 688226940
+    },
+    "readme_sha256": "99a0339f1d754089fc2f7f2c24f5a47888a51dc0646a8b210af60358c00da30d",
+    "redistribution_note": "raw files are NOT redistributed in the release; reproducers obtain via the official DOI and verify against dataset_hash_inputs",
+    "uci_doi": "10.24432/C5NW2H"
+  },
+  "status": "rc",
+  "timebase_diagnostics": "pending (importer batch)"
+}
