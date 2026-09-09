@@ -20,7 +20,9 @@ from .canonical import canonical_json_bytes
 
 _SEED_DOMAIN = "owtda-seed-v1"
 _RESERVED_SEED_FIELDS = frozenset({"domain", "stream_kind"})
-_STREAM_KIND_RE = re.compile(r"^[a-z][a-z0-9_]*$")
+# Plan §15.2 stream-kind tokens are mixed case (e.g. M0_permutation,
+# h1_observation_noise, analysis_bootstrap) -> letters/digits/underscore.
+_STREAM_KIND_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 
 
 def validate_root_key_hex(root_key_hex: Any) -> str:
@@ -39,7 +41,8 @@ def derive_seed_hex(root_key_hex: str, stream_kind: str, **named_fields: Any) ->
     root = validate_root_key_hex(root_key_hex)
     if not isinstance(stream_kind, str) or not _STREAM_KIND_RE.fullmatch(stream_kind):
         raise ValueError(
-            f"stream_kind must match ^[a-z][a-z0-9_]*$, got {stream_kind!r}"
+            "stream_kind must match ^[A-Za-z][A-Za-z0-9_]*$, got "
+            f"{stream_kind!r}"
         )
     bad = _RESERVED_SEED_FIELDS & named_fields.keys()
     if bad:
