@@ -23,3 +23,10 @@ packages = ["src/owtda_cal"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff.lint]
+# TRY004: manifest/root validators deliberately raise ValueError for type
+#          errors to keep one exception family for the public contract.
+# RUF022: __all__ is grouped by module with section comments (intentional).
+ignore = ["TRY004", "RUF022"]
