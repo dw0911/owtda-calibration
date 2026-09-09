@@ -1,0 +1,4 @@
+# 字节身份安全：禁止 git 行尾转换。
+# canonical JSON/JSONL/CSV 等科学对象以 exact bytes 计算 SHA256，
+# 任何 autocrlf/eol 转换都会破坏字节身份。故全部文件 -text。
+* -text

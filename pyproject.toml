@@ -1,0 +1,25 @@
+# 骨架文件：B01 仅登记包身份。依赖版本与锁定在冻结前通过 uv.lock 固化，
+# 版本选择必须与 COMPUTE_FREEZE / environment_lock_hash 一致（见协议 §15.3）。
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "owtda-calibration"
+version = "0.1.0"
+description = "Exchangeability failure and calibration boundaries of topological scans with overlapping windows (OW-TDA-CAL-R1)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2.0",
+  "scipy>=1.14",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/owtda_cal"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

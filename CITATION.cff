@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "若使用本仓库或引用其研究结果，请按此引用。作者与标题在稿件定稿时更新。"
+title: "重叠滑动窗口下拓扑扫描检验的交换性失效与校准边界 (OW-TDA-CAL-R1)"
+type: software
+keywords:
+  - topological data analysis
+  - change point detection
+  - permutation calibration
+  - dependent bootstrap
+  - persistent homology
+license: TBD
+date-released: "2026-09-10"
