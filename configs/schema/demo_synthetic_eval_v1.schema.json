@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "schema_kind": "scientific_row",
+  "schema_name": "demo_synthetic_eval_v1",
+  "fields": {
+    "activity_A": "forbidden",
+    "DGP_family": "value",
+    "data_unit_id": "value",
+    "evaluation_id": "value",
+    "exceed_count": "value",
+    "feature_id": "value",
+    "method_id": "value",
+    "observed_statistic": "value",
+    "p_value": "value",
+    "phase": "value",
+    "reject": "value",
+    "rho": "value",
+    "scenario_id": "value",
+    "source_null_logical_cell_id": "null",
+    "subject_internal_id": "forbidden"
+  },
+  "floats": ["observed_statistic", "p_value", "rho"]
+}
