@@ -1,6 +1,7 @@
-# METHOD SPEC v1.0（draft）— OW-TDA-CAL-R1
+# METHOD SPEC v1.0（FROZEN）— OW-TDA-CAL-R1
 
-> 状态：**DRAFT**。冻结前参数逐项闭合；任何与基线计划冲突处以计划为准并登记。
+> 状态：**FROZEN**（2026-09-10 B14a 共同冻结；此后只读，变更走 `AMENDMENT_REGISTRY.jsonl`）。
+> 冻结前参数逐项闭合；任何与基线计划冲突处以计划为准并登记。
 > 稳定标识（stable_id）一经本文件登记即不可改名；配置/代码改变先升 generation，不改 stable_id。
 
 ## 1. 共享观测统计量（基线 §3.3，对所有校准器相同）

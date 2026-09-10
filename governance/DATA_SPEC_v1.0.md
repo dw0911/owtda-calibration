@@ -1,6 +1,7 @@
-# DATA SPEC v1.0（draft）— OW-TDA-CAL-R1 数据生成与分析范围
+# DATA SPEC v1.0（FROZEN）— OW-TDA-CAL-R1 数据生成与分析范围
 
-> 状态：**DRAFT**。DGP/矩阵/规模的 machine 身份（data_model_config_hash 等）随实现批次登记；
+> 状态：**FROZEN**（2026-09-10 B14a 共同冻结；此后只读，变更走 `AMENDMENT_REGISTRY.jsonl`）。
+> DGP/矩阵/规模的 machine 身份（data_model_config_hash 等）随实现批次登记；
 > 与基线冲突以基线为准。
 
 ## 1. 合成 DGP（基线 §7）

@@ -1,0 +1,22 @@
+{
+  "architecture": "AMD64",
+  "blas_vendor": "scipy-openblas",
+  "budget_evidence": "artifacts/audit/compute_budget_RC.json",
+  "cpu_count": 16,
+  "freeze_date": "2026-09-10",
+  "gpu_used": false,
+  "kind": "compute_freeze",
+  "numpy": "2.2.6",
+  "os": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "ripser": "0.6.15",
+  "schema_version": 1,
+  "scipy": "1.15.3",
+  "thread_env_observed": {
+    "MKL_NUM_THREADS": "unset",
+    "NUMEXPR_NUM_THREADS": "unset",
+    "OMP_NUM_THREADS": "unset",
+    "OPENBLAS_NUM_THREADS": "unset"
+  },
+  "w_star": 8
+}

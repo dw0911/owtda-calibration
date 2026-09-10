@@ -1,6 +1,7 @@
-# SAP v1.0（draft）— OW-TDA-CAL-R1 统计分析计划
+# SAP v1.0（FROZEN）— OW-TDA-CAL-R1 统计分析计划
 
-> 状态：**DRAFT**。对应基线 §10–§14；estimand registry 在 ANALYSIS spec 前生成（基线 §15.2）。
+> 状态：**FROZEN**（2026-09-10 B14a 共同冻结；此后只读，变更走 `AMENDMENT_REGISTRY.jsonl`）。
+> 对应基线 §10–§14；estimand registry 在 ANALYSIS spec 前生成（基线 §15.2）。
 
 ## 1. 主估计与单格汇总（基线 §10.1）
 

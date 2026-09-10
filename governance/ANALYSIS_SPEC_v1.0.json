@@ -1,0 +1,131 @@
+{
+  "analysis_spec_version": "1.0",
+  "bootstrap_plans": [
+    {
+      "plan_name": "H0_DIAGNOSTICS_ALL_V1",
+      "plan_spec_hash": "fcb0ee6aaf819c9c26339e7029aeb528a3e3fd040ebd7af7f09d3c62cdfd610e",
+      "spec": {
+        "cluster_ordering": "cluster_id_ascii",
+        "replacement": true,
+        "resample_role": "H0_CLUSTER_STRATUM",
+        "sample_size": 2000,
+        "stratum_domain": "DGP_family",
+        "target_estimand": "CELL_REJECT_RATE"
+      }
+    },
+    {
+      "plan_name": "H1_ALT_POWER_ALL_V1",
+      "plan_spec_hash": "fc8fb40a9fc591ab82a45946c82b9b91785a550c06652fdf04f99619d2fb2a7a",
+      "spec": {
+        "cluster_ordering": "cluster_id_ascii",
+        "replacement": true,
+        "resample_role": "H1_CLUSTER_STRATUM",
+        "sample_size": 2000,
+        "stratum_domain": "DGP_family",
+        "target_estimand": "H1_SIZE_STD_POWER"
+      }
+    },
+    {
+      "plan_name": "H1_NULL_QUANTILE_ALL_V1",
+      "plan_spec_hash": "c8df7497e8ca395d8c28c2cfa7be4cf9c7e585335a6248275a4b399359cfdd87",
+      "spec": {
+        "cluster_ordering": "cluster_id_ascii",
+        "replacement": true,
+        "resample_role": "H0_CLUSTER_STRATUM",
+        "sample_size": 2000,
+        "stratum_domain": "DGP_family",
+        "target_estimand": "H1_SIZE_STD_POWER"
+      }
+    },
+    {
+      "plan_name": "P1_H0_PRIMARY_V1",
+      "plan_spec_hash": "8ca96f3a7d24e05cf1a95af4cb626166e7811c6bff56f63d1a92ca2a5870fc4c",
+      "spec": {
+        "cluster_ordering": "cluster_id_ascii",
+        "replacement": true,
+        "resample_role": "H0_CLUSTER_STRATUM",
+        "sample_size": 10000,
+        "stratum_domain": "DGP_family",
+        "target_estimand": "P1_D_OV_M0"
+      }
+    },
+    {
+      "plan_name": "P2_H0_PRIMARY_V1",
+      "plan_spec_hash": "595413531f203a3587117876dbfb9a5d5d6bee8cca3cf49e218678b727825ed5",
+      "spec": {
+        "cluster_ordering": "cluster_id_ascii",
+        "replacement": true,
+        "resample_role": "H0_CLUSTER_STRATUM",
+        "sample_size": 10000,
+        "stratum_domain": "DGP_family",
+        "target_estimand": "P2_D_ST_M0"
+      }
+    },
+    {
+      "plan_name": "P3_H0_PRIMARY_V1",
+      "plan_spec_hash": "fafde3a94c77c25aa6433435c5c320db0cb134c242657c6b9aa1c8178accbebe",
+      "spec": {
+        "cluster_ordering": "cluster_id_ascii",
+        "replacement": true,
+        "resample_role": "H0_CLUSTER_STRATUM",
+        "sample_size": 10000,
+        "stratum_domain": "DGP_family",
+        "target_estimand": "P3_D_CONS_M1"
+      }
+    },
+    {
+      "plan_name": "REAL_ALL_ENDPOINTS_V1",
+      "plan_spec_hash": "9db2ae945e0017e5e2e35facf9464660f961af14a546a4de6e68598f785b75b8",
+      "spec": {
+        "cluster_ordering": "subject_opaque_id_ascii",
+        "replacement": true,
+        "resample_role": "REAL_SUBJECT",
+        "sample_size": 2000,
+        "stratum_domain": "subject_admitted",
+        "target_estimand": "REAL_MARGINAL_DECISION_RATE"
+      }
+    }
+  ],
+  "ci": {
+    "clopper_pearson_role": "auxiliary_only",
+    "continuity_correction": false,
+    "wilson_z_90": "1.6448536269514722",
+    "wilson_z_95": "1.959963984540054"
+  },
+  "claim_states": [
+    "UNTESTED",
+    "SUPPORTED",
+    "NOT_SUPPORTED",
+    "INCONCLUSIVE",
+    "DESCRIPTIVE_ONLY",
+    "INVALIDATED",
+    "SUPERSEDED"
+  ],
+  "classification": {
+    "band": [
+      "0.035",
+      "0.065"
+    ],
+    "labels": [
+      "POINTWISE_PRACTICALLY_CALIBRATED",
+      "MATERIAL_CONSERVATISM",
+      "MATERIAL_ANTI_CONSERVATISM",
+      "BOUNDARY_OR_INDETERMINATE"
+    ],
+    "rule": "wilson90_subset_band_or_wilson95_bounds"
+  },
+  "config_kind": "analysis_spec",
+  "estimand_spec_registry_hash": "d696f2ce5eaa693fd7fdbae764a3f1bfbbf62fb58fb9e0a26fbf7b9d9b19f30a",
+  "holm": {
+    "alpha": "0.05",
+    "family": [
+      "P1_D_OV_M0",
+      "P2_D_ST_M0",
+      "P3_D_CONS_M1"
+    ],
+    "method": "holm_step_down"
+  },
+  "no_extension_after_inconclusive": true,
+  "quantile_rule": "nearest_rank",
+  "schema_version": 1
+}

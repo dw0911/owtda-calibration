@@ -1,7 +1,7 @@
 # OW-TDA-CAL-R1 PROJECT CHARTER
 
-> 版本：v1.0-draft（B01 建仓，2026-09-10）
-> 状态：`DRAFT` —— 正式 Monte Carlo 开始前必须转为 `PROTOCOL_FROZEN`
+> 版本：v1.0（B14a 共同冻结，2026-09-10）
+> 状态：`PROTOCOL_FROZEN`（B14a 闭合后生效）
 > 权威计划：`OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2026-09-09 定稿，本代唯一计划基线）
 
 ---

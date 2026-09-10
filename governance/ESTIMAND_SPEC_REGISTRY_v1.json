@@ -1,0 +1,181 @@
+{
+  "entries": [
+    {
+      "estimand_name": "A_TR_M0",
+      "estimand_spec_hash": "c650cfe9a0c58892609c93c12675ed2609b0fc531583f1ae835c259d7ec01c96",
+      "spec": {
+        "formula": "Dhat_inv*numerator",
+        "method": "M0",
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "A_tr"
+      }
+    },
+    {
+      "estimand_name": "A_TR_MOMENTS",
+      "estimand_spec_hash": "91e815855532fc60af1b7e052ea2402dff52d9cd12aa6c6b87293bda2159abb4",
+      "spec": {
+        "formula": "Dhat_inv*numerator",
+        "method": "MOMENTS",
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "A_tr"
+      }
+    },
+    {
+      "estimand_name": "CELL_REJECT_RATE",
+      "estimand_spec_hash": "fde1586cc9a0ed80a97669f58aef40d6da53193b98949563cd05b647906525b2",
+      "spec": {
+        "ci": [
+          "wilson_90",
+          "wilson_95",
+          "clopper_pearson_95"
+        ],
+        "conditioning": "cell_feature_method",
+        "role": "PRIMARY_DESCRIPTIVE",
+        "statistic": "pi_hat=K/2500"
+      }
+    },
+    {
+      "estimand_name": "D_CONS_MOMENTS",
+      "estimand_spec_hash": "f7eac6b38d563ce7fb4a5c03318b9a2da26ccddd5cdbd9747bec288f3f8e55ae",
+      "spec": {
+        "aggregation": "equal_DGP_weight",
+        "method": "MOMENTS",
+        "rho": "0",
+        "role": "SECONDARY",
+        "statistic": "D_CONS"
+      }
+    },
+    {
+      "estimand_name": "D_OV_MOMENTS",
+      "estimand_spec_hash": "72e41654388e6d88ae706be5edb6e1c3f236e2760cb203f7e2c3b32bcff1e19d",
+      "spec": {
+        "aggregation": "equal_DGP_weight",
+        "method": "MOMENTS",
+        "rho": "0",
+        "role": "SECONDARY",
+        "statistic": "D_OV"
+      }
+    },
+    {
+      "estimand_name": "D_ST_MOMENTS",
+      "estimand_spec_hash": "d00162f49f3948c943e85e0882b8123308d572fa2afbfe99a41eee9885ed6478",
+      "spec": {
+        "aggregation": "equal_DGP_weight",
+        "method": "MOMENTS",
+        "rho": "0",
+        "role": "SECONDARY",
+        "statistic": "D_ST"
+      }
+    },
+    {
+      "estimand_name": "H1_SIZE_STD_POWER",
+      "estimand_spec_hash": "1a6f311f0cced4906c650186a0f6bb03bc9843a102de367bf1c9eb43481e72de",
+      "spec": {
+        "quantile_rule": "nearest_rank",
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "size_standardized_power"
+      }
+    },
+    {
+      "estimand_name": "I_RHO_M0",
+      "estimand_spec_hash": "598753b7e6a068cbdcd70ee5623f9a5bae31ee6c02abc9e0a14c457c105658fa",
+      "spec": {
+        "causal_reading": "forbidden",
+        "method": "M0",
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "D_0.8-D_0"
+      }
+    },
+    {
+      "estimand_name": "P1_D_OV_M0",
+      "estimand_spec_hash": "eabb8873f16e241b8e37cb2e77b186a5cbd0d5b69b6b9319da1e474a73ef4dc6",
+      "spec": {
+        "aggregation": "equal_DGP_weight",
+        "boundary": "0.10",
+        "claim": "C2",
+        "method": "M0",
+        "rho": "0",
+        "role": "PRIMARY",
+        "sidedness": "one_sided",
+        "statistic": "D_OV"
+      }
+    },
+    {
+      "estimand_name": "P2_D_ST_M0",
+      "estimand_spec_hash": "08ca7119267bf695e900d107633fac508c3f0d6604d44a609cbe37a06ed5f6a7",
+      "spec": {
+        "aggregation": "equal_DGP_weight",
+        "boundary": "0.10",
+        "claim": "C3",
+        "method": "M0",
+        "rho": "0",
+        "role": "PRIMARY",
+        "sidedness": "one_sided",
+        "statistic": "D_ST"
+      }
+    },
+    {
+      "estimand_name": "P3_D_CONS_M1",
+      "estimand_spec_hash": "d1388430ce08076036ff1826b742015d0e8ccc216c8e4f4bce389340454c7951",
+      "spec": {
+        "aggregation": "equal_DGP_weight",
+        "boundary": "0.01",
+        "claim": "C5",
+        "method": "M1",
+        "rho": "0",
+        "role": "PRIMARY",
+        "sidedness": "one_sided",
+        "statistic": "D_CONS"
+      }
+    },
+    {
+      "estimand_name": "PAIRED_M0_M1_DIFF",
+      "estimand_spec_hash": "bf506c3c0bbe4f6e1b06f9996b71596035d5144869ad541281a8d5ceded5aaab",
+      "spec": {
+        "role": "SECONDARY",
+        "scope": "cell_feature",
+        "statistic": "paired_difference"
+      }
+    },
+    {
+      "estimand_name": "REAL_DISTANCE",
+      "estimand_spec_hash": "04f5feac8f5b65c76db15da0fd9b400f12d02b23759922e6e4c1f684810eca9b",
+      "spec": {
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "distance",
+        "threshold_seconds": 2,
+        "unit": "seconds"
+      }
+    },
+    {
+      "estimand_name": "REAL_JOINT_ENDPOINT",
+      "estimand_spec_hash": "f02c0b9698b42cc82b82e8c9877b86918944ca35cf2c211d10b97f978612beba",
+      "spec": {
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "J",
+        "stratum": "feature_method_stride"
+      }
+    },
+    {
+      "estimand_name": "REAL_MARGINAL_DECISION_RATE",
+      "estimand_spec_hash": "54accd9f71c11db3030762a176399f3d44c7bf8d66a22ddb198b4d252524517e",
+      "spec": {
+        "n_subject_bootstrap": 2000,
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "r",
+        "stratum": "feature_method_stride"
+      }
+    },
+    {
+      "estimand_name": "REAL_POSITION_HIT",
+      "estimand_spec_hash": "d760ce7b21ff51b7e7efaf884b1e0d3b35cd54d2ab29e75793027efffc5c937d",
+      "spec": {
+        "role": "DESCRIPTIVE_ONLY",
+        "statistic": "L",
+        "stratum": "feature_stride",
+        "threshold_seconds": 2
+      }
+    }
+  ],
+  "schema_version": 1
+}

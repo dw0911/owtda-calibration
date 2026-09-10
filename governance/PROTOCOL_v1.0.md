@@ -1,6 +1,6 @@
-# PROTOCOL v1.0（draft）— OW-TDA-CAL-R1
+# PROTOCOL v1.0（FROZEN）— OW-TDA-CAL-R1
 
-> 状态：**DRAFT**（B02 建骨架）。2026-09-23 共同冻结时升为正式并只读；
+> 状态：**FROZEN**（B14a 共同冻结，2026-09-10；此后只读）；
 > 此后变更一律走 `AMENDMENT_REGISTRY.jsonl`（append-only）。
 > 权威基线：`../OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2026-09-09 定稿；
 > 仓库内副本 SHA256 `dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3`）。

@@ -1,0 +1,85 @@
+{
+  "config_kind": "protocol_content",
+  "documents": [
+    {
+      "file_sha256": "47ed124585219bad3ab07fe9693a1d9f7803b6d0898ae0232dd4fbfd65c5f43d",
+      "path": "governance/PROJECT_CHARTER.md",
+      "size": 9542
+    },
+    {
+      "file_sha256": "9a571c94a680312e62cf15d8b76036abdd920ec2c55c03754f4c5fe2b54b019a",
+      "path": "governance/PROTOCOL_v1.0.md",
+      "size": 5255
+    },
+    {
+      "file_sha256": "2f97792a73a220b075b9d6c123650cce2f8734520c94a6ff6acc56a915aa939e",
+      "path": "governance/METHOD_SPEC_v1.0.md",
+      "size": 3766
+    },
+    {
+      "file_sha256": "32484f7a6b84df55483fdf06707f4c8038f18837d0adf62d1335d92ca1416b88",
+      "path": "governance/SAP_v1.0.md",
+      "size": 4999
+    },
+    {
+      "file_sha256": "f787c2008d7fc2f2d4ed4ba37bf52d1950ebfce9d3ef080c219c8831ee4588b3",
+      "path": "governance/DATA_SPEC_v1.0.md",
+      "size": 4381
+    },
+    {
+      "file_sha256": "e9666c21f1b4587a219a4d3c20dc3ef840989a81e3d1045eafa1fa421a7a55f5",
+      "path": "governance/CLAIM_MATRIX_v1.0.csv",
+      "size": 2545
+    },
+    {
+      "file_sha256": "3bd4b4dbbeb1af33a041b44ce808d2952914476574a302f19287f19398781341",
+      "path": "governance/ATTACK_SUITE_v1.0.md",
+      "size": 11617
+    },
+    {
+      "file_sha256": "dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3",
+      "path": "OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md",
+      "size": 181556
+    }
+  ],
+  "evidence_generation_id": "G01",
+  "failure_routes": [
+    "REAL_OMITTED_BY_DATA_GATE",
+    "REAL_DEFERRED",
+    "INVALIDATED",
+    "VOID_EVALUATOR_DEFECT"
+  ],
+  "freeze_date": "2026-09-10",
+  "gates": [
+    "G0",
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6"
+  ],
+  "phases": [
+    "NULL",
+    "ALT",
+    "REAL"
+  ],
+  "project_id": "owtda-cal-r1",
+  "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+  "protocol_version": "1.0",
+  "schema_version": 1,
+  "statistics": {
+    "B": 999,
+    "alpha": "0.05",
+    "boundary_audit_tolerance": "128*eps64*max(1,abs(Tb),abs(Tobs))",
+    "equivalence_band": [
+      "0.035",
+      "0.065"
+    ],
+    "max_statistic_plateau_tolerance": "64*eps64*max(1,abs(Tmax))",
+    "p_value_rule": "(1+exceed)/(B+1)",
+    "reject_rule": "p<=0.05",
+    "resample_exceed_comparison": "float64_ge",
+    "window_mean_variance_factor": "A_mean=q-(q*q-1)/(3M)"
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "analysis_spec_hash": "1de8b74332892a6f71593f8b2be3b67b8bc094392296643b1fa84c4a395bba2f",
+  "component_generations": {
+    "data_generation_id": "D01",
+    "feature_generation_id": {
+      "bpi": "F01",
+      "moments": "F01"
+    },
+    "method_generation_id": {
+      "M0": "M01",
+      "M1": "M01"
+    }
+  },
+  "compute_spec_hash": "4082572e2ca96ae86e9a2d854468743b08817970d982f5e158a6e5f135cb903b",
+  "environment_lock_hash": "61f5f50a604efa379e1e67cd9b2fbe466acd6e52e73cb424a321c96f4d72b74e",
+  "environment_lock_manifest": [
+    {
+      "file_sha256": "b8ebeae81b8f9d570b8390acea18feded19686333271ece33d0b4dd859af500d",
+      "path": "pyproject.toml",
+      "size": 1055
+    },
+    {
+      "file_sha256": "bb06144fa9b2583b5b0a94c93e1877873f7203c0c2b821da9c2dcbc0dd2c08b9",
+      "path": "governance/COMPUTE_FREEZE.json",
+      "size": 578
+    }
+  ],
+  "estimand_spec_registry_hash": "d696f2ce5eaa693fd7fdbae764a3f1bfbbf62fb58fb9e0a26fbf7b9d9b19f30a",
+  "evidence_generation_id": "G01",
+  "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+  "kind": "freeze_manifest",
+  "project_id": "owtda-cal-r1",
+  "protocol_content_hash": "6c1acb3c4bfca8ca6e7ca01fa18d6ad1082477766f00e622ac0271c08f37f5b6",
+  "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+  "schema_version": 1,
+  "scope_design": {
+    "ALT": {
+      "csv_sha256": "86a9eb3a79b8873ca3e61d4004121e061f3d61b17ab5bb4c7509698e949e0ed4",
+      "file": "SCOPE_DESIGN_ALT_aebd4f34ab0a5142cb1edc6877cea4d242e5b55f615808d93c42e0d3d524b35f.csv",
+      "rows": 32,
+      "scope_design_hash": "aebd4f34ab0a5142cb1edc6877cea4d242e5b55f615808d93c42e0d3d524b35f"
+    },
+    "NULL": {
+      "csv_sha256": "93e4fff6f8d89af152d088dd527c693b4b3d38984d6990b49c1a9d37ade0dbdb",
+      "file": "SCOPE_DESIGN_NULL_bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b.csv",
+      "rows": 112,
+      "scope_design_hash": "bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b"
+    }
+  },
+  "scope_spec_hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
+  "source_tree_hash": "3dfc5966d3ac4adaa8645d0f1badb05bd1d99cd0ca2372b7efb27481c72ba589",
+  "source_tree_manifest": [
+    {
+      "file_sha256": "f866a6d0f6b87e78434717643293faa0b66544f140bbcceec4126aadf26a6d04",
+      "path": "audit/build_freeze.py",
+      "size": 15947
+    },
+    {
+      "file_sha256": "97bacfbed7994efb071093427dc767588a5783e235af1cb7f49a5547705a2602",
+      "path": "audit/compute_budget.py",
+      "size": 9018
+    },
+    {
+      "file_sha256": "21f7731e8d73fd2959c8a9aca7acc0389a70d21ae0a44a646b68c2359fd8f104",
+      "path": "audit/validate_freeze.py",
+      "size": 6846
+    },
+    {
+      "file_sha256": "c133294e6a857d8a8487b784eb9c6564746a3a22dba52090c3942407ee6e38b2",
+      "path": "audit/validate_identity.py",
+      "size": 5683
+    },
+    {
+      "file_sha256": "aa52392a1094127ff1fef365fab748c95ddde46e83c6864a20c0c476ed363a87",
+      "path": "configs/real/DATA_MANIFEST.json",
+      "size": 6687
+    },
+    {
+      "file_sha256": "ca1111c10a62c331c4f0d2f78ba6da4b65f7f7c449c7253e9033e3aa834cb961",
+      "path": "configs/real/REAL_COMMITMENTS_RC.json",
+      "size": 1070
+    },
+    {
+      "file_sha256": "67009a445350a697c10079ce927f7af1dd0ed187c8246d7888b3d6e4261759ac",
+      "path": "configs/real/REAL_DISPOSITION_RC.json",
+      "size": 1293
+    },
+    {
+      "file_sha256": "e95c796f231b81edf07dff1602649cd17d4d7b594883e3c58d67afdeae442e72",
+      "path": "configs/schema/README.md",
+      "size": 1143
+    },
+    {
+      "file_sha256": "28841d15acfb041027898adc8e44d8c3ec778e5b3a382a9e351a9145eec230ef",
+      "path": "configs/schema/demo_synthetic_eval_v1.schema.json",
+      "size": 633
+    },
+    {
+      "file_sha256": "0c2eaa4d690f4243223aee690fc94d19f5604fb3cd784f86dc0a265da841c5af",
+      "path": "src/owtda_cal/__init__.py",
+      "size": 1841
+    },
+    {
+      "file_sha256": "ecbb36e7cb3a8b499825fa1bd29e360a67c29f43b712bc934541565844107d1c",
+      "path": "src/owtda_cal/bpi.py",
+      "size": 2199
+    },
+    {
+      "file_sha256": "5e6d342f04ae8fd2bd860bf80a13fbb2c4c4f7f30bf880ae89ed02af2f38e04b",
+      "path": "src/owtda_cal/calibrate.py",
+      "size": 6128
+    },
+    {
+      "file_sha256": "3c637115bf1c3a9049d00064f14ab9378b2c8ae150c35ffd7666acfce908a2bc",
+      "path": "src/owtda_cal/canonical.py",
+      "size": 5296
+    },
+    {
+      "file_sha256": "9507b7ba9c3f68e49816fbd4a7a4655d57d5a26fe7aebaee630feca0ea0bf940",
+      "path": "src/owtda_cal/cells.py",
+      "size": 7137
+    },
+    {
+      "file_sha256": "e152bdafe78a0e348d695d5d2465cec491356e5a3590ea60f2417a5d6cd32b02",
+      "path": "src/owtda_cal/chains.py",
+      "size": 5320
+    },
+    {
+      "file_sha256": "8081ecafbade3ede9609a2873bfcac8c883a92aeabecdd4574d10676c4adfd15",
+      "path": "src/owtda_cal/dgp.py",
+      "size": 7927
+    },
+    {
+      "file_sha256": "3e31186791ddaf8bd1af0ea147a63cb145db9ca52ab03c04789fc517c0cd3d59",
+      "path": "src/owtda_cal/features.py",
+      "size": 4555
+    },
+    {
+      "file_sha256": "2955c3862e6d1508a473870dcfbb085b66f229376ba71fccd7cce647fae5d747",
+      "path": "src/owtda_cal/freeze.py",
+      "size": 7862
+    },
+    {
+      "file_sha256": "a85601cc95874212485a8e3bb6b82349a48d16d0ab9d26aba740bae76d1ba4ce",
+      "path": "src/owtda_cal/hashing.py",
+      "size": 3430
+    },
+    {
+      "file_sha256": "aabe84c497bc010ee691de528b5dd4b06d97b13f3d78107db6ccc36c5a2b4497",
+      "path": "src/owtda_cal/identity.py",
+      "size": 5586
+    },
+    {
+      "file_sha256": "ebc80d65b64aceaf3723a77f1bd32c2ad207333fd92a86977e6f0d600a3d7d98",
+      "path": "src/owtda_cal/indexes.py",
+      "size": 16654
+    },
+    {
+      "file_sha256": "82739cc3ae3a57ca8ff369525cd32e701fb43f97fb175f88f2aae81b22ee11db",
+      "path": "src/owtda_cal/moments.py",
+      "size": 1330
+    },
+    {
+      "file_sha256": "359566500fe9966dc3b31acdba1d39d37d36db0142416e68f1f1e2d0ab58c525",
+      "path": "src/owtda_cal/pamap2_import.py",
+      "size": 10860
+    },
+    {
+      "file_sha256": "d0597c1fb6eba8fd600116bd207f9ae21ef1e714eab5def83f30ef8b9f5f4356",
+      "path": "src/owtda_cal/pamap2_tasks.py",
+      "size": 12004
+    },
+    {
+      "file_sha256": "971246e3d919b3abbf3a585972cc33d0675efb1f3f6b6e9276cf95a20957796a",
+      "path": "src/owtda_cal/parallel.py",
+      "size": 4703
+    },
+    {
+      "file_sha256": "f50fe3d6f5f47812746265cf17ba82e0fe7bf73b8e478307f30d42ace99d629e",
+      "path": "src/owtda_cal/ph.py",
+      "size": 2520
+    },
+    {
+      "file_sha256": "459773b9f22137378c7aecfc0931dea78b825282b75201b23a78aeddb96ce8c5",
+      "path": "src/owtda_cal/pointcloud.py",
+      "size": 2962
+    },
+    {
+      "file_sha256": "c210304d9bf0ee60c6d89a13df2af925780d7d12894f1c067d06c1d1ad50cd7b",
+      "path": "src/owtda_cal/probe.py",
+      "size": 3078
+    },
+    {
+      "file_sha256": "c3367b53bafa1ffb7df8b5ee9bf2774a1dbde1e9380974860ce4376d4da4b91b",
+      "path": "src/owtda_cal/realdata.py",
+      "size": 3001
+    },
+    {
+      "file_sha256": "461190b7d2bf56abc1f5ef78342c716d5dd4e750e3e541b7172a77d386659649",
+      "path": "src/owtda_cal/registry.py",
+      "size": 9430
+    },
+    {
+      "file_sha256": "a9eb4a8c67807904503d9d394d4cdd3d0aa27c878bf7e9d63355f2a0f2ceebad",
+      "path": "src/owtda_cal/rowschema.py",
+      "size": 9548
+    },
+    {
+      "file_sha256": "a9ca15204cf5ef65cec5eaec3e281d665c190da1c28bb9a27cf1f998923d44bc",
+      "path": "src/owtda_cal/scan.py",
+      "size": 5127
+    },
+    {
+      "file_sha256": "617eaa7e3d2b9482e2afe774a6ab05d2e8e9fe947caac749e3897896c982bd7b",
+      "path": "src/owtda_cal/scope.py",
+      "size": 12810
+    },
+    {
+      "file_sha256": "30232ea7013f9300e4d1fffa7b601990680ef534f07c2312b6b6bbc1591d97a0",
+      "path": "src/owtda_cal/seeding.py",
+      "size": 3012
+    },
+    {
+      "file_sha256": "c5be5d6f7abb0d8bbd2e36240e4b21227d954d72b32c6be7dcced10274b05c96",
+      "path": "src/owtda_cal/shardio.py",
+      "size": 8196
+    }
+  ],
+  "status": "FROZEN"
+}

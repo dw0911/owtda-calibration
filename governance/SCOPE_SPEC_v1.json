@@ -1,0 +1,102 @@
+{
+  "config_kind": "scope_spec",
+  "phases": [
+    {
+      "config_kind": "scope_spec",
+      "phase": "NULL",
+      "schema_version": 1,
+      "synthetic": {
+        "DGP_families": [
+          "N_AR",
+          "N_CIRCLE"
+        ],
+        "budget_matrices": {
+          "FIXED_M": {
+            "M": 192,
+            "W": 64
+          },
+          "FIXED_T": {
+            "T": 3120,
+            "W": 64
+          }
+        },
+        "features": [
+          "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+          "MOMENTS_MEAN_COV_FROB_V1"
+        ],
+        "methods": [
+          "M0_NAIVE_PERM_B999_V1",
+          "M1_DMB_R1_TRI_EXTIID_B999_V1"
+        ],
+        "replicate_count": 2500,
+        "rho_levels": [
+          "0",
+          "0.8"
+        ],
+        "strides": [
+          64,
+          32,
+          16,
+          8
+        ]
+      }
+    },
+    {
+      "config_kind": "scope_spec",
+      "phase": "ALT",
+      "schema_version": 1,
+      "synthetic": {
+        "DGP_family": "CIRCLE_BASED_H1",
+        "alternatives": [
+          "shape_change",
+          "mean_shift"
+        ],
+        "features": [
+          "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+          "MOMENTS_MEAN_COV_FROB_V1"
+        ],
+        "geometry": {
+          "M": 192,
+          "W": 64,
+          "strides": [
+            64,
+            16
+          ]
+        },
+        "methods": [
+          "M0_NAIVE_PERM_B999_V1",
+          "M1_DMB_R1_TRI_EXTIID_B999_V1"
+        ],
+        "replicate_count": 1600,
+        "rho_levels": [
+          "0",
+          "0.8"
+        ]
+      }
+    }
+  ],
+  "real": {
+    "W": 100,
+    "features": [
+      "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "MOMENTS_MEAN_COV_FROB_V1"
+    ],
+    "methods": [
+      "M0_NAIVE_PERM_B999_V1",
+      "M1_DMB_R1_TRI_EXTIID_B999_V1"
+    ],
+    "n_task": "DERIVED_FROM_TASK_INDEX_SEAL",
+    "replicate_source": "TASK_INDEX_SEAL",
+    "required_relations": [
+      "prediction_row_per_task_stride_feature_method",
+      "evaluation_row_one_to_one_with_prediction",
+      "truth_row_per_task"
+    ],
+    "strides": [
+      100,
+      50,
+      25
+    ]
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,38 @@
+{
+  "budget_limits": {
+    "core_wall_hours": "268.8",
+    "disk_rule": "estimated_peak_disk<=0.8*F_free",
+    "h0_wall_hours": "192",
+    "h1_wall_hours": "76.8",
+    "peak_rss_gib": "24"
+  },
+  "cache_key_fields": [
+    "data_unit_id",
+    "window_start",
+    "W",
+    "feature_config_hash"
+  ],
+  "config_kind": "compute_spec",
+  "no_cross_cell_cache_reuse": true,
+  "ph_windows": {
+    "h0": 5750000,
+    "h1": 2457600,
+    "total": 8207600
+  },
+  "reference_environment": "registered_windows11_host_float64_frozen_lock_w_star",
+  "ripser": {
+    "coeff": 2,
+    "engine": "cpu",
+    "maxdim": 1,
+    "thresh": "inf"
+  },
+  "schema_version": 1,
+  "thread_env": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "w_star": 8,
+  "worker_consistency": "bitwise_identical_payload"
+}
