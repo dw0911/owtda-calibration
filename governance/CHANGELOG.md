@@ -56,8 +56,23 @@
 - Git tag `v1.0-freeze-owtda-cal-r1`；
 - 校验：`audit/validate_freeze.py` 全 PASS；pytest 362 passed；ruff clean。
 
+## 2026-09-10 — B14b 冻结收尾：`OWTDA_CAL_R1_B14b_20260910_REGISTRIES_AND_REAL_DISPOSITION`
+
+- `SEED_REGISTRY_v1.0.json`：13 entries（smoke 两 phase、NULL data/M0/M1、ALT data/M0/M1、
+  REAL_TASK_BUILD 两项、REAL_PREDICTION 两项、ANALYSIS bootstrap），按七元组 ASCII 排序；
+  合成 root keys 明文入库（计划 §16.1 规定），`real_task` / `real_task_id_salt` 仅登记
+  `secret_ref` + `root_key_commitment`（明文存于 git-ignored `secrets/REAL_TASK_SECRETS.local.json`）；
+- `COMPONENT_REGISTRY_v1.json`：6 entries（2 data + 2 feature + 2 method），
+  `config_hash` 用无 run 参数的生成器/特征/方法配置，`code_file_manifest_hash` 逐文件清单；
+- `SECRET_COMMITMENT_REGISTRY_v1.0.json`：`entries=[]`、`reveal_events=[]`
+  （REAL 在 task index 形成前即 omitted，不得铸造 salt）；
+- `REAL_DISPOSITION.jsonl`：genesis + `REAL_OMITTED_BY_DATA_GATE`（stage `REAL_DATA_FROZEN`、
+  `reason_code=TASK_GATE_MIN_TASKS_NOT_MET`、`task_index_seal_hash=null`、`truth_unsealed=false`），
+  reason 对象 `REAL_DISPOSITION_REASON_71144c33….json`（8 受试者 / 23 任务 / 需 24）；
+- `FREEZE_MANIFEST.json` 增记三类 registry snapshot hash 与 REAL 链 tip；
+- `audit/validate_freeze.py` 扩展至 **33 项**（含 registry 主键/排序/快照重算、REAL 链重放与 truth 封闭）；
+- 代码：`src/owtda_cal/components.py`、`src/owtda_cal/disposition.py`；测试 `tests/test_disposition.py`。
+
 ## 待登记（未发生）
 
-- B14b：SEED / COMPONENT / SECRET_COMMITMENT registries（root key commitments 与 secret refs）、
-  正式 `REAL_DISPOSITION` append-only 链事件（`REAL_OMITTED_BY_DATA_GATE`）；
-- 后续批次：blind smoke（G3）、正式 H0/H1 运行、分析冻结、release。
+- 后续批次：blind smoke（G3）、正式 H0/H1 运行与 admission（`RUN_COMPONENT_SET`）、分析冻结、release。
