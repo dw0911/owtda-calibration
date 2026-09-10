@@ -53,6 +53,17 @@ class DataTimebaseFail(Pamap2Error):
 
 
 @dataclass
+class SegmentResult:
+    """One final analysis segment (grid-contiguous, bad rows removed)."""
+
+    analysis_segment_id: int
+    timestamps: np.ndarray
+    grid_index: np.ndarray
+    activity: np.ndarray
+    chest_g: np.ndarray  # [n,3] in g units
+
+
+@dataclass
 class ImportResult:
     subject: str
     final_timestamps: np.ndarray
@@ -65,6 +76,7 @@ class ImportResult:
     original_entrywise_missing_rate: float
     original_rowwise_missing_rate: float
     final_segment_count: int
+    analysis_segments: list = field(default_factory=list)
     diagnostics: dict = field(default_factory=dict)
 
 
@@ -196,7 +208,7 @@ def import_subject(path: str, *, subject: str | None = None) -> ImportResult:
     clocks = clock_segments(ts)
     n_grid_segments = 0
     dropped = 0
-    final_segment_count = 0
+    segments: list[SegmentResult] = []
     best: tuple[int, np.ndarray, np.ndarray, np.ndarray, np.ndarray] | None = None
 
     for (c0, c1) in clocks:
@@ -219,11 +231,19 @@ def import_subject(path: str, *, subject: str | None = None) -> ImportResult:
             seg_j = j[g0:g1][keep]
             seg_ts = ts[seg][keep]
             seg_act = act[seg][keep]
-            # after dropping bad rows, keep every grid-contiguous run; the
-            # largest non-empty run is the final analysis segment.
-            runs = grid_contiguous_segments(seg_j)
-            final_segment_count += len(runs)
-            for (r0, r1) in runs:
+            # after dropping bad rows, every grid-contiguous run is a final
+            # analysis segment (numbered by time order); the largest one is
+            # also exposed as ``final_*`` for convenience.
+            for (r0, r1) in grid_contiguous_segments(seg_j):
+                segments.append(
+                    SegmentResult(
+                        analysis_segment_id=len(segments),
+                        timestamps=seg_ts[r0:r1],
+                        grid_index=seg_j[r0:r1],
+                        activity=seg_act[r0:r1],
+                        chest_g=seg_g[r0:r1],
+                    )
+                )
                 cand = (r1 - r0, seg_ts[r0:r1], seg_j[r0:r1], seg_act[r0:r1], seg_g[r0:r1])
                 if best is None or cand[0] > best[0]:
                     best = cand
@@ -242,7 +262,8 @@ def import_subject(path: str, *, subject: str | None = None) -> ImportResult:
         dropped_bad_rows=dropped,
         original_entrywise_missing_rate=entrywise,
         original_rowwise_missing_rate=rowwise,
-        final_segment_count=final_segment_count,
+        final_segment_count=len(segments),
+        analysis_segments=segments,
         diagnostics={"rows_parsed": int(ts.shape[0])},
     )
 
@@ -257,6 +278,7 @@ __all__ = [
     "Pamap2Error",
     "DataIdentityFail",
     "DataTimebaseFail",
+    "SegmentResult",
     "ImportResult",
     "parse_rows",
     "check_strictly_increasing",

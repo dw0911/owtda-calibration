@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "rc",
+  "disposition_status": "REAL_OMITTED_BY_DATA_GATE",
+  "disposition_stage": "REAL_DATA_FROZEN",
+  "reason_code": "TASK_GATE_MIN_TASKS_NOT_MET",
+  "reason_object_hash": null,
+  "task_index_seal_hash": null,
+  "truth_unsealed": false,
+  "dataset_hash": "eb0e11f9c20a0498ffc5f69017b5fd7744f4d46232b8adf52f1b9352525fc33b",
+  "task_builder_config_hash": "bbaaa38bcc421818d6d8a22c89f26078be8c72baabb81dd53fb55a0e75db7961",
+  "evidence": "artifacts/audit/real_task_enumeration_RC.json",
+  "gate": {
+    "admitted_subjects": 8,
+    "total_tasks": 23,
+    "every_admitted_subject_has_task": true,
+    "pass": false,
+    "requirements": {
+      "min_subjects": 8,
+      "min_tasks": 24
+    }
+  },
+  "candidates_per_subject": {
+    "subject101": 3,
+    "subject102": 1,
+    "subject103": 4,
+    "subject104": 3,
+    "subject105": 3,
+    "subject106": 3,
+    "subject107": 3,
+    "subject108": 3,
+    "subject109": 0
+  },
+  "note": "RC only: full-segment enumeration confirms 23 tasks (< 24) with 8 admitted subjects and subject109 having NO_ELIGIBLE_TASK. Synthetic mainline continues; formal REAL_DISPOSITION chain event to be written at freeze (B14) with the frozen reason_code enum.",
+  "generated_at_utc": "2026-09-10"
+}

@@ -108,104 +108,122 @@
     "per_subject": {
       "subject101": {
         "candidate_count": 3,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          3
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.001352223730596652,
         "final_rows": 376417,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 376417,
-        "rowwise_missing_rate": 0.001352223730596652
+        "segment_lengths": [
+          376417
+        ]
       },
       "subject102": {
         "candidate_count": 1,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          1
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0008657718120805369,
         "final_rows": 447000,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 447000,
-        "rowwise_missing_rate": 0.0008657718120805369
+        "segment_lengths": [
+          447000
+        ]
       },
       "subject103": {
         "candidate_count": 4,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          4
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0007237979219484798,
         "final_rows": 252833,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 252833,
-        "rowwise_missing_rate": 0.0007237979219484798
+        "segment_lengths": [
+          252833
+        ]
       },
       "subject104": {
         "candidate_count": 3,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          3
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0006462849236594897,
         "final_rows": 329576,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 329576,
-        "rowwise_missing_rate": 0.0006462849236594897
+        "segment_lengths": [
+          329576
+        ]
       },
       "subject105": {
         "candidate_count": 3,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          3
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0008324817294274287,
         "final_rows": 374783,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 374783,
-        "rowwise_missing_rate": 0.0008324817294274287
+        "segment_lengths": [
+          374783
+        ]
       },
       "subject106": {
         "candidate_count": 3,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          3
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0009479930462084424,
         "final_rows": 361817,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 361817,
-        "rowwise_missing_rate": 0.0009479930462084424
+        "segment_lengths": [
+          361817
+        ]
       },
       "subject107": {
         "candidate_count": 3,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          3
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0008195179193811205,
         "final_rows": 313599,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 313599,
-        "rowwise_missing_rate": 0.0008195179193811205
+        "segment_lengths": [
+          313599
+        ]
       },
       "subject108": {
         "candidate_count": 3,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          3
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.003205638787249008,
         "final_rows": 408031,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 408031,
-        "rowwise_missing_rate": 0.003205638787249008
+        "segment_lengths": [
+          408031
+        ]
       },
       "subject109": {
         "candidate_count": 0,
-        "clock_segments": 1,
+        "candidates_per_segment": [
+          0
+        ],
         "dropped_bad_rows": 0,
-        "entrywise_missing_rate": 0.0060162793441075856,
         "final_rows": 8477,
         "final_segments": 1,
-        "grid_segments": 1,
         "rows_parsed": 8477,
-        "rowwise_missing_rate": 0.0060162793441075856
+        "segment_lengths": [
+          8477
+        ]
       }
     },
-    "status": "rc_dry_run"
+    "status": "rc_full_segment"
   }
 }

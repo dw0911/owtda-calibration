@@ -34,6 +34,15 @@
 - 风险登记：专题截止日仅用户口径 2026-10-31（未编辑部核验），投稿日 10-28 早于该口径，
   冲突处置见 COLUMN_RECORD §3.4/§4。
 
+## 2026-09-10 — REAL 线：Data Gate FAIL → omission RC（计划 §24 分流 1）
+
+- 九受试者全 analysis segments 枚举（B11b2/B11b3）：准入 8 受试者、候选 **23 < 24**，
+  `subject109` 无候选（`NO_ELIGIBLE_TASK`）→ `REAL_DATA_TASK_GATE` = FAIL；
+- 判定为**数据事实**（非实现缺陷），按计划 §24 分流 1：`configs/real/REAL_DISPOSITION_RC.json`
+  记 `REAL_OMITTED_BY_DATA_GATE`（stage `REAL_DATA_FROZEN`，reason `TASK_GATE_MIN_TASKS_NOT_MET`）；
+- 未下调准入线、未放宽 3000/500 阈值；合成主线不受影响；
+- 正式 `REAL_DISPOSITION` append-only 链事件与冻结 reason_code 枚举在 B14 冻结批写入。
+
 ## 待登记（未发生）
 
 - 协议正文定稿与 `protocol_content_hash` / `freeze_id` 计算（冻结批）；

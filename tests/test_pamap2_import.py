@@ -153,3 +153,14 @@ class TestImportSubject:
         lines = [_line(0.0, act=99)]
         with pytest.raises(DataIdentityFail):
             import_subject(self._write(tmp_path, lines))
+
+    def test_all_analysis_segments_enumerated(self, tmp_path):
+        lines = [_line(i * 0.01) for i in range(6)]
+        lines += [_line(1.0 + i * 0.01) for i in range(3)]
+        res = import_subject(self._write(tmp_path, lines))
+        assert res.final_segment_count == 2
+        assert [s.analysis_segment_id for s in res.analysis_segments] == [0, 1]
+        assert res.analysis_segments[0].chest_g.shape[0] == 6
+        assert res.analysis_segments[1].chest_g.shape[0] == 3
+        # final_* mirrors the largest segment
+        assert res.final_timestamps.shape[0] == 6
