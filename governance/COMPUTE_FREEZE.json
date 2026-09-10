@@ -1,7 +1,11 @@
 {
   "architecture": "AMD64",
   "blas_vendor": "scipy-openblas",
-  "budget_evidence": "artifacts/audit/compute_budget_RC.json",
+  "budget_evidence": "OWTDA-CAL-R1-AUDIT-SUPPLEMENT-R1-20260910.zip:/wstar/worker_confirmation_RC.json",
+  "budget_evidence_superseded": [
+    "artifacts/audit/compute_budget_RC.json",
+    "artifacts/audit/worker_sweep_RC.json"
+  ],
   "cpu_count": 16,
   "freeze_date": "2026-09-10",
   "gpu_used": false,
@@ -12,11 +16,12 @@
   "ripser": "0.6.15",
   "schema_version": 1,
   "scipy": "1.15.3",
+  "superseded_evidence_status": "HISTORICAL_DIAGNOSTIC_ONLY",
   "thread_env_observed": {
-    "MKL_NUM_THREADS": "unset",
-    "NUMEXPR_NUM_THREADS": "unset",
-    "OMP_NUM_THREADS": "unset",
-    "OPENBLAS_NUM_THREADS": "unset"
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
   },
   "w_star": 8
 }

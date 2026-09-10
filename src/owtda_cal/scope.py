@@ -58,8 +58,8 @@ SMOKE_PHASES = (PHASE_SMOKE_NULL, PHASE_SMOKE_ALT)
 # runner/reference-environment change bumps this monotonically and forces both
 # smoke phases to be re-run, so one generation never spans two implementations.
 # S01 was superseded by the B15c H1 DGP addition.
-SMOKE_GENERATION_ID = "S02"
-SMOKE_GENERATIONS_SUPERSEDED = ("S01",)
+SMOKE_GENERATION_ID = "S03"
+SMOKE_GENERATIONS_SUPERSEDED = ("S01", "S02")
 
 
 def scope_spec_h0() -> dict:

@@ -1,0 +1,10 @@
+{"generation_id":"C01","hash":"f9a3192b454eba0586f2b0cf931f30492b259b225ea14536cad217337926099e","ref_kind":"config","role":"config","source":"governance/COMPUTE_SPEC_v1.json","stable_id":"compute_spec"}
+{"generation_id":"S01","hash":"8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4","ref_kind":"config","role":"config","source":"governance/SCOPE_SPEC_v1.json","stable_id":"scope_spec"}
+{"generation_id":"S03","hash":"d4b5a800fe0e994b13e4dbbed68f8e2ae8b4dfcc9cb9516283d566e6daedf98f","ref_kind":"config","role":"config","source":"governance/SMOKE_CONFIG_v1.json","stable_id":"smoke_config"}
+{"generation_id":"D01","hash":"13b49c1735e0ec6541a6e51b1a77d9cdcc2b1596e65aff577706e5761dba04e2","ref_kind":"data","role":"data","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"SYNTHETIC_CIRCLE_BASED_H1_V1"}
+{"generation_id":"D01","hash":"eb62824fdec0aaf7758d8310945e86ac67a7f0e7714a7884932177785bb79853","ref_kind":"data","role":"data","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"SYNTHETIC_N_AR_V1"}
+{"generation_id":"D01","hash":"efc19eb6ac356e6a6ea30a4b614ec4ae0cb84b052819591429137a4589c57b9a","ref_kind":"data","role":"data","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"SYNTHETIC_N_CIRCLE_V1"}
+{"generation_id":"F01","hash":"f6ae5527905fda875d783902cbe8d7dcd50ff407dab8bfc4f41e1e38e4ed5f4b","ref_kind":"feature","role":"feature","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"}
+{"generation_id":"F01","hash":"edebe023a5e7c9643ff7ae8328220bbcc39cb5ab52a1ffee8efdd1ff3a687718","ref_kind":"feature","role":"feature","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"MOMENTS_MEAN_COV_FROB_V1"}
+{"generation_id":"M01","hash":"c825adc04688a2c99662b1d8d2134503edc8c2b8be802105566f3ff7e60383ab","ref_kind":"method","role":"method","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"M0_NAIVE_PERM_B999_V1"}
+{"generation_id":"M01","hash":"b3c50ea509fb1f6b0f1d279c405a81be4378fc5a3884dcbe276693902ea23d66","ref_kind":"method","role":"method","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"M1_DMB_R1_TRI_EXTIID_B999_V1"}

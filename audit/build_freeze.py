@@ -262,9 +262,13 @@ def _confirmed_w_star() -> tuple[int, str]:
         data = json.loads(Path(rc).read_text(encoding="utf-8"))
         if data.get("frozen_w_star_confirmed"):
             return int(data["frozen_w_star"]), f"{rc}:CONFIRMED"
+        # A voided / partially failing confirmation may NOT change the frozen value
+        # (the protocol forbids re-running a failed run to improve the number).
         selected = data.get("selected_workers") or []
-        if selected:
-            return int(selected[0]), f"{rc}:AMENDED_FROM_MEASUREMENT"
+        return (
+            int(data.get("frozen_w_star", 8)),
+            f"{rc}:NOT_CONFIRMED_PREVIOUS_VALUE_KEPT measured_selection={selected}",
+        )
     return 8, "PREVIOUS_FROZEN_VALUE (no confirmation RC supplied)"
 
 

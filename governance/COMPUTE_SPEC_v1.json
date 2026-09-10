@@ -34,5 +34,7 @@
     "OPENBLAS_NUM_THREADS": "1"
   },
   "w_star": 8,
+  "w_star_confirmation_protocol": "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json",
+  "w_star_source": "f:\\BPI\\_audit_r1\\wstar\\worker_confirmation_RC.json:NOT_CONFIRMED_PREVIOUS_VALUE_KEPT measured_selection=[12]",
   "worker_consistency": "bitwise_identical_payload"
 }

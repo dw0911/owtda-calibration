@@ -1,0 +1,12 @@
+{
+  "delivered_in_batch": "audit-supplement-R1",
+  "evidence": [
+    "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json",
+    "audit/run_wstar_confirmation.py"
+  ],
+  "kind": "governance_reason",
+  "prior_8_replicate_sweep": "HISTORICAL_DIAGNOSTIC_ONLY",
+  "reason_code": "AM_WORKER_CONFIRMATION_RULE",
+  "schema_version": 1,
+  "statement": "冻结的 COMPUTE_SPEC.w_star=8 从未经过正式确认；8-replicate 扫描指向 12，差异超 §9.4 的 2% 并列阈值。本修正登记确认协议：两 phase 均使用完整 32-replicate worklist，workers=8 与 12 各 3 次配对运行，顺序固定 8→12、12→8、8→12，以三次吞吐中位数裁决，2% 内取 8，并要求 payload 逐位一致、error=0、swap 增量=0、peak RSS≤24 GiB；协议在测量前登记并进入冻结源域。"
+}

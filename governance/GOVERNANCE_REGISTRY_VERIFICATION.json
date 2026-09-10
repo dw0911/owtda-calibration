@@ -1,0 +1,33 @@
+{
+  "amendment_tips": [
+    "4230d2d80e9b2789e903c7885377a3ef9872f06ab4ed290af10a93ac11a8d181",
+    "82575f4ad080f58208648509c3710cba71ab2e8adb04df218acb7653f94e3884",
+    "97c11cf29d4dbf0caf7af15975f390be5ebba29f756af8a0d0fa5a6dca9a3f28",
+    "f863104a9a5122d0fe00e50ab0323eab218c10001b6889972080786ad6cb9247",
+    "423087ff86614570d4d98aab512f2e5bcc664c6f587d2b94b02f988006aff3cb"
+  ],
+  "amendments": {
+    "events": 5,
+    "file": "AMENDMENT_REGISTRY.jsonl",
+    "tip": "423087ff86614570d4d98aab512f2e5bcc664c6f587d2b94b02f988006aff3cb"
+  },
+  "current_smoke_generation": "S03",
+  "invalidation_tips": [
+    "c1d18565622f7ec8d5aeec9c8e1f20a738c93b404f392e3c9f3e87d326ef7b26",
+    "7c5c009bfe728ad435202cfc7ee488a50271eb98cd7458700d6db18d3b3d1618"
+  ],
+  "invalidations": {
+    "events": 2,
+    "file": "INVALIDATION_REGISTRY.jsonl",
+    "tip": "7c5c009bfe728ad435202cfc7ee488a50271eb98cd7458700d6db18d3b3d1618"
+  },
+  "reason_hashes": {
+    "AM_ENVIRONMENT_LOCK_CORRECTION": "4128e50cda09b0a1bbab71ba7e7998024b71b23febff0336902e65b2e60a3664",
+    "AM_SMOKE_SHIFT_DIRECTION": "f6f6c25807d7f6e8bb841e8f3fcbadd47c9d0bf1a566255d2f4c292d5f2dffec",
+    "AM_WORKER_CONFIRMATION_RULE": "e19066fc02af1e171bbf5393468d0b87ccff17bc92a82129203966146cd5b941",
+    "INV_S01_SMOKE": "209e420c5657986d58edf73bc4216fce12ca1915e4d2f658f251c3247194a5e9",
+    "INV_S02_PREFREEZE_SMOKE": "71f8b374bdebdad779f2e7745acc40ab7c0df969f7c73e42bf721993fcf1c777"
+  },
+  "s03_generation": "S03",
+  "wstar_status": false
+}
