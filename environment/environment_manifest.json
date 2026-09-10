@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "path": "environment_manifest.json",
+      "sha256": "d5a8e9d86f7bee83a1f3e65e7c7431a5779c2b08d37b358c001080ba78c2d673",
+      "size": 1828
+    },
+    {
+      "path": "environment_rebuild_test.json",
+      "sha256": "4d4a08c10fdb3d96c3eef4e0ed9540cc1da64683051915f2bbe4b4cc8399fa40",
+      "size": 2721
+    },
+    {
+      "path": "numpy_show_config.txt",
+      "sha256": "0591befcc54a2ea1236f50f0f666880eaccd368c0332d95cc8e4a750872a05d9",
+      "size": 2540
+    },
+    {
+      "path": "pip_freeze_all.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "d8f8d9034b4318b495463df5d9e987e411bfa86bf74761a15b3d5fd91226b135",
+      "size": 1388
+    },
+    {
+      "path": "python_VV.txt",
+      "sha256": "337ab675f0c5d31b0868fd63af5c24acc94eabd88cb033e7245e0257b1d7f295",
+      "size": 159
+    },
+    {
+      "path": "thread_env.json",
+      "sha256": "19e0cc7dec9b99942626642eac122f0c4a4b20b0b360a8b8a9224e990e39b494",
+      "size": 793
+    },
+    {
+      "path": "tool_versions.json",
+      "sha256": "434c0d398b548b2d95d30abca826e67b7de6ea662a6b5790c317fc8018e68a3f",
+      "size": 604
+    },
+    {
+      "path": "uv.lock",
+      "sha256": "6fa9a5de21ec071b9d0762c7223f63826f25a12b0e026e366fe6d04ce1a68439",
+      "size": 62667
+    }
+  ],
+  "generated_at_utc": "2026-09-10T15:54:03Z",
+  "kind": "environment_manifest",
+  "lock_covers": [
+    "pyproject.toml",
+    "uv.lock",
+    "environment/tool_versions.json",
+    "environment/thread_env.json",
+    "environment/pip_freeze_all.txt",
+    "environment/numpy_show_config.txt",
+    "environment/python_VV.txt",
+    "environment/environment_rebuild_test.json"
+  ],
+  "rebuild_test_passed": true,
+  "schema_version": 1,
+  "thread_env_rule": "four BLAS/thread variables set to \"1\" by scripts/frozen_env.py before the interpreter starts"
+}

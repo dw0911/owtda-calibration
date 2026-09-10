@@ -1,0 +1,23 @@
+{
+  "blas": {
+    "blas_name": "scipy-openblas",
+    "blas_version": "0.3.29"
+  },
+  "cpu_count": 16,
+  "generated_at_utc": "2026-09-10T15:53:58Z",
+  "interpreter": "F:\\BPI\\owtda-calibration\\.venv\\Scripts\\python.exe",
+  "kind": "tool_versions",
+  "machine": "AMD64",
+  "os": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "numpy": "2.2.6",
+    "psutil": "7.2.2",
+    "pytest": "9.1.1",
+    "ripser": "0.6.15",
+    "ruff": "0.16.6",
+    "scipy": "1.15.3"
+  },
+  "python": "3.12.10",
+  "schema_version": 1,
+  "uv": "uv 0.12.12 (c4be69153 2026-09-09 x86_64-pc-windows-msvc)"
+}

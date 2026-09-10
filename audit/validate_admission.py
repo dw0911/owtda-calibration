@@ -31,6 +31,9 @@ from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(REPO / "audit"))
+
+import run_registry
 
 from owtda_cal import scope, smoke
 
@@ -143,6 +146,16 @@ def _sample_run(*, phase: str, workers: int) -> dict[str, Any]:
 
 
 def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="G4 pre-admission checks + §9.4 budget")
+    parser.add_argument(
+        "--evidence-root",
+        default=None,
+        help="smoke evidence root (outside the repo); enables sealed S03 evidence",
+    )
+    args = parser.parse_args()
+
     checks: list[dict[str, Any]] = []
 
     def record(name: str, passed: bool, detail: str = "") -> None:
@@ -242,16 +255,22 @@ def main() -> int:
         f"est_peak={estimated_peak_disk / 1024**2:.1f} MiB free={free / 1024**3:.1f} GiB",
     )
 
-    open_runs = 0
-    for phase in scope.SMOKE_PHASES:
-        shard_registry = REPO / f"artifacts/smoke/{phase}/shard_registry.jsonl"
-        if shard_registry.exists():
-            open_runs += sum(
-                1
-                for line in shard_registry.read_text(encoding="utf-8").splitlines()
-                if line.strip()
-            )
-    record("open_runs_zero", open_runs == 0, f"open_runs={open_runs}")
+    # P0-6: open_runs is derived from the run/state registry's latest states, and a
+    # missing registry fails closed (never an implied zero, never a line count).
+    registry_dir = (
+        Path(args.evidence_root).expanduser() / "smoke" / smoke.SMOKE_GENERATION_ID
+        if args.evidence_root
+        else REPO / "artifacts/smoke" / smoke.SMOKE_GENERATION_ID
+    )
+    try:
+        open_ids = sorted(run_registry.open_runs(registry_dir))
+        record(
+            "open_runs_zero",
+            not open_ids,
+            f"registry={registry_dir} open_runs={open_ids}",
+        )
+    except run_registry.RunRegistryError as exc:
+        record("open_runs_zero", False, str(exc))
 
     all_pass = all(c["pass"] for c in checks)
     out = {

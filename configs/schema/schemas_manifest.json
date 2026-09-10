@@ -1,0 +1,70 @@
+{
+  "data_groups": [
+    "H0_N_AR",
+    "H0_N_CIRCLE",
+    "H1_SHAPE_CHANGE",
+    "H1_MEAN_SHIFT",
+    "REAL_PREDICTION",
+    "REAL_EVALUATION"
+  ],
+  "discriminator_dimensions": [
+    "row_type",
+    "phase",
+    "DGP_family",
+    "scenario_id",
+    "feature_id",
+    "method_id"
+  ],
+  "feature_ids": {
+    "BPI": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "MOMENTS": "MOMENTS_MEAN_COV_FROB_V1"
+  },
+  "generated_by": "audit/build_schemas.py",
+  "kind": "schemas_manifest",
+  "method_ids": {
+    "M0": "M0_NAIVE_PERM_B999_V1",
+    "M1": "M1_DMB_R1_TRI_EXTIID_B999_V1"
+  },
+  "null_policy": "required-null fields are present-and-null; omission is an error",
+  "objects": [
+    {
+      "file": "scientific_row.schema.json",
+      "schema_kind": "scientific_row",
+      "sha256": "ca47f8976e19db93a6c47f318baba9249f5ecf979ed25856892fc1c26acd82b6",
+      "variants": 24
+    },
+    {
+      "file": "scientific_row_wire.schema.json",
+      "schema_kind": "scientific_row_wire",
+      "sha256": "2e72d5cf5398738485963ef99b26efd65c941fc8c2742c1027ea44d87d24de8a",
+      "variants": 24
+    },
+    {
+      "file": "feature_sufficient_row.schema.json",
+      "schema_kind": "feature_sufficient_row",
+      "sha256": "32875a7bbe3ffcafb7b54e7684e1755b85c7e9b40cc05929f781b0237dd9baee",
+      "variants": 3
+    },
+    {
+      "file": "feature_sufficient_row_wire.schema.json",
+      "schema_kind": "feature_sufficient_row_wire",
+      "sha256": "d50362a368534d3bb323efe2b7e89fba2a104c200b9cd7733d8a0cb4e3b67e60",
+      "variants": 3
+    },
+    {
+      "file": "scientific_result_projection.schema.json",
+      "schema_kind": "scientific_result_projection",
+      "sha256": "bdad74319e8664571b43cbe6cd1bf79502a76245508e95b64a03e3f874da1af8",
+      "variants": 24
+    },
+    {
+      "file": "feature_result_projection.schema.json",
+      "schema_kind": "feature_result_projection",
+      "sha256": "a6ef837276133abc00def34ed9b96d9b323f8e832a930fff9e267bdf4457579a",
+      "variants": 1
+    }
+  ],
+  "schema_version": 1,
+  "unknown_fields_policy": "reject",
+  "wire_float_rule": "f64:<16 lowercase hex, big-endian binary64>"
+}

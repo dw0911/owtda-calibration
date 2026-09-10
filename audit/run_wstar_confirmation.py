@@ -27,7 +27,6 @@ import json
 import statistics
 import sys
 import threading
-import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -35,7 +34,7 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import scope, smoke  # noqa: E402
+from owtda_cal import scope, smoke
 
 PROTOCOL_PATH = REPO / "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json"
 GOV = REPO / "governance"

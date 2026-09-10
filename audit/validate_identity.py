@@ -143,7 +143,18 @@ def main() -> int:
         "all_pass": all_pass,
         "checks": checks,
     }
-    out_dir = REPO_ROOT / "artifacts" / "audit"
+    # --out-dir lets the audit capture clean-state evidence *outside* the repo, so
+    # producing the cleanliness proof cannot itself dirty the worktree (P0-1).
+    import argparse
+
+    parser = argparse.ArgumentParser(description="G0 identity validator")
+    parser.add_argument("--out-dir", default=None)
+    args = parser.parse_args()
+    out_dir = (
+        Path(args.out_dir).expanduser()
+        if args.out_dir
+        else REPO_ROOT / "artifacts" / "audit"
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = payload["generated_at_utc"].replace(":", "").replace("-", "").replace("T", "T")
     out_file = out_dir / f"identity_check_{stamp}.json"

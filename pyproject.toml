@@ -37,4 +37,10 @@ pythonpath = ["src"]
 # TRY004: manifest/root validators deliberately raise ValueError for type
 #          errors to keep one exception family for the public contract.
 # RUF022: __all__ is grouped by module with section comments (intentional).
-ignore = ["TRY004", "RUF022"]
+# ISC004: long bilingual evidence strings are written as compile-time implicit
+#          concatenation inside list literals for readability; every such spot is
+#          a contiguous pair/triple of literals (no comma hazard). Disclosed as a
+#          style concession in the audit supplement.
+# UP047: R1 explicitly keeps TypeVar-style generics in parallel.py; migrating to
+#          PEP 695 type parameters is deferred (it would touch the smoke path).
+ignore = ["TRY004", "RUF022", "ISC004", "UP047"]

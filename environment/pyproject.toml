@@ -1,0 +1,40 @@
+# 依赖在冻结前通过 uv.lock 固化；锁文件、解释器版本、OS/CPU、BLAS 与线程设置共同进入
+# environment_lock_hash（见 governance/COMPUTE_FREEZE.json 与 Plan §15.3）。
+# P0-2 修正：原先只声明 numpy/scipy，遗漏实际运行必需的 ripser 与证据工具 psutil。
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "owtda-calibration"
+version = "0.1.0"
+description = "Exchangeability failure and calibration boundaries of topological scans with overlapping windows (OW-TDA-CAL-R1)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy==2.2.6",
+  "scipy==1.15.3",
+  "ripser==0.6.15",
+]
+
+[dependency-groups]
+# 证据工具链（校验器、资源采样、测试执行）：
+# pytest 产出可解析的原始测试证据；ruff 做静态检查；psutil 采集 RSS/swap。
+dev = [
+  "pytest==9.1.1",
+  "ruff==0.16.6",
+  "psutil==7.2.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/owtda_cal"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff.lint]
+# TRY004: manifest/root validators deliberately raise ValueError for type
+#          errors to keep one exception family for the public contract.
+# RUF022: __all__ is grouped by module with section comments (intentional).
+ignore = ["TRY004", "RUF022"]

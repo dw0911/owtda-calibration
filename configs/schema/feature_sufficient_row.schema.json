@@ -1,0 +1,113 @@
+{
+  "computed_fields": {
+    "feature_result_hash": "sha256 over the feature projection hash-view; inserted before row_payload_hash",
+    "row_payload_hash": "sha256 of the §15.4 hash-view canonical bytes (covers feature_result_hash)"
+  },
+  "discriminator": [
+    "row_type",
+    "phase",
+    "feature_generation_id"
+  ],
+  "null_rule": "required-null fields must be present with value null; omission is an error",
+  "schema_kind": "feature_sufficient_row",
+  "schema_name": "feature_sufficient_row_v1",
+  "schema_version": 1,
+  "source": "Plan §16 (FEATURE_SUFFICIENT_LEDGER)",
+  "unknown_fields": "reject",
+  "variants": [
+    {
+      "discriminator": {
+        "feature_generation_id": "F01",
+        "phase": "NULL",
+        "row_type": "feature_sufficient"
+      },
+      "fields": {
+        "a_r": "value",
+        "data_content_hash": "value",
+        "data_generation_id": "value",
+        "data_unit_id": "value",
+        "evidence_generation_id": "value",
+        "feature_config_hash": "value",
+        "feature_generation_id": "value",
+        "feature_id": "value",
+        "feature_matrix_hash": "value",
+        "feature_sufficient_id": "value",
+        "freeze_id": "value",
+        "logical_data_key": "value",
+        "logical_feature_key": "value",
+        "project_id": "value",
+        "protocol_id": "value",
+        "q_r": "value",
+        "row_type": "value",
+        "schema_version": "value"
+      },
+      "floats": [
+        "a_r",
+        "q_r"
+      ]
+    },
+    {
+      "discriminator": {
+        "feature_generation_id": "F01",
+        "phase": "ALT",
+        "row_type": "feature_sufficient"
+      },
+      "fields": {
+        "a_r": "value",
+        "data_content_hash": "value",
+        "data_generation_id": "value",
+        "data_unit_id": "value",
+        "evidence_generation_id": "value",
+        "feature_config_hash": "value",
+        "feature_generation_id": "value",
+        "feature_id": "value",
+        "feature_matrix_hash": "value",
+        "feature_sufficient_id": "value",
+        "freeze_id": "value",
+        "logical_data_key": "value",
+        "logical_feature_key": "value",
+        "project_id": "value",
+        "protocol_id": "value",
+        "q_r": "value",
+        "row_type": "value",
+        "schema_version": "value"
+      },
+      "floats": [
+        "a_r",
+        "q_r"
+      ]
+    },
+    {
+      "discriminator": {
+        "feature_generation_id": "F01",
+        "phase": "REAL",
+        "row_type": "feature_sufficient"
+      },
+      "fields": {
+        "a_r": "value",
+        "data_content_hash": "value",
+        "data_generation_id": "value",
+        "data_unit_id": "value",
+        "evidence_generation_id": "value",
+        "feature_config_hash": "value",
+        "feature_generation_id": "value",
+        "feature_id": "value",
+        "feature_matrix_hash": "value",
+        "feature_sufficient_id": "value",
+        "freeze_id": "value",
+        "logical_data_key": "value",
+        "logical_feature_key": "value",
+        "project_id": "value",
+        "protocol_id": "value",
+        "q_r": "value",
+        "row_type": "value",
+        "schema_version": "value"
+      },
+      "floats": [
+        "a_r",
+        "q_r"
+      ]
+    }
+  ],
+  "wire_float_rule": "f64:<16 lowercase hex, big-endian binary64>"
+}

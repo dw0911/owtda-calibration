@@ -1,0 +1,28 @@
+{
+  "declared": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "generated_at_utc": "2026-09-10T15:53:57Z",
+  "interpreter": "F:\\BPI\\owtda-calibration\\.venv\\Scripts\\python.exe",
+  "kind": "thread_env_evidence",
+  "launcher": "scripts/frozen_env.py",
+  "observed_after_import": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "observed_before_import": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "passed": true,
+  "schema_version": 1,
+  "set_before_interpreter_start": true,
+  "stable_across_numpy_import": true
+}

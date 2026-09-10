@@ -1,0 +1,33 @@
+{
+  "discriminator": [
+    "feature_generation_id"
+  ],
+  "hash_rule": "feature_result_hash over the §15.4 hash-view canonical bytes (floats f64-encoded)",
+  "null_rule": "projections contain no required-null fields",
+  "schema_kind": "feature_result_projection",
+  "schema_name": "feature_result_projection_v1",
+  "schema_version": 1,
+  "source": "Plan §16 (feature projection 恰含 7 个字段)",
+  "unknown_fields": "reject",
+  "variants": [
+    {
+      "discriminator": {
+        "feature_generation_id": "F01"
+      },
+      "fields": {
+        "a_r": "value",
+        "data_content_hash": "value",
+        "feature_config_hash": "value",
+        "feature_generation_id": "value",
+        "feature_matrix_hash": "value",
+        "feature_sufficient_id": "value",
+        "q_r": "value"
+      },
+      "floats": [
+        "a_r",
+        "q_r"
+      ]
+    }
+  ],
+  "wire_float_rule": "f64:<16 lowercase hex, big-endian binary64>"
+}

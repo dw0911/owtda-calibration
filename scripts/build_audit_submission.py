@@ -36,7 +36,7 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import freeze  # noqa: E402
+from owtda_cal import freeze
 
 SUBMISSION_ID = "OWTDA-CAL-R1-AUDIT-SUBMISSION-20260910"
 PARENT = REPO.parent

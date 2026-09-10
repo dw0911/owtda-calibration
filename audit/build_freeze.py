@@ -300,7 +300,14 @@ def _compute_freeze(w_star: int) -> dict[str, Any]:
         "cpu_count": os.cpu_count(),
         "thread_env_observed": {v: os.environ.get(v, "unset") for v in thread_vars},
         "gpu_used": False,
-        "budget_evidence": "artifacts/audit/compute_budget_RC.json",
+        # P0-2: the 8-replicate / pre-amendment budget probes are historical
+        # diagnostics; the authoritative budget basis is the preregistered w*
+        # confirmation on the full 32-replicate worklist (audit supplement R1).
+        "budget_evidence": (
+            "OWTDA-CAL-R1-AUDIT-SUPPLEMENT-R1-20260910.zip:/wstar/worker_confirmation_RC.json"
+        ),
+        "budget_evidence_superseded": ["artifacts/audit/compute_budget_RC.json", "artifacts/audit/worker_sweep_RC.json"],
+        "superseded_evidence_status": "HISTORICAL_DIAGNOSTIC_ONLY",
     }
 
 
@@ -558,10 +565,15 @@ def main() -> int:
 
     disposition_info = _write_real_disposition(fid)
 
+    # P0-2: the environment lock must cover the real environment, not only
+    # pyproject/COMPUTE_FREEZE: the lock file, the tool/version map, the observed
+    # thread variables and the fresh-venv rebuild test all enter the hash.
     env_files = [REPO / "pyproject.toml", gov / "COMPUTE_FREEZE.json"]
     uv_lock = REPO / "uv.lock"
     if uv_lock.exists():
         env_files.append(uv_lock)
+    env_evidence = sorted((REPO / "environment").glob("*")) if (REPO / "environment").is_dir() else []
+    env_files.extend(p for p in env_evidence if p.is_file())
     env_entries = freeze.file_manifest_entries(env_files, root=REPO)
     env_hash = freeze.environment_lock_hash(env_entries)
 

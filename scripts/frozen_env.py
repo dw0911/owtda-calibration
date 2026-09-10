@@ -39,11 +39,12 @@ THREAD_ENV = {
 }
 PROBE = (
     "import json,os,sys;"
-    "before={k:os.environ.get(k,'unset') for k in %r};"
+    "keys=tuple(sorted({'OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS'}));"
+    "before={k:os.environ.get(k,'unset') for k in keys};"
     "import numpy;"
-    "after={k:os.environ.get(k,'unset') for k in %r};"
+    "after={k:os.environ.get(k,'unset') for k in keys};"
     "print(json.dumps({'argv0':sys.executable,'before_import':before,"
-    "'after_import':after,'numpy':numpy.__version__}))" % (tuple(THREAD_ENV), tuple(THREAD_ENV))
+    "'after_import':after,'numpy':numpy.__version__}))"
 )
 
 
@@ -54,11 +55,13 @@ def _child_env() -> dict[str, str]:
 def _run(cmd: list[str], *, env: dict[str, str], capture: Path | None) -> tuple[int, float, str]:
     start = time.perf_counter()
     if capture is None:
-        code = subprocess.run(cmd, env=env, cwd=str(REPO)).returncode
+        code = subprocess.run(cmd, env=env, cwd=str(REPO), check=False).returncode
         return code, time.perf_counter() - start, ""
     capture.parent.mkdir(parents=True, exist_ok=True)
     with capture.open("wb") as fh:
-        proc = subprocess.run(cmd, env=env, cwd=str(REPO), stdout=fh, stderr=subprocess.STDOUT)
+        proc = subprocess.run(
+            cmd, env=env, cwd=str(REPO), stdout=fh, stderr=subprocess.STDOUT, check=False
+        )
     return proc.returncode, time.perf_counter() - start, str(capture)
 
 
@@ -68,17 +71,25 @@ def main() -> int:
     parser.add_argument("--label", required=True)
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--capture", action="store_true", help="capture stdout+stderr to a log")
+    parser.add_argument(
+        "--log-dir",
+        default=None,
+        help="directory for captured logs (default: --out-dir); use to emit stdout_stderr/",
+    )
     parser.add_argument("--cmd", nargs=argparse.REMAINDER, required=True)
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
+    log_dir = Path(args.log_dir).expanduser() if args.log_dir else out_dir
+    log_dir.mkdir(parents=True, exist_ok=True)
     cmd = [c for c in args.cmd if c != "--"]
 
     env = _child_env()
     probe_out = out_dir / "thread_env.json"
     probe = subprocess.run(
-        [args.python, "-c", PROBE], env=env, cwd=str(REPO), capture_output=True, text=True
+        [args.python, "-c", PROBE], env=env, cwd=str(REPO), capture_output=True,
+        text=True, check=False,
     )
     observed = json.loads(probe.stdout.strip().splitlines()[-1]) if probe.stdout else {}
     declared = {k: "1" for k in THREAD_ENV}
@@ -102,7 +113,7 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    log_path = out_dir / f"{args.label}.log" if args.capture else None
+    log_path = log_dir / f"{args.label}.log" if args.capture else None
     code, seconds, log = _run([args.python, *cmd], env=env, capture=log_path)
 
     record = {
