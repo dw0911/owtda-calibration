@@ -76,11 +76,24 @@ def seed_entry(
     component_generation_id: str,
     root_key_hex: str | None = None,
     secret_ref: str | None = None,
+    root_key_commitment_hex: str | None = None,
 ) -> dict:
-    """Build a strict SEED_REGISTRY entry (root key or isolated secret_ref)."""
+    """Build a strict SEED_REGISTRY entry (root key or isolated secret_ref).
+
+    ``secret_ref`` mode must supply ``root_key_commitment_hex`` (the commitment
+    held by the isolated store); plaintext mode derives it from ``root_key_hex``.
+    """
     if (root_key_hex is None) == (secret_ref is None):
         raise ValueError("exactly one of root_key_hex/secret_ref required")
-    commitment = root_key_commitment(root_key_hex) if root_key_hex is not None else None
+    if root_key_hex is not None:
+        if root_key_commitment_hex is not None:
+            raise ValueError("commitment must be derived from root_key_hex, not supplied")
+        commitment = root_key_commitment(root_key_hex)
+    else:
+        if root_key_commitment_hex is None:
+            raise ValueError("secret_ref mode requires root_key_commitment_hex")
+        ensure_sha256_hex(root_key_commitment_hex, what="root_key_commitment")
+        commitment = root_key_commitment_hex
     entry_hash = root_entry_hash(
         project_id=project_id,
         protocol_id=protocol_id,
@@ -89,7 +102,7 @@ def seed_entry(
         phase=phase,
         stream_family=stream_family,
         component_generation_id=component_generation_id,
-        root_key_commitment=commitment if commitment is not None else "0" * 64,
+        root_key_commitment=commitment,
     )
     return {
         "project_id": project_id,

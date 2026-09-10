@@ -1,0 +1,19 @@
+{
+  "dataset_hash": "eb0e11f9c20a0498ffc5f69017b5fd7744f4d46232b8adf52f1b9352525fc33b",
+  "gate": {
+    "admitted_subjects": 8,
+    "eligible_tasks": 23,
+    "every_admitted_subject_has_task": false,
+    "min_subjects_required": 8,
+    "min_tasks_required": 24,
+    "pass": false
+  },
+  "kind": "real_disposition_reason",
+  "reason_code": "TASK_GATE_MIN_TASKS_NOT_MET",
+  "schema_version": 1,
+  "subjects_without_candidate": [
+    "subject109"
+  ],
+  "task_builder_config_hash": "bbaaa38bcc421818d6d8a22c89f26078be8c72baabb81dd53fb55a0e75db7961",
+  "thresholds_unchanged": true
+}

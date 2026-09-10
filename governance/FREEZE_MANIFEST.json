@@ -11,6 +11,7 @@
       "M1": "M01"
     }
   },
+  "component_registry_snapshot_hash": "71cac3b27700cd3e75c0f657edf539cf433a330d5fd3354067404c4a3b602214",
   "compute_spec_hash": "4082572e2ca96ae86e9a2d854468743b08817970d982f5e158a6e5f135cb903b",
   "environment_lock_hash": "61f5f50a604efa379e1e67cd9b2fbe466acd6e52e73cb424a321c96f4d72b74e",
   "environment_lock_manifest": [
@@ -32,6 +33,15 @@
   "project_id": "owtda-cal-r1",
   "protocol_content_hash": "6c1acb3c4bfca8ca6e7ca01fa18d6ad1082477766f00e622ac0271c08f37f5b6",
   "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+  "real_disposition": {
+    "chain_file": "governance/REAL_DISPOSITION.jsonl",
+    "event_count": 1,
+    "latest_stage": "REAL_DATA_FROZEN",
+    "latest_status": "REAL_OMITTED_BY_DATA_GATE",
+    "reason_object_hash": "71144c331f108d0e3ff5def4fe977a0acf1887e65393ce69541b713b4c2e125f",
+    "tip_hash": "6a8ee23b10621f06f15ce914759a27f37c9345d5a0c1c7850cd0a1075bef299c",
+    "truth_unsealed": false
+  },
   "schema_version": 1,
   "scope_design": {
     "ALT": {
@@ -48,12 +58,14 @@
     }
   },
   "scope_spec_hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
-  "source_tree_hash": "3dfc5966d3ac4adaa8645d0f1badb05bd1d99cd0ca2372b7efb27481c72ba589",
+  "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
+  "seed_registry_snapshot_hash": "331c4a284c9a42d9319aa1d74e8ad2ec5750036fc0d486c8f24a9f37a70289d9",
+  "source_tree_hash": "a8cd6fe0472256215ad46d686a13cc6a6def957d8964136fa6cbde3fb9ddcddc",
   "source_tree_manifest": [
     {
-      "file_sha256": "f866a6d0f6b87e78434717643293faa0b66544f140bbcceec4126aadf26a6d04",
+      "file_sha256": "39dd0d1dcec010e85d408792923e999511bda5af7a9267c190bd8e694b44b3db",
       "path": "audit/build_freeze.py",
-      "size": 15947
+      "size": 24581
     },
     {
       "file_sha256": "97bacfbed7994efb071093427dc767588a5783e235af1cb7f49a5547705a2602",
@@ -61,9 +73,9 @@
       "size": 9018
     },
     {
-      "file_sha256": "21f7731e8d73fd2959c8a9aca7acc0389a70d21ae0a44a646b68c2359fd8f104",
+      "file_sha256": "9cffe40e6b704d27149426ed4c931af80b7a985d55c61de6cfc7ac6c0fab3477",
       "path": "audit/validate_freeze.py",
-      "size": 6846
+      "size": 10115
     },
     {
       "file_sha256": "c133294e6a857d8a8487b784eb9c6564746a3a22dba52090c3942407ee6e38b2",
@@ -126,9 +138,19 @@
       "size": 5320
     },
     {
+      "file_sha256": "8434c742a5221db3513c5b4ef6b12e8794e8dede6e8149e2517fed8961883a34",
+      "path": "src/owtda_cal/components.py",
+      "size": 4822
+    },
+    {
       "file_sha256": "8081ecafbade3ede9609a2873bfcac8c883a92aeabecdd4574d10676c4adfd15",
       "path": "src/owtda_cal/dgp.py",
       "size": 7927
+    },
+    {
+      "file_sha256": "15a59b1d6de9bcfbccff74c49734255144fe33d9d5569cf921bbe0665641b2c3",
+      "path": "src/owtda_cal/disposition.py",
+      "size": 8780
     },
     {
       "file_sha256": "3e31186791ddaf8bd1af0ea147a63cb145db9ca52ab03c04789fc517c0cd3d59",
@@ -196,9 +218,9 @@
       "size": 3001
     },
     {
-      "file_sha256": "461190b7d2bf56abc1f5ef78342c716d5dd4e750e3e541b7172a77d386659649",
+      "file_sha256": "3579b6c4628514866d77eb9e179937090e519baad09aaf8d41b3bd707ca31f8b",
       "path": "src/owtda_cal/registry.py",
-      "size": 9430
+      "size": 10016
     },
     {
       "file_sha256": "a9eb4a8c67807904503d9d394d4cdd3d0aa27c878bf7e9d63355f2a0f2ceebad",

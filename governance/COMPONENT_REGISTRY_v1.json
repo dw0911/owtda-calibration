@@ -1,0 +1,77 @@
+{
+  "entries": [
+    {
+      "code_file_manifest_hash": "28f8f00b6f27e1efbd7fed49a433e9da3517693bff55abb12e4f4bc01f97c8cf",
+      "component_generation_id": "D01",
+      "component_kind": "data",
+      "component_registry_entry_hash": "25df049030f961fe96242e985345d8393fd2c5c7d9a141fbbb9e5f868470ed25",
+      "config_hash": "ca75bfeb3a045a5cac40a40a472fc4c9538c7c66255492e6d729862bbc2c1f78",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "SYNTHETIC_N_AR_V1"
+    },
+    {
+      "code_file_manifest_hash": "28f8f00b6f27e1efbd7fed49a433e9da3517693bff55abb12e4f4bc01f97c8cf",
+      "component_generation_id": "D01",
+      "component_kind": "data",
+      "component_registry_entry_hash": "44d959fc6b3ac7b75af2c73b52bd1d22de8f2c3d4ed1eb36dc506a107d4cef0e",
+      "config_hash": "077aeb981a76d9e8ff6315dbfc158a05c28040e85a48cc798d47345ed0a83b0d",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "SYNTHETIC_N_CIRCLE_V1"
+    },
+    {
+      "code_file_manifest_hash": "eaee7b6092b6a6aee8f1481a281b43de663e9b44d0f5ce5178bbfb251cccdddf",
+      "component_generation_id": "F01",
+      "component_kind": "feature",
+      "component_registry_entry_hash": "105acf8002b5e22aa5c22234537f2e39c50a691a9e5c47f80d972902373426df",
+      "config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"
+    },
+    {
+      "code_file_manifest_hash": "aa7b07bdbf6c08583ebb10717359680da54ee3a461beb197e625855e2f74708e",
+      "component_generation_id": "F01",
+      "component_kind": "feature",
+      "component_registry_entry_hash": "01b383eb896b691235ef0111c620a87eaff33ce3fc32ba2f7cf4055048ce5fe0",
+      "config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
+    },
+    {
+      "code_file_manifest_hash": "4e72c42e8e603ef232a8e3aa01032beb11ec8c772eff4c10b6d0a9ff5d3da6f0",
+      "component_generation_id": "M01",
+      "component_kind": "method",
+      "component_registry_entry_hash": "870323f4964bdfc5c59ebedd0849fa9a70153df7b1a82e9597a5ca6d4d504dc3",
+      "config_hash": "2a184b3835a281e0a172c40cccd3262e4c7dbaf8bef4a4869ac256d306dcec0e",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "M0_NAIVE_PERM_B999_V1"
+    },
+    {
+      "code_file_manifest_hash": "4e72c42e8e603ef232a8e3aa01032beb11ec8c772eff4c10b6d0a9ff5d3da6f0",
+      "component_generation_id": "M01",
+      "component_kind": "method",
+      "component_registry_entry_hash": "a3b67ad393174dc3506615ccd19a53d2f568724aa2e8b338516f64661be1be3c",
+      "config_hash": "f778e68bb16160fc803263fb4d9848962130df3c7c3f91002b01913181f9b6f4",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "M1_DMB_R1_TRI_EXTIID_B999_V1"
+    }
+  ],
+  "schema_version": 1
+}

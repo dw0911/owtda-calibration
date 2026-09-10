@@ -28,7 +28,7 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import freeze, scope
+from owtda_cal import disposition, freeze, registry, scope
 from owtda_cal.hashing import file_sha256
 
 GOV = REPO / "governance"
@@ -63,13 +63,13 @@ def main() -> int:
 
     scope_spec = _load("SCOPE_SPEC_v1.json")
     protocol = _load("PROTOCOL_CONTENT_v1.json")
-    registry = _load("ESTIMAND_SPEC_REGISTRY_v1.json")
+    estimand_registry = _load("ESTIMAND_SPEC_REGISTRY_v1.json")
     analysis = _load("ANALYSIS_SPEC_v1.0.json")
     compute = _load("COMPUTE_SPEC_v1.json")
 
     s_hash = freeze.scope_spec_hash(scope_spec)
     p_hash = freeze.protocol_content_hash(protocol)
-    e_hash = freeze.estimand_registry_hash(registry)
+    e_hash = freeze.estimand_registry_hash(estimand_registry)
     a_hash = freeze.analysis_spec_hash(analysis)
     c_hash = freeze.compute_spec_hash(compute)
 
@@ -114,7 +114,7 @@ def main() -> int:
             record("frozen_document", False, entry["path"])
     record("frozen_documents", docs_ok, f"{len(protocol['documents'])} entries")
 
-    specs_blob = json.dumps([scope_spec, protocol, registry, analysis, compute])
+    specs_blob = json.dumps([scope_spec, protocol, estimand_registry, analysis, compute])
     record("cycle_free", manifest["freeze_id"] not in specs_blob, "freeze_id absent from specs")
 
     src_entries = freeze.file_manifest_entries(
@@ -136,6 +136,94 @@ def main() -> int:
         env_hash == manifest["environment_lock_hash"],
         env_hash,
     )
+
+    seed_reg = _load("SEED_REGISTRY_v1.0.json")
+    comp_reg = _load("COMPONENT_REGISTRY_v1.json")
+    secret_reg = _load("SECRET_COMMITMENT_REGISTRY_v1.0.json")
+    registry.validate_seed_registry(seed_reg["entries"])
+    registry.validate_component_registry(comp_reg["entries"])
+    registry.validate_secret_registry(secret_reg["entries"])
+    record("seed_registry_entries", len(seed_reg["entries"]) == 13, str(len(seed_reg["entries"])))
+    record(
+        "component_registry_entries",
+        len(comp_reg["entries"]) == 6,
+        str(len(comp_reg["entries"])),
+    )
+    seed_keys = [
+        tuple(
+            e[k]
+            for k in (
+                "project_id",
+                "protocol_id",
+                "freeze_id",
+                "evidence_generation_id",
+                "phase",
+                "stream_family",
+                "component_generation_id",
+            )
+        )
+        for e in seed_reg["entries"]
+    ]
+    record("seed_registry_sorted", seed_keys == sorted(seed_keys))
+    comp_keys = [
+        tuple(
+            e[k]
+            for k in (
+                "project_id",
+                "protocol_id",
+                "freeze_id",
+                "evidence_generation_id",
+                "component_kind",
+                "stable_id",
+                "component_generation_id",
+            )
+        )
+        for e in comp_reg["entries"]
+    ]
+    record("component_registry_sorted", comp_keys == sorted(comp_keys))
+    record(
+        "seed_registry_snapshot_hash",
+        registry.registry_snapshot_hash([e["root_entry_hash"] for e in seed_reg["entries"]])
+        == manifest["seed_registry_snapshot_hash"],
+    )
+    record(
+        "component_registry_snapshot_hash",
+        registry.registry_snapshot_hash(
+            [e["component_registry_entry_hash"] for e in comp_reg["entries"]]
+        )
+        == manifest["component_registry_snapshot_hash"],
+    )
+    record(
+        "secret_registry_snapshot_hash",
+        registry.registry_snapshot_hash([]) == manifest["secret_registry_snapshot_hash"],
+    )
+    isolated = {"real_task", "real_task_id_salt"}
+    record(
+        "real_root_keys_isolated",
+        all(
+            e["root_key_hex"] is None and e["secret_ref"] is not None
+            for e in seed_reg["entries"]
+            if e["stream_family"] in isolated
+        ),
+    )
+
+    disp_info = disposition.validate_chain(GOV / "REAL_DISPOSITION.jsonl")
+    recorded = manifest["real_disposition"]
+    record(
+        "real_disposition_tip",
+        disp_info["tip_hash"] == recorded["tip_hash"]
+        and disp_info["latest_status"] == recorded["latest_status"],
+        disp_info["latest_status"],
+    )
+    reason_path = GOV / f"REAL_DISPOSITION_REASON_{disp_info['reason_object_hash']}.json"
+    reason = json.loads(reason_path.read_text(encoding="utf-8"))
+    record(
+        "real_disposition_reason_object",
+        disposition.reason_object_hash(reason) == disp_info["reason_object_hash"]
+        and reason["gate"]["pass"] is False,
+        disp_info["reason_object_hash"],
+    )
+    record("real_truth_sealed", disp_info["truth_unsealed"] is False)
 
     for name in ("PROTOCOL_v1.0.md", "METHOD_SPEC_v1.0.md", "SAP_v1.0.md", "DATA_SPEC_v1.0.md"):
         head = (GOV / name).read_text(encoding="utf-8").splitlines()[:4]

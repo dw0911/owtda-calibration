@@ -21,6 +21,7 @@ import hashlib
 import json
 import os
 import platform
+import secrets
 import subprocess
 import sys
 from pathlib import Path
@@ -31,7 +32,7 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import freeze, scope
+from owtda_cal import chains, components, disposition, freeze, registry, scope
 
 PROJECT_ID = "owtda-cal-r1"
 PROTOCOL_ID = "OWTDA-CAL-R1-PROTOCOL-v1.0"
@@ -53,6 +54,39 @@ COMPONENT_GENERATIONS = {
     "method_generation_id": {"M0": "M01", "M1": "M01"},
 }
 SOURCE_TREE_PREFIXES = ("src/", "configs/", "audit/")
+TASK_INDEX_GENERATION_ID = "T01"
+SEED_ROOT_FAMILIES = (
+    ("SMOKE_NULL", "smoke", "S01"),
+    ("SMOKE_ALT", "smoke", "S01"),
+    ("NULL", "null_data", "D01"),
+    ("NULL", "null_M0", "M01"),
+    ("NULL", "null_M1", "M01"),
+    ("ALT", "h1_data", "D01"),
+    ("ALT", "h1_M0", "M01"),
+    ("ALT", "h1_M1", "M01"),
+    ("REAL_TASK_BUILD", "real_task", "T01"),
+    ("REAL_TASK_BUILD", "real_task_id_salt", "T01"),
+    ("REAL_PREDICTION", "real_M0", "M01"),
+    ("REAL_PREDICTION", "real_M1", "M01"),
+    ("ANALYSIS", "analysis_bootstrap", "A01"),
+)
+ISOLATED_FAMILIES = frozenset({"real_task", "real_task_id_salt"})
+SECRET_KEY_BY_FAMILY = {
+    "real_task": "real_task_root_key",
+    "real_task_id_salt": "real_task_id_salt",
+}
+GOV = REPO / "governance"
+SECRETS_FILE = REPO / "secrets" / "REAL_TASK_SECRETS.local.json"
+COMPONENT_GENERATION_BY_KIND = {"data": "D01", "feature": "F01", "method": "M01"}
+REAL_RC_EVIDENCE = {
+    "admitted_subjects": 8,
+    "min_subjects_required": 8,
+    "eligible_tasks": 23,
+    "min_tasks_required": 24,
+    "subjects_without_candidate": ["subject109"],
+    "dataset_hash": "eb0e11f9c20a0498ffc5f69017b5fd7744f4d46232b8adf52f1b9352525fc33b",
+    "task_builder_config_hash": "bbaaa38bcc421818d6d8a22c89f26078be8c72baabb81dd53fb55a0e75db7961",
+}
 
 
 def _write_json(path: Path, obj: dict[str, Any]) -> None:
@@ -298,6 +332,150 @@ def _git_tracked(prefixes: tuple[str, ...]) -> list[str]:
     return [line for line in out.stdout.splitlines() if line.strip()]
 
 
+def _load_local_secrets() -> dict[str, str]:
+    """Load-or-create the isolated REAL secrets (git-ignored, never committed)."""
+    data: dict[str, str] = {}
+    if SECRETS_FILE.exists():
+        data = json.loads(SECRETS_FILE.read_text(encoding="utf-8"))
+    changed = False
+    for name in ("real_task_root_key", "real_task_id_salt"):
+        if name not in data:
+            data[name] = secrets.token_bytes(32).hex()
+            changed = True
+    if changed:
+        SECRETS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        SECRETS_FILE.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    return data
+
+
+def _seed_entries(fid: str) -> list[dict[str, Any]]:
+    path = GOV / "SEED_REGISTRY_v1.0.json"
+    prior: dict[tuple[str, str, str], dict[str, Any]] = {}
+    if path.exists():
+        for entry in json.loads(path.read_text(encoding="utf-8"))["entries"]:
+            prior[
+                (entry["phase"], entry["stream_family"], entry["component_generation_id"])
+            ] = entry
+    local = _load_local_secrets()
+    entries = []
+    for phase, family, generation in SEED_ROOT_FAMILIES:
+        registry.assert_family_phase_allowed(family, phase)
+        registry.assert_smoke_formal_separation(phase, family)
+        common = {
+            "project_id": PROJECT_ID,
+            "protocol_id": PROTOCOL_ID,
+            "freeze_id": fid,
+            "evidence_generation_id": EVIDENCE_GENERATION_ID,
+            "phase": phase,
+            "stream_family": family,
+            "component_generation_id": generation,
+        }
+        if family in ISOLATED_FAMILIES:
+            secret_name = SECRET_KEY_BY_FAMILY[family]
+            entries.append(
+                registry.seed_entry(
+                    **common,
+                    secret_ref=f"local_secret_store://REAL_TASK_SECRETS/{secret_name}",
+                    root_key_commitment_hex=hashlib.sha256(
+                        bytes.fromhex(local[secret_name])
+                    ).hexdigest(),
+                )
+            )
+            continue
+        old = prior.get((phase, family, generation))
+        key_hex = (
+            old["root_key_hex"]
+            if old and old.get("root_key_hex")
+            else secrets.token_bytes(32).hex()
+        )
+        entries.append(registry.seed_entry(**common, root_key_hex=key_hex))
+    return sorted(
+        entries,
+        key=lambda e: (
+            e["project_id"],
+            e["protocol_id"],
+            e["freeze_id"],
+            e["evidence_generation_id"],
+            e["phase"],
+            e["stream_family"],
+            e["component_generation_id"],
+        ),
+    )
+
+
+def _component_entries(fid: str) -> list[dict[str, Any]]:
+    entries = []
+    for definition in components.component_definitions():
+        manifests = freeze.file_manifest_entries(
+            [REPO / f for f in definition["code_files"]], root=REPO
+        )
+        entries.append(
+            registry.component_entry(
+                project_id=PROJECT_ID,
+                protocol_id=PROTOCOL_ID,
+                freeze_id=fid,
+                evidence_generation_id=EVIDENCE_GENERATION_ID,
+                component_kind=definition["component_kind"],
+                stable_id=definition["stable_id"],
+                component_generation_id=COMPONENT_GENERATION_BY_KIND[
+                    definition["component_kind"]
+                ],
+                config_hash=definition["config_hash"],
+                code_file_manifest_hash=freeze.source_tree_hash(manifests),
+            )
+        )
+    return sorted(
+        entries,
+        key=lambda e: (
+            e["project_id"],
+            e["protocol_id"],
+            e["freeze_id"],
+            e["evidence_generation_id"],
+            e["component_kind"],
+            e["stable_id"],
+            e["component_generation_id"],
+        ),
+    )
+
+
+def _write_real_disposition(fid: str) -> dict[str, Any]:
+    path = GOV / "REAL_DISPOSITION.jsonl"
+    if not path.exists():
+        reason = disposition.reason_object(
+            reason_code="TASK_GATE_MIN_TASKS_NOT_MET", **REAL_RC_EVIDENCE
+        )
+        r_hash = disposition.reason_object_hash(reason)
+        _write_json(GOV / f"REAL_DISPOSITION_REASON_{r_hash}.json", reason)
+        genesis = disposition.genesis_hash(
+            project_id=PROJECT_ID,
+            protocol_id=PROTOCOL_ID,
+            freeze_id=fid,
+            evidence_generation_id=EVIDENCE_GENERATION_ID,
+        )
+        event = disposition.event(
+            project_id=PROJECT_ID,
+            protocol_id=PROTOCOL_ID,
+            freeze_id=fid,
+            evidence_generation_id=EVIDENCE_GENERATION_ID,
+            disposition_status="REAL_OMITTED_BY_DATA_GATE",
+            disposition_stage="REAL_DATA_FROZEN",
+            reason_code="TASK_GATE_MIN_TASKS_NOT_MET",
+            reason_object_hash_value=r_hash,
+            task_index_seal_hash=None,
+            truth_unsealed=False,
+            prev_real_disposition_event_hash=genesis,
+        )
+        chains.append_cas(str(path), event, expected_tip=None, hash_field="disposition_hash")
+    info = disposition.validate_chain(path)
+    if info["latest_status"] != "REAL_OMITTED_BY_DATA_GATE":
+        raise ValueError("existing REAL_DISPOSITION chain has unexpected status")
+    info["reason_object_hash"] = disposition.read_events(path)[-1]["reason_object_hash"]
+    return info
+
+
 def main() -> int:
     gov = REPO / "governance"
 
@@ -309,9 +487,9 @@ def main() -> int:
     _write_json(gov / "PROTOCOL_CONTENT_v1.json", protocol)
     p_hash = freeze.protocol_content_hash(protocol)
 
-    registry = freeze.estimand_registry(_estimands())
-    _write_json(gov / "ESTIMAND_SPEC_REGISTRY_v1.json", registry)
-    e_hash = freeze.estimand_registry_hash(registry)
+    estimand_registry = freeze.estimand_registry(_estimands())
+    _write_json(gov / "ESTIMAND_SPEC_REGISTRY_v1.json", estimand_registry)
+    e_hash = freeze.estimand_registry_hash(estimand_registry)
 
     analysis = _analysis_spec(e_hash)
     _write_json(gov / "ANALYSIS_SPEC_v1.0.json", analysis)
@@ -352,6 +530,26 @@ def main() -> int:
 
     _write_json(gov / "COMPUTE_FREEZE.json", _compute_freeze(compute["w_star"]))
 
+    seed_entries = _seed_entries(fid)
+    registry.validate_seed_registry(seed_entries)
+    _write_json(gov / "SEED_REGISTRY_v1.0.json", {"schema_version": 1, "entries": seed_entries})
+
+    component_entries = _component_entries(fid)
+    registry.validate_component_registry(component_entries)
+    _write_json(
+        gov / "COMPONENT_REGISTRY_v1.json",
+        {"schema_version": 1, "entries": component_entries},
+    )
+
+    # REAL is omitted before any formal task index exists, so no candidate /
+    # ground-truth salt entries may be minted for a task-index generation.
+    _write_json(
+        gov / "SECRET_COMMITMENT_REGISTRY_v1.0.json",
+        {"schema_version": 1, "entries": [], "reveal_events": []},
+    )
+
+    disposition_info = _write_real_disposition(fid)
+
     env_files = [REPO / "pyproject.toml", gov / "COMPUTE_FREEZE.json"]
     uv_lock = REPO / "uv.lock"
     if uv_lock.exists():
@@ -380,6 +578,22 @@ def main() -> int:
     manifest["estimand_spec_registry_hash"] = e_hash
     manifest["source_tree_manifest"] = src_entries
     manifest["environment_lock_manifest"] = env_entries
+    manifest["seed_registry_snapshot_hash"] = registry.registry_snapshot_hash(
+        [e["root_entry_hash"] for e in seed_entries]
+    )
+    manifest["component_registry_snapshot_hash"] = registry.registry_snapshot_hash(
+        [e["component_registry_entry_hash"] for e in component_entries]
+    )
+    manifest["secret_registry_snapshot_hash"] = registry.registry_snapshot_hash([])
+    manifest["real_disposition"] = {
+        "chain_file": "governance/REAL_DISPOSITION.jsonl",
+        "tip_hash": disposition_info["tip_hash"],
+        "event_count": disposition_info["event_count"],
+        "latest_status": disposition_info["latest_status"],
+        "latest_stage": disposition_info["latest_stage"],
+        "truth_unsealed": disposition_info["truth_unsealed"],
+        "reason_object_hash": disposition_info["reason_object_hash"],
+    }
     _write_json(gov / "FREEZE_MANIFEST.json", manifest)
 
     print(f"protocol_content_hash = {p_hash}")
