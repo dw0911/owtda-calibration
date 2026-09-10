@@ -42,6 +42,42 @@
     "tip_hash": "6a8ee23b10621f06f15ce914759a27f37c9345d5a0c1c7850cd0a1075bef299c",
     "truth_unsealed": false
   },
+  "run_admission": {
+    "NULL": {
+      "replicate_count": 2500,
+      "run_component_set_file": "RUN_COMPONENT_SET_0257738c79b6a3e1c1684e576e18855b0ffb71f631e88142edc4b3971b2122e3.json",
+      "run_component_set_hash": "0257738c79b6a3e1c1684e576e18855b0ffb71f631e88142edc4b3971b2122e3",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_36997f4aa59e8387ec43cc303cf14e8e85da682c4f81980eb15a3d647421f7ae.jsonl",
+      "run_input_bindings_hash": "36997f4aa59e8387ec43cc303cf14e8e85da682c4f81980eb15a3d647421f7ae",
+      "run_input_bindings_row_count": 8,
+      "scope_design_file": "SCOPE_DESIGN_NULL_bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b.csv",
+      "scope_design_hash": "bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b",
+      "scope_design_rows": 112
+    },
+    "SMOKE_ALT": {
+      "replicate_count": 128,
+      "run_component_set_file": "RUN_COMPONENT_SET_82b8e297f7f76dc3ec759c53c22d4496e394727ac733577286bc5743ff76004e.json",
+      "run_component_set_hash": "82b8e297f7f76dc3ec759c53c22d4496e394727ac733577286bc5743ff76004e",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248.jsonl",
+      "run_input_bindings_hash": "8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248",
+      "run_input_bindings_row_count": 9,
+      "scope_design_file": "SCOPE_DESIGN_SMOKE_ALT_f0423c344f4aec2cc0c9d4484a4ef71b000f1edb976ed280e2cfad5e6de91e75.csv",
+      "scope_design_hash": "f0423c344f4aec2cc0c9d4484a4ef71b000f1edb976ed280e2cfad5e6de91e75",
+      "scope_design_rows": 32
+    },
+    "SMOKE_NULL": {
+      "replicate_count": 128,
+      "run_component_set_file": "RUN_COMPONENT_SET_914bef208f55d40b70db04532d7e9a0549437d97bc0f8ec40cf69f060e2fdcc5.json",
+      "run_component_set_hash": "914bef208f55d40b70db04532d7e9a0549437d97bc0f8ec40cf69f060e2fdcc5",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248.jsonl",
+      "run_input_bindings_hash": "8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248",
+      "run_input_bindings_row_count": 9,
+      "scope_design_file": "SCOPE_DESIGN_SMOKE_NULL_9cf9a4922af4aab204e01582c63e20a871e04347ba987b9ea060efcd198ccf8a.csv",
+      "scope_design_hash": "9cf9a4922af4aab204e01582c63e20a871e04347ba987b9ea060efcd198ccf8a",
+      "scope_design_rows": 112
+    }
+  },
+  "run_admission_note": "ALT run component set is deferred until the authoritative H0 phase seal exists (parent_phase_seal_hash); smoke phases carry parent=null.",
   "schema_version": 1,
   "scope_design": {
     "ALT": {
@@ -60,12 +96,18 @@
   "scope_spec_hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "331c4a284c9a42d9319aa1d74e8ad2ec5750036fc0d486c8f24a9f37a70289d9",
-  "source_tree_hash": "a8cd6fe0472256215ad46d686a13cc6a6def957d8964136fa6cbde3fb9ddcddc",
+  "smoke_config_hash": "f06c92369390920c9a5d3e987de7a35990bb500d0ced1629856e242a705b275c",
+  "source_tree_hash": "8f01a58f4660be2c09395ccfa83689dc5332cc027ed00017724e485609ebd762",
   "source_tree_manifest": [
     {
       "file_sha256": "39dd0d1dcec010e85d408792923e999511bda5af7a9267c190bd8e694b44b3db",
       "path": "audit/build_freeze.py",
       "size": 24581
+    },
+    {
+      "file_sha256": "2ee4c5c68d5243dfbf894df7f42082c2903c691a83dc5653c8514a1c28c60269",
+      "path": "audit/build_run_admission.py",
+      "size": 10416
     },
     {
       "file_sha256": "97bacfbed7994efb071093427dc767588a5783e235af1cb7f49a5547705a2602",
@@ -81,6 +123,11 @@
       "file_sha256": "c133294e6a857d8a8487b784eb9c6564746a3a22dba52090c3942407ee6e38b2",
       "path": "audit/validate_identity.py",
       "size": 5683
+    },
+    {
+      "file_sha256": "d1cc951d8f10b88b684da608b673c9aa070af020387f575908f3dbdfda97f497",
+      "path": "audit/validate_runs.py",
+      "size": 7175
     },
     {
       "file_sha256": "aa52392a1094127ff1fef365fab748c95ddde46e83c6864a20c0c476ed363a87",
@@ -228,14 +275,19 @@
       "size": 9548
     },
     {
+      "file_sha256": "30ae570861d87737d5b4ca0df64805662dfcd885caa39e54d8ac6306bbd4f7ce",
+      "path": "src/owtda_cal/runs.py",
+      "size": 14059
+    },
+    {
       "file_sha256": "a9ca15204cf5ef65cec5eaec3e281d665c190da1c28bb9a27cf1f998923d44bc",
       "path": "src/owtda_cal/scan.py",
       "size": 5127
     },
     {
-      "file_sha256": "617eaa7e3d2b9482e2afe774a6ab05d2e8e9fe947caac749e3897896c982bd7b",
+      "file_sha256": "5b9a8fb867f59f911003ddc31f7cd3221e879314a399c3e937ed7790434ccf89",
       "path": "src/owtda_cal/scope.py",
-      "size": 12810
+      "size": 13592
     },
     {
       "file_sha256": "30232ea7013f9300e4d1fffa7b601990680ef534f07c2312b6b6bbc1591d97a0",

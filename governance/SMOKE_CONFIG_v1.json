@@ -1,0 +1,20 @@
+{
+  "config_kind": "smoke_config",
+  "derivation": "cells x replicates: 28x128=3584, 8x128=1024 (Plan G3)",
+  "feeds_parameter_selection": false,
+  "forbidden_outputs": [
+    "rejection_rate_summary",
+    "parameter_selection"
+  ],
+  "replicates_per_cell": 128,
+  "reported_outputs": [
+    "wall_time",
+    "field_counts",
+    "errors"
+  ],
+  "schema_version": 1,
+  "smoke_evaluations": {
+    "SMOKE_ALT": 1024,
+    "SMOKE_NULL": 3584
+  }
+}

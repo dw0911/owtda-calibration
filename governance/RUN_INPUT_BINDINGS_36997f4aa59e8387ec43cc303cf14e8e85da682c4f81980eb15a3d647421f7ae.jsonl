@@ -1,0 +1,8 @@
+{"generation_id":"C01","hash":"4082572e2ca96ae86e9a2d854468743b08817970d982f5e158a6e5f135cb903b","ref_kind":"config","role":"config","source":"governance/COMPUTE_SPEC_v1.json","stable_id":"compute_spec"}
+{"generation_id":"S01","hash":"8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4","ref_kind":"config","role":"config","source":"governance/SCOPE_SPEC_v1.json","stable_id":"scope_spec"}
+{"generation_id":"D01","hash":"25df049030f961fe96242e985345d8393fd2c5c7d9a141fbbb9e5f868470ed25","ref_kind":"data","role":"data","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"SYNTHETIC_N_AR_V1"}
+{"generation_id":"D01","hash":"44d959fc6b3ac7b75af2c73b52bd1d22de8f2c3d4ed1eb36dc506a107d4cef0e","ref_kind":"data","role":"data","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"SYNTHETIC_N_CIRCLE_V1"}
+{"generation_id":"F01","hash":"105acf8002b5e22aa5c22234537f2e39c50a691a9e5c47f80d972902373426df","ref_kind":"feature","role":"feature","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"}
+{"generation_id":"F01","hash":"01b383eb896b691235ef0111c620a87eaff33ce3fc32ba2f7cf4055048ce5fe0","ref_kind":"feature","role":"feature","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"MOMENTS_MEAN_COV_FROB_V1"}
+{"generation_id":"M01","hash":"870323f4964bdfc5c59ebedd0849fa9a70153df7b1a82e9597a5ca6d4d504dc3","ref_kind":"method","role":"method","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"M0_NAIVE_PERM_B999_V1"}
+{"generation_id":"M01","hash":"a3b67ad393174dc3506615ccd19a53d2f568724aa2e8b338516f64661be1be3c","ref_kind":"method","role":"method","source":"governance/COMPONENT_REGISTRY_v1.json","stable_id":"M1_DMB_R1_TRI_EXTIID_B999_V1"}

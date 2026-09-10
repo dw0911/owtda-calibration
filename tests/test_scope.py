@@ -151,5 +151,26 @@ class TestScopeDesignRows:
         with pytest.raises(ValueError):
             scope.scope_design_rows(
                 project_id=_PID, protocol_id=_PRT, freeze_id=_FZ,
-                evidence_generation_id=_EG, phase="SMOKE_NULL",
+                evidence_generation_id=_EG, phase="NOPE",
             )
+
+    def test_smoke_phases_share_geometry_with_own_identity(self):
+        null_rows = scope.scope_design_rows(
+            project_id=_PID, protocol_id=_PRT, freeze_id=_FZ,
+            evidence_generation_id=_EG, phase=scope.PHASE_NULL,
+        )
+        smoke_rows = scope.scope_design_rows(
+            project_id=_PID, protocol_id=_PRT, freeze_id=_FZ,
+            evidence_generation_id=_EG, phase=scope.PHASE_SMOKE_NULL,
+        )
+        assert len(null_rows) == len(smoke_rows) == 112
+        assert all(r["replicate_count"] == scope.R0_SMOKE for r in smoke_rows)
+        assert {r["logical_cell_id"] for r in smoke_rows} & {
+            r["logical_cell_id"] for r in null_rows
+        } == set()
+        smoke_alt = scope.scope_design_rows(
+            project_id=_PID, protocol_id=_PRT, freeze_id=_FZ,
+            evidence_generation_id=_EG, phase=scope.PHASE_SMOKE_ALT,
+        )
+        assert len(smoke_alt) == 32
+        assert all(r["replicate_count"] == scope.R0_SMOKE for r in smoke_alt)

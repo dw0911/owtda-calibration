@@ -73,6 +73,26 @@
 - `audit/validate_freeze.py` 扩展至 **33 项**（含 registry 主键/排序/快照重算、REAL 链重放与 truth 封闭）；
 - 代码：`src/owtda_cal/components.py`、`src/owtda_cal/disposition.py`；测试 `tests/test_disposition.py`。
 
+## 2026-09-10 — B15a run 身份层：`OWTDA_CAL_R1_B15a_20260910_RUN_ADMISSION`
+
+- 新增 `src/owtda_cal/runs.py`：`RUN_COMPONENT_SET`（严格字段白名单、四类 refs 排序唯一）、
+  `RUN_INPUT_BINDINGS`（JSONL 字节 + content hash）、三类 expected index（字段全 64-hex、主键唯一、
+  排序、三层闭合）、`run_instance_id`、`RUN_SEAL` payload/hash、三个独立 domain 的 id-set hash；
+- `scope.scope_design_rows` 支持 `SMOKE_NULL` / `SMOKE_ALT`（同格结构、128 replicates、独立 phase 身份）；
+  NULL/ALT 既有行与 hash **不变**；
+- 新增 `governance/SMOKE_CONFIG_v1.json`（128 reps/cell；3,584/1,024 smoke evaluations；不输出拒绝率）；
+- 生成 `RUN_COMPONENT_SET_<hash>.json` 与 `RUN_INPUT_BINDINGS_<hash>.jsonl`：
+  `SMOKE_NULL`（112 行 design / 9 bindings）、`SMOKE_ALT`（32 / 9）、`NULL`（112 / 8）；
+  **ALT 的 component set 按设计延后**（`parent_phase_seal_hash` 必须是权威 H0 phase seal）；
+- `FREEZE_MANIFEST.json` 增记 `smoke_config_hash` 与 `run_admission` 块，并刷新
+  `source_tree_hash`（计划 §16.2 允许冻结时"另行绑定最终 source/component/environment manifests"）；
+- 新增 `audit/build_run_admission.py`、`audit/validate_runs.py`（G4 前置，28 项 PASS）、
+  `tests/test_runs.py`（27 项）。
+- 冻结科学内容未变：`freeze_id`、五类 spec hash、三类 registry、`SCOPE_DESIGN_NULL/ALT`、REAL 链 tip 全部不变；
+  tag `v1.0-freeze-owtda-cal-r1` 仍指向 `e16222f`。
+
 ## 待登记（未发生）
 
-- 后续批次：blind smoke（G3）、正式 H0/H1 运行与 admission（`RUN_COMPONENT_SET`）、分析冻结、release。
+- B15b：G3 blind smoke 实际运行（SMOKE_NULL/SMOKE_ALT 3,584/1,024 evaluations）、§9.4 正式预算判定、
+  `w*` 最终确认、G4 admission 前置（`open_runs=0`）；
+- 后续批次：正式 H0/H1 运行、分析冻结、release。

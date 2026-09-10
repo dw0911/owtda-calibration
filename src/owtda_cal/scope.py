@@ -44,6 +44,8 @@ METHOD_IDS = (M0_STABLE_ID, M1_STABLE_ID)
 
 R0_H0 = 2500
 R0_H1 = 1600
+R0_SMOKE = 128  # G3 blind-smoke replicate count (Plan §9.3/§9.4)
+SMOKE_PHASES = (PHASE_SMOKE_NULL, PHASE_SMOKE_ALT)
 
 
 def scope_spec_h0() -> dict:
@@ -278,52 +280,62 @@ def scope_design_rows(
     freeze_id: str,
     evidence_generation_id: str,
     phase: str,
+    replicate_count: int | None = None,
 ) -> list[dict]:
-    """SCOPE_DESIGN rows (Plan §16.2): NULL 112 rows, ALT 32 rows.
+    """SCOPE_DESIGN rows (Plan §16.2).
 
-    Primary key ``(phase, logical_cell_id, feature_id, method_id)`` is unique;
-    every row has ``expected_logical_evaluations == replicate_count``.
-    ALT rows bind ``source_null_logical_cell_id`` to the matching N-CIRCLE
-    NULL cell (same rho, W, stride, T, M).
+    NULL 112 rows / ALT 32 rows; SMOKE_NULL / SMOKE_ALT share the same cell
+    geometry but carry their own phase identity and 128 replicates.  Primary key
+    ``(phase, logical_cell_id, feature_id, method_id)`` is unique; every row has
+    ``expected_logical_evaluations == replicate_count``.  ALT rows bind
+    ``source_null_logical_cell_id`` to the matching N-CIRCLE null cell of the
+    same generation (NULL for ALT, SMOKE_NULL for SMOKE_ALT).
     """
     ctx = _Ctx(project_id=project_id, protocol_id=protocol_id,
                freeze_id=freeze_id, evidence_generation_id=evidence_generation_id)
     rows: list[dict] = []
-    if phase == PHASE_NULL:
+    if phase in (PHASE_NULL, PHASE_SMOKE_NULL):
+        count = replicate_count if replicate_count is not None else (
+            R0_SMOKE if phase == PHASE_SMOKE_NULL else R0_H0
+        )
         for cell in h0_null_cells():
             cell_id = ctx.cell_id(
-                phase=PHASE_NULL, DGP_family=cell.family,
+                phase=phase, DGP_family=cell.family,
                 scenario_id=SCENARIO_NULL, rho=cell.rho, W=cell.W,
                 stride=cell.stride, T=cell.T, M=cell.M,
             )
-            exp_id = ctx.experiment(phase=PHASE_NULL, scenario_id=SCENARIO_NULL)
+            exp_id = ctx.experiment(phase=phase, scenario_id=SCENARIO_NULL)
             for feature in FEATURE_IDS:
                 for method in METHOD_IDS:
                     rows.append(
                         {
-                            "phase": PHASE_NULL,
+                            "phase": phase,
                             "experiment_id": exp_id,
                             "logical_cell_id": cell_id,
                             "budget_membership": list(cell.budget_membership),
                             "feature_id": feature,
                             "method_id": method,
-                            "replicate_count": R0_H0,
-                            "expected_logical_evaluations": R0_H0,
+                            "replicate_count": count,
+                            "expected_logical_evaluations": count,
                             "required": True,
                             "source_null_logical_cell_id": None,
                             "null_model_config_hash": None,
                         }
                     )
-    elif phase == PHASE_ALT:
+    elif phase in (PHASE_ALT, PHASE_SMOKE_ALT):
+        count = replicate_count if replicate_count is not None else (
+            R0_SMOKE if phase == PHASE_SMOKE_ALT else R0_H1
+        )
+        source_phase = PHASE_SMOKE_NULL if phase == PHASE_SMOKE_ALT else PHASE_NULL
         for cell in h1_alt_cells():
             cell_id = ctx.cell_id(
-                phase=PHASE_ALT, DGP_family=H1_FAMILY,
+                phase=phase, DGP_family=H1_FAMILY,
                 scenario_id=cell.scenario, rho=cell.rho, W=cell.W,
                 stride=cell.stride, T=cell.T, M=cell.M,
             )
-            exp_id = ctx.experiment(phase=PHASE_ALT, scenario_id=cell.scenario)
+            exp_id = ctx.experiment(phase=phase, scenario_id=cell.scenario)
             src_id = ctx.cell_id(
-                phase=PHASE_NULL, DGP_family=DGP_FAMILY_N_CIRCLE,
+                phase=source_phase, DGP_family=DGP_FAMILY_N_CIRCLE,
                 scenario_id=SCENARIO_NULL, rho=cell.rho, W=cell.W,
                 stride=cell.stride, T=cell.T, M=cell.M,
             )
@@ -331,21 +343,23 @@ def scope_design_rows(
                 for method in METHOD_IDS:
                     rows.append(
                         {
-                            "phase": PHASE_ALT,
+                            "phase": phase,
                             "experiment_id": exp_id,
                             "logical_cell_id": cell_id,
                             "budget_membership": [],
                             "feature_id": feature,
                             "method_id": method,
-                            "replicate_count": R0_H1,
-                            "expected_logical_evaluations": R0_H1,
+                            "replicate_count": count,
+                            "expected_logical_evaluations": count,
                             "required": True,
                             "source_null_logical_cell_id": src_id,
                             "null_model_config_hash": None,
                         }
                     )
     else:
-        raise ValueError(f"scope_design_rows supports NULL/ALT only, got {phase!r}")
+        raise ValueError(
+            f"scope_design_rows supports NULL/ALT/SMOKE_NULL/SMOKE_ALT, got {phase!r}"
+        )
     return rows
 
 
@@ -381,6 +395,8 @@ __all__ = [
     "METHOD_IDS",
     "R0_H0",
     "R0_H1",
+    "R0_SMOKE",
+    "SMOKE_PHASES",
     "scope_spec_h0",
     "scope_spec_h1",
     "scope_spec_hash",
