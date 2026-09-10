@@ -24,6 +24,23 @@ M1_STABLE_ID = "M1_DMB_R1_TRI_EXTIID_B999_V1"
 EPS64 = 2.0**-52
 
 
+def p_value(exceed: int, *, B: int = B) -> float:
+    """p = (1 + exceed) / (B + 1) (Plan §6)."""
+    if not 0 <= exceed <= B:
+        raise ValueError(f"exceed must be in [0, {B}], got {exceed}")
+    return (1 + exceed) / (B + 1)
+
+
+def reject_from_exceed(exceed: int, *, B: int = B) -> bool:
+    """reject <=> p <= 0.05 <=> exceed <= 49 (Plan §6, attack #30)."""
+    return p_value(exceed, B=B) <= 0.05
+
+
+def resample_exceeds(t_resampled: float, t_observed: float) -> bool:
+    """Exact float64 ``>=`` comparison for resample exceed counting (#34)."""
+    return bool(t_resampled >= t_observed)
+
+
 def integer_cuberoot_ceil(M: int) -> int:
     """Smallest j with j^3 >= M (integer arithmetic, no float cube root)."""
     if not isinstance(M, int) or M <= 0:
@@ -81,15 +98,15 @@ def calibrate_m0(
         )
         row = statistic_curve(a[perm])
         t_r = float(row["values"].max())
-        exceed += int(t_r >= t_obs)
-    p = (1 + exceed) / 1000.0
+        exceed += int(resample_exceeds(t_r, t_obs))
+    p = p_value(exceed)
     return {
         "M": M,
         "B": B,
         "observed_statistic": t_obs,
         "exceed_count": exceed,
         "p_value": p,
-        "reject": bool(p <= 0.05),
+        "reject": reject_from_exceed(exceed),
     }
 
 
@@ -147,8 +164,8 @@ def calibrate_m1(
         weighted = xi[:, None] * z
         row = statistic_curve(weighted)
         t_r = float(row["values"].max())
-        exceed += int(t_r >= t_obs)
-    p = (1 + exceed) / 1000.0
+        exceed += int(resample_exceeds(t_r, t_obs))
+    p = p_value(exceed)
     return {
         "M": M,
         "B": B,
@@ -156,7 +173,7 @@ def calibrate_m1(
         "observed_statistic": t_obs,
         "exceed_count": exceed,
         "p_value": p,
-        "reject": bool(p <= 0.05),
+        "reject": reject_from_exceed(exceed),
     }
 
 
@@ -165,6 +182,9 @@ __all__ = [
     "M0_STABLE_ID",
     "M1_STABLE_ID",
     "EPS64",
+    "p_value",
+    "reject_from_exceed",
+    "resample_exceeds",
     "integer_cuberoot_ceil",
     "dmb_block_length",
     "m0_permutation",
