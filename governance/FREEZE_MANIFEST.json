@@ -11,7 +11,7 @@
       "M1": "M01"
     }
   },
-  "component_registry_snapshot_hash": "71cac3b27700cd3e75c0f657edf539cf433a330d5fd3354067404c4a3b602214",
+  "component_registry_snapshot_hash": "17d743a211460cb251eb139ca165517dcea4b0a4efa2bfcfc8b081ed33223c62",
   "compute_spec_hash": "4082572e2ca96ae86e9a2d854468743b08817970d982f5e158a6e5f135cb903b",
   "environment_lock_hash": "61f5f50a604efa379e1e67cd9b2fbe466acd6e52e73cb424a321c96f4d72b74e",
   "environment_lock_manifest": [
@@ -45,35 +45,35 @@
   "run_admission": {
     "NULL": {
       "replicate_count": 2500,
-      "run_component_set_file": "RUN_COMPONENT_SET_0257738c79b6a3e1c1684e576e18855b0ffb71f631e88142edc4b3971b2122e3.json",
-      "run_component_set_hash": "0257738c79b6a3e1c1684e576e18855b0ffb71f631e88142edc4b3971b2122e3",
-      "run_input_bindings_file": "RUN_INPUT_BINDINGS_36997f4aa59e8387ec43cc303cf14e8e85da682c4f81980eb15a3d647421f7ae.jsonl",
-      "run_input_bindings_hash": "36997f4aa59e8387ec43cc303cf14e8e85da682c4f81980eb15a3d647421f7ae",
+      "run_component_set_file": "RUN_COMPONENT_SET_7f021ed43d12cec3fe36a2ad016916c224a8e31d12a08a793e9eca64dcc18b73.json",
+      "run_component_set_hash": "7f021ed43d12cec3fe36a2ad016916c224a8e31d12a08a793e9eca64dcc18b73",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_9a8a2e54fadc2853b855ea1e686936bc6bf89dc2b80e5942977e7935fcd62e36.jsonl",
+      "run_input_bindings_hash": "9a8a2e54fadc2853b855ea1e686936bc6bf89dc2b80e5942977e7935fcd62e36",
       "run_input_bindings_row_count": 8,
       "scope_design_file": "SCOPE_DESIGN_NULL_bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b.csv",
       "scope_design_hash": "bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b",
       "scope_design_rows": 112
     },
     "SMOKE_ALT": {
-      "replicate_count": 128,
-      "run_component_set_file": "RUN_COMPONENT_SET_82b8e297f7f76dc3ec759c53c22d4496e394727ac733577286bc5743ff76004e.json",
-      "run_component_set_hash": "82b8e297f7f76dc3ec759c53c22d4496e394727ac733577286bc5743ff76004e",
-      "run_input_bindings_file": "RUN_INPUT_BINDINGS_8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248.jsonl",
-      "run_input_bindings_hash": "8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248",
+      "replicate_count": 32,
+      "run_component_set_file": "RUN_COMPONENT_SET_4a31e21b0c3d5f2d1e87384840331607607b913eb6bf2472fc1b39135ffe3188.json",
+      "run_component_set_hash": "4a31e21b0c3d5f2d1e87384840331607607b913eb6bf2472fc1b39135ffe3188",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_08eb1360c092a82de7b9745ded26b916a17cd0d670f2e0a2d4ba61480d02fac4.jsonl",
+      "run_input_bindings_hash": "08eb1360c092a82de7b9745ded26b916a17cd0d670f2e0a2d4ba61480d02fac4",
       "run_input_bindings_row_count": 9,
-      "scope_design_file": "SCOPE_DESIGN_SMOKE_ALT_f0423c344f4aec2cc0c9d4484a4ef71b000f1edb976ed280e2cfad5e6de91e75.csv",
-      "scope_design_hash": "f0423c344f4aec2cc0c9d4484a4ef71b000f1edb976ed280e2cfad5e6de91e75",
+      "scope_design_file": "SCOPE_DESIGN_SMOKE_ALT_94e1903efc905a5100df6691cbc64e726bfd4b5cf1d428f8f25c9de156f4e703.csv",
+      "scope_design_hash": "94e1903efc905a5100df6691cbc64e726bfd4b5cf1d428f8f25c9de156f4e703",
       "scope_design_rows": 32
     },
     "SMOKE_NULL": {
-      "replicate_count": 128,
-      "run_component_set_file": "RUN_COMPONENT_SET_914bef208f55d40b70db04532d7e9a0549437d97bc0f8ec40cf69f060e2fdcc5.json",
-      "run_component_set_hash": "914bef208f55d40b70db04532d7e9a0549437d97bc0f8ec40cf69f060e2fdcc5",
-      "run_input_bindings_file": "RUN_INPUT_BINDINGS_8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248.jsonl",
-      "run_input_bindings_hash": "8db97341da25605829b434d8206be73b05ccd5e31f6c2a3518f6152ab012e248",
+      "replicate_count": 32,
+      "run_component_set_file": "RUN_COMPONENT_SET_aad291fc9570639467de0246cf7125561e7bc210d83b3f6347d58907b608fd73.json",
+      "run_component_set_hash": "aad291fc9570639467de0246cf7125561e7bc210d83b3f6347d58907b608fd73",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_08eb1360c092a82de7b9745ded26b916a17cd0d670f2e0a2d4ba61480d02fac4.jsonl",
+      "run_input_bindings_hash": "08eb1360c092a82de7b9745ded26b916a17cd0d670f2e0a2d4ba61480d02fac4",
       "run_input_bindings_row_count": 9,
-      "scope_design_file": "SCOPE_DESIGN_SMOKE_NULL_9cf9a4922af4aab204e01582c63e20a871e04347ba987b9ea060efcd198ccf8a.csv",
-      "scope_design_hash": "9cf9a4922af4aab204e01582c63e20a871e04347ba987b9ea060efcd198ccf8a",
+      "scope_design_file": "SCOPE_DESIGN_SMOKE_NULL_92589b2da96dfa38d79033c2025a4db9898240e3a5ce40aa14002ccd3ff16144.csv",
+      "scope_design_hash": "92589b2da96dfa38d79033c2025a4db9898240e3a5ce40aa14002ccd3ff16144",
       "scope_design_rows": 112
     }
   },
@@ -96,8 +96,8 @@
   "scope_spec_hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "331c4a284c9a42d9319aa1d74e8ad2ec5750036fc0d486c8f24a9f37a70289d9",
-  "smoke_config_hash": "f06c92369390920c9a5d3e987de7a35990bb500d0ced1629856e242a705b275c",
-  "source_tree_hash": "8f01a58f4660be2c09395ccfa83689dc5332cc027ed00017724e485609ebd762",
+  "smoke_config_hash": "630f01ccffc9aa31670ea79062b7e4d0e8e82bb89b88b874f060462c2d14d3da",
+  "source_tree_hash": "97e32eeb37646011fce249681dda4599de595cb7a8e1bc51f75e6fc704f79ddd",
   "source_tree_manifest": [
     {
       "file_sha256": "39dd0d1dcec010e85d408792923e999511bda5af7a9267c190bd8e694b44b3db",
@@ -105,14 +105,24 @@
       "size": 24581
     },
     {
-      "file_sha256": "2ee4c5c68d5243dfbf894df7f42082c2903c691a83dc5653c8514a1c28c60269",
+      "file_sha256": "89aae52c5aa95ced81b6ba0bb4770637e8d911eb3acbc5cc6182a55ec755fe53",
       "path": "audit/build_run_admission.py",
-      "size": 10416
+      "size": 10864
     },
     {
       "file_sha256": "97bacfbed7994efb071093427dc767588a5783e235af1cb7f49a5547705a2602",
       "path": "audit/compute_budget.py",
       "size": 9018
+    },
+    {
+      "file_sha256": "c95a021b4c9e7d92fa0213e7cb9022fe394d861efbcef4ddf0562844ab7cf818",
+      "path": "audit/run_smoke.py",
+      "size": 6312
+    },
+    {
+      "file_sha256": "eddc193bd3f373524ed18aa35f57fee9f2dc263cd43db8172e598016b98c5de8",
+      "path": "audit/validate_admission.py",
+      "size": 7026
     },
     {
       "file_sha256": "9cffe40e6b704d27149426ed4c931af80b7a985d55c61de6cfc7ac6c0fab3477",
@@ -165,9 +175,9 @@
       "size": 2199
     },
     {
-      "file_sha256": "5e6d342f04ae8fd2bd860bf80a13fbb2c4c4f7f30bf880ae89ed02af2f38e04b",
+      "file_sha256": "641f20b02609e29b1e54ea6248d44bdba7efbaeb08f0ef3903cdbb3b1d2d958a",
       "path": "src/owtda_cal/calibrate.py",
-      "size": 6128
+      "size": 6402
     },
     {
       "file_sha256": "3c637115bf1c3a9049d00064f14ab9378b2c8ae150c35ffd7666acfce908a2bc",
@@ -185,9 +195,9 @@
       "size": 5320
     },
     {
-      "file_sha256": "8434c742a5221db3513c5b4ef6b12e8794e8dede6e8149e2517fed8961883a34",
+      "file_sha256": "caff31c52a559d0eb72903e2cb744e376fbc47dc7ed8627f9be7b6297846114e",
       "path": "src/owtda_cal/components.py",
-      "size": 4822
+      "size": 5908
     },
     {
       "file_sha256": "8081ecafbade3ede9609a2873bfcac8c883a92aeabecdd4574d10676c4adfd15",
@@ -285,9 +295,9 @@
       "size": 5127
     },
     {
-      "file_sha256": "5b9a8fb867f59f911003ddc31f7cd3221e879314a399c3e937ed7790434ccf89",
+      "file_sha256": "5a9545c56d7c46d2c50dd55f52ffa73fef8abf152b5df37fa21ce6f8787d6957",
       "path": "src/owtda_cal/scope.py",
-      "size": 13592
+      "size": 13701
     },
     {
       "file_sha256": "30232ea7013f9300e4d1fffa7b601990680ef534f07c2312b6b6bbc1591d97a0",
@@ -298,6 +308,11 @@
       "file_sha256": "c5be5d6f7abb0d8bbd2e36240e4b21227d954d72b32c6be7dcced10274b05c96",
       "path": "src/owtda_cal/shardio.py",
       "size": 8196
+    },
+    {
+      "file_sha256": "cc096435a9137afa78afc267e3b34aa9228ae972333dc0ba4138d7b854bf5bcf",
+      "path": "src/owtda_cal/smoke.py",
+      "size": 12271
     }
   ],
   "status": "FROZEN"

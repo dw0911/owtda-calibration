@@ -44,7 +44,9 @@ METHOD_IDS = (M0_STABLE_ID, M1_STABLE_ID)
 
 R0_H0 = 2500
 R0_H1 = 1600
-R0_SMOKE = 128  # G3 blind-smoke replicate count (Plan §9.3/§9.4)
+# G3 blind smoke: 32 replicates per cell -> H0 896 data units / 3,584 rows /
+# 73,600 PH windows (128 master paths x 575), H1 256 / 1,024 / 49,152 (Plan §9.3).
+R0_SMOKE = 32
 SMOKE_PHASES = (PHASE_SMOKE_NULL, PHASE_SMOKE_ALT)
 
 

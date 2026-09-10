@@ -83,19 +83,33 @@ def method_config_hash(stable_id: str) -> str:
 
 
 def component_definitions() -> list[dict[str, Any]]:
-    """The frozen synthetic component set (data / feature / method)."""
+    """The frozen synthetic component set (data / feature / method).
+
+    ``code_files`` must cover every source file the component's numerics depend
+    on (B15b completeness fix: the resampler's statistic/scan and the RNG/ID
+    helpers were missing from the original manifests).
+    """
+    identity_core = ["src/owtda_cal/canonical.py", "src/owtda_cal/identity.py"]
     return [
         {
             "component_kind": "data",
             "stable_id": DATA_STABLE_N_AR,
             "config_hash": data_generator_config_hash(dgp.DGP_FAMILY_N_AR),
-            "code_files": ["src/owtda_cal/dgp.py"],
+            "code_files": [
+                "src/owtda_cal/dgp.py",
+                "src/owtda_cal/seeding.py",
+                *identity_core,
+            ],
         },
         {
             "component_kind": "data",
             "stable_id": DATA_STABLE_N_CIRCLE,
             "config_hash": data_generator_config_hash(dgp.DGP_FAMILY_N_CIRCLE),
-            "code_files": ["src/owtda_cal/dgp.py"],
+            "code_files": [
+                "src/owtda_cal/dgp.py",
+                "src/owtda_cal/seeding.py",
+                *identity_core,
+            ],
         },
         {
             "component_kind": "feature",
@@ -106,25 +120,43 @@ def component_definitions() -> list[dict[str, Any]]:
                 "src/owtda_cal/bpi.py",
                 "src/owtda_cal/ph.py",
                 "src/owtda_cal/pointcloud.py",
+                "src/owtda_cal/hashing.py",
+                *identity_core,
             ],
         },
         {
             "component_kind": "feature",
             "stable_id": MOMENTS_STABLE_ID,
             "config_hash": feature_config_hash(moments_feature_spec()),
-            "code_files": ["src/owtda_cal/features.py", "src/owtda_cal/moments.py"],
+            "code_files": [
+                "src/owtda_cal/features.py",
+                "src/owtda_cal/moments.py",
+                "src/owtda_cal/pointcloud.py",
+                "src/owtda_cal/hashing.py",
+                *identity_core,
+            ],
         },
         {
             "component_kind": "method",
             "stable_id": M0_STABLE_ID,
             "config_hash": method_config_hash(M0_STABLE_ID),
-            "code_files": ["src/owtda_cal/calibrate.py"],
+            "code_files": [
+                "src/owtda_cal/calibrate.py",
+                "src/owtda_cal/scan.py",
+                "src/owtda_cal/seeding.py",
+                *identity_core,
+            ],
         },
         {
             "component_kind": "method",
             "stable_id": M1_STABLE_ID,
             "config_hash": method_config_hash(M1_STABLE_ID),
-            "code_files": ["src/owtda_cal/calibrate.py"],
+            "code_files": [
+                "src/owtda_cal/calibrate.py",
+                "src/owtda_cal/scan.py",
+                "src/owtda_cal/seeding.py",
+                *identity_core,
+            ],
         },
     ]
 

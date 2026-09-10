@@ -1,0 +1,74 @@
+{
+  "all_pass": true,
+  "budget": {
+    "h1_pending": "SMOKE_ALT (B15c)",
+    "t_0_32_seconds": 1019.558104900003,
+    "t_h0_hat_hours": 27.657283661566918,
+    "wall_limit_hours": 192.0
+  },
+  "checks": [
+    {
+      "check": "g3_counts",
+      "detail": "896/3584/73600",
+      "pass": true
+    },
+    {
+      "check": "g3_zero_unexplained_errors",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "g3_zero_missing_fields",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "g3_blind_no_forbidden_aggregates",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "g3_provenance_bound",
+      "detail": "aad291fc9570",
+      "pass": true
+    },
+    {
+      "check": "wall_gate_h0",
+      "detail": "t_H0_hat=27.657h",
+      "pass": true
+    },
+    {
+      "check": "memory_gate_total_rss",
+      "detail": "peak_total=1485676544 bytes",
+      "pass": true
+    },
+    {
+      "check": "memory_gate_no_swap_growth",
+      "detail": "growth=0 bytes",
+      "pass": true
+    },
+    {
+      "check": "disk_gate",
+      "detail": "est_peak=230.4 MiB free=455.6 GiB",
+      "pass": true
+    },
+    {
+      "check": "open_runs_zero",
+      "detail": "open_runs=0",
+      "pass": true
+    }
+  ],
+  "generated_at_utc": "2026-09-10T03:08:18Z",
+  "kind": "admission_precheck_v1",
+  "resource_sample": {
+    "errors": 0,
+    "peak_total_rss_bytes": 1485676544,
+    "replicates": 2,
+    "swap_before_bytes": 75046912,
+    "swap_growth_bytes": 0,
+    "swap_peak_bytes": 75046912,
+    "wall_seconds": 78.28669110000192,
+    "workers": 8
+  },
+  "schema_version": 1
+}

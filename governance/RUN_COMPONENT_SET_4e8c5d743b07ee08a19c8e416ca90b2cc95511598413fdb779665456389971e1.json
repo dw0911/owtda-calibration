@@ -3,37 +3,37 @@
   "code_manifest_refs": [
     {
       "generation_id": "F01",
-      "hash": "eaee7b6092b6a6aee8f1481a281b43de663e9b44d0f5ce5178bbfb251cccdddf",
+      "hash": "d57afa066e2299689d068b61b09fdf21ca2b74d1dd3fdbdbee94fdccd1d45797",
       "role": "code",
       "stable_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"
     },
     {
       "generation_id": "M01",
-      "hash": "4e72c42e8e603ef232a8e3aa01032beb11ec8c772eff4c10b6d0a9ff5d3da6f0",
+      "hash": "f464ff11cf85cace546de6844e4fc6cf081f1080007f2a707e2a0dc832a4b1bb",
       "role": "code",
       "stable_id": "M0_NAIVE_PERM_B999_V1"
     },
     {
       "generation_id": "M01",
-      "hash": "4e72c42e8e603ef232a8e3aa01032beb11ec8c772eff4c10b6d0a9ff5d3da6f0",
+      "hash": "f464ff11cf85cace546de6844e4fc6cf081f1080007f2a707e2a0dc832a4b1bb",
       "role": "code",
       "stable_id": "M1_DMB_R1_TRI_EXTIID_B999_V1"
     },
     {
       "generation_id": "F01",
-      "hash": "aa7b07bdbf6c08583ebb10717359680da54ee3a461beb197e625855e2f74708e",
+      "hash": "fac4f1bc1447af2abf9af78fb107435f2c71823a3709ee6aef9f030bb5c02b76",
       "role": "code",
       "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
     },
     {
       "generation_id": "D01",
-      "hash": "28f8f00b6f27e1efbd7fed49a433e9da3517693bff55abb12e4f4bc01f97c8cf",
+      "hash": "69f1e9fdcf4597cda1b32101e3b856aefb42b1c70d5c958c5e62ff8eb2350ae0",
       "role": "code",
       "stable_id": "SYNTHETIC_N_AR_V1"
     },
     {
       "generation_id": "D01",
-      "hash": "28f8f00b6f27e1efbd7fed49a433e9da3517693bff55abb12e4f4bc01f97c8cf",
+      "hash": "69f1e9fdcf4597cda1b32101e3b856aefb42b1c70d5c958c5e62ff8eb2350ae0",
       "role": "code",
       "stable_id": "SYNTHETIC_N_CIRCLE_V1"
     }
@@ -41,42 +41,42 @@
   "component_refs": [
     {
       "generation_id": "D01",
-      "hash": "25df049030f961fe96242e985345d8393fd2c5c7d9a141fbbb9e5f868470ed25",
+      "hash": "9096a1362b3b00759d727d2977ad255280e17d950f77d1c3ba4f56c98f7c2609",
       "role": "data",
       "stable_id": "SYNTHETIC_N_AR_V1"
     },
     {
       "generation_id": "D01",
-      "hash": "44d959fc6b3ac7b75af2c73b52bd1d22de8f2c3d4ed1eb36dc506a107d4cef0e",
+      "hash": "c1b6baf0b5fc959328e602b00f69817a21acdbdad43367d5306660419084e028",
       "role": "data",
       "stable_id": "SYNTHETIC_N_CIRCLE_V1"
     },
     {
       "generation_id": "F01",
-      "hash": "105acf8002b5e22aa5c22234537f2e39c50a691a9e5c47f80d972902373426df",
+      "hash": "f9af998c5f40824720551a63761767d86932c859e060a0b2357d58b0ee005a79",
       "role": "feature",
       "stable_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"
     },
     {
       "generation_id": "F01",
-      "hash": "01b383eb896b691235ef0111c620a87eaff33ce3fc32ba2f7cf4055048ce5fe0",
+      "hash": "7b3f9af23366c2346c4a61b986c72f7203035b85a5ea28f1d9ad87bc094b2d03",
       "role": "feature",
       "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
     },
     {
       "generation_id": "M01",
-      "hash": "870323f4964bdfc5c59ebedd0849fa9a70153df7b1a82e9597a5ca6d4d504dc3",
+      "hash": "7e1a0399111afc4a84dc46d041d3a3305558a472f8d4555ea30ad3f57a5c5769",
       "role": "method",
       "stable_id": "M0_NAIVE_PERM_B999_V1"
     },
     {
       "generation_id": "M01",
-      "hash": "a3b67ad393174dc3506615ccd19a53d2f568724aa2e8b338516f64661be1be3c",
+      "hash": "f0b64f76a31c412e22966f8418747e8e9df001c982176856dbcca3d67e8f61af",
       "role": "method",
       "stable_id": "M1_DMB_R1_TRI_EXTIID_B999_V1"
     }
   ],
-  "compute_git_commit": "e16222fbb6bb1d496553e88e2fd20c063b448a87",
+  "compute_git_commit": "3cbd84ac00a04accefe7147f3bf0ed68f343b169",
   "config_refs": [
     {
       "generation_id": "C01",
@@ -122,9 +122,9 @@
   ],
   "run_config_manifest_hash": "2d380125d9ee384468252609182313d9a6c36aa985b7fa6c28a48e7324fc11c2",
   "run_input_bindings_empty_by_contract": false,
-  "run_input_bindings_hash": "36997f4aa59e8387ec43cc303cf14e8e85da682c4f81980eb15a3d647421f7ae",
+  "run_input_bindings_hash": "9a8a2e54fadc2853b855ea1e686936bc6bf89dc2b80e5942977e7935fcd62e36",
   "run_input_bindings_row_count": 8,
   "schema_version": 1,
   "scope_design_hash": "bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b",
-  "source_tree_hash": "8f01a58f4660be2c09395ccfa83689dc5332cc027ed00017724e485609ebd762"
+  "source_tree_hash": "ea6504b38e0e0b37190cd15be9b6a591efe81e9d78f96ae251b53be35ca7f0b5"
 }

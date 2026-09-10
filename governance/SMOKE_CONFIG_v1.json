@@ -1,20 +1,31 @@
 {
   "config_kind": "smoke_config",
-  "derivation": "cells x replicates: 28x128=3584, 8x128=1024 (Plan G3)",
+  "derivation": "Plan §9.3: H0 = 28 cells x 32 reps = 896 data units, x4 feature/method = 3,584 rows, 128 master paths x 575 windows = 73,600 PH windows; H1 = 8 cells x 32 reps = 256 data units, x4 = 1,024 rows, 256 x 192 = 49,152 PH windows",
   "feeds_parameter_selection": false,
   "forbidden_outputs": [
     "rejection_rate_summary",
+    "method_ranking",
     "parameter_selection"
   ],
-  "replicates_per_cell": 128,
+  "replicates_per_cell": 32,
   "reported_outputs": [
     "wall_time",
     "field_counts",
     "errors"
   ],
   "schema_version": 1,
+  "smoke_data_units": {
+    "SMOKE_ALT": 256,
+    "SMOKE_NULL": 896
+  },
   "smoke_evaluations": {
     "SMOKE_ALT": 1024,
     "SMOKE_NULL": 3584
-  }
+  },
+  "smoke_generation_id": "S01",
+  "smoke_ph_windows": {
+    "SMOKE_ALT": 49152,
+    "SMOKE_NULL": 73600
+  },
+  "stream_kind_prefix": "smoke_"
 }

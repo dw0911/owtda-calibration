@@ -33,10 +33,19 @@ SMOKE_CONFIG = {
     "schema_version": 1,
     "config_kind": "smoke_config",
     "replicates_per_cell": scope.R0_SMOKE,
+    "smoke_generation_id": "S01",
+    "smoke_data_units": {"SMOKE_NULL": 896, "SMOKE_ALT": 256},
     "smoke_evaluations": {"SMOKE_NULL": 3584, "SMOKE_ALT": 1024},
-    "derivation": "cells x replicates: 28x128=3584, 8x128=1024 (Plan G3)",
+    "smoke_ph_windows": {"SMOKE_NULL": 73600, "SMOKE_ALT": 49152},
+    "derivation": (
+        "Plan §9.3: H0 = 28 cells x 32 reps = 896 data units, x4 feature/method "
+        "= 3,584 rows, 128 master paths x 575 windows = 73,600 PH windows; "
+        "H1 = 8 cells x 32 reps = 256 data units, x4 = 1,024 rows, 256 x 192 "
+        "= 49,152 PH windows"
+    ),
+    "stream_kind_prefix": "smoke_",
     "reported_outputs": ["wall_time", "field_counts", "errors"],
-    "forbidden_outputs": ["rejection_rate_summary", "parameter_selection"],
+    "forbidden_outputs": ["rejection_rate_summary", "method_ranking", "parameter_selection"],
     "feeds_parameter_selection": False,
 }
 

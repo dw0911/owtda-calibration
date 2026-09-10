@@ -91,8 +91,29 @@
 - 冻结科学内容未变：`freeze_id`、五类 spec hash、三类 registry、`SCOPE_DESIGN_NULL/ALT`、REAL 链 tip 全部不变；
   tag `v1.0-freeze-owtda-cal-r1` 仍指向 `e16222f`。
 
+## 2026-09-10 — B15b G3 blind smoke（SMOKE_NULL）：`OWTDA_CAL_R1_B15b_20260910_SMOKE_NULL`
+
+- **B15a 数值修正（透明披露）**：smoke 的 replicates/cell 应为 **32**（计划 §9.3：H0 896 data units、
+  3,584 rows、73,600 PH 窗口 = 128 master paths × 575），B15a 误写为 128 并据此生成过 smoke 对象；
+  本批修正 `R0_SMOKE=32`、`SMOKE_CONFIG`（新增 data units / PH windows / `smoke_` 前缀 /
+  `smoke_generation_id=S01`），并**删除**旧 smoke 的 SCOPE_DESIGN CSV 与 RUN_COMPONENT_SET/bindings 后重建；
+- **component `code_files` 完整性修正**：原清单遗漏 resampler 的 `scan.py` 与 RNG/ID 依赖
+  （`seeding.py`/`canonical.py`/`identity.py`/`hashing.py`），已补齐并重建 COMPONENT_REGISTRY 与
+  RUN_COMPONENT_SET（`SMOKE_NULL=aad291fc…`、`SMOKE_ALT=4a31e21b…`、`NULL=7f021ed4…`）；
+- 新增 `src/owtda_cal/smoke.py`（SMOKE_NULL runner；master×feature 粒度并行；PH 窗口逐 master 恰好
+  计算一次 = 73,600；stream_kind 全部 `smoke_` 前缀）、`audit/run_smoke.py`、`audit/validate_admission.py`、
+  `tests/test_smoke.py`（11 项）；`calibrate.py` 的 stream_kind 参数化（默认值不变）；
+- **G3 smoke 实跑**（8 workers）：896 data units / 3,584 evaluation rows / 73,600 PH 窗口、
+  **0 未解释 error**、0 缺字段、无禁止聚合输出；`t_0,32 = 1019.56 s`；
+- **§9.4 三项 Gate（H0 部分）**：wall `t_H0_hat = 27.657 h ≤ 192 h` ✓；
+  总 peak RSS（父+workers）= 1.486 GB ≤ 24 GiB ✓；run 期间 swap 增量 = 0 ✓；
+  磁盘 `estimated_peak_disk = 230.4 MiB ≤ 0.8 × 455.6 GiB` ✓；`open_runs = 0` ✓；
+- 冻结科学内容仍未变：`freeze_id`、五类 spec hash、`SCOPE_DESIGN_NULL/ALT`、REAL 链 tip 不变；
+  变更的是 registry 的 `code_files` 清单与其派生的 component/run 身份（记录于本条目）。
+- smoke 行仅作运行证据（`artifacts/smoke/SMOKE_NULL/`），**永不进入论文**。
+
 ## 待登记（未发生）
 
-- B15b：G3 blind smoke 实际运行（SMOKE_NULL/SMOKE_ALT 3,584/1,024 evaluations）、§9.4 正式预算判定、
-  `w*` 最终确认、G4 admission 前置（`open_runs=0`）；
+- B15c：SMOKE_ALT 实跑（H1 alternative DGP：§12.1 形状变化 / §12.2 mean shift）+ `t_1,32` +
+  §9.4 完整判定（`t_H1/t_core`）+ `w*` 最终确认；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

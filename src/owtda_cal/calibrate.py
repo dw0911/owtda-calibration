@@ -60,10 +60,11 @@ def dmb_block_length(*, W: int, stride: int, M: int) -> int:
 
 
 def m0_permutation(root_key_hex: str, *, method_generation_id: str,
-                   data_unit_id: str, resample_index: int, M: int) -> np.ndarray:
+                   data_unit_id: str, resample_index: int, M: int,
+                   stream_kind: str = "M0_permutation") -> np.ndarray:
     rng = make_rng(
         root_key_hex,
-        "M0_permutation",
+        stream_kind,
         method_generation_id=method_generation_id,
         data_unit_id=data_unit_id,
         resample_index=resample_index,
@@ -80,6 +81,7 @@ def calibrate_m0(
     root_key_hex: str,
     method_generation_id: str,
     data_unit_id: str,
+    stream_kind: str = "M0_permutation",
 ) -> dict:
     a = np.asarray(feature_matrix, dtype=np.float64)
     if a.ndim != 2:
@@ -95,6 +97,7 @@ def calibrate_m0(
             data_unit_id=data_unit_id,
             resample_index=r,
             M=M,
+            stream_kind=stream_kind,
         )
         row = statistic_curve(a[perm])
         t_r = float(row["values"].max())
@@ -119,10 +122,11 @@ def dmb_multiplier_series(e: np.ndarray, *, b: int) -> np.ndarray:
 
 
 def m1_gaussian_draw(root_key_hex: str, *, method_generation_id: str,
-                     data_unit_id: str, resample_index: int, size: int) -> np.ndarray:
+                     data_unit_id: str, resample_index: int, size: int,
+                     stream_kind: str = "M1_gaussian_innovation") -> np.ndarray:
     rng = make_rng(
         root_key_hex,
-        "M1_gaussian_innovation",
+        stream_kind,
         method_generation_id=method_generation_id,
         data_unit_id=data_unit_id,
         resample_index=resample_index,
@@ -141,6 +145,7 @@ def calibrate_m1(
     data_unit_id: str,
     W: int,
     stride: int,
+    stream_kind: str = "M1_gaussian_innovation",
 ) -> dict:
     a = np.asarray(feature_matrix, dtype=np.float64)
     if a.ndim != 2:
@@ -159,6 +164,7 @@ def calibrate_m1(
             data_unit_id=data_unit_id,
             resample_index=r,
             size=M + b - 1,
+            stream_kind=stream_kind,
         )
         xi = dmb_multiplier_series(e, b=b)
         weighted = xi[:, None] * z
