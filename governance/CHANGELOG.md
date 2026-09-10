@@ -43,7 +43,21 @@
 - 未下调准入线、未放宽 3000/500 阈值；合成主线不受影响；
 - 正式 `REAL_DISPOSITION` append-only 链事件与冻结 reason_code 枚举在 B14 冻结批写入。
 
+## 2026-09-10 — B14a 共同冻结：`OWTDA_CAL_R1_B14a_20260910_COMMON_FREEZE`
+
+- 治理文档升 `FROZEN`：PROTOCOL / METHOD_SPEC / SAP / DATA_SPEC / PROJECT_CHARTER（此后只读，
+  变更走 `AMENDMENT_REGISTRY.jsonl`）；
+- 冻结对象落库：`SCOPE_SPEC_v1.json`、`PROTOCOL_CONTENT_v1.json`、`ESTIMAND_SPEC_REGISTRY_v1.json`、
+  `ANALYSIS_SPEC_v1.0.json`、`COMPUTE_SPEC_v1.json`、`COMPUTE_FREEZE.json`；
+- `freeze_id = 7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d`
+  （`evidence_generation_id=G01`，由 protocol/scope/analysis/compute 四个 spec hash 派生）；
+- `SCOPE_DESIGN_NULL_*.csv`（112 行）与 `SCOPE_DESIGN_ALT_*.csv`（32 行）由 `freeze_id` 派生；
+- `FREEZE_MANIFEST.json` 记录全部对象 hash 与 source/environment manifests（不回灌 `freeze_id`，无环）；
+- Git tag `v1.0-freeze-owtda-cal-r1`；
+- 校验：`audit/validate_freeze.py` 全 PASS；pytest 362 passed；ruff clean。
+
 ## 待登记（未发生）
 
-- 协议正文定稿与 `protocol_content_hash` / `freeze_id` 计算（冻结批）；
-- 后续批次（B07+）：scope/index、schema、smoke、PAMAP2 数据、攻击套件、冻结、正式运行等。
+- B14b：SEED / COMPONENT / SECRET_COMMITMENT registries（root key commitments 与 secret refs）、
+  正式 `REAL_DISPOSITION` append-only 链事件（`REAL_OMITTED_BY_DATA_GATE`）；
+- 后续批次：blind smoke（G3）、正式 H0/H1 运行、分析冻结、release。
