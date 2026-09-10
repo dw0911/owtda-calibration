@@ -72,13 +72,18 @@ def main() -> int:
         print(f"BLOCKED: {rc_path} not found - the w* confirmation has not finished")
         return 1
     rc = json.loads(rc_path.read_text(encoding="utf-8"))
-    w_star = (
-        rc["frozen_w_star"]
-        if rc.get("frozen_w_star_confirmed")
-        else (rc.get("selected_workers") or [8])[0]
+    # Conservative adoption rule: a new w* is adopted ONLY when the preregistered
+    # protocol confirms it for every phase.  A voided / partially failing
+    # confirmation keeps the previous frozen value and is recorded as an open item
+    # (the protocol forbids re-running a failed run to improve the number).
+    confirmed = bool(rc.get("frozen_w_star_confirmed"))
+    w_star = int(rc["frozen_w_star"]) if confirmed else 8
+    print(
+        f"w* verdict: frozen={rc['frozen_w_star']} selected={rc.get('selected_workers')} "
+        f"confirmed={confirmed} -> adopted w_star={w_star}"
+        + ("" if confirmed else " (NOT CONFIRMED: previous frozen value kept; "
+                                "a new preregistration is required to change w*)")
     )
-    print(f"w* verdict: frozen={rc['frozen_w_star']} selected={rc.get('selected_workers')} "
-          f"confirmed={rc.get('frozen_w_star_confirmed')} -> adopted w_star={w_star}")
 
     # 2. advance the smoke generation
     if step(2):

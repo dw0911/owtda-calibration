@@ -236,6 +236,7 @@ def main() -> int:
         },
     ]
     if wstar.get("frozen_w_star_confirmed") is not None:
+        confirmed = bool(wstar.get("frozen_w_star_confirmed"))
         amendment_events.append(
             {
                 "schema_version": 1,
@@ -247,11 +248,17 @@ def main() -> int:
                 "preregistered_protocol_sha256": wstar.get("protocol_sha256"),
                 "frozen_w_star_before": wstar.get("frozen_w_star"),
                 "measured_selection": wstar.get("selected_workers"),
-                "confirmed": wstar.get("frozen_w_star_confirmed"),
+                "confirmed": confirmed,
+                # Only a confirmation for *every* phase may change the frozen value;
+                # a voided confirmation keeps it and the open item is recorded.
                 "adopted_w_star": (
-                    wstar.get("frozen_w_star")
-                    if wstar.get("frozen_w_star_confirmed")
-                    else (wstar.get("selected_workers") or [None])[0]
+                    wstar.get("frozen_w_star") if confirmed else wstar.get("frozen_w_star")
+                ),
+                "status": "CONFIRMED_NO_CHANGE" if confirmed
+                else "VOIDED_OR_NOT_CONFIRMED_PREVIOUS_VALUE_KEPT",
+                "follow_up": None if confirmed else (
+                    "新的预登记才能更换 w*（协议禁止用重跑改善数字）；"
+                    "失败运行已保留，未丢弃、未重跑"
                 ),
                 "requires_refreeze": True,
                 "reason_object_hash": reason_hash["AM_WORKER_CONFIRMATION_RULE"],
