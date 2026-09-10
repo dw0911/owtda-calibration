@@ -33,7 +33,7 @@ SMOKE_CONFIG = {
     "schema_version": 1,
     "config_kind": "smoke_config",
     "replicates_per_cell": scope.R0_SMOKE,
-    "smoke_generation_id": "S01",
+    "smoke_generation_id": scope.SMOKE_GENERATION_ID,
     "smoke_data_units": {"SMOKE_NULL": 896, "SMOKE_ALT": 256},
     "smoke_evaluations": {"SMOKE_NULL": 3584, "SMOKE_ALT": 1024},
     "smoke_ph_windows": {"SMOKE_NULL": 73600, "SMOKE_ALT": 49152},
@@ -84,7 +84,7 @@ def _smoke_config_ref() -> dict[str, Any]:
     return runs.ref(
         role="config",
         stable_id="smoke_config",
-        generation_id="S01",
+        generation_id=scope.SMOKE_GENERATION_ID,
         hash_value=config_hash("smoke_config", 1, SMOKE_CONFIG),
     )
 
@@ -159,7 +159,7 @@ def _bindings(
                 role="config",
                 ref_kind="config",
                 stable_id="smoke_config",
-                generation_id="S01",
+                generation_id=scope.SMOKE_GENERATION_ID,
                 hash_value=config_hash("smoke_config", 1, SMOKE_CONFIG),
                 source="governance/SMOKE_CONFIG_v1.json",
             )

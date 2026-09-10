@@ -56,8 +56,8 @@ COMPONENT_GENERATIONS = {
 SOURCE_TREE_PREFIXES = ("src/", "configs/", "audit/")
 TASK_INDEX_GENERATION_ID = "T01"
 SEED_ROOT_FAMILIES = (
-    ("SMOKE_NULL", "smoke", "S01"),
-    ("SMOKE_ALT", "smoke", "S01"),
+    ("SMOKE_NULL", "smoke", scope.SMOKE_GENERATION_ID),
+    ("SMOKE_ALT", "smoke", scope.SMOKE_GENERATION_ID),
     ("NULL", "null_data", "D01"),
     ("NULL", "null_M0", "M01"),
     ("NULL", "null_M1", "M01"),
@@ -354,11 +354,13 @@ def _load_local_secrets() -> dict[str, str]:
 def _seed_entries(fid: str) -> list[dict[str, Any]]:
     path = GOV / "SEED_REGISTRY_v1.0.json"
     prior: dict[tuple[str, str, str], dict[str, Any]] = {}
+    prior_by_phase_family: dict[tuple[str, str], dict[str, Any]] = {}
     if path.exists():
         for entry in json.loads(path.read_text(encoding="utf-8"))["entries"]:
             prior[
                 (entry["phase"], entry["stream_family"], entry["component_generation_id"])
             ] = entry
+            prior_by_phase_family[(entry["phase"], entry["stream_family"])] = entry
     local = _load_local_secrets()
     entries = []
     for phase, family, generation in SEED_ROOT_FAMILIES:
@@ -385,7 +387,13 @@ def _seed_entries(fid: str) -> list[dict[str, Any]]:
                 )
             )
             continue
-        old = prior.get((phase, family, generation))
+        # A smoke-generation bump (Plan §9.3) must re-key every *derived* seed
+        # through the stream payload, not by silently minting a new phase root
+        # key: keep the family's existing key so the generation id is the only
+        # thing that changes.
+        old = prior.get((phase, family, generation)) or prior_by_phase_family.get(
+            (phase, family)
+        )
         key_hex = (
             old["root_key_hex"]
             if old and old.get("root_key_hex")

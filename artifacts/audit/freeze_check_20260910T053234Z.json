@@ -1,0 +1,169 @@
+{
+  "all_pass": false,
+  "checks": [
+    {
+      "check": "scope_spec_hash",
+      "detail": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
+      "pass": true
+    },
+    {
+      "check": "protocol_content_hash",
+      "detail": "6c1acb3c4bfca8ca6e7ca01fa18d6ad1082477766f00e622ac0271c08f37f5b6",
+      "pass": true
+    },
+    {
+      "check": "estimand_registry_hash",
+      "detail": "d696f2ce5eaa693fd7fdbae764a3f1bfbbf62fb58fb9e0a26fbf7b9d9b19f30a",
+      "pass": true
+    },
+    {
+      "check": "analysis_spec_hash",
+      "detail": "1de8b74332892a6f71593f8b2be3b67b8bc094392296643b1fa84c4a395bba2f",
+      "pass": true
+    },
+    {
+      "check": "compute_spec_hash",
+      "detail": "4082572e2ca96ae86e9a2d854468743b08817970d982f5e158a6e5f135cb903b",
+      "pass": true
+    },
+    {
+      "check": "freeze_id",
+      "detail": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "pass": true
+    },
+    {
+      "check": "analysis_binds_estimand_registry",
+      "detail": "d696f2ce5eaa693fd7fdbae764a3f1bfbbf62fb58fb9e0a26fbf7b9d9b19f30a",
+      "pass": true
+    },
+    {
+      "check": "scope_design[NULL].bytes",
+      "detail": "SCOPE_DESIGN_NULL_bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b.csv",
+      "pass": true
+    },
+    {
+      "check": "scope_design[NULL].rows",
+      "detail": "112",
+      "pass": true
+    },
+    {
+      "check": "scope_design[NULL].row_hash",
+      "detail": "bbecccb5f651ec979dca867ed8ebc900c79fde57d75e6f1c8630680a1bc2a04b",
+      "pass": true
+    },
+    {
+      "check": "scope_design[ALT].bytes",
+      "detail": "SCOPE_DESIGN_ALT_aebd4f34ab0a5142cb1edc6877cea4d242e5b55f615808d93c42e0d3d524b35f.csv",
+      "pass": true
+    },
+    {
+      "check": "scope_design[ALT].rows",
+      "detail": "32",
+      "pass": true
+    },
+    {
+      "check": "scope_design[ALT].row_hash",
+      "detail": "aebd4f34ab0a5142cb1edc6877cea4d242e5b55f615808d93c42e0d3d524b35f",
+      "pass": true
+    },
+    {
+      "check": "frozen_documents",
+      "detail": "8 entries",
+      "pass": true
+    },
+    {
+      "check": "cycle_free",
+      "detail": "freeze_id absent from specs",
+      "pass": true
+    },
+    {
+      "check": "source_tree_hash",
+      "detail": "recorded=a6c3d575ab5b now=a6c3d575ab5b",
+      "pass": true
+    },
+    {
+      "check": "environment_lock_hash",
+      "detail": "61f5f50a604efa379e1e67cd9b2fbe466acd6e52e73cb424a321c96f4d72b74e",
+      "pass": true
+    },
+    {
+      "check": "seed_registry_entries",
+      "detail": "13",
+      "pass": true
+    },
+    {
+      "check": "component_registry_entries",
+      "detail": "7",
+      "pass": false
+    },
+    {
+      "check": "seed_registry_sorted",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "component_registry_sorted",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "seed_registry_snapshot_hash",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "component_registry_snapshot_hash",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "secret_registry_snapshot_hash",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "real_root_keys_isolated",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "real_disposition_tip",
+      "detail": "REAL_OMITTED_BY_DATA_GATE",
+      "pass": true
+    },
+    {
+      "check": "real_disposition_reason_object",
+      "detail": "71144c331f108d0e3ff5def4fe977a0acf1887e65393ce69541b713b4c2e125f",
+      "pass": true
+    },
+    {
+      "check": "real_truth_sealed",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "status_frozen[PROTOCOL_v1.0.md]",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "status_frozen[METHOD_SPEC_v1.0.md]",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "status_frozen[SAP_v1.0.md]",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "status_frozen[DATA_SPEC_v1.0.md]",
+      "detail": "",
+      "pass": true
+    }
+  ],
+  "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+  "generated_at_utc": "2026-09-10T05:32:34Z",
+  "kind": "freeze_check_v1",
+  "schema_version": 1
+}

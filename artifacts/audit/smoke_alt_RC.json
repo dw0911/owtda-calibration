@@ -1,0 +1,84 @@
+{
+  "budget": {
+    "h1_gate_pass": true,
+    "limits": {
+      "core_wall_hours": 268.8,
+      "h0_wall_hours": 192.0,
+      "h1_wall_hours": 76.8
+    },
+    "t_1_32_seconds": 272.51739369999996,
+    "t_h1_hat_hours": 4.731204751736111
+  },
+  "counts_match_contract": true,
+  "expected_counts": {
+    "data_units": 256,
+    "evaluation_rows": 1024,
+    "ph_windows": 49152
+  },
+  "expected_counts_scaled": {
+    "data_units": 256,
+    "evaluation_rows": 1024,
+    "ph_windows": 49152
+  },
+  "forbidden_aggregates_emitted": false,
+  "formal_id_leak_check": {
+    "formal_id_sample_replicates": 2,
+    "formal_ids_checked": 66,
+    "formal_ids_found_in_smoke_ledger": 0,
+    "passed": true
+  },
+  "identity_closure": {
+    "actual": {
+      "data_unit_id": 256,
+      "evaluation_id": 1024,
+      "experiment_id": 1,
+      "feature_sufficient_id": 512,
+      "logical_cell_id": 8,
+      "logical_evaluation_key": 1024
+    },
+    "expected": {
+      "data_unit_id": 256,
+      "evaluation_id": 1024,
+      "experiment_id": 1,
+      "feature_sufficient_id": 512,
+      "logical_cell_id": 8,
+      "logical_evaluation_key": 1024
+    },
+    "passed": true
+  },
+  "kind": "smoke_run_rc_v1",
+  "ledger_file": "artifacts/smoke/SMOKE_ALT/evaluation_rows_w8_r32.jsonl",
+  "missing_required_fields": 0,
+  "phase": "SMOKE_ALT",
+  "provenance": {
+    "environment_lock_hash": "61f5f50a604efa379e1e67cd9b2fbe466acd6e52e73cb424a321c96f4d72b74e",
+    "run_component_set_file": "RUN_COMPONENT_SET_89298ac17c7ce4f149cecaeb8ee7bf376239eb7fbb535359bab21c7af8c84c6f.json",
+    "run_component_set_hash": "89298ac17c7ce4f149cecaeb8ee7bf376239eb7fbb535359bab21c7af8c84c6f",
+    "run_input_bindings_hash": "d4914fdc15aa84add98df6ceb40ec52f77ec1e54b6d8aec8c56f41c906edcd29",
+    "scope_design_hash": "94e1903efc905a5100df6691cbc64e726bfd4b5cf1d428f8f25c9de156f4e703",
+    "smoke_config_hash": "fc4c54b9023d0194b3d805500f50f21dc999a46a6633eb331d02211673800be0",
+    "source_tree_hash": "0cd15a9676961622e9c203f8f9fbd9c51d1d61566affe3a3c0282f2176015ee6"
+  },
+  "replicates_per_cell": 32,
+  "report": {
+    "data_units": 256,
+    "errors": 0,
+    "evaluation_rows": 1024,
+    "forbidden_aggregates_emitted": false,
+    "ph_windows": 49152,
+    "phase": "SMOKE_ALT",
+    "wall_seconds": 272.51739369999996
+  },
+  "resources": {
+    "disk_free_bytes": 489186701312,
+    "ledger_bytes": 1014170,
+    "peak_rss_bytes": 164470784,
+    "swap_gate": "swap_in_use",
+    "swap_used_bytes": 56680448
+  },
+  "schema_version": 1,
+  "smoke_generation_id": "S02",
+  "status": "g3_smoke",
+  "unexplained_errors": 0,
+  "workers": 8
+}

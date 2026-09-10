@@ -112,8 +112,81 @@
   变更的是 registry 的 `code_files` 清单与其派生的 component/run 身份（记录于本条目）。
 - smoke 行仅作运行证据（`artifacts/smoke/SMOKE_NULL/`），**永不进入论文**。
 
+## 2026-09-10 — B15c H1 alternative DGP + G3 blind smoke（SMOKE_ALT）：`OWTDA_CAL_R1_B15c_20260910_SMOKE_ALT`
+
+- 新增 H1 alternative DGP（`src/owtda_cal/dgp.py`）：`CIRCLE_BASED_H1` 的
+  `shape_change`（`τ=⌊T/2⌋` 前 `C(u)=(cos2πu,sin2πu)`、后 `F(u)=(sin2πu,sin4πu)`）与
+  `mean_shift`（`+0.5·v·1(t>τ)`，`v=(cos2πV,sin2πV)`，`V∼U(0,1)`）；两变体共享 N-CIRCLE 的
+  AR/copula latent 路径与连续观测噪声 `0.08η_t`，latent/noise stream 命名域为
+  `{data_generation_id, master_replicate_id}`（排除 alternative/ρ/s/T/M）；
+  新增 `shift_direction` 流（每次一个 `float64`，仅 mean-shift 消费）；
+- 新增 `build_null_signature(rho, W, s, T, M)`（Plan §7）：H0 与 H1 共用同一 null 模型身份，
+  H1 cell 将 effect 置零后精确回到对应 N-CIRCLE H0 的 `null_model_config_hash`；
+- **F-B15c-1（修复 B15b 的 smoke 身份域/流合同违规）**：B15b 的 smoke runner 使用 **formal**
+  身份函数（`cells.*` / `scope.logical_*`）与 formal 流 kind/字段
+  （`null_*`、`{data_generation_id, DGP_family, master_replicate_id}`），违反 §16
+  「smoke 使用完全独立的身份域，禁止借用 formal logical IDs」、§9.3「`stream_kind` 必须以
+  `smoke_` 开头」与 §15.2 smoke 字段表。本批新增 `src/owtda_cal/smoke_ids.py`（§16 全部 12 个
+  `smoke_*` ID 与流字段构造），`smoke.py` 全量改走 smoke 命名空间，并在
+  `audit/run_smoke.py` 增加 **formal ID 泄漏检查**（§16 要求 validator 必须拒绝）；
+  ledger 增加 `experiment_id` / `feature_sufficient_id` / `evaluation_id` / `scenario_id` 列；
+  **B15b 的 S01 smoke 证据作废**；
+- **smoke generation `S01` → `S02`**（§9.3 umbrella 规则：新增 DGP 必须整体提升并重跑两 phase）；
+  phase root key 保持不变（generation 经流 payload 进入派生），
+  `scope.SMOKE_GENERATIONS_SUPERSEDED = ("S01",)`；
+- **§15.2 流表增行 `smoke_shift_direction`**（smoke 版 `shift_direction`，字段同其它 smoke 数据流）；
+- 新增 `SYNTHETIC_CIRCLE_BASED_H1_V1` 数据组件（COMPONENT_REGISTRY 6 → 7 条）；
+  `audit/validate_freeze.py` 的组件条目检查改为「与 `components.component_definitions()` 一致」
+  （避免新增组件后留下过期 registry）；
+- 新增 `audit/run_worker_sweep.py`（`w*` 确认）与 `audit/run_smoke.py --phase`
+  （两 phase 盲 smoke + `identity_closure`）；
+  `tests/test_h1_dgp.py`（36）/`tests/test_smoke_ids.py`（14）/`tests/test_smoke.py`（11 → 17）；
+- **G3 blind smoke 实跑（8 workers，S02）**：SMOKE_NULL **896 / 3,584 / 73,600**
+  （`t_0,32 = 842.03 s`）、SMOKE_ALT **256 / 1,024 / 49,152**（`t_1,32 = 272.52 s`）；
+  两 phase 均 **0 未解释 error、0 缺字段、0 formal ID 泄漏、身份闭合**；无禁止聚合输出；
+- **§9.4 完整判定 23/23 PASS**：`t_H0_hat = 22.842 h ≤ 192 h`、`t_H1_hat = 4.731 h ≤ 76.8 h`、
+  `t_core_hat = 27.573 h ≤ 268.8 h`；总 peak RSS = **1.393 GiB ≤ 24 GiB**；swap 增量 = 0；
+  `estimated_peak_disk = 386.1 MiB ≤ 0.8 × 455.6 GiB`；`open_runs = 0`；
+- **`w*` 未确认（决策待定）**：worker 扫描（两 phase × workers{1,4,8,10,12}，replicates=8）显示
+  **所有 worker 数下 evaluation-row payload 逐位一致**（`worker_consistency` 成立），但吞吐
+  **w=12 最高**（H0 `+8.1%`、H1 `+6.3%` 相对 w=8，均超 §9.4 的 2% 并列阈值），
+  故 §9.4 规则指向 `w*=12`，与冻结的 `COMPUTE_SPEC.w_star=8` 不符。
+  由于 `w_star` 是 `compute_spec_hash` → `freeze_id` → SCOPE_DESIGN/全部合成身份的输入，
+  **未作单方面修改**，需走 amendment + 重新冻结决策（见 B15c VALIDATION_REPORT §5）；
+- 冻结科学内容不变：`freeze_id`、五类 spec hash、`SCOPE_DESIGN_NULL/ALT` 行与 hash、
+  REAL 链 tip 不变；tag `v1.0-freeze-owtda-cal-r1` 仍指向 `e16222f`；
+  变更的是 component 条目集合、smoke 规模/身份域与其派生的 component/run 身份。
+- smoke 行仅作运行证据（`artifacts/smoke/<phase>/`），**永不进入论文**。
+
+## 2026-09-10 — 审计提交（归档）：`OWTDA-CAL-R1-AUDIT-SUBMISSION-20260910`
+
+- 归档包 `artifacts/archive/OWTDA-CAL-R1-AUDIT-SUBMISSION-20260910.zip`（313 对象；
+  SHA256 见同名 `.zip.sha256` sidecar 与 `_incoming/OWTDA_CAL_R1_AUDIT_SUBMISSION_20260910/`），
+  自包含且逐字节可验证（`package_manifest.json` + `SHA256SUMS.txt`，构建时自校验 0 mismatch）；
+- 内容：被审计工作树（`repo/`，排除 `secrets/`、缓存与既往归档）、冻结源域 manifest 与复算
+  `source_tree_hash`、git 状态、6 个 Gate 对象（JSON 权威 + 渲染 MD）、受理记录/审计请求/
+  问题与待决断登记、被作废的 S01 smoke 证据、以及 B01–B15c 全部交付四件套（`batches/`）；
+- Gate 判定：`G0-FREEZE-CHAIN-AND-IDENTITY` **PASS**、`G3-BLIND-SMOKE-BOTH-PHASES` **PASS**、
+  `SECTION-9-4-COMPUTE-BUDGET` **PASS**、`H1-ALTERNATIVE-CONSTRUCT-CONTRACTS` **PASS**、
+  `W-STAR-CONFIRMATION` **FAIL_UNCONFIRMED**（待裁定）、
+  `SOURCE-REVISION-ADMISSIBILITY` **BLOCKED_PENDING_OPERATOR_ACTION**（待具名 commit）；
+- 登记 **问题 8 项**（含 F-B15c-1 的定性与影响面、F-B15c-4 的 source_tree_hash 覆盖风险、
+  w* 未确认、revision 未提交、wall 抖动与 w=10 swap 观测、REAL omission 状态）与
+  **待决断 5 项**（D-1 w*、D-2 B15b 撤回、D-3 amendment 登记、D-4 smoke_ids 归属、D-5 具名 commit）；
+- 新增 `scripts/build_audit_submission.py`：**刻意置于冻结源域（`src/`/`configs/`/`audit/`）之外**，
+  使"打包已冻结状态"这一动作永远不会扰动它所打包的哈希；
+- 新增 `scripts/export_audit_submission.py`：把密封包导出为单一可浏览文件夹
+  （`package/` 为解压原文、外加密封包与其 SHA256 sidecar、`00_START_HERE.md` 交接说明与
+  提交文档），并在导出后原地重新逐项校验（`EXPORT_VERIFY.json`）；交接说明
+  `artifacts/archive/OWTDA-CAL-R1-AUDIT-SUBMISSION-20260910_HANDOVER.md` 按同一策略
+  **不进入密封包**，以保证包体是纯证据对象；
+- 冻结科学内容不变：`freeze_id`、五类 spec hash、`SCOPE_DESIGN_NULL/ALT`、REAL 链 tip、
+  tag `v1.0-freeze-owtda-cal-r1` 均未移动；本条目属治理层归档记录，不进入 `source_tree_hash`。
+
 ## 待登记（未发生）
 
-- B15c：SMOKE_ALT 实跑（H1 alternative DGP：§12.1 形状变化 / §12.2 mean shift）+ `t_1,32` +
-  §9.4 完整判定（`t_H1/t_core`）+ `w*` 最终确认；
+- B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
+  正式 H0/H1 run 的 runner 与 phase seal 链；
+  **D-1 `w*` amendment 决策**（采纳 12 或维持 8，及其重新冻结代价）；
+  **D-5 具名 commit**（建立不可变审计 revision）；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

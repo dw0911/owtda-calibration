@@ -59,15 +59,55 @@ def dmb_block_length(*, W: int, stride: int, M: int) -> int:
     return max(q0, integer_cuberoot_ceil(M))
 
 
-def m0_permutation(root_key_hex: str, *, method_generation_id: str,
-                   data_unit_id: str, resample_index: int, M: int,
-                   stream_kind: str = "M0_permutation") -> np.ndarray:
+def resample_stream_fields(
+    *,
+    method_generation_id: str | None,
+    data_unit_id: str | None,
+    stream_fields: dict[str, object] | None,
+    resample_index: int,
+) -> dict[str, object]:
+    """Exact named fields of an ``M0_permutation``/``M1_gaussian_innovation`` draw.
+
+    Formal streams use ``{method_generation_id, data_unit_id, resample_index}``
+    (Plan §15.2).  The blind smoke must instead use the isolated smoke fields
+    ``{smoke_generation_id, phase, smoke_data_unit_id, resample_index}``, which
+    it passes through ``stream_fields``; mixing the two forms is rejected.
+    """
+    if stream_fields is None:
+        if method_generation_id is None or data_unit_id is None:
+            raise ValueError(
+                "pass either method_generation_id/data_unit_id or stream_fields"
+            )
+        fields: dict[str, object] = {
+            "method_generation_id": method_generation_id,
+            "data_unit_id": data_unit_id,
+        }
+    else:
+        if method_generation_id is not None or data_unit_id is not None:
+            raise ValueError(
+                "stream_fields is mutually exclusive with "
+                "method_generation_id/data_unit_id"
+            )
+        fields = dict(stream_fields)
+        if "resample_index" in fields:
+            raise ValueError("stream_fields must not contain resample_index")
+    fields["resample_index"] = resample_index
+    return fields
+
+
+def m0_permutation(root_key_hex: str, *, method_generation_id: str | None = None,
+                   data_unit_id: str | None = None, resample_index: int, M: int,
+                   stream_kind: str = "M0_permutation",
+                   stream_fields: dict[str, object] | None = None) -> np.ndarray:
     rng = make_rng(
         root_key_hex,
         stream_kind,
-        method_generation_id=method_generation_id,
-        data_unit_id=data_unit_id,
-        resample_index=resample_index,
+        **resample_stream_fields(
+            method_generation_id=method_generation_id,
+            data_unit_id=data_unit_id,
+            stream_fields=stream_fields,
+            resample_index=resample_index,
+        ),
     )
     perm = rng.permutation(M)
     if perm.shape != (M,) or perm.dtype != np.int64:
@@ -79,9 +119,10 @@ def calibrate_m0(
     feature_matrix: np.ndarray,
     *,
     root_key_hex: str,
-    method_generation_id: str,
-    data_unit_id: str,
+    method_generation_id: str | None = None,
+    data_unit_id: str | None = None,
     stream_kind: str = "M0_permutation",
+    stream_fields: dict[str, object] | None = None,
 ) -> dict:
     a = np.asarray(feature_matrix, dtype=np.float64)
     if a.ndim != 2:
@@ -98,6 +139,7 @@ def calibrate_m0(
             resample_index=r,
             M=M,
             stream_kind=stream_kind,
+            stream_fields=stream_fields,
         )
         row = statistic_curve(a[perm])
         t_r = float(row["values"].max())
@@ -121,15 +163,19 @@ def dmb_multiplier_series(e: np.ndarray, *, b: int) -> np.ndarray:
     return conv / np.sqrt(float(b))
 
 
-def m1_gaussian_draw(root_key_hex: str, *, method_generation_id: str,
-                     data_unit_id: str, resample_index: int, size: int,
-                     stream_kind: str = "M1_gaussian_innovation") -> np.ndarray:
+def m1_gaussian_draw(root_key_hex: str, *, method_generation_id: str | None = None,
+                     data_unit_id: str | None = None, resample_index: int, size: int,
+                     stream_kind: str = "M1_gaussian_innovation",
+                     stream_fields: dict[str, object] | None = None) -> np.ndarray:
     rng = make_rng(
         root_key_hex,
         stream_kind,
-        method_generation_id=method_generation_id,
-        data_unit_id=data_unit_id,
-        resample_index=resample_index,
+        **resample_stream_fields(
+            method_generation_id=method_generation_id,
+            data_unit_id=data_unit_id,
+            stream_fields=stream_fields,
+            resample_index=resample_index,
+        ),
     )
     e = rng.standard_normal(size, dtype=np.float64)
     if e.shape != (size,):
@@ -141,11 +187,12 @@ def calibrate_m1(
     feature_matrix: np.ndarray,
     *,
     root_key_hex: str,
-    method_generation_id: str,
-    data_unit_id: str,
+    method_generation_id: str | None = None,
+    data_unit_id: str | None = None,
     W: int,
     stride: int,
     stream_kind: str = "M1_gaussian_innovation",
+    stream_fields: dict[str, object] | None = None,
 ) -> dict:
     a = np.asarray(feature_matrix, dtype=np.float64)
     if a.ndim != 2:
@@ -165,6 +212,7 @@ def calibrate_m1(
             resample_index=r,
             size=M + b - 1,
             stream_kind=stream_kind,
+            stream_fields=stream_fields,
         )
         xi = dmb_multiplier_series(e, b=b)
         weighted = xi[:, None] * z
@@ -193,6 +241,7 @@ __all__ = [
     "resample_exceeds",
     "integer_cuberoot_ceil",
     "dmb_block_length",
+    "resample_stream_fields",
     "m0_permutation",
     "calibrate_m0",
     "dmb_multiplier_series",

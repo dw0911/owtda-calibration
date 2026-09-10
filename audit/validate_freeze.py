@@ -28,7 +28,7 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import disposition, freeze, registry, scope
+from owtda_cal import components, disposition, freeze, registry, scope
 from owtda_cal.hashing import file_sha256
 
 GOV = REPO / "governance"
@@ -144,10 +144,20 @@ def main() -> int:
     registry.validate_component_registry(comp_reg["entries"])
     registry.validate_secret_registry(secret_reg["entries"])
     record("seed_registry_entries", len(seed_reg["entries"]) == 13, str(len(seed_reg["entries"])))
+    # The registry must describe exactly the component set the code defines, so a
+    # newly added component (B15c: SYNTHETIC_CIRCLE_BASED_H1_V1) cannot leave a
+    # stale registry behind.
+    defined_components = sorted(
+        (d["component_kind"], d["stable_id"])
+        for d in components.component_definitions()
+    )
+    registered_components = sorted(
+        (e["component_kind"], e["stable_id"]) for e in comp_reg["entries"]
+    )
     record(
         "component_registry_entries",
-        len(comp_reg["entries"]) == 6,
-        str(len(comp_reg["entries"])),
+        registered_components == defined_components,
+        f"{len(registered_components)} vs {len(defined_components)}",
     )
     seed_keys = [
         tuple(

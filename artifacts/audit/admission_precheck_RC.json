@@ -1,45 +1,116 @@
 {
   "all_pass": true,
   "budget": {
-    "h1_pending": "SMOKE_ALT (B15c)",
-    "t_0_32_seconds": 1019.558104900003,
-    "t_h0_hat_hours": 27.657283661566918,
-    "wall_limit_hours": 192.0
+    "t_0_32_seconds": 842.0347019000037,
+    "t_1_32_seconds": 272.51739369999996,
+    "t_core_hat_hours": 27.57285790657562,
+    "t_h0_hat_hours": 22.84165315483951,
+    "t_h1_hat_hours": 4.731204751736111,
+    "wall_limits_hours": {
+      "core": 268.8,
+      "h0": 192.0,
+      "h1": 76.8
+    }
   },
   "checks": [
     {
-      "check": "g3_counts",
+      "check": "g3_counts_smoke",
       "detail": "896/3584/73600",
       "pass": true
     },
     {
-      "check": "g3_zero_unexplained_errors",
+      "check": "g3_zero_unexplained_errors_smoke",
       "detail": "",
       "pass": true
     },
     {
-      "check": "g3_zero_missing_fields",
+      "check": "g3_zero_missing_fields_smoke",
       "detail": "",
       "pass": true
     },
     {
-      "check": "g3_blind_no_forbidden_aggregates",
+      "check": "g3_no_formal_id_leak_smoke",
+      "detail": "checked=180",
+      "pass": true
+    },
+    {
+      "check": "g3_blind_no_forbidden_aggregates_smoke",
       "detail": "",
       "pass": true
     },
     {
-      "check": "g3_provenance_bound",
-      "detail": "aad291fc9570",
+      "check": "g3_provenance_bound_smoke",
+      "detail": "8614dee622e1",
+      "pass": true
+    },
+    {
+      "check": "g3_smoke_generation_smoke",
+      "detail": "S02",
+      "pass": true
+    },
+    {
+      "check": "g3_identity_closure_smoke",
+      "detail": "cells=28 units=896 evaluations=3584",
+      "pass": true
+    },
+    {
+      "check": "g3_counts_smoke_alt",
+      "detail": "256/1024/49152",
+      "pass": true
+    },
+    {
+      "check": "g3_zero_unexplained_errors_smoke_alt",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "g3_zero_missing_fields_smoke_alt",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "g3_no_formal_id_leak_smoke_alt",
+      "detail": "checked=66",
+      "pass": true
+    },
+    {
+      "check": "g3_blind_no_forbidden_aggregates_smoke_alt",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "g3_provenance_bound_smoke_alt",
+      "detail": "89298ac17c7c",
+      "pass": true
+    },
+    {
+      "check": "g3_smoke_generation_smoke_alt",
+      "detail": "S02",
+      "pass": true
+    },
+    {
+      "check": "g3_identity_closure_smoke_alt",
+      "detail": "cells=8 units=256 evaluations=1024",
       "pass": true
     },
     {
       "check": "wall_gate_h0",
-      "detail": "t_H0_hat=27.657h",
+      "detail": "t_H0_hat=22.842h",
+      "pass": true
+    },
+    {
+      "check": "wall_gate_h1",
+      "detail": "t_H1_hat=4.731h",
+      "pass": true
+    },
+    {
+      "check": "wall_gate_core",
+      "detail": "t_core_hat=27.573h",
       "pass": true
     },
     {
       "check": "memory_gate_total_rss",
-      "detail": "peak_total=1485676544 bytes",
+      "detail": "peak_total=1495216128 bytes",
       "pass": true
     },
     {
@@ -49,7 +120,7 @@
     },
     {
       "check": "disk_gate",
-      "detail": "est_peak=230.4 MiB free=455.6 GiB",
+      "detail": "est_peak=386.1 MiB free=455.6 GiB",
       "pass": true
     },
     {
@@ -58,17 +129,32 @@
       "pass": true
     }
   ],
-  "generated_at_utc": "2026-09-10T03:08:18Z",
+  "generated_at_utc": "2026-09-10T05:55:44Z",
   "kind": "admission_precheck_v1",
-  "resource_sample": {
-    "errors": 0,
-    "peak_total_rss_bytes": 1485676544,
-    "replicates": 2,
-    "swap_before_bytes": 75046912,
-    "swap_growth_bytes": 0,
-    "swap_peak_bytes": 75046912,
-    "wall_seconds": 78.28669110000192,
-    "workers": 8
-  },
-  "schema_version": 1
+  "resource_sample": [
+    {
+      "errors": 0,
+      "peak_total_rss_bytes": 1495216128,
+      "phase": "SMOKE_NULL",
+      "replicates": 2,
+      "swap_before_bytes": 56680448,
+      "swap_growth_bytes": 0,
+      "swap_peak_bytes": 56680448,
+      "wall_seconds": 66.50312380000105,
+      "workers": 8
+    },
+    {
+      "errors": 0,
+      "peak_total_rss_bytes": 1463922688,
+      "phase": "SMOKE_ALT",
+      "replicates": 2,
+      "swap_before_bytes": 56680448,
+      "swap_growth_bytes": 0,
+      "swap_peak_bytes": 56680448,
+      "wall_seconds": 21.831592399998044,
+      "workers": 8
+    }
+  ],
+  "schema_version": 1,
+  "smoke_generation_id": "S02"
 }

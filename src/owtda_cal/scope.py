@@ -21,7 +21,13 @@ from dataclasses import dataclass
 from . import cells
 from .calibrate import M0_STABLE_ID, M1_STABLE_ID
 from .canonical import canonical_decimal_text
-from .dgp import DGP_FAMILY_N_AR, DGP_FAMILY_N_CIRCLE
+from .dgp import (
+    DGP_FAMILY_H1,
+    DGP_FAMILY_N_AR,
+    DGP_FAMILY_N_CIRCLE,
+    H1_SCENARIO_MEAN,
+    H1_SCENARIO_SHAPE,
+)
 from .features import BPI_STABLE_ID, MOMENTS_STABLE_ID
 from .identity import H
 
@@ -31,11 +37,11 @@ PHASE_SMOKE_NULL = "SMOKE_NULL"
 PHASE_SMOKE_ALT = "SMOKE_ALT"
 
 SCENARIO_NULL = "h0"
-SCENARIO_ALT_SHAPE = "shape_change"
-SCENARIO_ALT_MEAN = "mean_shift"
+SCENARIO_ALT_SHAPE = H1_SCENARIO_SHAPE
+SCENARIO_ALT_MEAN = H1_SCENARIO_MEAN
 
 RHO_LEVELS = ("0", "0.8")
-H1_FAMILY = "CIRCLE_BASED_H1"
+H1_FAMILY = DGP_FAMILY_H1
 H0_FAMILIES = (DGP_FAMILY_N_AR, DGP_FAMILY_N_CIRCLE)
 H1_GEOMETRIES = (64, 16)  # W=64, M=192, s in {64,16} (Plan §12.1)
 
@@ -48,6 +54,12 @@ R0_H1 = 1600
 # 73,600 PH windows (128 master paths x 575), H1 256 / 1,024 / 49,152 (Plan §9.3).
 R0_SMOKE = 32
 SMOKE_PHASES = (PHASE_SMOKE_NULL, PHASE_SMOKE_ALT)
+# Plan §9.3 umbrella generation: any DGP/feature/method/schema/RNG-consumption/
+# runner/reference-environment change bumps this monotonically and forces both
+# smoke phases to be re-run, so one generation never spans two implementations.
+# S01 was superseded by the B15c H1 DGP addition.
+SMOKE_GENERATION_ID = "S02"
+SMOKE_GENERATIONS_SUPERSEDED = ("S01",)
 
 
 def scope_spec_h0() -> dict:

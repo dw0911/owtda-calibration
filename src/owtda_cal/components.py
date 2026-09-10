@@ -26,10 +26,16 @@ COMPONENT_KINDS = ("data", "feature", "method")
 
 DATA_STABLE_N_AR = "SYNTHETIC_N_AR_V1"
 DATA_STABLE_N_CIRCLE = "SYNTHETIC_N_CIRCLE_V1"
+DATA_STABLE_H1 = "SYNTHETIC_CIRCLE_BASED_H1_V1"
 
 
 def data_generator_spec(family: str) -> dict[str, Any]:
-    """Run-parameter-free generator config (``rho`` lives in the run config)."""
+    """Run-parameter-free generator config (``rho`` lives in the run config).
+
+    The H1 entry covers *both* alternatives: ``scenario_id`` is a run parameter
+    exactly like ``rho``, so it belongs to ``data_model_config_hash`` and never
+    to the component config (Plan §12.1, §15.3).
+    """
     if family == dgp.DGP_FAMILY_N_AR:
         return {
             "schema_version": 1,
@@ -49,6 +55,18 @@ def data_generator_spec(family: str) -> dict[str, Any]:
             "distribution": "circle_random_walk",
             "unit": "unitless",
             "rho_role": "run_parameter",
+        }
+    if family == dgp.DGP_FAMILY_H1:
+        return {
+            "schema_version": 1,
+            "config_kind": "data_generator",
+            "stable_id": DATA_STABLE_H1,
+            "generator_version": dgp.H1_VERSION,
+            "distribution": "circle_then_figure_eight_or_unit_circle_mean_shift",
+            "unit": "unitless",
+            "rho_role": "run_parameter",
+            "scenario_role": "run_parameter",
+            "alternatives": list(dgp.H1_SCENARIOS),
         }
     raise ValueError(f"unknown DGP family {family!r}")
 
@@ -112,6 +130,16 @@ def component_definitions() -> list[dict[str, Any]]:
             ],
         },
         {
+            "component_kind": "data",
+            "stable_id": DATA_STABLE_H1,
+            "config_hash": data_generator_config_hash(dgp.DGP_FAMILY_H1),
+            "code_files": [
+                "src/owtda_cal/dgp.py",
+                "src/owtda_cal/seeding.py",
+                *identity_core,
+            ],
+        },
+        {
             "component_kind": "feature",
             "stable_id": BPI_STABLE_ID,
             "config_hash": feature_config_hash(bpi_feature_spec()),
@@ -165,6 +193,7 @@ __all__ = [
     "COMPONENT_KINDS",
     "DATA_STABLE_N_AR",
     "DATA_STABLE_N_CIRCLE",
+    "DATA_STABLE_H1",
     "data_generator_spec",
     "data_generator_config_hash",
     "method_spec",

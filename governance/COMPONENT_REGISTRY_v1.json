@@ -1,10 +1,22 @@
 {
   "entries": [
     {
-      "code_file_manifest_hash": "69f1e9fdcf4597cda1b32101e3b856aefb42b1c70d5c958c5e62ff8eb2350ae0",
+      "code_file_manifest_hash": "c36df69296cb5b03234ff3e9bf96e95bcc9c383839f667b132092dcd5e612dd6",
       "component_generation_id": "D01",
       "component_kind": "data",
-      "component_registry_entry_hash": "9096a1362b3b00759d727d2977ad255280e17d950f77d1c3ba4f56c98f7c2609",
+      "component_registry_entry_hash": "ccb841ee5505cdd6ceaabe1553e1e509346c05fc1fefec0d64520d171a0dbfe2",
+      "config_hash": "03b87941c153babb9ed123513df03eda482f400b24fccf84d321dcc0c876aec4",
+      "evidence_generation_id": "G01",
+      "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
+      "project_id": "owtda-cal-r1",
+      "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+      "stable_id": "SYNTHETIC_CIRCLE_BASED_H1_V1"
+    },
+    {
+      "code_file_manifest_hash": "c36df69296cb5b03234ff3e9bf96e95bcc9c383839f667b132092dcd5e612dd6",
+      "component_generation_id": "D01",
+      "component_kind": "data",
+      "component_registry_entry_hash": "061f7f638f35ba98d359143da6f6a1c7b98b46699d49d7b709a4177251a6f304",
       "config_hash": "ca75bfeb3a045a5cac40a40a472fc4c9538c7c66255492e6d729862bbc2c1f78",
       "evidence_generation_id": "G01",
       "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
@@ -13,10 +25,10 @@
       "stable_id": "SYNTHETIC_N_AR_V1"
     },
     {
-      "code_file_manifest_hash": "69f1e9fdcf4597cda1b32101e3b856aefb42b1c70d5c958c5e62ff8eb2350ae0",
+      "code_file_manifest_hash": "c36df69296cb5b03234ff3e9bf96e95bcc9c383839f667b132092dcd5e612dd6",
       "component_generation_id": "D01",
       "component_kind": "data",
-      "component_registry_entry_hash": "c1b6baf0b5fc959328e602b00f69817a21acdbdad43367d5306660419084e028",
+      "component_registry_entry_hash": "bcfc1fcafcdcc2ab8c05915c96f2bcd96899a2267f381bdaf73b4049e8a00687",
       "config_hash": "077aeb981a76d9e8ff6315dbfc158a05c28040e85a48cc798d47345ed0a83b0d",
       "evidence_generation_id": "G01",
       "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
@@ -49,10 +61,10 @@
       "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
     },
     {
-      "code_file_manifest_hash": "f464ff11cf85cace546de6844e4fc6cf081f1080007f2a707e2a0dc832a4b1bb",
+      "code_file_manifest_hash": "78d3621e60c331c284af108fb91676608dc1ce6ea004ae33b195d7220ddb4d8f",
       "component_generation_id": "M01",
       "component_kind": "method",
-      "component_registry_entry_hash": "7e1a0399111afc4a84dc46d041d3a3305558a472f8d4555ea30ad3f57a5c5769",
+      "component_registry_entry_hash": "33c9d4499017dc4b43e772ecdd6b3b133dcae56f9a76936cc14de5c65e2a7285",
       "config_hash": "2a184b3835a281e0a172c40cccd3262e4c7dbaf8bef4a4869ac256d306dcec0e",
       "evidence_generation_id": "G01",
       "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",
@@ -61,10 +73,10 @@
       "stable_id": "M0_NAIVE_PERM_B999_V1"
     },
     {
-      "code_file_manifest_hash": "f464ff11cf85cace546de6844e4fc6cf081f1080007f2a707e2a0dc832a4b1bb",
+      "code_file_manifest_hash": "78d3621e60c331c284af108fb91676608dc1ce6ea004ae33b195d7220ddb4d8f",
       "component_generation_id": "M01",
       "component_kind": "method",
-      "component_registry_entry_hash": "f0b64f76a31c412e22966f8418747e8e9df001c982176856dbcca3d67e8f61af",
+      "component_registry_entry_hash": "3a3ccb4d19b776edbbbcba6aba6f003050ffb83234e8a84f1df3bd54ce15a671",
       "config_hash": "f778e68bb16160fc803263fb4d9848962130df3c7c3f91002b01913181f9b6f4",
       "evidence_generation_id": "G01",
       "freeze_id": "7cb4f85e31394b23f6c9d6bcaa9ce6a7fc7b824b2b5c8fb6b600c9181979322d",

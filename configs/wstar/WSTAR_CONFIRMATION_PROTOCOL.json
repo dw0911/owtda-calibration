@@ -1,0 +1,70 @@
+{
+  "acceptance_conditions": [
+    "scientific payload hash identical across every run of a phase",
+    "unexplained error count = 0 in every run",
+    "swap growth = 0 bytes in every run",
+    "peak total RSS (parent + workers) <= 24 GiB in every run",
+    "data units / evaluation rows / PH windows equal the frozen G3 counts of the phase"
+  ],
+  "candidates": [
+    8,
+    12
+  ],
+  "compute_identity": {
+    "environment_lock_source": "governance/FREEZE_MANIFEST.environment_lock_hash",
+    "runner": "audit/run_wstar_confirmation.py",
+    "thread_env": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "thread_env_rule": "set by scripts/frozen_env.py before the interpreter starts"
+  },
+  "config_kind": "wstar_confirmation_protocol",
+  "decision_rule": {
+    "else": "choose the candidate with the higher median throughput",
+    "if_within_tie_margin": "choose the smaller worker count (8)",
+    "statistic": "median of the three per-run throughputs (computed PH windows / wall seconds)",
+    "tie_margin": 0.02
+  },
+  "execution_order": "fixed alternating order 8->12, 12->8, 8->12 per phase",
+  "failure_action": "any failed acceptance condition voids this confirmation and requires a new preregistration; no re-run to improve a number",
+  "frozen_w_star": 8,
+  "paired_runs_per_phase": 3,
+  "phases": [
+    "SMOKE_NULL",
+    "SMOKE_ALT"
+  ],
+  "preregistered_at_utc": "2026-09-10T15:20:00Z",
+  "prior_evidence": {
+    "evidence_path": "artifacts/audit/worker_sweep_RC.json",
+    "note": "the 8-replicate sweep pointed at w=12 (H0 +8.1%, H1 +6.3% vs w=8); that measurement is 8 replicates per cell and is demoted to historical diagnostic under this protocol",
+    "role": "historical_diagnostic_only"
+  },
+  "prohibitions": [
+    "no parameter, code or environment change between the paired runs",
+    "no result-dependent choice of run order",
+    "no discarding of a completed run",
+    "no use of the 8-replicate sweep as the confirmation"
+  ],
+  "protocol_id": "WSTAR-CONFIRMATION-R1-20260910",
+  "purpose": "confirm or falsify the frozen COMPUTE_SPEC.w_star=8 on the full 32-replicate smoke worklist with paired alternating worker counts",
+  "schema_version": 1,
+  "sequence": [
+    [
+      8,
+      12
+    ],
+    [
+      12,
+      8
+    ],
+    [
+      8,
+      12
+    ]
+  ],
+  "status": "PREREGISTERED_BEFORE_MEASUREMENT",
+  "worklist": "full 32-replicate smoke worklist (scope.R0_SMOKE = 32; no replicate limit)"
+}
