@@ -247,11 +247,35 @@ def _analysis_spec(estimand_registry_hash_value: str) -> dict[str, Any]:
     }
 
 
+def _confirmed_w_star() -> tuple[int, str]:
+    """``w*`` from the preregistered confirmation verdict (audit P0-3).
+
+    ``COMPUTE_SPEC.w_star`` must come from the protocol's verdict rather than a
+    hand-typed number: ``OWTDA_WSTAR_RC`` points at
+    ``worker_confirmation_RC.json``.  Without it the previous frozen value is
+    kept and that is recorded explicitly.
+    """
+    import os
+
+    rc = os.environ.get("OWTDA_WSTAR_RC")
+    if rc and Path(rc).exists():
+        data = json.loads(Path(rc).read_text(encoding="utf-8"))
+        if data.get("frozen_w_star_confirmed"):
+            return int(data["frozen_w_star"]), f"{rc}:CONFIRMED"
+        selected = data.get("selected_workers") or []
+        if selected:
+            return int(selected[0]), f"{rc}:AMENDED_FROM_MEASUREMENT"
+    return 8, "PREVIOUS_FROZEN_VALUE (no confirmation RC supplied)"
+
+
 def _compute_spec() -> dict[str, Any]:
+    w_star, w_star_source = _confirmed_w_star()
     return {
         "schema_version": 1,
         "config_kind": "compute_spec",
-        "w_star": 8,
+        "w_star": w_star,
+        "w_star_source": w_star_source,
+        "w_star_confirmation_protocol": "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json",
         "worker_consistency": "bitwise_identical_payload",
         "thread_env": {
             "OMP_NUM_THREADS": "1",
