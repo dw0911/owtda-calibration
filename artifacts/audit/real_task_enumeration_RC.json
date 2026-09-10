@@ -1,0 +1,187 @@
+{
+  "candidate_count_total": 23,
+  "dataset_hash": "eb0e11f9c20a0498ffc5f69017b5fd7744f4d46232b8adf52f1b9352525fc33b",
+  "eligibility": [
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject101",
+      "task_count": 3
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject102",
+      "task_count": 1
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject103",
+      "task_count": 4
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject104",
+      "task_count": 3
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject105",
+      "task_count": 3
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject106",
+      "task_count": 3
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject107",
+      "task_count": 3
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": null,
+      "subject_admitted": true,
+      "subject_internal_id": "subject108",
+      "task_count": 3
+    },
+    {
+      "identity_gate_status": "PASS",
+      "nonadmission_reason": "NO_ELIGIBLE_TASK",
+      "subject_admitted": false,
+      "subject_internal_id": "subject109",
+      "task_count": 0
+    }
+  ],
+  "gate": {
+    "admitted_subjects": 8,
+    "every_admitted_subject_has_task": true,
+    "pass": false,
+    "requirements": {
+      "min_subjects": 8,
+      "min_tasks": 24
+    },
+    "total_tasks": 23
+  },
+  "generated_at_utc": "2026-09-10T01:22:00Z",
+  "kind": "real_task_enumeration_rc_v1",
+  "note": "dry-run enumeration only; no sanitized task directories written",
+  "per_subject": {
+    "subject101": {
+      "candidate_count": 3,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.001352223730596652,
+      "final_rows": 376417,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 376417,
+      "rowwise_missing_rate": 0.001352223730596652
+    },
+    "subject102": {
+      "candidate_count": 1,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0008657718120805369,
+      "final_rows": 447000,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 447000,
+      "rowwise_missing_rate": 0.0008657718120805369
+    },
+    "subject103": {
+      "candidate_count": 4,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0007237979219484798,
+      "final_rows": 252833,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 252833,
+      "rowwise_missing_rate": 0.0007237979219484798
+    },
+    "subject104": {
+      "candidate_count": 3,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0006462849236594897,
+      "final_rows": 329576,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 329576,
+      "rowwise_missing_rate": 0.0006462849236594897
+    },
+    "subject105": {
+      "candidate_count": 3,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0008324817294274287,
+      "final_rows": 374783,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 374783,
+      "rowwise_missing_rate": 0.0008324817294274287
+    },
+    "subject106": {
+      "candidate_count": 3,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0009479930462084424,
+      "final_rows": 361817,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 361817,
+      "rowwise_missing_rate": 0.0009479930462084424
+    },
+    "subject107": {
+      "candidate_count": 3,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0008195179193811205,
+      "final_rows": 313599,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 313599,
+      "rowwise_missing_rate": 0.0008195179193811205
+    },
+    "subject108": {
+      "candidate_count": 3,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.003205638787249008,
+      "final_rows": 408031,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 408031,
+      "rowwise_missing_rate": 0.003205638787249008
+    },
+    "subject109": {
+      "candidate_count": 0,
+      "clock_segments": 1,
+      "dropped_bad_rows": 0,
+      "entrywise_missing_rate": 0.0060162793441075856,
+      "final_rows": 8477,
+      "final_segments": 1,
+      "grid_segments": 1,
+      "rows_parsed": 8477,
+      "rowwise_missing_rate": 0.0060162793441075856
+    }
+  },
+  "schema_version": 1,
+  "status": "rc_dry_run",
+  "task_builder_config_hash": "bbaaa38bcc421818d6d8a22c89f26078be8c72baabb81dd53fb55a0e75db7961",
+  "task_index_generation_id": "TI01"
+}

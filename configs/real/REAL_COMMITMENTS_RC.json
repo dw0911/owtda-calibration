@@ -1,0 +1,38 @@
+{
+  "dataset_hash": "eb0e11f9c20a0498ffc5f69017b5fd7744f4d46232b8adf52f1b9352525fc33b",
+  "generated_at_utc": "2026-09-10T01:22:00Z",
+  "note": "commitments only; plaintext secrets stay isolated outside the repository",
+  "real_task_id_salt_commitment": "bd0d18f5356246a4e1db24375d4230ff068e8afbe0fc005cfe8f8ed4ab6abe0f",
+  "real_task_root_key_commitment": "a55d01fb0038861d29f87dd5f2ef0c56e9f1acd9cb17380e7e30b548aa6b4e4d",
+  "schema_version": 1,
+  "secrets_location_abs": "f:/BPI/owtda-data/pamap2\\secrets",
+  "status": "rc",
+  "task_builder_config_hash": "bbaaa38bcc421818d6d8a22c89f26078be8c72baabb81dd53fb55a0e75db7961",
+  "task_builder_spec": {
+    "allowed_activities": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      16,
+      17,
+      24
+    ],
+    "config_kind": "task_builder",
+    "context_range": [
+      20,
+      30
+    ],
+    "grid_hz": 100,
+    "max_zero_run": 500,
+    "min_bout_rows": 3000,
+    "schema_version": 1
+  },
+  "task_index_generation_id": "TI01"
+}
