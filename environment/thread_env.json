@@ -5,7 +5,7 @@
     "OMP_NUM_THREADS": "1",
     "OPENBLAS_NUM_THREADS": "1"
   },
-  "generated_at_utc": "2026-09-10T15:53:57Z",
+  "generated_at_utc": "2026-09-11T13:59:48Z",
   "interpreter": "F:\\BPI\\owtda-calibration\\.venv\\Scripts\\python.exe",
   "kind": "thread_env_evidence",
   "launcher": "scripts/frozen_env.py",

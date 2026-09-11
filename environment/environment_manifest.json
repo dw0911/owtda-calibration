@@ -1,29 +1,28 @@
 {
+  "excluded_patterns": [
+    "*.tmp",
+    "_probe/"
+  ],
   "files": [
     {
-      "path": "environment_manifest.json",
-      "sha256": "d5a8e9d86f7bee83a1f3e65e7c7431a5779c2b08d37b358c001080ba78c2d673",
-      "size": 1828
-    },
-    {
       "path": "environment_rebuild_test.json",
-      "sha256": "4d4a08c10fdb3d96c3eef4e0ed9540cc1da64683051915f2bbe4b4cc8399fa40",
-      "size": 2721
+      "sha256": "505735d3f60f0869389768ef8847963aa51b2abff1180fcb786dfa26247349cc",
+      "size": 2810
     },
     {
       "path": "numpy_show_config.txt",
-      "sha256": "0591befcc54a2ea1236f50f0f666880eaccd368c0332d95cc8e4a750872a05d9",
-      "size": 2540
+      "sha256": "5af135549a797791d93021e78c9968efecc3668bd420c40f684a90ba1a24df3a",
+      "size": 2744
     },
     {
       "path": "pip_freeze_all.txt",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "size": 0
+      "sha256": "866dbfd57290620f510987df727bca8dce4207a2e596ada6caf4fbd107d15309",
+      "size": 560
     },
     {
       "path": "pyproject.toml",
-      "sha256": "d8f8d9034b4318b495463df5d9e987e411bfa86bf74761a15b3d5fd91226b135",
-      "size": 1388
+      "sha256": "c84b296387924fc022950e5730f3f1d34ee74ed124b4ba9d375aa462f6b59844",
+      "size": 1870
     },
     {
       "path": "python_VV.txt",
@@ -32,12 +31,12 @@
     },
     {
       "path": "thread_env.json",
-      "sha256": "19e0cc7dec9b99942626642eac122f0c4a4b20b0b360a8b8a9224e990e39b494",
+      "sha256": "68371dfe742569d7024127b6853862e0a08922204c8dc75cdf0c8c57d547554c",
       "size": 793
     },
     {
       "path": "tool_versions.json",
-      "sha256": "434c0d398b548b2d95d30abca826e67b7de6ea662a6b5790c317fc8018e68a3f",
+      "sha256": "717ac5f866919c755e23bc907593222bc5c3d5f9fe8d6440c749e0ca02bac158",
       "size": 604
     },
     {
@@ -46,7 +45,32 @@
       "size": 62667
     }
   ],
-  "generated_at_utc": "2026-09-10T15:54:03Z",
+  "freeze_evidence": {
+    "attempts": [
+      {
+        "command": [
+          "C:\\Users\\94277\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\uv.EXE",
+          "pip",
+          "freeze",
+          "--python",
+          "F:\\BPI\\owtda-calibration\\.venv\\Scripts\\python.exe"
+        ],
+        "exit_code": 0,
+        "stderr": "",
+        "stdout_bytes": 529
+      }
+    ],
+    "command": [
+      "C:\\Users\\94277\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\uv.EXE",
+      "pip",
+      "freeze",
+      "--python",
+      "F:\\BPI\\owtda-calibration\\.venv\\Scripts\\python.exe"
+    ],
+    "exit_code": 0,
+    "file": "pip_freeze_all.txt"
+  },
+  "generated_at_utc": "2026-09-11T13:59:54Z",
   "kind": "environment_manifest",
   "lock_covers": [
     "pyproject.toml",
@@ -60,5 +84,9 @@
   ],
   "rebuild_test_passed": true,
   "schema_version": 1,
+  "sealed_by": "FREEZE_MANIFEST.environment_lock_manifest",
+  "self_excluded": [
+    "environment_manifest.json"
+  ],
   "thread_env_rule": "four BLAS/thread variables set to \"1\" by scripts/frozen_env.py before the interpreter starts"
 }

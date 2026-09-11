@@ -1,12 +1,23 @@
 """VR persistent homology wrapper (Plan §5.1).
 
 Frozen settings: Vietoris-Rips, F2, H0+H1, maxdim=1, no data-driven thresh,
-euclidean, ``distance_matrix=False`` always (avoids the square-matrix
-heuristic).  ``ripser`` 0.6.15 caps the death of a never-dying H1 class at the
-point-cloud diameter, and reports the final H0 class with ``death=inf``; we
-therefore drop only explicit ``inf`` deaths and keep finite classes (including
-the diameter-capped H1 class, which later hits the winsor cap).  Clouds with
-fewer than 2 unique points are handled upstream (zero vectors).
+euclidean, ``distance_matrix=False`` always (avoids the square-matrix heuristic).
+
+Precision is **layered**, and the layers must not be conflated (audit A09):
+
+* the raw series, point clouds, diagrams and everything downstream (features,
+  scan, calibration) are ``float64``;
+* the PH engine is fixed to ``ripser`` 0.6.15, whose ``ripser()`` casts the dense
+  lower-triangular distances to ``float32`` before calling the C++ backend, so the
+  filtration *inside* the engine is float32.  Input and output ndarrays being
+  float64 does not make the backend float64.
+
+On topology: in a finite Euclidean point cloud the Vietoris-Rips filtration forms
+the full simplex once the filtration value reaches the diameter, so every H1 class
+has died by then; only the final H0 component is reported with ``death=inf``.  We
+therefore drop only explicit ``inf`` deaths and keep all finite classes, which then
+hit the winsor cap.  Clouds with fewer than 2 unique points are handled upstream
+(zero vectors).
 """
 
 from __future__ import annotations

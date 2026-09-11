@@ -4,7 +4,7 @@
     "blas_version": "0.3.29"
   },
   "cpu_count": 16,
-  "generated_at_utc": "2026-09-10T15:53:58Z",
+  "generated_at_utc": "2026-09-11T13:59:48Z",
   "interpreter": "F:\\BPI\\owtda-calibration\\.venv\\Scripts\\python.exe",
   "kind": "tool_versions",
   "machine": "AMD64",

@@ -24,6 +24,7 @@ import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
@@ -47,7 +48,48 @@ def _run(cmd: list[str], *, cwd: Path | None = None, env: dict | None = None) ->
 
 
 def _text(cmd: list[str], *, env: dict | None = None) -> str:
-    return _run(cmd, env=env).stdout
+    """Run a command and return its stdout, failing loudly on any error.
+
+    Audit A07: the previous version returned stdout only and ignored the exit code,
+    so a command that failed on this host (``python -m pip freeze`` is unavailable
+    in a uv-managed venv) silently produced a **zero-byte** evidence file.  A
+    non-zero exit now raises with the command, its exit code and stderr; stderr is
+    appended to successful output too, so warnings cannot hide either.
+    """
+    done = _run(cmd, env=env)
+    if done.returncode != 0:
+        raise RuntimeError(
+            f"evidence command failed (exit {done.returncode}): {' '.join(cmd)}\n"
+            f"stderr: {done.stderr.strip()}"
+        )
+    stderr = done.stderr.strip()
+    return done.stdout + (f"\n[stderr]\n{stderr}\n" if stderr else "")
+
+
+def _capture_evidence(path: Path, candidates: list[list[str]]) -> dict[str, Any]:
+    """Write ``path`` from the first candidate command that really produces output.
+
+    Audit A07: the evidence must name the command that produced it, and a command
+    that fails may never be recorded as an empty (unrecognisable) file.
+    """
+    attempts: list[dict[str, Any]] = []
+    for cmd in candidates:
+        done = _run(cmd)
+        attempts.append({
+            "command": cmd,
+            "exit_code": done.returncode,
+            "stdout_bytes": len(done.stdout or ""),
+            "stderr": (done.stderr or "").strip()[:2000],
+        })
+        if done.returncode == 0 and (done.stdout or "").strip():
+            path.write_text(done.stdout, encoding="utf-8")
+            return {
+                "file": path.name,
+                "command": cmd,
+                "exit_code": 0,
+                "attempts": attempts,
+            }
+    raise RuntimeError(f"no candidate command produced {path.name}: {attempts}")
 
 
 def main() -> int:
@@ -60,15 +102,27 @@ def main() -> int:
     out = Path(args.out).expanduser()
     out.mkdir(parents=True, exist_ok=True)
     python = args.python
+    # A07: `uv` is a host executable, not a module of the venv interpreter, so it
+    # is resolved explicitly and its absence is fatal (the rebuild test needs it).
+    uv_bin = shutil.which("uv")
+    if uv_bin is None:
+        raise SystemExit("uv executable not found on PATH; the environment rebuild test requires it")
     if not Path(python).exists():
         raise SystemExit(f"frozen interpreter missing: {python}")
 
     shutil.copyfile(REPO / "pyproject.toml", out / "pyproject.toml")
     shutil.copyfile(REPO / "uv.lock", out / "uv.lock")
 
-    (out / "pip_freeze_all.txt").write_text(
-        _text([python, "-m", "pip", "freeze"]), encoding="utf-8"
-    )
+    candidates: list[list[str]] = []
+    if uv_bin:
+        candidates.append([uv_bin, "pip", "freeze", "--python", python])
+    candidates.append([python, "-m", "pip", "freeze"])
+    candidates.append([sys.executable, "-m", "pip", "freeze"])
+    if uv_bin:
+        candidates.append(
+            [uv_bin, "pip", "list", "--format", "freeze", "--python", python]
+        )
+    freeze_info = _capture_evidence(out / "pip_freeze_all.txt", candidates)
     (out / "python_VV.txt").write_text(
         _text([python, "-VV"]) + "\n" + "sys.executable=" + python + "\n", encoding="utf-8"
     )
@@ -96,7 +150,9 @@ def main() -> int:
             ]
         ).strip()
     )
-    uv_version = _text([sys.executable, "-m", "uv", "--version"]).strip()
+    # A07: uv lives on PATH, not as a module of the venv interpreter; collecting
+    # its version through `sys.executable -m uv` silently produced empty evidence.
+    uv_version = _text([uv_bin, "--version"]).strip() if uv_bin else "UNAVAILABLE"
     blas = json.loads(
         _text(
             [
@@ -137,8 +193,8 @@ def main() -> int:
     (rebuild_dir / "src" / "owtda_cal" / "__init__.py").write_text(
         "VERSION = '0.1.0'\n", encoding="utf-8"
     )
-    sync = _run([sys.executable, "-m", "uv", "sync", "--frozen"], cwd=rebuild_dir)
-    installed = _text([sys.executable, "-m", "uv", "pip", "list", "--python", str(rebuild_dir / ".venv/Scripts/python.exe")])
+    sync = _run([uv_bin, "sync", "--frozen"], cwd=rebuild_dir)
+    installed = _text([uv_bin, "pip", "list", "--python", str(rebuild_dir / ".venv/Scripts/python.exe")])
     rebuild = {
         "schema_version": 1,
         "kind": "environment_rebuild_test",
@@ -157,11 +213,26 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    files = sorted(p for p in out.iterdir() if p.is_file())
+    # Audit A07: the manifest must describe the *other* evidence files only.  The
+    # previous version enumerated the directory before rewriting itself, so the
+    # stale manifest was hashed into its own replacement and the recorded
+    # size/hash could never match the delivered file.  It is removed first and
+    # excluded explicitly; the freeze manifest seals the final bytes from outside.
+    manifest_path = out / "environment_manifest.json"
+    manifest_path.unlink(missing_ok=True)
+    excluded = {"environment_manifest.json"}
+    files = sorted(
+        p for p in out.iterdir()
+        if p.is_file() and p.name not in excluded and not p.name.endswith(".tmp")
+    )
     manifest = {
         "schema_version": 1,
         "kind": "environment_manifest",
         "generated_at_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "self_excluded": sorted(excluded),
+        "excluded_patterns": ["*.tmp", "_probe/"],
+        "sealed_by": "FREEZE_MANIFEST.environment_lock_manifest",
+        "freeze_evidence": freeze_info,
         "lock_covers": [
             "pyproject.toml",
             "uv.lock",
