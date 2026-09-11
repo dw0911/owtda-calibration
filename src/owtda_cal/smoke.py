@@ -148,6 +148,375 @@ def _smoke_row(
     }
 
 
+@dataclass(frozen=True)
+class ExpectedCell:
+    """One expected smoke cell, in the **smoke** identity domain."""
+
+    DGP_family: str
+    scenario_id: str
+    rho: str
+    W: int
+    stride: int
+    T: int
+    M: int
+    logical_cell_id: str
+    physical_cell_id: str
+
+
+@dataclass(frozen=True)
+class SmokeExpected:
+    """The complete expected identity set of one smoke phase (audit A01).
+
+    One traversal produces the SCOPE_DESIGN rows, the expected (ID-only)
+    evaluation rows and the runner worklist, so the plan cannot describe a
+    different identity domain than the ledger.  Nothing here depends on the
+    runner: this is the specification side.
+    """
+
+    phase: str
+    smoke_generation_id: str
+    replicate_count: int
+    experiment_id: str
+    cells: tuple[ExpectedCell, ...]
+    rows: tuple[dict[str, Any], ...]
+
+    def evaluation_ids(self) -> frozenset[str]:
+        return frozenset(r["evaluation_id"] for r in self.rows)
+
+    def data_unit_ids(self) -> frozenset[str]:
+        return frozenset(r["data_unit_id"] for r in self.rows)
+
+    def feature_sufficient_ids(self) -> frozenset[str]:
+        return frozenset(r["feature_sufficient_id"] for r in self.rows)
+
+    def logical_cell_ids(self) -> frozenset[str]:
+        return frozenset(r["logical_cell_id"] for r in self.rows)
+
+    def units(self) -> frozenset[tuple[str, int, str, str]]:
+        """``(logical_cell_id, replicate_id, feature_id, method_id)`` tuples."""
+        return frozenset(
+            (r["logical_cell_id"], r["replicate_id"], r["feature_id"], r["method_id"])
+            for r in self.rows
+        )
+
+    def replicates_per_cell(self) -> dict[str, frozenset[int]]:
+        acc: dict[str, set[int]] = {}
+        for row in self.rows:
+            acc.setdefault(row["logical_cell_id"], set()).add(row["replicate_id"])
+        return {key: frozenset(v) for key, v in acc.items()}
+
+    def index(self) -> dict[tuple[Any, ...], dict[str, str]]:
+        """Lookup by ``(family, scenario, rho, stride, replicate, feature, method)``."""
+        return {
+            (
+                r["DGP_family"], r["scenario_id"], r["rho"], r["stride"],
+                r["replicate_id"], r["feature_id"], r["method_id"],
+            ): r
+            for r in self.rows
+        }
+
+
+def enumerate_smoke_expected(
+    *, ctx: dict[str, Any], replicate_count: int
+) -> SmokeExpected:
+    """The single source of truth for a smoke phase's expected identities (A01).
+
+    ``ctx`` is the smoke context (project/protocol/freeze/evidence ids, the active
+    ``smoke_generation_id``, the phase and its experiment id).  Replicates are
+    numbered ``1..replicate_count`` (Plan §9.3, audit A02).
+    """
+    phase = ctx["phase"]
+    gen = ctx["smoke_generation_id"]
+    if phase not in scope.SMOKE_PHASES:
+        raise ValueError(f"not a smoke phase: {phase!r}")
+    if replicate_count < 1:
+        raise ValueError("replicate_count must be >= 1")
+    common = {
+        "project_id": ctx["project_id"],
+        "protocol_id": ctx["protocol_id"],
+        "freeze_id": ctx["freeze_id"],
+        "evidence_generation_id": ctx["evidence_generation_id"],
+        "smoke_generation_id": gen,
+        "phase": phase,
+    }
+    experiment_id = ctx["experiment_id"]
+    cell_by_key: dict[tuple[Any, ...], ExpectedCell] = {}
+    rows: list[dict[str, Any]] = []
+
+    def cell_for(
+        *, DGP_family: str, scenario_id: str, rho: str, W: int, stride: int, T: int,
+        M: int, data_model_config_hash: str,
+    ) -> ExpectedCell:
+        key = (DGP_family, scenario_id, rho, W, stride, T, M)
+        cell = cell_by_key.get(key)
+        if cell is None:
+            cell = ExpectedCell(
+                DGP_family=DGP_family, scenario_id=scenario_id, rho=rho, W=W,
+                stride=stride, T=T, M=M,
+                logical_cell_id=smoke_ids.smoke_logical_cell_id(
+                    smoke_experiment_id=experiment_id, smoke_generation_id=gen,
+                    DGP_family=DGP_family, scenario_id=scenario_id, rho=rho, W=W,
+                    stride=stride, T=T, M=M,
+                ),
+                physical_cell_id=smoke_ids.smoke_physical_cell_id(
+                    **common, DGP_family=DGP_family, rho=rho, W=W, stride=stride,
+                    T=T, M=M, data_model_config_hash=data_model_config_hash,
+                ),
+            )
+            cell_by_key[key] = cell
+        return cell
+
+    def rows_for(
+        cell: ExpectedCell, *, replicate: int, base_series_id: str,
+        master_replicate_id: str,
+    ) -> None:
+        data_unit_id = smoke_ids.smoke_data_unit_id(
+            smoke_base_series_id=base_series_id,
+            smoke_physical_cell_id=cell.physical_cell_id,
+            smoke_generation_id=gen,
+        )
+        logical_data_key = smoke_ids.smoke_logical_data_key(
+            smoke_generation_id=gen, smoke_logical_cell_id=cell.logical_cell_id,
+            smoke_master_replicate_id=master_replicate_id,
+        )
+        for feature_id in scope.FEATURE_IDS:
+            logical_feature_key = smoke_ids.smoke_logical_feature_key(
+                smoke_generation_id=gen, smoke_logical_data_key=logical_data_key,
+                feature_id=feature_id,
+            )
+            feature_sufficient_id = smoke_ids.smoke_feature_sufficient_id(
+                smoke_generation_id=gen, smoke_data_unit_id=data_unit_id,
+                feature_id=feature_id,
+                feature_config_hash=FEATURE_CONFIG_HASH_BY_STABLE[feature_id],
+            )
+            for method_key in ("M0", "M1"):
+                method_id = METHOD_BY_KEY[method_key][0]
+                rows.append({
+                    "phase": phase,
+                    "smoke_generation_id": gen,
+                    "experiment_id": experiment_id,
+                    "logical_cell_id": cell.logical_cell_id,
+                    "physical_cell_id": cell.physical_cell_id,
+                    "logical_data_key": logical_data_key,
+                    "logical_feature_key": logical_feature_key,
+                    "logical_evaluation_key": smoke_ids.smoke_logical_evaluation_key(
+                        smoke_generation_id=gen,
+                        smoke_logical_data_key=logical_data_key,
+                        feature_id=feature_id, method_id=method_id,
+                    ),
+                    "data_unit_id": data_unit_id,
+                    "feature_sufficient_id": feature_sufficient_id,
+                    "evaluation_id": smoke_ids.smoke_evaluation_id(
+                        smoke_generation_id=gen, smoke_data_unit_id=data_unit_id,
+                        smoke_feature_sufficient_id=feature_sufficient_id,
+                        method_id=method_id,
+                        method_config_hash=METHOD_CONFIG_HASH_BY_KEY[method_key],
+                    ),
+                    "DGP_family": cell.DGP_family,
+                    "scenario_id": cell.scenario_id,
+                    "rho": cell.rho,
+                    "replicate_id": replicate,
+                    "W": cell.W,
+                    "stride": cell.stride,
+                    "T": cell.T,
+                    "M": cell.M,
+                    "feature_id": feature_id,
+                    "method_id": method_id,
+                })
+
+    if phase == scope.PHASE_SMOKE_NULL:
+        for family in scope.H0_FAMILIES:
+            for rho in scope.RHO_LEVELS:
+                dmh = _data_model_hash(family, rho)
+                for replicate in range(1, replicate_count + 1):
+                    master_replicate_id = smoke_ids.smoke_master_replicate_id(
+                        **common, DGP_family=family, replicate_id=replicate
+                    )
+                    base_series_id = smoke_ids.smoke_base_series_id(
+                        smoke_master_replicate_id=master_replicate_id,
+                        smoke_generation_id=gen, rho=rho,
+                        raw_length=cells.L_MASTER, data_model_config_hash=dmh,
+                    )
+                    for h0_cell in scope.h0_null_cells():
+                        if h0_cell.family != family or h0_cell.rho != rho:
+                            continue
+                        cell = cell_for(
+                            DGP_family=family, scenario_id=scope.SCENARIO_NULL,
+                            rho=rho, W=h0_cell.W, stride=h0_cell.stride,
+                            T=h0_cell.T, M=h0_cell.M, data_model_config_hash=dmh,
+                        )
+                        rows_for(
+                            cell, replicate=replicate,
+                            base_series_id=base_series_id,
+                            master_replicate_id=master_replicate_id,
+                        )
+    else:
+        for cell_def in scope.h1_alt_cells():
+            dmh = dgp.data_model_config_hash(
+                dgp.h1_data_model_spec(cell_def.scenario, cell_def.rho)
+            )
+            for replicate in range(1, replicate_count + 1):
+                master_replicate_id = smoke_ids.smoke_master_replicate_id(
+                    **common, DGP_family=dgp.DGP_FAMILY_H1, replicate_id=replicate
+                )
+                base_series_id = smoke_ids.smoke_base_series_id(
+                    smoke_master_replicate_id=master_replicate_id,
+                    smoke_generation_id=gen, rho=cell_def.rho,
+                    raw_length=cell_def.T, data_model_config_hash=dmh,
+                )
+                cell = cell_for(
+                    DGP_family=dgp.DGP_FAMILY_H1, scenario_id=cell_def.scenario,
+                    rho=cell_def.rho, W=cell_def.W, stride=cell_def.stride,
+                    T=cell_def.T, M=cell_def.M, data_model_config_hash=dmh,
+                )
+                rows_for(
+                    cell, replicate=replicate, base_series_id=base_series_id,
+                    master_replicate_id=master_replicate_id,
+                )
+
+    ordered = tuple(
+        sorted(cell_by_key.values(), key=lambda c: (c.DGP_family, c.scenario_id, c.rho, c.stride))
+    )
+    return SmokeExpected(
+        phase=phase, smoke_generation_id=gen, replicate_count=replicate_count,
+        experiment_id=experiment_id, cells=ordered,
+        rows=tuple(sorted(rows, key=lambda r: (
+            r["logical_cell_id"], r["replicate_id"], r["feature_id"], r["method_id"],
+        ))),
+    )
+
+
+def smoke_scope_rows(
+    *,
+    project_id: str,
+    protocol_id: str,
+    freeze_id: str,
+    evidence_generation_id: str,
+    smoke_generation_id: str,
+    phase: str,
+    replicate_count: int,
+) -> list[dict[str, Any]]:
+    """SCOPE_DESIGN rows for a smoke phase, in the **smoke** identity domain (A01).
+
+    The smoke scope must be generated from the same domain as the ledger; the
+    previous formal-domain rows shared no cell/experiment id with the executed
+    rows, so the seal could not connect plan and execution.
+    """
+    ctx = {
+        "project_id": project_id, "protocol_id": protocol_id, "freeze_id": freeze_id,
+        "evidence_generation_id": evidence_generation_id,
+        "smoke_generation_id": smoke_generation_id, "phase": phase,
+        "experiment_id": smoke_ids.smoke_experiment_id(
+            project_id=project_id, protocol_id=protocol_id, freeze_id=freeze_id,
+            evidence_generation_id=evidence_generation_id,
+            smoke_generation_id=smoke_generation_id, phase=phase,
+        ),
+    }
+    expected = enumerate_smoke_expected(ctx=ctx, replicate_count=replicate_count)
+    by_cell: dict[str, dict[str, Any]] = {}
+    for row in expected.rows:
+        entry = by_cell.setdefault(row["logical_cell_id"], {
+            "phase": phase,
+            "experiment_id": row["experiment_id"],
+            "logical_cell_id": row["logical_cell_id"],
+            "budget_membership": [],
+            "feature_id": row["feature_id"],
+            "method_id": row["method_id"],
+            "replicate_count": replicate_count,
+            "expected_logical_evaluations": replicate_count,
+            "required": True,
+            "source_null_logical_cell_id": None,
+            "null_model_config_hash": None,
+            "_features": set(),
+            "_methods": set(),
+        })
+        entry["_features"].add(row["feature_id"])
+        entry["_methods"].add(row["method_id"])
+    out: list[dict[str, Any]] = []
+    for cell_id in sorted(by_cell):
+        base = by_cell[cell_id]
+        features = sorted(base.pop("_features"))
+        methods = sorted(base.pop("_methods"))
+        for feature_id in features:
+            for method_id in methods:
+                out.append({**base, "feature_id": feature_id, "method_id": method_id})
+    return out
+
+
+#: Identity fields a smoke ledger row must agree on with the expectation.
+SMOKE_IDENTITY_FIELDS = (
+    "phase",
+    "smoke_generation_id",
+    "experiment_id",
+    "logical_cell_id",
+    "logical_data_key",
+    "logical_feature_key",
+    "logical_evaluation_key",
+    "data_unit_id",
+    "feature_sufficient_id",
+    "DGP_family",
+    "scenario_id",
+    "rho",
+    "feature_id",
+    "method_id",
+)
+
+
+def assert_smoke_ledger_matches_expected(
+    *,
+    ctx: dict[str, Any],
+    replicate_count: int,
+    ledger_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Fail closed unless the ledger is exactly the expected identity set (A01/A05).
+
+    Two independent checks, neither of which can be satisfied by a count:
+
+    1. **set equality** of the evaluation ids built from the specification;
+    2. **row-by-row foreign keys** — every other identity field of every ledger row
+       must equal the expected row's value (looked up by evaluation id).
+
+    The expectation comes from :func:`enumerate_smoke_expected`, i.e. from the
+    frozen specification, never from a runner-produced ID column.  A 0-based
+    replicate numbering is rejected by the same equality (its ids are disjoint).
+    """
+    expected = enumerate_smoke_expected(ctx=ctx, replicate_count=replicate_count)
+    expected_ids = expected.evaluation_ids()
+    actual_ids = {row["evaluation_id"] for row in ledger_rows}
+    if actual_ids != expected_ids:
+        missing = sorted(expected_ids - actual_ids)[:3]
+        unexpected = sorted(actual_ids - expected_ids)[:3]
+        raise ValueError(
+            "smoke ledger does not match the expected identity set: "
+            f"missing={missing} unexpected={unexpected} "
+            f"(expected {len(expected_ids)}, got {len(actual_ids)})"
+        )
+    by_id = {row["evaluation_id"]: row for row in expected.rows}
+    for row in ledger_rows:
+        reference = by_id[row["evaluation_id"]]
+        for name in SMOKE_IDENTITY_FIELDS:
+            if row.get(name) != reference[name]:
+                raise ValueError(
+                    f"identity mismatch in {name!r} for evaluation "
+                    f"{row['evaluation_id'][:12]}: {row.get(name)!r} != "
+                    f"{reference[name]!r}"
+                )
+    per_cell = expected.replicates_per_cell()
+    wanted = frozenset(range(1, replicate_count + 1))
+    bad = {cell: sorted(v) for cell, v in per_cell.items() if v != wanted}
+    if bad:
+        raise ValueError(f"replicate numbering is not 1..{replicate_count}: {bad}")
+    return {
+        "phase": ctx["phase"],
+        "smoke_generation_id": ctx["smoke_generation_id"],
+        "evaluation_rows": len(ledger_rows),
+        "cells": len(per_cell),
+        "replicate_count": replicate_count,
+        "data_units": len(expected.data_unit_ids()),
+        "feature_sufficient_ids": len(expected.feature_sufficient_ids()),
+    }
+
+
 def process_master_feature(payload: dict[str, Any]) -> dict[str, Any]:
     """Worker entry point: one H0 master path x one feature (Plan §9.3).
 
@@ -697,6 +1066,10 @@ __all__ = [
     "ROW_FIELDS",
     "FEATURE_KIND_BY_STABLE",
     "SmokeResult",
+    "ExpectedCell",
+    "SmokeExpected",
+    "enumerate_smoke_expected",
+    "smoke_scope_rows",
     "process_master_feature",
     "process_alt_feature",
     "smoke_context",

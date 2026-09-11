@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import cells
+from . import cells, smoke_ids
 from .calibrate import M0_STABLE_ID, M1_STABLE_ID
 from .canonical import canonical_decimal_text
 from .dgp import (
@@ -308,10 +308,26 @@ def scope_design_rows(
     ctx = _Ctx(project_id=project_id, protocol_id=protocol_id,
                freeze_id=freeze_id, evidence_generation_id=evidence_generation_id)
     rows: list[dict] = []
-    if phase in (PHASE_NULL, PHASE_SMOKE_NULL):
-        count = replicate_count if replicate_count is not None else (
-            R0_SMOKE if phase == PHASE_SMOKE_NULL else R0_H0
+    if phase in (PHASE_SMOKE_NULL, PHASE_SMOKE_ALT):
+        # Audit A01: the smoke scope must be generated from the *smoke* identity
+        # domain by the same enumerator that defines the expected worklist.  The
+        # previous formal-domain rows shared no cell/experiment id with the ledger,
+        # so the seal could not connect the plan to the execution.  The import is
+        # function-local because ``smoke`` imports ``scope`` at module level.
+        from .smoke import smoke_scope_rows
+
+        count = replicate_count if replicate_count is not None else R0_SMOKE
+        return smoke_scope_rows(
+            project_id=project_id,
+            protocol_id=protocol_id,
+            freeze_id=freeze_id,
+            evidence_generation_id=evidence_generation_id,
+            smoke_generation_id=SMOKE_GENERATION_ID,
+            phase=phase,
+            replicate_count=count,
         )
+    if phase == PHASE_NULL:
+        count = replicate_count if replicate_count is not None else R0_H0
         for cell in h0_null_cells():
             cell_id = ctx.cell_id(
                 phase=phase, DGP_family=cell.family,
@@ -336,11 +352,9 @@ def scope_design_rows(
                             "null_model_config_hash": None,
                         }
                     )
-    elif phase in (PHASE_ALT, PHASE_SMOKE_ALT):
-        count = replicate_count if replicate_count is not None else (
-            R0_SMOKE if phase == PHASE_SMOKE_ALT else R0_H1
-        )
-        source_phase = PHASE_SMOKE_NULL if phase == PHASE_SMOKE_ALT else PHASE_NULL
+    elif phase == PHASE_ALT:
+        count = replicate_count if replicate_count is not None else R0_H1
+        source_phase = PHASE_NULL
         for cell in h1_alt_cells():
             cell_id = ctx.cell_id(
                 phase=phase, DGP_family=H1_FAMILY,
@@ -375,6 +389,71 @@ def scope_design_rows(
             f"scope_design_rows supports NULL/ALT/SMOKE_NULL/SMOKE_ALT, got {phase!r}"
         )
     return rows
+
+
+def smoke_scope_join_report(
+    *,
+    project_id: str,
+    protocol_id: str,
+    freeze_id: str,
+    evidence_generation_id: str,
+    phase: str,
+    replicate_count: int | None = None,
+    ledger_rows: list[dict] | None = None,
+) -> dict:
+    """Join the smoke scope rows to the expected (and optionally actual) rows.
+
+    Audit A01/A05: a count-only "closure" hid the fact that the plan and the
+    ledger used two different identity domains.  This returns the explicit
+    intersection so a zero join can never pass as closed.
+    """
+    from .smoke import enumerate_smoke_expected
+
+    generation = SMOKE_GENERATION_ID
+    count = replicate_count if replicate_count is not None else R0_SMOKE
+    ctx = {
+        "project_id": project_id, "protocol_id": protocol_id, "freeze_id": freeze_id,
+        "evidence_generation_id": evidence_generation_id,
+        "smoke_generation_id": generation, "phase": phase,
+        "experiment_id": smoke_ids.smoke_experiment_id(
+            project_id=project_id, protocol_id=protocol_id, freeze_id=freeze_id,
+            evidence_generation_id=evidence_generation_id,
+            smoke_generation_id=generation, phase=phase,
+        ),
+    }
+    expected = enumerate_smoke_expected(ctx=ctx, replicate_count=count)
+    scope_rows = scope_design_rows(
+        project_id=project_id, protocol_id=protocol_id, freeze_id=freeze_id,
+        evidence_generation_id=evidence_generation_id, phase=phase,
+        replicate_count=count,
+    )
+    scope_cells = {r["logical_cell_id"] for r in scope_rows}
+    scope_experiments = {r["experiment_id"] for r in scope_rows}
+    expected_cells = set(expected.logical_cell_ids())
+    report = {
+        "phase": phase,
+        "scope_cells": len(scope_cells),
+        "expected_cells": len(expected_cells),
+        "cell_intersection": len(scope_cells & expected_cells),
+        "experiment_intersection": len(scope_experiments & {expected.experiment_id}),
+        "scope_rows": len(scope_rows),
+        "expected_rows": len(expected.rows),
+        "scope_equals_expected_cells": scope_cells == expected_cells,
+    }
+    if ledger_rows is not None:
+        ledger_cells = {r["logical_cell_id"] for r in ledger_rows}
+        ledger_experiments = {r["experiment_id"] for r in ledger_rows}
+        report.update({
+            "ledger_cells": len(ledger_cells),
+            "ledger_expected_cell_intersection": len(ledger_cells & expected_cells),
+            "ledger_experiment_intersection": len(
+                ledger_experiments & {expected.experiment_id}
+            ),
+            "evaluation_ids_equal": (
+                {r["evaluation_id"] for r in ledger_rows} == set(expected.evaluation_ids())
+            ),
+        })
+    return report
 
 
 def scope_counts_summary() -> dict:
@@ -423,6 +502,7 @@ __all__ = [
     "NullCell",
     "AltCell",
     "h0_null_cells",
+    "smoke_scope_join_report",
     "h1_alt_cells",
     "scope_design_rows",
     "scope_counts_summary",

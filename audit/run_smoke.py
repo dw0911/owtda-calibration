@@ -190,26 +190,45 @@ def formal_id_leak_check(
     }
 
 
-def identity_closure(phase: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """Check the smoke ledger closes over every Layer-1/2 identity (§16)."""
-    n_cells = (
-        len(scope.h0_null_cells())
-        if phase == scope.PHASE_SMOKE_NULL
-        else len(scope.h1_alt_cells())
+def identity_closure(
+    phase: str, rows: list[dict[str, Any]], *, manifest: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Spec-derived closure check for the smoke ledger (audit A01/A05).
+
+    The previous implementation compared **unique-ID counts**, which cannot see a
+    wrong worklist: the audited ledger had the right number of cells and still
+    shared no cell id with its own scope, and replacing one evaluation id with
+    ``AUDIT_WRONG_ID`` kept every count intact.  Now the expectation is rebuilt
+    from the specification by the single smoke enumerator, and the check is set
+    equality plus row-by-row foreign keys.  Counts are still reported, but only as
+    informational output.
+    """
+    from owtda_cal import smoke as smoke_mod
+
+    if manifest is None:
+        raise ValueError(
+            "identity_closure requires the freeze manifest: the expectation must be "
+            "rebuilt from the specification, not counted from the ledger"
+        )
+    ctx = smoke_mod.smoke_context(manifest, phase)
+    report = smoke_mod.assert_smoke_ledger_matches_expected(
+        ctx=ctx, replicate_count=scope.R0_SMOKE, ledger_rows=rows
     )
-    units = n_cells * scope.R0_SMOKE
-    feature_sufficient = units * len(scope.FEATURE_IDS)
-    evaluations = feature_sufficient * len(scope.METHOD_IDS)
-    expected = {
-        "experiment_id": 1,
-        "logical_cell_id": n_cells,
-        "data_unit_id": units,
-        "feature_sufficient_id": feature_sufficient,
-        "evaluation_id": evaluations,
-        "logical_evaluation_key": evaluations,
+    counts = {
+        key: len({row[key] for row in rows})
+        for key in (
+            "experiment_id", "logical_cell_id", "data_unit_id",
+            "feature_sufficient_id", "evaluation_id", "logical_evaluation_key",
+        )
     }
-    actual = {key: len({row[key] for row in rows}) for key in expected}
-    return {"expected": expected, "actual": actual, "passed": actual == expected}
+    return {
+        "passed": True,
+        "mode": "spec_derived_set_equality_plus_foreign_keys",
+        "evaluation_rows": report["evaluation_rows"],
+        "cells": report["cells"],
+        "replicate_count": report["replicate_count"],
+        "counts_informational": counts,
+    }
 
 
 def run_phase(
@@ -242,7 +261,7 @@ def run_phase(
     )
     missing_fields = smoke.assert_row_fields(result.rows)
     leak = formal_id_leak_check(manifest, phase, result.rows)
-    closure = identity_closure(phase, result.rows)
+    closure = identity_closure(phase, result.rows, manifest=manifest)
 
     shard_dir = REPO / "artifacts/smoke" / phase
     shard_dir.mkdir(parents=True, exist_ok=True)

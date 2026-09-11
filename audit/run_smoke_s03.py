@@ -143,7 +143,7 @@ def main() -> int:
         expected = smoke.expected_smoke_counts(phase)
         scale = replicates / scope.R0_SMOKE
         expected_scaled = {k: round(v * scale) for k, v in expected.items()}
-        closure = identity_closure(phase, result.rows)
+        closure = identity_closure(phase, result.rows, manifest=manifest)
         leak = formal_id_leak_check(manifest, phase, result.rows)
         counts_match = (
             result.data_units == expected_scaled["data_units"]
