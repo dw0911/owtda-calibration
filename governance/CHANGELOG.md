@@ -317,8 +317,26 @@
 - S03 证据：pre-amendment 的 S03 目录**不删除**，整体移出交付树为
   `smoke/S03_superseded_pre_parallelism_amendment/`，使交付包内只含单一身份的追加链。
 
+## 2026-09-11 — 缺陷记录：治理链被重写导致外部追加事件丢失（F-R1-1）
+
+- **现象**：`audit/build_governance_registries.py::_write_chain` 每次按内部清单**重写**整条
+  registry 链（事件含构建时刻 `at_utc`，重写必然改变字节）。`AM_PARALLELISM_DECOUPLING`
+  重建时，由 `audit/append_invalidation.py` 追加的 `INV_V12_SOURCE_ANCHOR` 被静默抹掉；
+  补充序列的登记阶段随后重新追加，交付链恢复完整（3 条 invalidation）。
+- **归类**：与 `freeze_id` 静默复用（本批已修）、`source_tree_hash` 静默漏项（B15c 已修）
+  同属「无法从产物本身察觉的历史丢失」。
+- **本轮处置**：**未在本批修改代码**，因为 `audit/` 属冻结源域，任何改动都会移动
+  `source_tree_hash` 并强制第 5 次编号 smoke——为一个纯工具缺陷付出身份抖动不划算。
+  已提出结构性修法（追加器 + 内容冲突 fail-closed）与根因建议（收窄冻结源域），
+  见 `governance/AMENDMENT_PROPOSAL_TOOLING_SCOPE.md`，建议与 B15d 合并实施。
+- **未受影响的保证**：本批交付包内的两条链均为**完整且自洽**（哈希链可复算、
+  事件数与 reason 对象齐备），F-R1-1 影响的是**未来重建**，不是已交付对象。
+
 ## 待登记（未发生）
 
+- **F-R1-1 修复**：治理链追加化（`_write_chain`）+ 冻结源域收窄
+  （`governance/AMENDMENT_PROPOSAL_TOOLING_SCOPE.md`，提案未生效；建议与 B15d 的身份变更
+  合并实施，不额外增加一次编号 smoke）；
 - B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
   正式 H0/H1 run 的 runner 与 phase seal 链；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。
