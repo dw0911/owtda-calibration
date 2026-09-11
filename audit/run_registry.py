@@ -74,7 +74,7 @@ def record_start(
     compute_git_commit: str,
     source_tree_hash: str,
     environment_lock_hash: str,
-    w_star: int,
+    workers_used: int,
 ) -> dict[str, Any]:
     registry_dir.mkdir(parents=True, exist_ok=True)
     run_path, state_path = _registry_paths(registry_dir)
@@ -91,7 +91,9 @@ def record_start(
         "compute_git_commit": compute_git_commit,
         "source_tree_hash": source_tree_hash,
         "environment_lock_hash": environment_lock_hash,
-        "w_star": w_star,
+        # AM_PARALLELISM_DECOUPLING: the realised parallelism is a per-run record,
+        # not a frozen compute identity (the contract lives in COMPUTE_SPEC).
+        "workers_used": workers_used,
         "at_utc": at,
         "prev_event_hash": chains.read_tip(str(run_path), hash_field=RUN_EVENT_HASH_FIELD),
     }

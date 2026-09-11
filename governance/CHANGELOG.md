@@ -282,9 +282,43 @@
 - 全量 **521 项测试通过**、ruff **All checks passed**；随后按「先提交源码 → 再重建 →
   后运行」的纪律重建冻结并重跑 S03。
 
+## 2026-09-11 — `AM_PARALLELISM_DECOUPLING`：并行度从「冻结取值」改为「冻结契约」（`v1.4`）
+
+采纳 B 建议（在正式 run 之前实施）：
+
+- **`compute_spec` 只冻结契约**：移除 `w_star` / `w_star_source` /
+  `w_star_confirmation_protocol`，改为 `parallelism_contract`
+  （`workers_range="1..cpu_count"`、`invariance_requirement="bitwise_identical_payload"`、
+  `workers_used_must_be_recorded_per_run=true`、
+  `acceptance={RSS≤24 GiB, swap 增量=0, 未解释 error=0}`、`thread_env` 四变量=1）；
+- **证据移出哈希面**：`FREEZE_MANIFEST.parallelism_evidence`（协议路径 + sha256、裁决
+  `VOIDED_OR_NOT_CONFIRMED`、测量选择、观测到的逐位一致）+ `parallelism_contract_hashed_in`。
+  预登记协议 `configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json` **事后未修改**；
+- `COMPUTE_FREEZE.json` 移除 `w_star`（环境锁只记录观察量，不记录决策）；
+- **运行级记录并行度**：声明值 `SMOKE_CONFIG_v1.json:default_workers`；实际值
+  `RUN_REGISTRY.jsonl:workers_used` 与 `smoke_provenance_manifest.workers_used` /
+  `declared_workers`；`run_smoke_s03` 启动时校验「声明 = 实际」，不一致即拒绝运行；
+- **堵住一处同类静默漂移**：`build_freeze` 此前在 `freeze_id` 变更时会**静默复用旧 freeze_id
+  的 REAL 处置链**（`disposition.validate_chain` 只用各事件自身的 `freeze_id` 重算 genesis，
+  从不与当前冻结比对）。现改为显式 `real_disposition_decision ∈ {CREATE, REANCHOR, REUSE}`：
+  漂移时**追加 re-anchor 事件**并以 `freeze_id_anchored` 做 fail-closed 校验；
+  `FREEZE_MANIFEST.real_disposition` 记录 `decision` 与 `freeze_id_anchored`；
+- `audit/validate_freeze.py` 的 seed 条目数改为由 `len(build_freeze.SEED_ROOT_FAMILIES)` 派生
+  （去掉硬编码 13，与先前的组件数同属一类过期断言）；
+- **补件包构建器的 D-1/D-2 结构性修复**：冻结 tag 由 `revision/git_show_ref_tags.txt` **派生**
+  （保留 `--freeze-tag` 覆盖），`governance/` 改为**整树 glob**（`REQUIRED_GOVERNANCE` 只标记
+  必须存在的项）——两处散文/清单过期不再可能；
+- **身份后果（必须在正式 run 前完成）**：`compute_spec_hash` → `freeze_id` →
+  `SCOPE_DESIGN` 行哈希 → 全部合成身份变更（`requires_refreeze=true`）；REAL 链追加一条
+  re-anchor 事件；`v1.0` 未移动，本次冻结标签为 **`v1.4-freeze-owtda-cal-r1`**；
+- 新增测试 `tests/test_parallelism_contract.py`（16 项）：契约形状、哈希面内**无任何冻结的
+  worker 数**（按键名递归检查，避免 `window_start` 子串假阳性）、运行级记录、REAL 链
+  re-anchor 与 `CREATE/REUSE/REANCHOR` 全覆盖；
+- S03 证据：pre-amendment 的 S03 目录**不删除**，整体移出交付树为
+  `smoke/S03_superseded_pre_parallelism_amendment/`，使交付包内只含单一身份的追加链。
+
 ## 待登记（未发生）
 
-- **B 提案裁定**（并行度解耦：采纳则需在正式 run 前重建 + 新建 `v1.3`）；
 - B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
   正式 H0/H1 run 的 runner 与 phase seal 链；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

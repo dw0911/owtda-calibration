@@ -252,45 +252,77 @@ def _analysis_spec(estimand_registry_hash_value: str) -> dict[str, Any]:
     }
 
 
-def _confirmed_w_star() -> tuple[int, str]:
-    """``w*`` from the preregistered confirmation verdict (audit P0-3).
+def _parallelism_evidence() -> dict[str, Any]:
+    """Evidence behind the parallelism *contract* (recorded in the manifest only).
 
-    ``COMPUTE_SPEC.w_star`` must come from the protocol's verdict rather than a
-    hand-typed number: ``OWTDA_WSTAR_RC`` points at
-    ``worker_confirmation_RC.json``.  Without it the previous frozen value is
-    kept and that is recorded explicitly.
+    Amendment ``AM_PARALLELISM_DECOUPLING``: the frozen ``compute_spec`` covers the
+    **contract** (thread variables pinned to 1, bitwise payload invariance, the
+    resource acceptance conditions), never the concrete worker count.  The verdict
+    of the preregistered confirmation and the observed invariance are *evidence*
+    and are deliberately kept **outside** the hashed spec, so a later confirmation
+    can never silently re-freeze the scientific identity.  ``OWTDA_WSTAR_RC``
+    points at ``worker_confirmation_RC.json`` when available.
     """
     import os
 
+    protocol = REPO / "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json"
+    evidence: dict[str, Any] = {
+        "contract": "COMPUTE_SPEC.parallelism_contract",
+        "confirmation_protocol": "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json",
+        "confirmation_protocol_sha256": (
+            hashlib.sha256(protocol.read_bytes()).hexdigest()
+            if protocol.exists()
+            else None
+        ),
+        "verdict": "NOT_SUPPLIED",
+        "measured_selection": None,
+        "observed_bitwise_identity": None,
+        "note": (
+            "The preregistered protocol measured 8 vs 12 workers and its acceptance "
+            "condition (no swap growth) failed for one phase, so no worker count was "
+            "adopted; under this amendment that verdict no longer changes any frozen "
+            "identity - the contract it was testing is what is frozen."
+        ),
+    }
     rc = os.environ.get("OWTDA_WSTAR_RC")
     if rc and Path(rc).exists():
         data = json.loads(Path(rc).read_text(encoding="utf-8"))
-        if data.get("frozen_w_star_confirmed"):
-            return int(data["frozen_w_star"]), f"{rc}:CONFIRMED"
-        # A voided / partially failing confirmation may NOT change the frozen value
-        # (the protocol forbids re-running a failed run to improve the number).
-        selected = data.get("selected_workers") or []
-        return (
-            int(data.get("frozen_w_star", 8)),
-            f"{rc}:NOT_CONFIRMED_PREVIOUS_VALUE_KEPT measured_selection={selected}",
+        evidence["verdict"] = (
+            "CONFIRMED" if data.get("frozen_w_star_confirmed")
+            else "VOIDED_OR_NOT_CONFIRMED"
         )
-    return 8, "PREVIOUS_FROZEN_VALUE (no confirmation RC supplied)"
+        evidence["measured_selection"] = data.get("selected_workers")
+        evidence["reference_workers"] = data.get("frozen_w_star")
+        decisions = data.get("decisions_per_phase") or {}
+        if decisions:
+            evidence["observed_bitwise_identity"] = all(
+                (d.get("payload_identical_to_reference") is not False)
+                for d in decisions.values()
+            )
+    return evidence
 
 
 def _compute_spec() -> dict[str, Any]:
-    w_star, w_star_source = _confirmed_w_star()
+    """The hashed compute spec: the parallelism *contract*, not its realisation."""
     return {
         "schema_version": 1,
         "config_kind": "compute_spec",
-        "w_star": w_star,
-        "w_star_source": w_star_source,
-        "w_star_confirmation_protocol": "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json",
-        "worker_consistency": "bitwise_identical_payload",
-        "thread_env": {
-            "OMP_NUM_THREADS": "1",
-            "OPENBLAS_NUM_THREADS": "1",
-            "MKL_NUM_THREADS": "1",
-            "NUMEXPR_NUM_THREADS": "1",
+        "parallelism_contract": {
+            "workers_range": "1..cpu_count",
+            "invariance_requirement": "bitwise_identical_payload",
+            "workers_used_must_be_recorded_per_run": True,
+            "worker_consistency": "bitwise_identical_payload",
+            "acceptance": {
+                "peak_total_rss_gib_max": "24",
+                "swap_growth_bytes_max": 0,
+                "unexplained_errors_max": 0,
+            },
+            "thread_env": {
+                "OMP_NUM_THREADS": "1",
+                "OPENBLAS_NUM_THREADS": "1",
+                "MKL_NUM_THREADS": "1",
+                "NUMEXPR_NUM_THREADS": "1",
+            },
         },
         "budget_limits": {
             "h0_wall_hours": "192",
@@ -303,7 +335,7 @@ def _compute_spec() -> dict[str, Any]:
         "ripser": {"maxdim": 1, "thresh": "inf", "coeff": 2, "engine": "cpu"},
         "cache_key_fields": ["data_unit_id", "window_start", "W", "feature_config_hash"],
         "no_cross_cell_cache_reuse": True,
-        "reference_environment": "registered_windows11_host_float64_frozen_lock_w_star",
+        "reference_environment": "registered_windows11_host_float64_frozen_lock",
     }
 
 
@@ -316,13 +348,18 @@ def _blas_vendor() -> str:
         return "unknown"
 
 
-def _compute_freeze(w_star: int) -> dict[str, Any]:
+def _compute_freeze() -> dict[str, Any]:
+    """Environment observations only.
+
+    Amendment ``AM_PARALLELISM_DECOUPLING`` removed ``w_star`` from this object:
+    a worker count is a decision, not an observation, and it does not belong in
+    the environment lock.
+    """
     thread_vars = ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS")
     return {
         "schema_version": 1,
         "kind": "compute_freeze",
         "freeze_date": FREEZE_DATE,
-        "w_star": w_star,
         "os": platform.platform(),
         "architecture": platform.machine(),
         "python": platform.python_version(),
@@ -334,8 +371,8 @@ def _compute_freeze(w_star: int) -> dict[str, Any]:
         "thread_env_observed": {v: os.environ.get(v, "unset") for v in thread_vars},
         "gpu_used": False,
         # P0-2: the 8-replicate / pre-amendment budget probes are historical
-        # diagnostics; the authoritative budget basis is the preregistered w*
-        # confirmation on the full 32-replicate worklist (audit supplement R1).
+        # diagnostics; the authoritative budget basis is the preregistered
+        # parallelism confirmation on the full 32-replicate worklist (R1).
         "budget_evidence": (
             "OWTDA-CAL-R1-AUDIT-SUPPLEMENT-R1-20260910.zip:/wstar/worker_confirmation_RC.json"
         ),
@@ -489,9 +526,27 @@ def _component_entries(fid: str) -> list[dict[str, Any]]:
     )
 
 
+def real_disposition_decision(events: list[dict[str, Any]], fid: str) -> str:
+    """``CREATE`` / ``REANCHOR`` / ``REUSE`` for the REAL disposition chain.
+
+    ``disposition.validate_chain`` re-derives each event's genesis from *that
+    event's own* ``freeze_id`` and never compares it with the current freeze, so a
+    changed ``freeze_id`` used to leave the chain pointing at the previous
+    identity **silently**.  That is the same defect class as a stale
+    ``compute_git_commit``: identity drift without a signal.  The decision is
+    therefore made explicit here, and a drift must be *recorded* as a new event
+    rather than passed over.
+    """
+    if not events:
+        return "CREATE"
+    return "REUSE" if events[-1].get("freeze_id") == fid else "REANCHOR"
+
+
 def _write_real_disposition(fid: str) -> dict[str, Any]:
     path = GOV / "REAL_DISPOSITION.jsonl"
-    if not path.exists():
+    events = disposition.read_events(path) if path.exists() else []
+    decision = real_disposition_decision(events, fid)
+    if decision in ("CREATE", "REANCHOR"):
         reason = disposition.reason_object(
             reason_code="TASK_GATE_MIN_TASKS_NOT_MET", **REAL_RC_EVIDENCE
         )
@@ -502,6 +557,11 @@ def _write_real_disposition(fid: str) -> dict[str, Any]:
             protocol_id=PROTOCOL_ID,
             freeze_id=fid,
             evidence_generation_id=EVIDENCE_GENERATION_ID,
+        )
+        prev = (
+            genesis
+            if decision == "CREATE"
+            else chains.read_tip(str(path), hash_field="disposition_hash")
         )
         event = disposition.event(
             project_id=PROJECT_ID,
@@ -514,13 +574,26 @@ def _write_real_disposition(fid: str) -> dict[str, Any]:
             reason_object_hash_value=r_hash,
             task_index_seal_hash=None,
             truth_unsealed=False,
-            prev_real_disposition_event_hash=genesis,
+            prev_real_disposition_event_hash=prev,
         )
-        chains.append_cas(str(path), event, expected_tip=None, hash_field="disposition_hash")
+        chains.append_cas(
+            str(path),
+            event,
+            expected_tip=None if decision == "CREATE" else prev,
+            hash_field="disposition_hash",
+        )
     info = disposition.validate_chain(path)
     if info["latest_status"] != "REAL_OMITTED_BY_DATA_GATE":
         raise ValueError("existing REAL_DISPOSITION chain has unexpected status")
-    info["reason_object_hash"] = disposition.read_events(path)[-1]["reason_object_hash"]
+    latest = disposition.read_events(path)[-1]
+    if latest["freeze_id"] != fid:
+        raise ValueError(
+            "REAL_DISPOSITION chain tip is not anchored to the current freeze_id "
+            f"({latest['freeze_id'][:12]} != {fid[:12]})"
+        )
+    info["real_disposition_decision"] = decision
+    info["freeze_id_anchored"] = True
+    info["reason_object_hash"] = latest["reason_object_hash"]
     return info
 
 
@@ -579,7 +652,7 @@ def main() -> int:
             "csv_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
         }
 
-    _write_json(gov / "COMPUTE_FREEZE.json", _compute_freeze(compute["w_star"]))
+    _write_json(gov / "COMPUTE_FREEZE.json", _compute_freeze())
 
     seed_entries = _seed_entries(fid)
     registry.validate_seed_registry(seed_entries)
@@ -641,6 +714,11 @@ def main() -> int:
         [e["component_registry_entry_hash"] for e in component_entries]
     )
     manifest["secret_registry_snapshot_hash"] = registry.registry_snapshot_hash([])
+    # AM_PARALLELISM_DECOUPLING: the parallelism *contract* is hashed (it lives in
+    # COMPUTE_SPEC); its evidence is recorded here, in the manifest, which feeds
+    # back into no hash - so a later confirmation cannot silently move identity.
+    manifest["parallelism_evidence"] = _parallelism_evidence()
+    manifest["parallelism_contract_hashed_in"] = "COMPUTE_SPEC_v1.json"
     manifest["real_disposition"] = {
         "chain_file": "governance/REAL_DISPOSITION.jsonl",
         "tip_hash": disposition_info["tip_hash"],
@@ -649,6 +727,11 @@ def main() -> int:
         "latest_stage": disposition_info["latest_stage"],
         "truth_unsealed": disposition_info["truth_unsealed"],
         "reason_object_hash": disposition_info["reason_object_hash"],
+        # Explicit so a freeze_id drift can never pass unnoticed (see
+        # real_disposition_decision): REANCHOR means the tip was re-anchored to
+        # the current freeze_id by appending an event, not silently reused.
+        "decision": disposition_info["real_disposition_decision"],
+        "freeze_id_anchored": disposition_info["freeze_id_anchored"],
     }
     _write_json(gov / "FREEZE_MANIFEST.json", manifest)
 

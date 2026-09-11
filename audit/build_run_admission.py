@@ -36,6 +36,12 @@ SMOKE_CONFIG = {
     "schema_version": 1,
     "config_kind": "smoke_config",
     "replicates_per_cell": scope.R0_SMOKE,
+    # AM_PARALLELISM_DECOUPLING: parallelism is a *run-level* declaration, not a
+    # frozen scientific identity.  It is deliberately recorded here (whose hash
+    # feeds RUN_INPUT_BINDINGS, i.e. the run, and never freeze_id) alongside the
+    # contract in COMPUTE_SPEC.parallelism_contract; the realised value is written
+    # per run as ``workers_used``.
+    "default_workers": 8,
     "smoke_generation_id": scope.SMOKE_GENERATION_ID,
     "smoke_data_units": {"SMOKE_NULL": 896, "SMOKE_ALT": 256},
     "smoke_evaluations": {"SMOKE_NULL": 3584, "SMOKE_ALT": 1024},

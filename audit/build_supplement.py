@@ -100,29 +100,9 @@ PLAN: list[tuple[str, str, bool]] = [
         True,
     ),
     ("configs/schema/schemas_manifest.json", "repo/configs/schema/schemas_manifest.json", True),
-    # P0-5 governance
-    ("governance/AMENDMENT_REGISTRY.jsonl", "repo/governance/AMENDMENT_REGISTRY.jsonl", True),
-    (
-        "governance/INVALIDATION_REGISTRY.jsonl",
-        "repo/governance/INVALIDATION_REGISTRY.jsonl",
-        True,
-    ),
-    ("governance/B12_DISPOSITION.json", "repo/governance/B12_DISPOSITION.json", True),
-    (
-        "governance/GOVERNANCE_REGISTRY_VERIFICATION.json",
-        "repo/governance/GOVERNANCE_REGISTRY_VERIFICATION.json",
-        True,
-    ),
-    ("governance/CHANGELOG.md", "repo/governance/CHANGELOG.md", True),
-    ("governance/reasons/AM_SMOKE_SHIFT_DIRECTION.json", "repo/governance/reasons/AM_SMOKE_SHIFT_DIRECTION.json", True),
-    ("governance/reasons/AM_WORKER_CONFIRMATION_RULE.json", "repo/governance/reasons/AM_WORKER_CONFIRMATION_RULE.json", True),
-    ("governance/reasons/AM_ENVIRONMENT_LOCK_CORRECTION.json", "repo/governance/reasons/AM_ENVIRONMENT_LOCK_CORRECTION.json", True),
-    ("governance/reasons/INV_S01_SMOKE.json", "repo/governance/reasons/INV_S01_SMOKE.json", True),
-    ("governance/reasons/INV_S02_PREFREEZE_SMOKE.json", "repo/governance/reasons/INV_S02_PREFREEZE_SMOKE.json", True),
-    # freeze objects that changed identity
-    ("governance/FREEZE_MANIFEST.json", "repo/governance/FREEZE_MANIFEST.json", True),
-    ("governance/COMPUTE_SPEC_v1.json", "repo/governance/COMPUTE_SPEC_v1.json", True),
-    ("governance/COMPUTE_FREEZE.json", "repo/governance/COMPUTE_FREEZE.json", True),
+    # P0-5 governance is collected by glob (_copy_governance): an explicit list
+    # silently omitted newly added objects (disclosed defect D-2), so the whole
+    # governance tree is copied and REQUIRED_GOVERNANCE only marks what must exist.
     # P0-6 smoke S03
     ("smoke/S03/SMOKE_NULL/evaluation_rows.jsonl", "smoke/S03/SMOKE_NULL/evaluation_rows.jsonl", True),
     ("smoke/S03/SMOKE_ALT/evaluation_rows.jsonl", "smoke/S03/SMOKE_ALT/evaluation_rows.jsonl", True),
@@ -186,7 +166,70 @@ def _copy_p0_smoke(evidence_root: Path, staging: Path) -> list[dict[str, Any]]:
     return copied
 
 
-def _cover(*, now: str, head: str, manifest: dict[str, Any]) -> str:
+REQUIRED_GOVERNANCE = (
+    "governance/FREEZE_MANIFEST.json",
+    "governance/COMPUTE_SPEC_v1.json",
+    "governance/COMPUTE_FREEZE.json",
+    "governance/AMENDMENT_REGISTRY.jsonl",
+    "governance/INVALIDATION_REGISTRY.jsonl",
+    "governance/CHANGELOG.md",
+    "governance/B12_DISPOSITION.json",
+    "governance/GOVERNANCE_REGISTRY_VERIFICATION.json",
+)
+
+
+def _copy_governance(staging: Path) -> list[dict[str, Any]]:
+    """Copy the whole governance tree by glob (fixes disclosed defect D-2)."""
+    root = REPO / "governance"
+    copied: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = f"governance/{path.relative_to(root).as_posix()}"
+        dest = staging / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, dest)
+        seen.add(rel)
+        copied.append(
+            {
+                "path": rel,
+                "source": f"repo/{path.relative_to(REPO).as_posix()}",
+                "status": "ok",
+                "size": path.stat().st_size,
+                "sha256": _sha256(path),
+            }
+        )
+    for rel in REQUIRED_GOVERNANCE:
+        if rel not in seen:
+            copied.append(
+                {
+                    "path": rel,
+                    "source": f"repo/{rel}",
+                    "status": f"MISSING:{root / rel[len('governance/'):]}",
+                    "required": True,
+                }
+            )
+    return copied
+
+
+def _derive_freeze_tag(staging: Path) -> str:
+    """The active freeze tag, read from the collected revision artifacts (D-1)."""
+    path = staging / "revision" / "git_show_ref_tags.txt"
+    if not path.exists():
+        return "UNKNOWN"
+    tags = [
+        line.split("refs/tags/", 1)[1]
+        for line in path.read_text(encoding="utf-8").split()
+        if line.startswith("refs/tags/v")
+    ]
+    numbered = [
+        (int(t.split("-")[0][1:]), t) for t in tags if t.split("-")[0][1:].isdigit()
+    ]
+    return max(numbered)[1] if numbered else "UNKNOWN"
+
+
+def _cover(*, now: str, head: str, manifest: dict[str, Any], freeze_tag: str) -> str:
     return f"""# {SUBMISSION_ID}
 
 补件（增量）：原 `OWTDA-CAL-R1-AUDIT-SUBMISSION-20260910` 包保持**只读**，本包只补
@@ -213,20 +256,23 @@ def _cover(*, now: str, head: str, manifest: dict[str, Any]) -> str:
 | P0-6 sealed S03 smoke | `smoke/S03/` | ledgers、seals、RUN/STATE 注册表、provenance |
 | P0-7 原始测试证据 | `verification/` | `pytest_full.log/.xml`、`ruff_check.log`、环境 |
 
-## 补件后处置（本轮追加，不改变任何身份）
+## 补件后处置（本轮追加）
 
 - `governance/H1_CONSTRUCT_REVIEW_PACKET.{{json,md}}` —— 回答
   `H1-ALTERNATIVE-CONSTRUCT-CONTRACTS = PENDING_CODE_REVIEW`：受审函数按源码 SHA256 固定，
   8 条构造合同全部 PASS，并列出刻意不作的声明；
-- `governance/AMENDMENT_PROPOSAL_PARALLELISM_DECOUPLING.md` —— §1 为**已生效**的 `w*`
-  处置（维持 8）；§2 为**未生效**的并行度解耦提案（待裁定，未改动任何身份）；
+- `governance/AMENDMENT_PROPOSAL_PARALLELISM_DECOUPLING.md` —— §1 为 `w*` 的历史处置
+  （未采纳 12）；§2 的并行度解耦提案**已采纳并生效**（`AM_PARALLELISM_DECOUPLING`，
+  `requires_refreeze=true`）。该 amendment 改变了 `compute_spec_hash → freeze_id →
+  SCOPE_DESIGN 行哈希`，故**全部合成身份已随之重派生**（这是本轮唯一的身份变更）；
 - fail-closed 冻结守卫（`audit/repo_guard.py`）：`build_freeze` / `build_run_admission`
   在写任何字节前拒绝脏的 `src/ configs/ audit/`，杜绝「静默漏项」这一类缺陷（S02 的
   stale `compute_git_commit`、F-B15c-4 的 `source_tree_hash` 漏项）。
 
 ## 锚点
 
-- 冻结 tag：`v1.2-freeze-owtda-cal-r1`（`v1.0` 未移动；`v1.1` 已取代，见 `DISCLOSURES.md`）
+- 冻结 tag：`{freeze_tag}`（**从本包 `revision/git_show_ref_tags.txt` 派生**，不再硬编码；
+  `v1.0-freeze-owtda-cal-r1` 自始未移动，历史 amendment 标签见该文件与 `DISCLOSURES.md`）
 - `freeze_id`：`{manifest.get("freeze_id", "see repo governance/FREEZE_MANIFEST.json")}`
 - `source_tree_hash`：见 `revision/source_tree_hash.txt` 与 `revision/source_manifest.json`
 
@@ -241,36 +287,52 @@ python -c "import hashlib,pathlib;r=pathlib.Path('<解压目录>');L=[l for l in
 """
 
 
-def _disclosures(*, now: str) -> str:
+def _disclosures(*, now: str, freeze_tag: str) -> str:
     return f"""# 披露（{SUBMISSION_ID}）
 
-生成时间（UTC）：{now}
+生成时间（UTC）：{now}；当前冻结 tag：`{freeze_tag}`（由本包 `revision/` 工件派生）。
 
-## 1. `w*` 确认未通过（不采纳新值）
+## 1. 并行度：从「冻结取值」改为「冻结契约」
 
 预登记协议 `configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json` 在任何测量之前入 git
-（`protocol_sha256 = df17eb1c…`）。执行结果：
+（`protocol_sha256 = df17eb1c…`），**事后未被修改**。执行结果：
 
 | phase | 8 workers（中位数） | 12 workers（中位数） | payload 逐位一致 | 验收 |
 |---|---|---|---|---|
 | SMOKE_NULL | 166.9 win/s | 187.8 win/s | ✓ | **VOIDED**（一次运行 swap 增量 4 MB） |
 | SMOKE_ALT | 358.4 win/s | 403.9 win/s | ✓ | CONFIRMED |
 
-按协议「任一验收条件失败即作废、且**不得重跑改善数字**」，**不采纳 w*=12**，冻结值维持 8；
-`COMPUTE_SPEC.w_star_source` 记录该判定。更换 `w*` 需要新的预登记。全部 12 次运行（含失败运行）
-原样保留于 `wstar/worker_confirmation_raw.jsonl`。
+按协议「任一验收条件失败即作废、且**不得重跑改善数字**」，**未采纳 12**；该次作废的确认
+未被重跑，全部 12 次运行（含失败运行）原样保留于 `wstar/worker_confirmation_raw.jsonl`。
 
-## 2. 顺序缺陷与两次 tag 处置
+**`AM_PARALLELISM_DECOUPLING`**：`compute_spec` 的覆盖面收窄为**契约**——线程变量=1、
+`invariance_requirement = bitwise_identical_payload`、资源验收（RSS≤24 GiB、swap 增量=0、
+未解释 error=0）；实际并行度改为**每 run 记录**——声明值 `SMOKE_CONFIG_v1.json:default_workers`，
+实际值 `RUN_REGISTRY.jsonl:workers_used` 与 `provenance.workers_used`（启动时校验两者一致）。
+`COMPUTE_FREEZE` 不再含 `w_star`（环境锁只记录观察量）；确认协议与其裁决作为契约证据保留在
+`FREEZE_MANIFEST.parallelism_evidence`（**不哈希**，故后续确认不会再次静默移动身份）。
+后果：`compute_spec_hash` → `freeze_id` → `SCOPE_DESIGN` 行哈希与全部合成身份随之变更，
+因此在正式 run 之前实施（本次即如此）。
+
+## 2. 顺带堵住的静默漂移缺陷
+
+`build_freeze` 在 `freeze_id` 变更时会**静默复用旧 freeze_id 的 REAL 处置链**（
+`disposition.validate_chain` 只用各事件自身的 `freeze_id` 重算 genesis，从不与当前冻结比对）。
+本 amendment 改为显式判定 `CREATE / REANCHOR / REUSE`：漂移时**追加一条 re-anchor 事件**，
+并以 `freeze_id_anchored` 做 fail-closed 校验；`FREEZE_MANIFEST.real_disposition` 记录
+`decision` 与 `freeze_id_anchored`。
+
+## 3. 顺序纪律与标签处置
 
 第一次补充序列在 commit **之前**重建冻结，导致 `RUN_COMPONENT_SET.compute_git_commit` 指向的
-revision 不包含实际运行源码（与被驳回的 S02 同因）。修正后的顺序为「先提交源码 → 再重建 →
-后运行」，并在新 revision 上重跑 S03。处置：
+revision 不包含实际运行源码（与被驳回的 S02 同因）。修正后的顺序固定为「**先提交源码 →
+再重建 → 再登记 → 后运行**」，并已加入 fail-closed 守卫（`audit/repo_guard.py`：冻结域脏即
+拒绝构建，「无法证明干净」视为不干净）。
 
-- `v1.0-freeze-owtda-cal-r1` **始终未移动**（仍为 `e16222f`）；
-- `v1.1-freeze-owtda-cal-r1` 保留但**已取代**（对齐 `INVALIDATION_REGISTRY.jsonl` 的
-  `INV_V11_FREEZE_TAG`）；
-- `v1.2-freeze-owtda-cal-r1` 为当前冻结 amendment，且在同一未闭合步骤内于最终 lint-clean
-  revision 上重建一次。
+- `v1.0-freeze-owtda-cal-r1` **自始未移动**；
+- `v1.1`、`v1.2` 保留为历史 amendment 锚点（分别登记 `INV_V11_FREEZE_TAG`、
+  `INV_V12_SOURCE_ANCHOR`）；
+- 当前冻结 tag 以本包 `revision/git_show_ref_tags.txt` 为准（本节标题行即由该文件派生）。
 
 ## 3. 样式让步（显式披露）
 
@@ -307,6 +369,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="build the audit supplement")
     parser.add_argument("--evidence-root", required=True)
     parser.add_argument("--out", default=str(OUT_PARENT))
+    parser.add_argument(
+        "--freeze-tag",
+        default=None,
+        help="override the freeze tag; by default it is derived from the collected "
+        "revision/git_show_ref_tags.txt (D-1 fix: never hard-code an identity)",
+    )
     args = parser.parse_args()
 
     evidence_root = Path(args.evidence_root).expanduser()
@@ -336,6 +404,9 @@ def main() -> int:
                 {"path": archive_path, "source": source, "status": f"MISSING:{src}", "required": required}
             )
     entries.extend(_copy_p0_smoke(evidence_root, staging))
+    # P0-5: the whole governance tree by glob (D-2: an explicit list went stale).
+    entries.extend(_copy_governance(staging))
+    freeze_tag = args.freeze_tag or _derive_freeze_tag(staging)
 
     # newest schema_check_*.json is copied under a stable name
     schema_checks = sorted((evidence_root / "schemas").glob("schema_check_*.json"))
@@ -409,9 +480,12 @@ def main() -> int:
         else "UNKNOWN"
     )
     (staging / "README.md").write_text(
-        _cover(now=now, head=head, manifest=manifest), encoding="utf-8"
+        _cover(now=now, head=head, manifest=manifest, freeze_tag=freeze_tag),
+        encoding="utf-8",
     )
-    (staging / "DISCLOSURES.md").write_text(_disclosures(now=now), encoding="utf-8")
+    (staging / "DISCLOSURES.md").write_text(
+        _disclosures(now=now, freeze_tag=freeze_tag), encoding="utf-8"
+    )
 
     contents: list[tuple[str, bytes]] = []
     for path in sorted(staging.rglob("*")):

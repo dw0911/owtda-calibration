@@ -37,7 +37,12 @@ REPO = Path(__file__).resolve().parents[1]
 LAUNCHER = REPO / "scripts/frozen_env.py"
 VENV_PY = REPO / ".venv/Scripts/python.exe"
 SCOPE_FILE = REPO / "src/owtda_cal/scope.py"
-NEW_TAG = "v1.3-freeze-owtda-cal-r1"
+NEW_TAG = "v1.4-freeze-owtda-cal-r1"
+TAG_MESSAGE = (
+    "OW-TDA-CAL-R1 R1 freeze amendment (AM_PARALLELISM_DECOUPLING: parallelism is "
+    "a contract, not a frozen value)"
+)
+SUPERSEDED_SMOKE_DIR = "S03_superseded_pre_parallelism_amendment"
 STAGES = (
     "generation",
     "commit_src",
@@ -124,12 +129,15 @@ def main() -> int:
         ).returncode
         if diff == 1 and _run("git_commit_src", [
             "git", "commit", "-q", "-m",
-            "fix(r1): generation-agnostic smoke test + lint clean for the S03 amendment",
-            "-m", "The current smoke generation is read from scope.SMOKE_GENERATION_ID "
-            "instead of being hard-coded, so the S02 -> S03 amendment cannot silently "
-            "invalidate the test contract. Committed before the freeze rebuild so that "
-            "RUN_COMPONENT_SET.compute_git_commit names a revision that really contains "
-            "the code the runs use.",
+            "feat(compute): decouple parallelism from the frozen compute identity "
+            "(AM_PARALLELISM_DECOUPLING)",
+            "-m", "compute_spec now freezes the parallelism *contract* (thread env = 1, "
+            "bitwise payload invariance, resource acceptance) instead of a worker "
+            "count; the realised parallelism is recorded per run. Also closes a "
+            "silent-drift defect: a freeze_id change no longer lets the REAL "
+            "disposition chain be reused without an explicit re-anchor. Committed "
+            "before the freeze rebuild so RUN_COMPONENT_SET.compute_git_commit names "
+            "a revision that really contains the code the runs use.",
         ]) != 0:
             return 1
         print("source revision committed:", subprocess.run(
@@ -164,10 +172,7 @@ def main() -> int:
             "revision whose frozen scope is byte-identical to the tree the runs used.",
         ]) != 0:
             return 1
-        _run("git_tag", [
-            "git", "tag", "-a", NEW_TAG, "-m",
-            f"OW-TDA-CAL-R1 R1 freeze amendment (w*={w_star}, guard + H1 review packet)",
-        ])
+        _run("git_tag", ["git", "tag", "-a", NEW_TAG, "-m", TAG_MESSAGE])
 
     if stage("register_anchor"):
         # The frozen scope gained the fail-closed guard and the H1 review-packet
@@ -202,15 +207,30 @@ def main() -> int:
         ]) != 0:
             return 1
 
-    if stage("smoke_s03") and _frozen(
-        "smoke_s03", root / "smoke/S03",
-        [
-            "audit/run_smoke_s03.py", "--root", str(root), "--workers", str(w_star),
-            "--phase", "both", "--label", "smoke_s03",
-        ],
-        log_dir=root / "smoke/S03/stdout_stderr",
-    ):
-        return 1
+    if stage("smoke_s03"):
+        # AM_PARALLELISM_DECOUPLING: the parallelism of a run comes from the
+        # run-level declaration in SMOKE_CONFIG, not from a frozen value.
+        smoke_config = json.loads(
+            (REPO / "governance/SMOKE_CONFIG_v1.json").read_text(encoding="utf-8")
+        )
+        workers = int(smoke_config["default_workers"])
+        current = root / "smoke/S03"
+        archived = root / "smoke" / SUPERSEDED_SMOKE_DIR
+        if current.exists() and not archived.exists():
+            # The previous S03 evidence belongs to the pre-amendment identity: keep
+            # it (never delete evidence) but move it out of the delivered tree so
+            # the package cannot mix two identities in one append-only chain.
+            print(f"archiving superseded S03 evidence -> {archived}")
+            current.rename(archived)
+        if _frozen(
+            "smoke_s03", current,
+            [
+                "audit/run_smoke_s03.py", "--root", str(root), "--workers", str(workers),
+                "--phase", "both", "--label", "smoke_s03",
+            ],
+            log_dir=current / "stdout_stderr",
+        ):
+            return 1
 
     if stage("verify") and (_run("validate_schemas", [
         str(VENV_PY), "audit/validate_schemas.py", "--out-dir", str(root / "schemas"),

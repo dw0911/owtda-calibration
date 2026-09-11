@@ -27,6 +27,9 @@ from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # audit/ -> builders
+
+import build_freeze
 
 from owtda_cal import components, disposition, freeze, registry, scope
 from owtda_cal.hashing import file_sha256
@@ -143,7 +146,9 @@ def main() -> int:
     registry.validate_seed_registry(seed_reg["entries"])
     registry.validate_component_registry(comp_reg["entries"])
     registry.validate_secret_registry(secret_reg["entries"])
-    record("seed_registry_entries", len(seed_reg["entries"]) == 13, str(len(seed_reg["entries"])))
+    # Derived, never hard-coded: the frozen seed families are the single source of
+    # truth, so adding/removing one cannot leave a stale expectation behind.
+    record("seed_registry_entries", len(seed_reg["entries"]) == len(build_freeze.SEED_ROOT_FAMILIES), str(len(seed_reg["entries"])))
     # The registry must describe exactly the component set the code defines, so a
     # newly added component (B15c: SYNTHETIC_CIRCLE_BASED_H1_V1) cannot leave a
     # stale registry behind.

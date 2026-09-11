@@ -69,9 +69,25 @@ def main() -> int:
     manifest = _load(GOV / "FREEZE_MANIFEST.json")
     seed_registry = _load(GOV / "SEED_REGISTRY_v1.0.json")
     compute = _load(GOV / "COMPUTE_SPEC_v1.json")
+    smoke_config = _load(GOV / "SMOKE_CONFIG_v1.json")
     admission = manifest["run_admission"]
     phases = list(scope.SMOKE_PHASES) if args.phase == "both" else [args.phase]
     replicates = args.replicates or scope.R0_SMOKE
+
+    # AM_PARALLELISM_DECOUPLING: the run records the parallelism it *used* and the
+    # value its admission *declared*; the frozen contract only requires that any
+    # allowed worker count produce bitwise identical payloads.
+    contract = compute["parallelism_contract"]
+    declared_workers = int(smoke_config["default_workers"])
+    workers_used = int(args.workers)
+    if contract["invariance_requirement"] != "bitwise_identical_payload":
+        raise SystemExit("parallelism contract violated: unexpected invariance requirement")
+    if declared_workers != workers_used:
+        raise SystemExit(
+            f"REFUSED: the run declares workers={declared_workers} in SMOKE_CONFIG "
+            f"but was launched with --workers {workers_used}; the run identity and "
+            "the run itself must agree"
+        )
 
     reports: dict[str, Any] = {}
     provenance: dict[str, Any] = {
@@ -83,8 +99,10 @@ def main() -> int:
         "source_tree_hash": manifest["source_tree_hash"],
         "environment_lock_hash": manifest["environment_lock_hash"],
         "smoke_config_hash": manifest["smoke_config_hash"],
-        "w_star": compute["w_star"],
-        "workers": args.workers,
+        "workers_used": workers_used,
+        "declared_workers": declared_workers,
+        "parallelism_contract": contract,
+        "parallelism_evidence": manifest.get("parallelism_evidence"),
         "replicates_per_cell": replicates,
         "phases": {},
     }
@@ -109,7 +127,7 @@ def main() -> int:
             else _head(),
             source_tree_hash=manifest["source_tree_hash"],
             environment_lock_hash=manifest["environment_lock_hash"],
-            w_star=compute["w_star"],
+            workers_used=workers_used,
         )
         result = runner(
             manifest=manifest, seed_registry=seed_registry, workers=args.workers,
@@ -174,7 +192,8 @@ def main() -> int:
             "identity_closure_passed": bool(closure["passed"]),
             "source_tree_hash": manifest["source_tree_hash"],
             "environment_lock_hash": manifest["environment_lock_hash"],
-            "w_star": compute["w_star"],
+            "workers_used": workers_used,
+            "declared_workers": declared_workers,
             "run_component_set_hash": admission[phase]["run_component_set_hash"],
             "run_input_bindings_hash": admission[phase]["run_input_bindings_hash"],
             "scope_design_hash": admission[phase]["scope_design_hash"],

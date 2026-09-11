@@ -111,8 +111,11 @@ def main() -> int:
 
     manifest = _load("FREEZE_MANIFEST.json")
     seed_registry = _load("SEED_REGISTRY_v1.0.json")
-    compute_spec = _load("COMPUTE_SPEC_v1.json")
-    frozen_w_star = compute_spec["w_star"]
+    # AM_PARALLELISM_DECOUPLING: there is no frozen worker count any more.  The
+    # reference for throughput comparison is the run-level declaration in
+    # SMOKE_CONFIG; the frozen object only carries the contract it must satisfy.
+    smoke_config = _load("SMOKE_CONFIG_v1.json")
+    frozen_w_star = int(smoke_config["default_workers"])
 
     results: list[dict[str, Any]] = []
     for phase in scope.SMOKE_PHASES:

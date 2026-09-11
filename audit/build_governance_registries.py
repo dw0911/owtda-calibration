@@ -143,6 +143,50 @@ def main() -> int:
                 "prior_8_replicate_sweep": "HISTORICAL_DIAGNOSTIC_ONLY",
             },
         ),
+        "AM_PARALLELISM_DECOUPLING": _reason(
+            "AM_PARALLELISM_DECOUPLING",
+            "冻结的 COMPUTE_SPEC.w_star 把一个**已被证明与结果无关**的操作参数写进了科学身份："
+            "同一对象里已声明 worker_consistency=bitwise_identical_payload（全长 32-replicate 的 12 次"
+            "配对运行 payload 逐位一致），可任何换机器/换核数都必须重新冻结并重派生全部合成身份"
+            "（R1 已因此付出一次确认作废与两次标签迁移）。本修正把 compute_spec 的覆盖面收窄为**契约**："
+            "线程变量=1、逐位不变性、资源验收（RSS/swap/error）；实际并行度改为每 run 记录——声明值在"
+            "SMOKE_CONFIG.default_workers，实际值在 RUN_REGISTRY.workers_used 与 provenance.workers_used，"
+            "并在启动时校验两者一致。COMPUTE_FREEZE 移除 w_star（环境锁只记录观察量）。"
+            "确认协议及其 VOIDED 裁决作为契约的证据保留在 FREEZE_MANIFEST.parallelism_evidence（不哈希，"
+            "故后续确认不会再次静默移动身份）。后果：compute_spec_hash 变更 → freeze_id 与 SCOPE_DESIGN "
+            "行哈希变更 → 全部合成身份变更，因此必须在正式 run 之前实施。另：REAL 处置链因 freeze_id "
+            "变更需锚定到新身份；此前 build_freeze 会在 freeze_id 变更时**静默复用旧链**（同类静默漂移），"
+            "现已改为显式 re-anchor 并 fail-closed 校验。",
+            [
+                "governance/COMPUTE_SPEC_v1.json",
+                "governance/COMPUTE_FREEZE.json",
+                "audit/build_freeze.py",
+                "audit/build_run_admission.py",
+                "audit/run_smoke_s03.py",
+                "governance/AMENDMENT_PROPOSAL_PARALLELISM_DECOUPLING.md",
+            ],
+            {
+                "scope": "compute_identity",
+                "requires_refreeze": True,
+                "freeze_id_changes": True,
+                "removed_identity_input": "COMPUTE_SPEC.w_star（含 COMPUTE_FREEZE.w_star）",
+                "still_frozen_as_contract": [
+                    "thread_env.* = 1",
+                    "invariance_requirement = bitwise_identical_payload",
+                    "acceptance: RSS<=24GiB, swap growth=0, unexplained errors=0",
+                ],
+                "run_level_records": [
+                    "SMOKE_CONFIG_v1.json:default_workers",
+                    "RUN_REGISTRY.jsonl:workers_used",
+                    "smoke_provenance_manifest:workers_used / declared_workers",
+                ],
+                "preregistration_untouched": (
+                    "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json（预登记不可事后修改，"
+                    "其裁决转为契约证据）"
+                ),
+                "closed_defect": "real_disposition_decision（freeze_id 变更时不再静默复用旧链）",
+            },
+        ),
         "INV_S01_SMOKE": _reason(
             "INV_S01_SMOKE",
             "F-B15c-1：B15b 的 smoke runner 借用 formal 身份函数（cells.* / scope.logical_*）与 "
@@ -262,6 +306,21 @@ def main() -> int:
                 "reason_object_hash": reason_hash["AM_WORKER_CONFIRMATION_RULE"],
             }
         )
+    amendment_events.append(
+        {
+            "schema_version": 1,
+            "event_type": "AMENDMENT",
+            "amendment_id": "AM-2026-09-11-06",
+            "at_utc": at,
+            "change_id": "AM_PARALLELISM_DECOUPLING",
+            "scope": "compute_identity",
+            "reason_object_hash": reason_hash["AM_PARALLELISM_DECOUPLING"],
+            "requires_refreeze": True,
+            "freeze_id_changes": True,
+            "removed_identity_input": "COMPUTE_SPEC.w_star",
+            "status": "ADOPTED_BEFORE_FORMAL_RUNS",
+        }
+    )
     amendment_tips = _write_chain(AMENDMENTS, amendment_events)
 
     invalidation_events = [
