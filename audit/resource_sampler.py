@@ -99,13 +99,14 @@ def sample_run(
 
     peak = max(samples) if samples else None
     bytes_after = tree_bytes(evidence_root)
+    # NOTE: this record is embedded in the seal, and the seal hash is taken over a
+    # *canonical* payload in which bare floats are forbidden.  Everything here is
+    # therefore int/str only; the GiB figure is derived by the checks.
     resources: dict[str, Any] = {
         "schema_version": 1,
         "kind": "run_resources_v1",
-        "wall_seconds": float(getattr(result, "wall_seconds", time.time() - started)),
-        "measured_wall_seconds": round(time.time() - started, 3),
+        "measured_wall_milliseconds": round((time.time() - started) * 1000),
         "peak_total_rss_bytes": peak,
-        "peak_total_rss_gib": round(peak / GIB, 6) if peak is not None else None,
         "swap_before_bytes": swap_before,
         "swap_peak_bytes": swap_peak,
         "swap_growth_bytes": swap_peak - swap_before,
@@ -118,7 +119,7 @@ def sample_run(
         "evidence_bytes_after": bytes_after,
         "evidence_bytes_written": bytes_after - bytes_before,
         "samples": len(samples),
-        "sample_interval_s": SAMPLE_INTERVAL_S,
+        "sample_interval_milliseconds": int(SAMPLE_INTERVAL_S * 1000),
     }
     return result, resources
 
@@ -134,7 +135,8 @@ def resource_verdict(
             "checks": {"resources_recorded": False},
             "passed": False,
         }
-    peak = resources.get("peak_total_rss_gib")
+    peak_bytes = resources.get("peak_total_rss_bytes")
+    peak = (peak_bytes / GIB) if isinstance(peak_bytes, int) else None
     swap = resources.get("swap_growth_bytes")
     written = resources.get("evidence_bytes_written")
     free = resources.get("disk_free_before_bytes")

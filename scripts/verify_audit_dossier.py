@@ -348,10 +348,10 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
               "equal run ids", f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
 
         check(f"smoke.{phase}.declared_matches_recomputed",
-              f"{phase} seal 自报结论与独立重算一致（不一致本身即为缺陷）",
-              declared == closure_ok,
+              f"{phase} seal 自报与独立重算**都为通过**（任一为否即失败）",
+              declared and closure_ok,
               {"declared": declared, "recomputed": closure_ok},
-              None, f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+              "both PASS", f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
 
     run_events = [
         json.loads(line)
@@ -562,14 +562,30 @@ def main() -> int:
     manifest = d.json("dossier_manifest.json")
     with tempfile.TemporaryDirectory(prefix="owtda_verify_") as tmp:
         staging = Path(tmp)
-        verify_package_integrity(d, manifest)
-        anchor = verify_source_anchor(d, _extract_all(d, staging))
-        freeze_manifest = verify_freeze_identity(d)
-        verify_chains(d)
-        verify_smoke(d, freeze_manifest, staging)
-        verify_revision(d, staging, anchor)
-        verify_verification(d)
-        verify_governance_extras(d, manifest)
+
+        def section(name: str, fn, *args):
+            """Run one verification section; a crash is a finding, not an abort.
+
+            A dossier is untrusted input: a malformed object must be *rejected*,
+            never allowed to take the verifier down before it writes a report.
+            """
+            try:
+                return fn(*args)
+            except Exception as exc:  # noqa: BLE001 - reported, not swallowed
+                check(f"verifier.section.{name}",
+                      f"{name} 段在异常输入下不崩溃（崩溃即判 FAIL）",
+                      False, f"{type(exc).__name__}: {exc}", None, None)
+                return None
+
+        section("integrity", verify_package_integrity, d, manifest)
+        anchor = section("source", verify_source_anchor, d, _extract_all(d, staging))
+        freeze_manifest = section("freeze", verify_freeze_identity, d) or {}
+        section("chains", verify_chains, d)
+        if freeze_manifest:
+            section("smoke", verify_smoke, d, freeze_manifest, staging)
+        section("revision", verify_revision, d, staging, anchor)
+        section("verification", verify_verification, d)
+        section("governance", verify_governance_extras, d, manifest)
 
     report = {
         "schema_version": 1,

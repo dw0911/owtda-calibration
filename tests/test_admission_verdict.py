@@ -28,8 +28,8 @@ def _resources(**overrides: Any) -> dict[str, Any]:
     record = {
         "schema_version": 1,
         "kind": "run_resources_v1",
-        "wall_seconds": 1.0,
-        "peak_total_rss_gib": 1.5,
+        "measured_wall_milliseconds": 1000,
+        "peak_total_rss_bytes": int(1.5 * 1024**3),
         "swap_growth_bytes": 0,
         "disk_free_before_bytes": 500 * 1024**3,
         "evidence_bytes_written": 1024,
@@ -111,7 +111,7 @@ class TestLayeredVerdict:
         [
             # A08: the audited NULL record showed a 4 MB swap increase.
             lambda r: r["SMOKE_ALT"]["resources"].update(swap_growth_bytes=4 * 1024 * 1024),
-            lambda r: r["SMOKE_ALT"]["resources"].update(peak_total_rss_gib=25.0),
+            lambda r: r["SMOKE_ALT"]["resources"].update(peak_total_rss_bytes=25 * 1024**3),
             lambda r: r["SMOKE_ALT"]["resources"].update(
                 evidence_bytes_written=10**15, disk_free_before_bytes=10**15
             ),

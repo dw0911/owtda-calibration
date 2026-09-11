@@ -58,15 +58,32 @@ class TestSampling:
         assert resources["kind"] == "run_resources_v1"
         assert resources["samples"] >= 1
         assert resources["peak_total_rss_bytes"] > 0
-        assert resources["peak_total_rss_gib"] > 0
+        assert resources["measured_wall_milliseconds"] >= 0
         assert resources["evidence_bytes_written"] >= 2048
         assert resources["disk_free_before_bytes"] > 0
         assert resources["swap_growth_bytes"] >= 0
         assert "host activity" in resources["swap_measurement_caveat"]
 
+    def test_record_is_canonical_encodable(self, tmp_path):
+        """The record is embedded in the seal, whose hash is canonical.
+
+        Bare floats are forbidden there, so a float leaking into this record would
+        make the seal step raise at the end of an expensive run.  This test is the
+        regression guard.
+        """
+        from owtda_cal.canonical import canonical_json
+
+        def runner(**kwargs):
+            return _FakeResult()
+
+        _, resources = resource_sampler.sample_run(runner, evidence_root=tmp_path)
+        encoded = canonical_json({**resources, "run_id": "S04:SMOKE_NULL:w8:r32",
+                                  "phase": "SMOKE_NULL"})
+        assert encoded  # raising would have failed the test
+
     def test_swap_growth_is_computed_from_before_and_peak(self):
         resources = {
-            "peak_total_rss_gib": 1.0,
+            "peak_total_rss_bytes": 1024**3,
             "swap_before_bytes": 100,
             "swap_peak_bytes": 100,
             "swap_growth_bytes": 0,
@@ -84,7 +101,7 @@ class TestSampling:
 class TestResourceVerdictMutations:
     def _verdict(self, **overrides):
         resources = {
-            "peak_total_rss_gib": 1.0,
+            "peak_total_rss_bytes": 1024**3,
             "swap_growth_bytes": 0,
             "disk_free_before_bytes": 10**12,
             "evidence_bytes_written": 10**6,
@@ -104,7 +121,7 @@ class TestResourceVerdictMutations:
         assert verdict["checks"]["no_swap_growth"] is False
 
     def test_peak_rss_above_limit_fails(self):
-        verdict = self._verdict(peak_total_rss_gib=24.0001)
+        verdict = self._verdict(peak_total_rss_bytes=24 * 1024**3 + 1)
         assert verdict["passed"] is False
         assert verdict["checks"]["peak_total_rss_within_limit"] is False
 

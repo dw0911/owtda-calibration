@@ -152,12 +152,33 @@ def a10_ph_windows_doubled(root: Path) -> list[str]:
     return [str(path)]
 
 
+def _inject_resources(seal: dict) -> dict:
+    """A plausible resource block, added if the seal predates A08 evidence.
+
+    Values are integers on purpose: the seal hash is taken over a canonical
+    payload in which bare floats are forbidden.
+    """
+    return seal.setdefault(
+        "resources",
+        {
+            "schema_version": 1,
+            "kind": "run_resources_v1",
+            "peak_total_rss_bytes": 1024**3,
+            "swap_growth_bytes": 0,
+            "disk_free_before_bytes": 500 * 1024**3,
+            "evidence_bytes_written": 1024,
+            "run_id": seal.get("run_id"),
+            "phase": seal.get("phase"),
+        },
+    )
+
+
 def a08_swap_growth(root: Path) -> list[str]:
-    """Hide/fake a page-file increase (the audited NULL record had +4 MB)."""
+    """A page-file increase (the audited NULL record had +4 MB)."""
     path = _seal(root, "SMOKE_NULL")
 
     def mutate(seal: dict) -> None:
-        seal["resources"]["swap_growth_bytes"] = 4 * 1024 * 1024
+        _inject_resources(seal)["swap_growth_bytes"] = 4 * 1024 * 1024
 
     _edit_json(path, mutate)
     return [str(path)]
@@ -168,7 +189,7 @@ def a08_resource_unbound(root: Path) -> list[str]:
     path = _seal(root, "SMOKE_NULL")
 
     def mutate(seal: dict) -> None:
-        seal["resources"]["run_id"] = "S99:SMOKE_NULL:w8:r32"
+        _inject_resources(seal)["run_id"] = "S99:SMOKE_NULL:w8:r32"
 
     _edit_json(path, mutate)
     return [str(path)]
@@ -190,7 +211,7 @@ def a02_zero_based_replicate(root: Path) -> list[str]:
     path = _one(root, "evaluation_rows.jsonl")
 
     def mutate(rows: list[dict]) -> None:
-        rows[0]["replicate"] = int(rows[0]["replicate"]) - 1
+        rows[0]["replicate_id"] = int(rows[0]["replicate_id"]) - 1
 
     _edit_jsonl(path, mutate)
     return [str(path)]
@@ -281,10 +302,32 @@ def run_attacks(zip_path: Path, out_dir: Path, only: str | None) -> dict[str, An
                 continue
             mutant_dir = tmpdir / attack["id"]
             shutil.copytree(clean, mutant_dir)
-            touched = attack["mutate"](mutant_dir)
+            try:
+                touched = attack["mutate"](mutant_dir)
+            except (OSError, KeyError, TypeError, ValueError, RuntimeError) as exc:  # one unusable attack must not stop the battery
+                results.append({
+                    "id": attack["id"], "finding": attack["finding"],
+                    "description": attack["description"], "touched": [],
+                    "verifier_exit_code": None, "targets": [],
+                    "detected": False, "attributable": False,
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "failed_checks_on_mutant": [],
+                })
+                continue
             mutant_zip = tmpdir / f"{attack['id']}.zip"
             repackage(mutant_dir, mutant_zip)
-            exit_code, statuses = verify(mutant_zip, out_dir / attack["id"])
+            try:
+                exit_code, statuses = verify(mutant_zip, out_dir / attack["id"])
+            except (OSError, KeyError, TypeError, ValueError, RuntimeError) as exc:
+                results.append({
+                    "id": attack["id"], "finding": attack["finding"],
+                    "description": attack["description"], "touched": touched,
+                    "verifier_exit_code": None, "targets": [],
+                    "detected": False, "attributable": False,
+                    "error": f"verifier did not produce a report: {exc}",
+                    "failed_checks_on_mutant": [],
+                })
+                continue
             targets = [
                 {
                     "check_id": check_id,
