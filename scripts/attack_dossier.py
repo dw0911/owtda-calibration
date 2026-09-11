@@ -207,13 +207,47 @@ def a01_wrong_cell_id(root: Path) -> list[str]:
 
 
 def a02_zero_based_replicate(root: Path) -> list[str]:
-    """Go back to 0-based replicate numbering (protocol requires 1..32)."""
+    """Go back to 0-based replicate numbering (protocol requires 1..32).
+
+    The replicate is not a column: it is baked into the ids.  This attack rebuilds
+    one row's ``logical_data_key``/``data_unit_id`` exactly as a 0-based
+    implementation would have produced them, so the row names a replicate that the
+    specification does not contain.
+    """
+    from owtda_cal import smoke_ids
+
     path = _one(root, "evaluation_rows.jsonl")
-
-    def mutate(rows: list[dict]) -> None:
-        rows[0]["replicate_id"] = int(rows[0]["replicate_id"]) - 1
-
-    _edit_jsonl(path, mutate)
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+    manifest = json.loads(
+        _one(root, "FREEZE_MANIFEST.json").read_text(encoding="utf-8")
+    )
+    generation = None
+    for candidate in ("S01", "S02", "S03", "S04", "S05"):
+        if candidate in rows[0]["logical_data_key"]:
+            generation = candidate
+            break
+    common = {
+        "project_id": manifest["project_id"],
+        "protocol_id": manifest["protocol_id"],
+        "freeze_id": manifest["freeze_id"],
+        "evidence_generation_id": manifest["evidence_generation_id"],
+        "smoke_generation_id": generation,
+        "phase": rows[0]["phase"],
+    }
+    row = rows[0]
+    master_replicate_id = smoke_ids.smoke_master_replicate_id(
+        **common, DGP_family=row["DGP_family"], replicate_id=0
+    )
+    row["logical_data_key"] = smoke_ids.smoke_logical_data_key(
+        smoke_generation_id=generation,
+        smoke_logical_cell_id=row["logical_cell_id"],
+        smoke_master_replicate_id=master_replicate_id,
+    )
+    path.write_text(
+        "".join(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n" for r in rows),
+        encoding="utf-8",
+    )
     return [str(path)]
 
 
