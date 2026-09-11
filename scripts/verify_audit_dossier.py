@@ -224,8 +224,10 @@ def verify_freeze_identity(d: Dossier) -> dict[str, Any]:
 
 def verify_chains(d: Dossier) -> None:
     for name, required in (
-        ("AMENDMENT_REGISTRY.jsonl", {"AM_PARALLELISM_DECOUPLING", "AM_TOOLING_SCOPE"}),
-        ("INVALIDATION_REGISTRY.jsonl", {"INV_S01_SMOKE", "INV_V12_SOURCE_ANCHOR"}),
+        ("AMENDMENT_REGISTRY.jsonl",
+         {"AM_PARALLELISM_DECOUPLING", "AM_TOOLING_SCOPE", "AM_RESOURCE_INSTRUMENT"}),
+        ("INVALIDATION_REGISTRY.jsonl",
+         {"INV_S01_SMOKE", "INV_V12_SOURCE_ANCHOR", "INV_S03_G3_REVOKED"}),
     ):
         events = [
             json.loads(line)
@@ -251,34 +253,52 @@ def verify_chains(d: Dossier) -> None:
               f"governance/{name}")
 
 
+def _smoke_root(d: Dossier) -> str | None:
+    """Locate the smoke evidence directory by generation (never hard-code S03).
+
+    Audit phase three promotes the smoke generation; a verifier with the old
+    generation baked into its paths would silently look in the wrong place.
+    """
+    for generation in ("S04", "S05", "S06", "S03", "S02", "S01"):
+        root = f"evidence/smoke/{generation}"
+        if d.has(f"{root}/provenance_manifest.json"):
+            return root
+    return None
+
+
 def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
-    provenance = d.json("evidence/smoke/S03/provenance_manifest.json")
+    smoke_root = _smoke_root(d)
+    check("smoke.evidence_present", "smoke 证据目录存在（按代次发现，不硬编码）",
+          smoke_root is not None, smoke_root, "evidence/smoke/<generation>", None)
+    if smoke_root is None:
+        return
+    provenance = d.json(f"{smoke_root}/provenance_manifest.json")
     check("smoke.provenance_binds_manifest",
-          "S03 provenance 绑定当前冻结身份",
+          f"{smoke_root} provenance 绑定当前冻结身份",
           provenance["freeze_id"] == manifest["freeze_id"]
           and provenance["source_tree_hash"] == manifest["source_tree_hash"]
           and provenance["environment_lock_hash"] == manifest["environment_lock_hash"],
           {"freeze_id": provenance["freeze_id"][:12]}, None,
-          "evidence/smoke/S03/provenance_manifest.json")
+          "{smoke_root}/provenance_manifest.json")
     check("smoke.open_runs_empty", "open_runs 为空",
           provenance["open_runs"] == [], provenance["open_runs"], [],
-          "evidence/smoke/S03/provenance_manifest.json")
+          "{smoke_root}/provenance_manifest.json")
     check("smoke.workers_recorded_and_consistent",
           "运行级并行度：声明 == 实际",
           provenance["workers_used"] == provenance["declared_workers"],
           {"used": provenance["workers_used"], "declared": provenance["declared_workers"]},
-          None, "evidence/smoke/S03/provenance_manifest.json")
+          None, "{smoke_root}/provenance_manifest.json")
 
     for phase, expected_rows, expected_windows in (
         ("SMOKE_NULL", 3584, 73600), ("SMOKE_ALT", 1024, 49152),
     ):
-        ledger = d.read(f"evidence/smoke/S03/{phase}/evaluation_rows.jsonl")
+        ledger = d.read(f"{smoke_root}/{phase}/evaluation_rows.jsonl")
         rows = [line for line in ledger.splitlines() if line.strip()]
         check(f"smoke.{phase}.row_count", f"{phase} 行数 == {expected_rows}",
               len(rows) == expected_rows, len(rows), expected_rows,
-              f"evidence/smoke/S03/{phase}/evaluation_rows.jsonl")
+              f"{smoke_root}/{phase}/evaluation_rows.jsonl")
 
-        seal = d.json(f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+        seal = d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json")
         # run_registry.record_seal hashes the canonical bytes of the payload
         # *before* seal_id/smoke_seal_hash are attached.
         payload = {
@@ -287,11 +307,11 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
         recomputed = _sha256(canonical_json_bytes(payload) + b"\n")
         check(f"smoke.{phase}.seal_hash", f"{phase} seal 哈希可复算",
               recomputed == seal["smoke_seal_hash"], recomputed[:16],
-              seal["smoke_seal_hash"][:16], f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+              seal["smoke_seal_hash"][:16], f"{smoke_root}/SMOKE_SEAL_{phase}.json")
         check(f"smoke.{phase}.seal_binds_ledger", f"{phase} seal 绑定交付的 ledger 字节",
               seal["ledger_content_hash"] == _sha256(ledger),
               seal["ledger_content_hash"][:16], _sha256(ledger)[:16],
-              f"evidence/smoke/S03/{phase}/evaluation_rows.jsonl")
+              f"{smoke_root}/{phase}/evaluation_rows.jsonl")
         # Audit A05: the seal's own booleans are NOT the verdict.  The identity
         # closure is recomputed from the frozen specification (set equality plus
         # row-by-row foreign keys) and the terminal state is replayed from the
@@ -315,7 +335,7 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
               f"{phase} 身份闭合由规格独立重算（集合相等 + 逐行外键）",
               closure_ok, closure_detail,
               "no exception; ledger ids == spec-derived ids",
-              f"evidence/smoke/S03/{phase}/evaluation_rows.jsonl")
+              f"{smoke_root}/{phase}/evaluation_rows.jsonl")
 
         declared = (
             bool(seal["counts_match_contract"])
@@ -337,7 +357,7 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
               f"{phase} 资源（峰值 RSS／swap 增长／磁盘）按冻结限值独立重算",
               resource_verdict["passed"],
               resource_verdict["observed"], limits,
-              f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+              f"{smoke_root}/SMOKE_SEAL_{phase}.json")
         check(f"smoke.{phase}.resources_bound_to_run",
               f"{phase} 资源记录绑定到同一次 run（run_id 一致）",
               bool(seal.get("resources"))
@@ -345,28 +365,28 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
               and seal["resources"].get("phase") == phase,
               {"resources_run_id": (seal.get("resources") or {}).get("run_id"),
                "seal_run_id": seal["run_id"]},
-              "equal run ids", f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+              "equal run ids", f"{smoke_root}/SMOKE_SEAL_{phase}.json")
 
         check(f"smoke.{phase}.declared_matches_recomputed",
               f"{phase} seal 自报与独立重算**都为通过**（任一为否即失败）",
               declared and closure_ok,
               {"declared": declared, "recomputed": closure_ok},
-              "both PASS", f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+              "both PASS", f"{smoke_root}/SMOKE_SEAL_{phase}.json")
 
     run_events = [
         json.loads(line)
-        for line in d.read("evidence/smoke/S03/RUN_REGISTRY.jsonl")
+        for line in d.read("{smoke_root}/RUN_REGISTRY.jsonl")
         .decode("utf-8").splitlines() if line.strip()
     ]
     state_events = [
         json.loads(line)
-        for line in d.read("evidence/smoke/S03/STATE_REGISTRY.jsonl")
+        for line in d.read("{smoke_root}/STATE_REGISTRY.jsonl")
         .decode("utf-8").splitlines() if line.strip()
     ]
     check("smoke.run_registry_present", "RUN/STATE 注册表存在且非空",
           bool(run_events) and bool(state_events),
           {"run_events": len(run_events), "state_events": len(state_events)}, ">0",
-          "evidence/smoke/S03/RUN_REGISTRY.jsonl")
+          "{smoke_root}/RUN_REGISTRY.jsonl")
     terminal: dict[str, str] = {}
     for event in state_events:
         terminal[str(event.get("run_id"))] = str(event.get("event_type"))
@@ -374,16 +394,16 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
           "STATE 注册表每个 run 的终态恰为 RUN_SEALED（精确匹配，非『非空即可』）",
           bool(terminal) and all(v == "RUN_SEALED" for v in terminal.values()),
           terminal, {"every run": "RUN_SEALED"},
-          "evidence/smoke/S03/STATE_REGISTRY.jsonl")
+          "{smoke_root}/STATE_REGISTRY.jsonl")
     for phase in ("SMOKE_NULL", "SMOKE_ALT"):
-        seal = d.json(f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+        seal = d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json")
         registry_state = terminal.get(seal["run_id"])
         check(f"smoke.{phase}.seal_terminal_matches_registry",
               f"{phase} seal 声明的终态 == 注册表重放的终态",
               seal["terminal_state"] == registry_state == "RUN_SEALED",
               {"seal": seal["terminal_state"], "registry": registry_state},
               "RUN_SEALED",
-              f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+              f"{smoke_root}/SMOKE_SEAL_{phase}.json")
 
 
 def verify_revision(d: Dossier, staging: Path, anchor: dict[str, Any]) -> None:

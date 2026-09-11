@@ -267,6 +267,42 @@ def main() -> int:
                 "closed_defect": "F-R1-1（注册链重写丢弃外部追加事件）",
             },
         ),
+        "AM_RESOURCE_INSTRUMENT": _reason(
+            "AM_RESOURCE_INSTRUMENT",
+            "§9.4 内存 Gate 的验收条件表达的是「**本次运行**不得溢出到磁盘」，但仪器采的是**整机**"
+            "页文件总量（psutil.swap_memory），该量随无关宿主活动移动，不可归因于本次运行。"
+            "审计 A08 指出资源准入未闭合并要求阶段三重跑时同步采集资源；把该 Gate 第一次接到真实 "
+            "sealed run 上后立即重现同一现象：同一段代码、同一台机器、前后数分钟，1100 秒的 "
+            "SMOKE_NULL 记 0 字节，312 秒的 SMOKE_ALT 记 1,564,672 字节（本机页文件总量 9.13 GB、"
+            "当时已用 61.7 MB，该跳动占已用量约 1.6%；若真为运行自身需求，应出现在更大更久的 "
+            "NULL 阶段）。本次修正**只改测量对象**：验收依据改为本次运行**进程树自身**的页文件用量"
+            "（psutil.Process.memory_info().pagefile / peak_pagefile，Windows 仪器，已在冻结环境"
+            "实测可用）；整机页文件仍全量记录，但明确标为 context，永不参与判定。"
+            "阈值一字未改（swap_growth_bytes_max 仍为 0），B/ρ/W/stride/T/M 及全部科学参数未动，"
+            "失败的那次运行原样保留、不删除、不用重跑改善数字；仪器不可用时 fail-closed（判失败）。",
+            [
+                "governance/AUDIT_VERDICT_20260911.json",
+                "governance/COMPUTE_SPEC_v1.json",
+                "audit/resource_sampler.py",
+                "audit/validate_admission.py",
+                "tests/test_resource_sampler.py",
+                "tests/test_admission_verdict.py",
+            ],
+            {
+                "scope": "resource_instrument",
+                "requires_refreeze": False,
+                "freeze_id_changes": False,
+                "thresholds_unchanged": {
+                    "peak_total_rss_gib_max": "24",
+                    "swap_growth_bytes_max": 0,
+                    "unexplained_errors_max": 0,
+                },
+                "instrument_before": "machine-wide psutil.swap_memory() total",
+                "instrument_after": "process-tree psutil.Process.memory_info().pagefile",
+                "host_wide_role": "context only, never decisive",
+                "closed_defect": "A08（资源准入未闭合；旧仪器不可归因）",
+            },
+        ),
         "INV_S01_SMOKE": _reason(
             "INV_S01_SMOKE",
             "F-B15c-1：B15b 的 smoke runner 借用 formal 身份函数（cells.* / scope.logical_*）与 "
@@ -415,6 +451,20 @@ def main() -> int:
             "hashed_source_paths": ["src/", "configs/"],
             "guarded_scope_paths": ["src/", "configs/", "audit/"],
             "status": "ADOPTED_BEFORE_FORMAL_RUNS",
+        }
+    )
+    amendment_events.append(
+        {
+            "schema_version": 1,
+            "event_type": "AMENDMENT",
+            "amendment_id": "AM-2026-09-12-08",
+            "at_utc": at,
+            "change_id": "AM_RESOURCE_INSTRUMENT",
+            "scope": "resource_instrument",
+            "reason_object_hash": reason_hash["AM_RESOURCE_INSTRUMENT"],
+            "requires_refreeze": False,
+            "freeze_id_changes": False,
+            "status": "ADOPTED_BEFORE_THE_S04_RERUN",
         }
     )
     amendment_tips = _write_chain(AMENDMENTS, amendment_events)

@@ -26,7 +26,7 @@
   "evidence": {
     "commits_matching_B12": [],
     "incoming_directories_with_b12": [],
-    "search_date": "2026-09-11T13:09:59Z",
+    "search_date": "2026-09-11T16:44:23Z",
     "search_scope": [
       "_incoming/*",
       "git log --all",
@@ -34,7 +34,7 @@
       "README.md"
     ]
   },
-  "generated_at_utc": "2026-09-11T13:09:59Z",
+  "generated_at_utc": "2026-09-11T16:44:23Z",
   "kind": "batch_number_disposition",
   "schema_version": 1,
   "statement": "编号 B12 未在任何批次交付目录、git commit、治理对象或计划条目中使用；批次序列为 B01、B02、B03–B11A、B11B1–B11B3、B13、B14a、B14b、B15a、B15b、B15c。本对象以显式处置替代补交四件套，并更正既往“覆盖 B01–B15c”的表述。",

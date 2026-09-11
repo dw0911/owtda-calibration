@@ -30,7 +30,12 @@ def _resources(**overrides: Any) -> dict[str, Any]:
         "kind": "run_resources_v1",
         "measured_wall_milliseconds": 1000,
         "peak_total_rss_bytes": int(1.5 * 1024**3),
-        "swap_growth_bytes": 0,
+        # Acceptance basis (the run's own page-file demand) and host-wide context.
+        "own_pagefile_growth_bytes": 0,
+        "host_swap_growth_bytes": 0,
+        "host_swap_measurement_caveat": (
+            "machine-wide page file usage: moves with unrelated host activity"
+        ),
         "disk_free_before_bytes": 500 * 1024**3,
         "evidence_bytes_written": 1024,
     }
@@ -109,8 +114,10 @@ class TestLayeredVerdict:
     @pytest.mark.parametrize(
         "mutate",
         [
-            # A08: the audited NULL record showed a 4 MB swap increase.
-            lambda r: r["SMOKE_ALT"]["resources"].update(swap_growth_bytes=4 * 1024 * 1024),
+            # A08: the run's own page file must not grow (contract threshold is 0).
+            lambda r: r["SMOKE_ALT"]["resources"].update(
+                own_pagefile_growth_bytes=4 * 1024 * 1024
+            ),
             lambda r: r["SMOKE_ALT"]["resources"].update(peak_total_rss_bytes=25 * 1024**3),
             lambda r: r["SMOKE_ALT"]["resources"].update(
                 evidence_bytes_written=10**15, disk_free_before_bytes=10**15
@@ -125,6 +132,22 @@ class TestLayeredVerdict:
         assert verdict["admission_passed"] is False
         assert verdict["checks"]["resource_admission"] is False
         assert verdict["resources"]["SMOKE_ALT"]["passed"] is False
+
+    def test_machine_wide_paging_alone_does_not_block_admission(self):
+        """AM_RESOURCE_INSTRUMENT: the verdict is about the run, not the machine.
+
+        The audited failure was host-wide page-file movement (NULL 0 B vs ALT
+        1.5 MB within minutes on the same host).  Such movement is recorded as
+        context; only the run's *own* page-file demand can fail the run.
+        """
+        reports = _reports()
+        reports["SMOKE_ALT"]["resources"].update(host_swap_growth_bytes=4 * 1024 * 1024)
+        verdict = run_smoke_s03.admission_verdict(reports, TERMINAL, open_runs_zero=True)
+        assert verdict["admission_passed"] is True
+        ctx = verdict["resources"]["SMOKE_ALT"]["context_checks"]
+        assert ctx["host_swap_growth_bytes"] == 4 * 1024 * 1024
+        assert ctx["host_swap_within_zero"] is False  # recorded, not decisive
+        assert "host activity" in ctx["caveat"]
 
     def test_missing_resource_evidence_blocks_admission(self):
         """Fail closed: no resource record is not the same as a clean record."""

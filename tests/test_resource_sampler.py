@@ -61,8 +61,13 @@ class TestSampling:
         assert resources["measured_wall_milliseconds"] >= 0
         assert resources["evidence_bytes_written"] >= 2048
         assert resources["disk_free_before_bytes"] > 0
-        assert resources["swap_growth_bytes"] >= 0
-        assert "host activity" in resources["swap_measurement_caveat"]
+        assert resources["host_swap_growth_bytes"] >= 0
+        assert "host activity" in resources["host_swap_measurement_caveat"]
+        # The acceptance basis is the run's own page-file demand; on this platform
+        # the Windows instrument is available, elsewhere it is None (fail closed).
+        own = resources["own_pagefile_growth_bytes"]
+        assert own is None or isinstance(own, int)
+        assert "pagefile" in resources["own_pagefile_instrument"]
 
     def test_record_is_canonical_encodable(self, tmp_path):
         """The record is embedded in the seal, whose hash is canonical.
@@ -81,31 +86,34 @@ class TestSampling:
                                   "phase": "SMOKE_NULL"})
         assert encoded  # raising would have failed the test
 
-    def test_swap_growth_is_computed_from_before_and_peak(self):
+    def test_own_pagefile_growth_is_the_acceptance_basis(self):
         resources = {
             "peak_total_rss_bytes": 1024**3,
-            "swap_before_bytes": 100,
-            "swap_peak_bytes": 100,
-            "swap_growth_bytes": 0,
+            "own_pagefile_growth_bytes": 0,
+            "host_swap_growth_bytes": 4 * 1024 * 1024,  # machine-wide noise
             "disk_free_before_bytes": 10**12,
             "evidence_bytes_written": 1,
         }
         verdict = resource_sampler.resource_verdict(
             resources, limits=resource_sampler.load_limits(), unexplained_errors=0
         )
+        # A machine-wide movement alone must not fail the run...
         assert verdict["passed"] is True
-        assert verdict["checks"]["no_swap_growth"] is True
-        assert verdict["observed"]["swap_growth_bytes"] == 0
+        assert verdict["checks"]["own_pagefile_growth_within_limit"] is True
+        # ...but it is still recorded, and reported as context.
+        assert verdict["context_checks"]["host_swap_growth_bytes"] == 4 * 1024 * 1024
+        assert verdict["context_checks"]["host_swap_within_zero"] is False
 
 
 class TestResourceVerdictMutations:
     def _verdict(self, **overrides):
         resources = {
             "peak_total_rss_bytes": 1024**3,
-            "swap_growth_bytes": 0,
+            "own_pagefile_growth_bytes": 0,
+            "host_swap_growth_bytes": 0,
             "disk_free_before_bytes": 10**12,
             "evidence_bytes_written": 10**6,
-            "swap_measurement_caveat": "host-wide",
+            "host_swap_measurement_caveat": "host-wide",
         }
         resources.update(overrides)
         return resource_sampler.resource_verdict(
@@ -115,10 +123,16 @@ class TestResourceVerdictMutations:
     def test_clean_record_passes(self):
         assert self._verdict()["passed"] is True
 
-    def test_any_swap_growth_fails(self):
-        verdict = self._verdict(swap_growth_bytes=1)
+    def test_own_pagefile_growth_fails(self):
+        verdict = self._verdict(own_pagefile_growth_bytes=1)
         assert verdict["passed"] is False
-        assert verdict["checks"]["no_swap_growth"] is False
+        assert verdict["checks"]["own_pagefile_growth_within_limit"] is False
+
+    def test_unavailable_instrument_fails_closed(self):
+        """Off-Windows there is no per-process page-file number: refuse, not assume."""
+        verdict = self._verdict(own_pagefile_growth_bytes=None)
+        assert verdict["passed"] is False
+        assert verdict["checks"]["own_pagefile_growth_within_limit"] is False
 
     def test_peak_rss_above_limit_fails(self):
         verdict = self._verdict(peak_total_rss_bytes=24 * 1024**3 + 1)

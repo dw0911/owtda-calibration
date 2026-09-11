@@ -68,6 +68,18 @@ SUPPLEMENT_DIR = (
 )
 
 
+#: Smoke evidence directory, discovered from the evidence root in ``main`` (the
+#: generation is promoted between audit rounds, so paths are never hard-coded).
+SMOKE_DIR = ""
+
+
+def _discover_smoke_dir(evidence_root: Path) -> str:
+    for generation in ("S04", "S05", "S06", "S03", "S02", "S01"):
+        if (evidence_root / f"smoke/{generation}/provenance_manifest.json").exists():
+            return f"smoke/{generation}"
+    raise SystemExit(f"no smoke provenance under {evidence_root}/smoke")
+
+
 def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -100,7 +112,7 @@ def build_gates(evidence_root: Path, gov: Path) -> tuple[list[dict[str, Any]], d
     schema_check = (
         _load_json(schema_files[-1]) if schema_files else {"checks": [], "all_pass": False}
     )
-    provenance = _load_json(evidence_root / "smoke/S03/provenance_manifest.json")
+    provenance = _load_json(evidence_root / f"{SMOKE_DIR}/provenance_manifest.json")
     verification = _load_json(evidence_root / "verification/validation_exit_codes.json")
     tags = (evidence_root / "revision/git_show_ref_tags.txt").read_text(encoding="utf-8")
     amendments = [
@@ -117,8 +129,8 @@ def build_gates(evidence_root: Path, gov: Path) -> tuple[list[dict[str, Any]], d
     smoke_config = _load_json(gov / "SMOKE_CONFIG_v1.json")
     phase_reports = {
         phase: {
-            "rc": _load_json(evidence_root / f"smoke/S03/{tag}_RC.json"),
-            "seal": _load_json(evidence_root / f"smoke/S03/SMOKE_SEAL_{phase}.json"),
+            "rc": _load_json(evidence_root / f"{SMOKE_DIR}/{tag}_RC.json"),
+            "seal": _load_json(evidence_root / f"{SMOKE_DIR}/SMOKE_SEAL_{phase}.json"),
         }
         for phase, tag in (("SMOKE_NULL", "smoke_null"), ("SMOKE_ALT", "smoke_alt"))
     }
@@ -154,8 +166,8 @@ def build_gates(evidence_root: Path, gov: Path) -> tuple[list[dict[str, Any]], d
         gate(
             "G3-BLIND-SMOKE-BOTH-PHASES",
             "PASS",
-            ["smoke/S03/provenance_manifest.json", "smoke/S03/SMOKE_SEAL_*.json",
-             "smoke/S03/RUN_REGISTRY.jsonl"],
+            [f"{SMOKE_DIR}/provenance_manifest.json", f"{SMOKE_DIR}/SMOKE_SEAL_*.json",
+             f"{SMOKE_DIR}/RUN_REGISTRY.jsonl"],
             {
                 "smoke_generation_id": provenance["smoke_generation_id"],
                 "workers_used": provenance["workers_used"],
@@ -238,13 +250,13 @@ def build_gates(evidence_root: Path, gov: Path) -> tuple[list[dict[str, Any]], d
             "MATERIAL-ADMISSION-P0",
             "PASS",
             ["revision/", "environment/", "wstar/", "configs/schema/", "governance/",
-             "smoke/S03/", "verification/"],
+             f"{SMOKE_DIR}/", "verification/"],
             {
                 "p0_items_closed": [
                     "P0-1 git freeze identity", "P0-2 real environment lock",
                     "P0-3 w* confirmation", "P0-4 strict schemas",
                     "P0-5 amendment/invalidation chains",
-                    "P0-6 sealed S03 smoke + run/state registries",
+                    f"P0-6 sealed {SMOKE_DIR} smoke + run/state registries",
                     "P0-7 raw test evidence",
                 ],
                 "schema_checks": len(schema_check["checks"]),
@@ -276,8 +288,8 @@ def build_gates(evidence_root: Path, gov: Path) -> tuple[list[dict[str, Any]], d
             "wstar/worker_confirmation_RC.json": _sha256_file(
                 evidence_root / "wstar/worker_confirmation_RC.json"
             ),
-            "smoke/S03/provenance_manifest.json": _sha256_file(
-                evidence_root / "smoke/S03/provenance_manifest.json"
+            f"{SMOKE_DIR}/provenance_manifest.json": _sha256_file(
+                evidence_root / f"{SMOKE_DIR}/provenance_manifest.json"
             ),
             "verification/validation_exit_codes.json": _sha256_file(
                 evidence_root / "verification/validation_exit_codes.json"
@@ -317,7 +329,9 @@ def main() -> int:
     parser.add_argument("--dossier-id", default=DOSSIER_ID)
     args = parser.parse_args()
 
+    global SMOKE_DIR
     evidence_root = Path(args.evidence_root).expanduser()
+    SMOKE_DIR = _discover_smoke_dir(evidence_root)
     out = Path(args.out).expanduser()
     staging = out / args.dossier_id
     shutil.rmtree(staging, ignore_errors=True)
@@ -610,7 +624,7 @@ def _readme(
     evidence_root: Path,
 ) -> bytes:
     manifest = _load_json(GOV / "FREEZE_MANIFEST.json")
-    provenance_path = evidence_root / "smoke/S03/provenance_manifest.json"
+    provenance_path = evidence_root / f"{SMOKE_DIR}/provenance_manifest.json"
     provenance = _load_json(provenance_path) if provenance_path.exists() else None
     lines = [
         f"# {dossier_id}",
@@ -640,7 +654,7 @@ def _readme(
         "| `repo/` | 受审树快照（git-tracked，排除 archive/secrets/缓存） |",
         "| `source/` | 源锚点：重算的 `source_tree_hash`、源清单、git 状态与两个范围 |",
         "| `gates/` | **派生**的 Gate 对象 + 每 Gate 的 Markdown + `DERIVATION.json`（输入哈希） |",
-        "| `evidence/` | P0 证据：`revision/`、`environment/`、`wstar/`、`schemas/`、`smoke/S03/`、`verification/` |",
+        "| `evidence/` | P0 证据：`revision/`、`environment/`、`wstar/`、`schemas/`、`smoke/<generation>/`、`verification/` |",
         "| `governance/` | 治理全树（spec、manifest、两条链、reasons、文档、提案、H1 复审包） |",
         "| `submission/` | 未闭合项与待决断、既往交付历史 |",
         "| `SHA256SUMS.txt` / `dossier_manifest.json` | 逐对象校验和与清单 |",

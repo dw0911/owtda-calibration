@@ -61,6 +61,35 @@ def tree_bytes(root: Path) -> int:
     return sum(p.stat().st_size for p in root.rglob("*") if p.is_file())
 
 
+def own_pagefile_bytes(proc: Any) -> int | None:
+    """Page-file bytes charged to **this process tree** (the run's own demand).
+
+    ``psutil.Process.memory_info()`` exposes ``pagefile`` on Windows; elsewhere the
+    attribute is absent and the instrument is reported as unavailable, which makes
+    the acceptance check fail closed rather than silently pass.
+
+    Audit A08 / AM_RESOURCE_INSTRUMENT: the acceptance condition is about the run's
+    *own* memory demand.  The machine-wide page-file total (``psutil.swap_memory``)
+    moves with unrelated host activity -- the same code on the same host recorded
+    0 bytes for the 1100 s NULL phase and 1.5 MB for the 312 s ALT phase -- so it is
+    recorded as context only and is never the basis of a verdict.
+    """
+    import psutil
+
+    total = 0
+    available = False
+    for candidate in (proc, *proc.children(recursive=True)):
+        try:
+            value = getattr(candidate.memory_info(), "pagefile", None)
+        except psutil.Error:
+            continue
+        if value is None:
+            continue
+        available = True
+        total += int(value)
+    return total if available else None
+
+
 def sample_run(
     runner: Callable[..., Any], *, evidence_root: Path, **kwargs: Any
 ) -> tuple[Any, dict[str, Any]]:
@@ -71,12 +100,14 @@ def sample_run(
     samples: list[int] = []
     swap_before = int(psutil.swap_memory().used)
     swap_peak = swap_before
+    own_before = own_pagefile_bytes(proc)
+    own_peak = own_before
     free_before = disk_free_bytes(evidence_root)
     bytes_before = tree_bytes(evidence_root)
     stop = threading.Event()
 
     def sampler() -> None:
-        nonlocal swap_peak
+        nonlocal swap_peak, own_peak
         while not stop.is_set():
             total = int(proc.memory_info().rss)
             for child in proc.children(recursive=True):
@@ -86,6 +117,9 @@ def sample_run(
                     pass
             samples.append(total)
             swap_peak = max(swap_peak, int(psutil.swap_memory().used))
+            current = own_pagefile_bytes(proc)
+            if current is not None:
+                own_peak = max(own_peak or 0, current)
             stop.wait(SAMPLE_INTERVAL_S)
 
     thread = threading.Thread(target=sampler, daemon=True)
@@ -97,21 +131,35 @@ def sample_run(
         stop.set()
         thread.join(timeout=2.0)
 
+    own_after = own_pagefile_bytes(proc)
     peak = max(samples) if samples else None
     bytes_after = tree_bytes(evidence_root)
     # NOTE: this record is embedded in the seal, and the seal hash is taken over a
     # *canonical* payload in which bare floats are forbidden.  Everything here is
-    # therefore int/str only; the GiB figure is derived by the checks.
+    # therefore int/str/None only; the GiB figure is derived by the checks.
     resources: dict[str, Any] = {
         "schema_version": 1,
         "kind": "run_resources_v1",
         "measured_wall_milliseconds": round((time.time() - started) * 1000),
         "peak_total_rss_bytes": peak,
-        "swap_before_bytes": swap_before,
-        "swap_peak_bytes": swap_peak,
-        "swap_growth_bytes": swap_peak - swap_before,
-        "swap_measurement_caveat": (
-            "system-wide page file usage: sensitive to unrelated host activity"
+        # Acceptance basis: the run's own page-file demand (Windows instrument).
+        "own_pagefile_instrument": (
+            "psutil.Process.memory_info().pagefile summed over the process tree"
+        ),
+        "own_pagefile_before_bytes": own_before,
+        "own_pagefile_peak_bytes": own_peak,
+        "own_pagefile_after_bytes": own_after,
+        "own_pagefile_growth_bytes": (
+            None if own_before is None or own_peak is None
+            else int(own_peak) - int(own_before)
+        ),
+        # Context only: machine-wide page-file movement, not attributable to the run.
+        "host_swap_before_bytes": swap_before,
+        "host_swap_peak_bytes": swap_peak,
+        "host_swap_growth_bytes": swap_peak - swap_before,
+        "host_swap_measurement_caveat": (
+            "machine-wide page file usage: moves with unrelated host activity and is "
+            "therefore recorded as context, never as an acceptance condition"
         ),
         "evidence_root": str(evidence_root),
         "disk_free_before_bytes": free_before,
@@ -127,17 +175,24 @@ def sample_run(
 def resource_verdict(
     resources: dict[str, Any] | None, *, limits: dict[str, Any], unexplained_errors: int
 ) -> dict[str, Any]:
-    """Evaluate one run's resources against the frozen limits (fail closed)."""
+    """Evaluate one run's resources against the frozen limits (fail closed).
+
+    The acceptance condition on paging is applied to the run's **own** page-file
+    demand (``own_pagefile_growth_bytes``).  Machine-wide movement is reported under
+    ``context_checks`` and can never decide the verdict (AM_RESOURCE_INSTRUMENT).
+    """
     if not resources:
         return {
             "limits": limits,
             "observed": None,
             "checks": {"resources_recorded": False},
+            "context_checks": {},
             "passed": False,
         }
     peak_bytes = resources.get("peak_total_rss_bytes")
     peak = (peak_bytes / GIB) if isinstance(peak_bytes, int) else None
-    swap = resources.get("swap_growth_bytes")
+    own_growth = resources.get("own_pagefile_growth_bytes")
+    host_growth = resources.get("host_swap_growth_bytes")
     written = resources.get("evidence_bytes_written")
     free = resources.get("disk_free_before_bytes")
     checks = {
@@ -145,8 +200,8 @@ def resource_verdict(
         "peak_total_rss_within_limit": bool(
             peak is not None and peak <= limits["peak_total_rss_gib_max"]
         ),
-        "no_swap_growth": bool(
-            swap is not None and swap <= limits["swap_growth_bytes_max"]
+        "own_pagefile_growth_within_limit": bool(
+            own_growth is not None and own_growth <= limits["swap_growth_bytes_max"]
         ),
         "unexplained_errors_within_limit": bool(
             unexplained_errors <= limits["unexplained_errors_max"]
@@ -159,12 +214,21 @@ def resource_verdict(
         "limits": limits,
         "observed": {
             "peak_total_rss_gib": peak,
-            "swap_growth_bytes": swap,
+            "own_pagefile_growth_bytes": own_growth,
+            "host_swap_growth_bytes": host_growth,
             "evidence_bytes_written": written,
             "disk_free_before_bytes": free,
             "unexplained_errors": unexplained_errors,
-            "swap_measurement_caveat": resources.get("swap_measurement_caveat"),
+            "instrument": resources.get("own_pagefile_instrument"),
         },
         "checks": checks,
+        "context_checks": {
+            "host_swap_growth_bytes": host_growth,
+            "host_swap_within_zero": bool(
+                host_growth is not None
+                and host_growth <= limits["swap_growth_bytes_max"]
+            ),
+            "caveat": resources.get("host_swap_measurement_caveat"),
+        },
         "passed": all(checks.values()),
     }
