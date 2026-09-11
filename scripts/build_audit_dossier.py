@@ -198,7 +198,13 @@ def build_gates(evidence_root: Path, gov: Path) -> tuple[list[dict[str, Any]], d
                 "status": "PROVISIONAL_UNTIL_FORMAL_RUNS",
                 "budget_limits": compute["budget_limits"],
                 "parallelism_contract": compute["parallelism_contract"],
-                "w_star_in_hashed_spec": "w_star" in json.dumps(compute),
+                # A10: decided by explicit schema fields, never by substring search
+                # (a text search over json.dumps would also match unrelated keys).
+                "w_star_is_a_schema_field": "w_star" in compute,
+                "parallelism_contract_present": "parallelism_contract" in compute,
+                "worker_counts_in_contract_only": not any(
+                    "w_star" == key or "workers" == key for key in compute
+                ),
             },
         ),
         gate(

@@ -149,6 +149,8 @@ def main() -> int:
             result.data_units == expected_scaled["data_units"]
             and result.evaluation_rows == expected_scaled["evaluation_rows"]
             and result.ph_windows == expected_scaled["ph_windows"]
+            # A10: the all-feature window work is checked independently of PH work.
+            and result.feature_windows == expected_scaled["feature_windows"]
         )
         missing = smoke.assert_row_fields(result.rows)
         rc = {
@@ -184,6 +186,7 @@ def main() -> int:
             "row_count": result.evaluation_rows,
             "data_units": result.data_units,
             "ph_windows": result.ph_windows,
+            "feature_windows": result.feature_windows,
             "expected_counts": expected,
             "counts_match_contract": counts_match,
             "unexplained_errors": result.errors,
@@ -216,6 +219,7 @@ def main() -> int:
                 "data_units": result.data_units,
                 "evaluation_rows": result.evaluation_rows,
                 "ph_windows": result.ph_windows,
+                "feature_windows": result.feature_windows,
             },
             "unexplained_errors": result.errors,
             "terminal_state": "RUN_SEALED",

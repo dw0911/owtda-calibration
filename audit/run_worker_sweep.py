@@ -84,7 +84,6 @@ def _measure(*, phase: str, workers: int, replicates: int,
     stop.set()
     thread.join(timeout=2.0)
 
-    windows = result.ph_windows * len(scope.FEATURE_IDS)
     return {
         "phase": phase,
         "workers": workers,
@@ -93,8 +92,11 @@ def _measure(*, phase: str, workers: int, replicates: int,
         "data_units": result.data_units,
         "evaluation_rows": result.evaluation_rows,
         "ph_windows_unique": result.ph_windows,
-        "ph_windows_computed": windows,
-        "windows_per_second": windows / result.wall_seconds,
+        # A10: PH throughput counts only the windows that entered the PH engine.
+        "ph_windows_computed": result.ph_windows,
+        "ph_windows_per_second": result.ph_windows / result.wall_seconds,
+        "feature_windows_processed": result.feature_windows,
+        "feature_windows_per_second": result.feature_windows / result.wall_seconds,
         "errors": result.errors,
         "missing_fields": smoke.assert_row_fields(result.rows),
         "payload_hash": _payload_hash(result.rows),
@@ -127,7 +129,7 @@ def main() -> int:
             results.append(row)
             print(
                 f"{phase} w={workers:<3} wall={row['wall_seconds']:.2f}s "
-                f"throughput={row['windows_per_second']:.1f} win/s "
+                f"throughput={row['ph_windows_per_second']:.1f} PH win/s "
                 f"rows={row['evaluation_rows']} errors={row['errors']} "
                 f"rss={row['peak_total_rss_bytes']}"
             )

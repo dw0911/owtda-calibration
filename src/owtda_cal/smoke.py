@@ -39,6 +39,10 @@ from .features import (
 SMOKE_STREAM_PREFIX = smoke_ids.SMOKE_ID_PREFIX
 SMOKE_GENERATION_ID = scope.SMOKE_GENERATION_ID
 FEATURE_KIND_BY_STABLE = {BPI_STABLE_ID: "bpi", MOMENTS_STABLE_ID: "moments"}
+#: Audit A10: only the BPI feature calls the persistence engine.  Counting both
+#: features as "PH windows" inflated PH/s by exactly 2x; the work is reported as
+#: ``ph_windows`` (real PH calls) and ``feature_windows`` (all feature work).
+FEATURE_USES_PH = {BPI_STABLE_ID: True, MOMENTS_STABLE_ID: False}
 FEATURE_CONFIG_HASH_BY_STABLE = {
     BPI_STABLE_ID: feature_config_hash(bpi_feature_spec()),
     MOMENTS_STABLE_ID: feature_config_hash(moments_feature_spec()),
@@ -80,6 +84,7 @@ class SmokeResult:
     evaluation_rows: int
     ph_windows: int
     errors: int
+    feature_windows: int = 0
     rows: list[dict[str, Any]] = field(default_factory=list)
 
     def report(self) -> dict[str, Any]:
@@ -90,6 +95,7 @@ class SmokeResult:
             "data_units": self.data_units,
             "evaluation_rows": self.evaluation_rows,
             "ph_windows": self.ph_windows,
+            "feature_windows": self.feature_windows,
             "errors": self.errors,
             "forbidden_aggregates_emitted": False,
         }
@@ -693,7 +699,14 @@ def process_master_feature(payload: dict[str, Any]) -> dict[str, Any]:
                     out=out,
                 )
             )
-    return {"rows": rows, "errors": errors, "data_units": data_units, "ph_windows": len(starts)}
+    return {
+        "rows": rows,
+        "errors": errors,
+        "data_units": data_units,
+        # A10: only the BPI feature actually runs the persistence engine.
+        "ph_windows": len(starts) if FEATURE_USES_PH[feature_id] else 0,
+        "feature_windows": len(starts),
+    }
 
 
 def process_alt_feature(payload: dict[str, Any]) -> dict[str, Any]:
@@ -747,6 +760,7 @@ def process_alt_feature(payload: dict[str, Any]) -> dict[str, Any]:
     errors = 0
     data_units = 0
     ph_windows = 0
+    feature_windows = 0
     for cell in scope.h1_alt_cells():
         if cell.scenario != scenario or cell.rho != rho:
             continue
@@ -760,7 +774,8 @@ def process_alt_feature(payload: dict[str, Any]) -> dict[str, Any]:
             windows, feature_kind=FEATURE_KIND_BY_STABLE[feature_id],
             scenario=SCENARIO_N_CIRCLE,
         )
-        ph_windows += len(starts)
+        ph_windows += len(starts) if FEATURE_USES_PH[feature_id] else 0
+        feature_windows += len(starts)
         base_series_id = smoke_ids.smoke_base_series_id(
             smoke_master_replicate_id=master_replicate_id,
             smoke_generation_id=smoke_generation_id,
@@ -874,7 +889,13 @@ def process_alt_feature(payload: dict[str, Any]) -> dict[str, Any]:
                     out=out,
                 )
             )
-    return {"rows": rows, "errors": errors, "data_units": data_units, "ph_windows": ph_windows}
+    return {
+        "rows": rows,
+        "errors": errors,
+        "data_units": data_units,
+        "ph_windows": ph_windows,
+        "feature_windows": feature_windows,
+    }
 
 
 def smoke_context(
@@ -974,7 +995,10 @@ def run_smoke_null(
         wall_seconds=wall,
         data_units=sum(p["data_units"] for p in parts) // len(scope.FEATURE_IDS),
         evaluation_rows=len(rows),
-        ph_windows=sum(p["ph_windows"] for p in parts) // len(scope.FEATURE_IDS),
+        # A10: each part already reports real PH work only (no feature division),
+        # and the all-feature work is reported separately.
+        ph_windows=sum(p["ph_windows"] for p in parts),
+        feature_windows=sum(p["feature_windows"] for p in parts),
         errors=sum(p["errors"] for p in parts),
         rows=rows,
     )
@@ -1021,7 +1045,10 @@ def run_smoke_alt(
         wall_seconds=wall,
         data_units=sum(p["data_units"] for p in parts) // len(scope.FEATURE_IDS),
         evaluation_rows=len(rows),
-        ph_windows=sum(p["ph_windows"] for p in parts) // len(scope.FEATURE_IDS),
+        # A10: each part already reports real PH work only (no feature division),
+        # and the all-feature work is reported separately.
+        ph_windows=sum(p["ph_windows"] for p in parts),
+        feature_windows=sum(p["feature_windows"] for p in parts),
         errors=sum(p["errors"] for p in parts),
         rows=rows,
     )
@@ -1048,6 +1075,8 @@ def expected_smoke_counts(phase: str = scope.PHASE_SMOKE_NULL) -> dict[str, int]
         * len(scope.FEATURE_IDS)
         * len(scope.METHOD_IDS),
         "ph_windows": ph_windows,
+        # A10: the all-feature window work (both features process the same windows).
+        "feature_windows": ph_windows * len(scope.FEATURE_IDS),
     }
 
 

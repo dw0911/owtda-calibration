@@ -98,7 +98,6 @@ def _measure(
     stop.set()
     thread.join(timeout=2.0)
 
-    windows = result.ph_windows * len(scope.FEATURE_IDS)
     expected = smoke.expected_smoke_counts(phase)
     run = {
         "phase": phase,
@@ -106,8 +105,12 @@ def _measure(
         "replicates_per_cell": scope.R0_SMOKE,
         "wall_seconds": result.wall_seconds,
         "ph_windows_unique": result.ph_windows,
-        "ph_windows_computed": windows,
-        "windows_per_second": windows / result.wall_seconds,
+        # A10: PH throughput counts only the windows that really entered the PH
+        # engine (BPI); MOMENTS windows are reported separately and never mixed in.
+        "ph_windows_computed": result.ph_windows,
+        "ph_windows_per_second": result.ph_windows / result.wall_seconds,
+        "feature_windows_processed": result.feature_windows,
+        "feature_windows_per_second": result.feature_windows / result.wall_seconds,
         "data_units": result.data_units,
         "evaluation_rows": result.evaluation_rows,
         "errors": result.errors,
@@ -192,7 +195,7 @@ def main() -> int:
                     )
                 print(
                     f"[wstar]   wall={run['wall_seconds']:.2f}s "
-                    f"throughput={run['windows_per_second']:.1f} win/s "
+                    f"throughput={run['ph_windows_per_second']:.1f} PH win/s "
                     f"errors={run['errors']} rss={resource['peak_total_rss_bytes']} "
                     f"swap_delta={resource['swap_growth_bytes']}",
                     flush=True,
@@ -214,7 +217,7 @@ def main() -> int:
         for run in phase_runs:
             by_workers.setdefault(run["workers"], []).append(run)
         medians = {
-            w: statistics.median(r["windows_per_second"] for r in rs)
+            w: statistics.median(r["ph_windows_per_second"] for r in rs)
             for w, rs in sorted(by_workers.items())
         }
         acceptance = {

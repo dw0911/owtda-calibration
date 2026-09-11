@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from owtda_cal import cells, scope, smoke
@@ -60,6 +61,68 @@ class TestSmokeCounts:
         assert ctx["smoke_generation_id"] == scope.SMOKE_GENERATION_ID
 
 
+class TestPhVersusFeatureWindowCounting:
+    """Audit A10: PH throughput must count PH calls, not feature work."""
+
+    def test_only_bpi_uses_the_persistence_engine(self):
+        from owtda_cal import features
+
+        assert smoke.FEATURE_USES_PH[features.BPI_STABLE_ID] is True
+        assert smoke.FEATURE_USES_PH[features.MOMENTS_STABLE_ID] is False
+        assert set(smoke.FEATURE_USES_PH) == set(scope.FEATURE_IDS)
+
+    def test_expected_counts_declare_both_quantities(self):
+        for phase in scope.SMOKE_PHASES:
+            counts = smoke.expected_smoke_counts(phase)
+            assert counts["feature_windows"] == counts["ph_windows"] * len(
+                scope.FEATURE_IDS
+            )
+
+    def _payload(self, feature_id: str, *, replicate: int = 1) -> dict:
+        registry = _load("SEED_REGISTRY_v1.0.json")
+        ctx = smoke.smoke_context(_load("FREEZE_MANIFEST.json"))
+        ctx["replicate_count"] = scope.R0_SMOKE
+        return {
+            "family": scope.H0_FAMILIES[0],
+            "rho": scope.RHO_LEVELS[0],
+            "replicate": replicate,
+            "feature_id": feature_id,
+            "ctx": ctx,
+            "root_key_hex": smoke.smoke_root_key(registry, scope.PHASE_SMOKE_NULL),
+        }
+
+    @staticmethod
+    def _stub_matrix(monkeypatch):
+        """Count windows without invoking the persistence engine (it is slow)."""
+        calls: list[int] = []
+
+        def fake(windows, *, feature_kind, scenario):
+            calls.append(len(windows))
+            return np.zeros((len(windows), 3), dtype=np.float64)
+
+        monkeypatch.setattr(smoke, "feature_matrix_for_windows", fake)
+        return calls
+
+    def test_bpi_worker_reports_ph_windows(self, monkeypatch):
+        from owtda_cal import features
+
+        calls = self._stub_matrix(monkeypatch)
+        out = smoke.process_master_feature(self._payload(features.BPI_STABLE_ID))
+        windows = len(cells.unique_window_start_map())
+        assert calls == [windows]  # the windows really were handed to the feature
+        assert out["ph_windows"] == windows
+        assert out["feature_windows"] == windows
+
+    def test_moments_worker_reports_no_ph_windows(self, monkeypatch):
+        from owtda_cal import features
+
+        self._stub_matrix(monkeypatch)
+        out = smoke.process_master_feature(self._payload(features.MOMENTS_STABLE_ID))
+        windows = len(cells.unique_window_start_map())
+        assert out["ph_windows"] == 0  # never counted as PH work
+        assert out["feature_windows"] == windows  # but the work is still reported
+
+
 class TestBlindOutput:
     def test_report_has_no_aggregates(self):
         result = smoke.SmokeResult(
@@ -69,7 +132,7 @@ class TestBlindOutput:
         report = result.report()
         assert set(report) == {
             "phase", "wall_seconds", "data_units", "evaluation_rows",
-            "ph_windows", "errors", "forbidden_aggregates_emitted",
+            "ph_windows", "feature_windows", "errors", "forbidden_aggregates_emitted",
         }
         for forbidden in ("rejection_rate", "power", "ranking", "p_value", "reject"):
             assert forbidden not in report
