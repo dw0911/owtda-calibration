@@ -34,7 +34,7 @@ sys.path.insert(0, str(REPO / "audit"))
 import repo_guard
 import resource_sampler
 
-from owtda_cal import chains, freeze, scope
+from owtda_cal import chains, dgp, freeze, scope
 from owtda_cal import smoke as smoke_mod
 from owtda_cal.canonical import canonical_json_bytes
 
@@ -450,11 +450,53 @@ def verify_verification(d: Dossier) -> None:
 
 def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
     packet = d.json("governance/H1_CONSTRUCT_REVIEW_PACKET.json")
-    check("h1.review_packet", "H1 复审包 8 条合同全部 PASS",
-          packet["all_contracts_pass"] and len(packet["contracts"]) == 8,
-          {"contracts": len(packet["contracts"]),
-           "pass": packet["all_contracts_pass"]}, None,
-          "governance/H1_CONSTRUCT_REVIEW_PACKET.json")
+    statuses = [c["status"] for c in packet["contracts"]]
+    check("h1.review_packet",
+          "H1 复审包逐条合同均为 PASS（不是只看汇总标志）",
+          bool(statuses) and packet["all_contracts_pass"]
+          and all(s == "PASS" for s in statuses),
+          {"contracts": len(statuses), "summary": packet["all_contracts_pass"],
+           "non_pass": [c["check_id"] for c in packet["contracts"] if c["status"] != "PASS"]},
+          None, "governance/H1_CONSTRUCT_REVIEW_PACKET.json")
+
+    # Audit A06: the source-null foreign key is recomputed here from the frozen
+    # context, so a packet whose ids point somewhere else cannot pass by simply
+    # declaring itself consistent.
+    freeze_manifest = d.json("governance/FREEZE_MANIFEST.json")
+    cells_by_key = {(c.scenario, c.stride): c for c in scope.h1_alt_cells()}
+    deviations: list[dict[str, Any]] = []
+    joins = packet["evidence"].get("null_scope_join", [])
+    for entry in joins:
+        cell = cells_by_key.get((entry.get("scenario"), entry.get("stride")))
+        if cell is None:
+            deviations.append({"scenario": entry.get("scenario"),
+                               "stride": entry.get("stride"), "reason": "unknown cell"})
+            continue
+        expected_id = scope.logical_cell_id(
+            project_id=freeze_manifest["project_id"],
+            protocol_id=freeze_manifest["protocol_id"],
+            freeze_id=freeze_manifest["freeze_id"],
+            evidence_generation_id=freeze_manifest["evidence_generation_id"],
+            phase=scope.PHASE_NULL,
+            DGP_family=dgp.DGP_FAMILY_N_CIRCLE,
+            scenario_id=scope.SCENARIO_NULL,
+            rho=cell.rho, W=cell.W, stride=cell.stride, T=cell.T, M=cell.M,
+        )
+        expected_signature = dgp.build_null_signature(
+            rho=cell.rho, W=cell.W, stride=cell.stride, T=cell.T, M=cell.M
+        )
+        if (entry.get("source_null_logical_cell_id") != expected_id
+                or entry.get("null_model_config_hash") != expected_signature):
+            deviations.append({
+                "scenario": entry.get("scenario"), "stride": entry.get("stride"),
+                "declared_id": entry.get("source_null_logical_cell_id"),
+                "expected_id": expected_id,
+            })
+    check("h1.source_null_join_recomputed",
+          "H1 每个 cell 的 source-null 外键按冻结上下文独立重算一致",
+          bool(joins) and not deviations,
+          {"entries": len(joins), "deviations": deviations[:3]},
+          "0 deviations", "governance/H1_CONSTRUCT_REVIEW_PACKET.json")
     smoke_config = d.json("governance/SMOKE_CONFIG_v1.json")
     contract = d.json("governance/COMPUTE_SPEC_v1.json")["parallelism_contract"]
     check("parallelism.declared_in_range",
