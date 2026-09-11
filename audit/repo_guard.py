@@ -43,7 +43,12 @@ HASHED_SOURCE_PATHS: tuple[str, ...] = ("src", "configs")
 #: the tooling, because ``compute_git_commit`` must name a revision that contains
 #: the very code that produced the evidence.  Cleanliness and hashing are two
 #: different questions and this guard answers the first one.
-GUARDED_SCOPE_PATHS: tuple[str, ...] = (*HASHED_SOURCE_PATHS, "audit")
+#:
+#: F-R1-6: ``scripts/`` is guarded too — ``scripts/frozen_env.py`` sets the BLAS /
+#: OMP thread variables *before* the interpreter starts, so it materially affects
+#: results; leaving it out let a run use an uncommitted launcher.  It is still not
+#: *hashed* (that is a B15d decision about the frozen scope).
+GUARDED_SCOPE_PATHS: tuple[str, ...] = (*HASHED_SOURCE_PATHS, "audit", "scripts")
 
 #: Backwards-compatible alias (the guard's default scope).
 FROZEN_SCOPE_PATHS: tuple[str, ...] = GUARDED_SCOPE_PATHS

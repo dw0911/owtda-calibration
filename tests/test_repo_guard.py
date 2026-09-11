@@ -133,9 +133,12 @@ class TestGuardIsWiredAndConsistent:
         guarded = tuple(f"{p}/" for p in repo_guard.GUARDED_SCOPE_PATHS)
         assert build_freeze.SOURCE_TREE_PREFIXES == hashed
         assert hashed == ("src/", "configs/")
-        assert guarded == ("src/", "configs/", "audit/")
+        assert guarded == ("src/", "configs/", "audit/", "scripts/")
         assert set(hashed) < set(guarded)
         assert "audit/" not in hashed and "audit/" in guarded
+        # F-R1-6: the thread-env launcher materially affects results and must be
+        # committed before a run, even though it is not part of the hashed scope.
+        assert "scripts/" in guarded and "scripts/" not in hashed
 
     @pytest.mark.parametrize("name", ["build_freeze.py", "build_run_admission.py"])
     def test_builders_call_the_guard(self, name: str):
