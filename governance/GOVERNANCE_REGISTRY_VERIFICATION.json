@@ -1,25 +1,25 @@
 {
   "amendment_tips": [
-    "40bb20e28f7fb80ad6dc347237b23ad12c9341c387ad42b26a3154d1cf9b1445",
-    "8cfee389e8cfb9365ad004bcf8ce376cb9cd8721b3da8d14310d135e26e090d5",
-    "8f10761acf1b16c66bc570a95ccb2312ccc169a9907427ad68b8ec5ce51d6fc2",
-    "2086b44639b18bbce07b154abbccb2a23930feb9eae30c35970ab154e3f4ac1f",
-    "179d9535bf5233e48be72b54584244daa38aaf981d2f1c0a79590f8ef3b8f93a"
+    "b66c9918f59c99c9d972ce4cd22a93838700804eee3af44c2bd4b56d1dfb8ef6",
+    "9a2476f20823efed37aac98bc09a566125c32203e2e0b6b597aed85bfeac1ebd",
+    "f0cd3b195266a7d9e7be2aea9858005d84f277e75889c36988ced7f69e122cef",
+    "2d3a67e8e559c7d5b09e71e6d566f74df635a53082dcdcf7d4bf3cd79e9f3a0b",
+    "95509d39eafae2014c0c5dc0bba44999933dc1a5920b7d0aeeb5d2233d074ea7"
   ],
   "amendments": {
     "events": 5,
     "file": "AMENDMENT_REGISTRY.jsonl",
-    "tip": "179d9535bf5233e48be72b54584244daa38aaf981d2f1c0a79590f8ef3b8f93a"
+    "tip": "95509d39eafae2014c0c5dc0bba44999933dc1a5920b7d0aeeb5d2233d074ea7"
   },
   "current_smoke_generation": "S03",
   "invalidation_tips": [
-    "a589dabe129f9f56e878f25a602b5c6bd82743ac6d3c27a6872b7f620317d863",
-    "51b0b3d72865e8e5fe3a207905c8c8b1609a7a20549fc5cf12a2ff3a052e29d7"
+    "83a3dbb31f3b765fb908831196e73a27dfcdd53e3e557eed2b890a4f2cae42c4",
+    "17395b68d6b46a34a2d8b82b5b7d97375a112d02e25f65dd86b441fae184e005"
   ],
   "invalidations": {
     "events": 2,
     "file": "INVALIDATION_REGISTRY.jsonl",
-    "tip": "51b0b3d72865e8e5fe3a207905c8c8b1609a7a20549fc5cf12a2ff3a052e29d7"
+    "tip": "17395b68d6b46a34a2d8b82b5b7d97375a112d02e25f65dd86b441fae184e005"
   },
   "reason_hashes": {
     "AM_ENVIRONMENT_LOCK_CORRECTION": "4128e50cda09b0a1bbab71ba7e7998024b71b23febff0336902e65b2e60a3664",

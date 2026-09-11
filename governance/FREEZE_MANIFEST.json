@@ -95,8 +95,8 @@
   "run_admission": {
     "NULL": {
       "replicate_count": 2500,
-      "run_component_set_file": "RUN_COMPONENT_SET_fc1090aa1e7327c66b2f37a5a50f0fd4a1cd19d6660a9068f40de9732101a8ce.json",
-      "run_component_set_hash": "fc1090aa1e7327c66b2f37a5a50f0fd4a1cd19d6660a9068f40de9732101a8ce",
+      "run_component_set_file": "RUN_COMPONENT_SET_b03e59e1b67900c2bbe4bc0e4eb2be91301864119b9f99f7469b5141a0f0b651.json",
+      "run_component_set_hash": "b03e59e1b67900c2bbe4bc0e4eb2be91301864119b9f99f7469b5141a0f0b651",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_40ed99f58d6b348620eb8bc9d5c7d086d3b29533f6dc32a58123f469431e9c1d.jsonl",
       "run_input_bindings_hash": "40ed99f58d6b348620eb8bc9d5c7d086d3b29533f6dc32a58123f469431e9c1d",
       "run_input_bindings_row_count": 9,
@@ -106,8 +106,8 @@
     },
     "SMOKE_ALT": {
       "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_9c8825f5679afc5b3da81def764ea62bbf0d7132aa437bc471a075198991d4a1.json",
-      "run_component_set_hash": "9c8825f5679afc5b3da81def764ea62bbf0d7132aa437bc471a075198991d4a1",
+      "run_component_set_file": "RUN_COMPONENT_SET_97795b26963c2e6da6d93e6a81fc99d5e4a800467cfc920b840a83fd075bc984.json",
+      "run_component_set_hash": "97795b26963c2e6da6d93e6a81fc99d5e4a800467cfc920b840a83fd075bc984",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_ce8cd477640990fec130ab5b6e32d51f6cb18bfbdc8b1ccd4bb3834510d2090a.jsonl",
       "run_input_bindings_hash": "ce8cd477640990fec130ab5b6e32d51f6cb18bfbdc8b1ccd4bb3834510d2090a",
       "run_input_bindings_row_count": 10,
@@ -117,8 +117,8 @@
     },
     "SMOKE_NULL": {
       "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_6a9871ae6a4a5db8d4c7d8037ed7afc4247c73a5928f3f767287f95f39639a0d.json",
-      "run_component_set_hash": "6a9871ae6a4a5db8d4c7d8037ed7afc4247c73a5928f3f767287f95f39639a0d",
+      "run_component_set_file": "RUN_COMPONENT_SET_0e059e786bace2fc99a37020909a2f71c91f6665e4cfa0678019dd4f1db981b1.json",
+      "run_component_set_hash": "0e059e786bace2fc99a37020909a2f71c91f6665e4cfa0678019dd4f1db981b1",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_ce8cd477640990fec130ab5b6e32d51f6cb18bfbdc8b1ccd4bb3834510d2090a.jsonl",
       "run_input_bindings_hash": "ce8cd477640990fec130ab5b6e32d51f6cb18bfbdc8b1ccd4bb3834510d2090a",
       "run_input_bindings_row_count": 10,
@@ -147,17 +147,22 @@
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "8b57fc32073a40d72eef21268d0b1f4f17aa9673e75ec6b24005dd099cb27d38",
   "smoke_config_hash": "d4b5a800fe0e994b13e4dbbed68f8e2ae8b4dfcc9cb9516283d566e6daedf98f",
-  "source_tree_hash": "8c535bc017e6747bc78fb0ceb84079b876c6b6d794ef421850cf94dc2cf460d6",
+  "source_tree_hash": "66c468cb19b810bbce69b7da06592e4f005cbf99a5f91d27c2a829ec4ff69496",
   "source_tree_manifest": [
+    {
+      "file_sha256": "997808336e88cc94ef4d3ad6ed52717a5ad31b4ec21c5b3a702a599d27a8b147",
+      "path": "audit/append_invalidation.py",
+      "size": 3329
+    },
     {
       "file_sha256": "11fb4136575eb059380e791fca3dd8238b3328b18d8c1cb51e32d2c5207faea1",
       "path": "audit/build_environment_evidence.py",
       "size": 7693
     },
     {
-      "file_sha256": "572ffd6bd10053031a44e8309aa354364d264d63faef69d16d409c582e30d600",
+      "file_sha256": "89fdaaf4e74dc7b7f3c19b3e568987d94c8fb16de06ae938deca8dad06621b41",
       "path": "audit/build_freeze.py",
-      "size": 27320
+      "size": 27824
     },
     {
       "file_sha256": "55587a23023f92cf46093b27fc9de68bd758e9db19bce1f494c0499cb0aa9184",
@@ -165,9 +170,14 @@
       "size": 14862
     },
     {
-      "file_sha256": "f28ac7cd564e194c7fd26c27602617aa64ab522caa5bf79e8a0afae15c144bec",
+      "file_sha256": "a0f97f0648e29bbca23842d8b11d001bdc74fd77795e5cc9f1052c473017f237",
+      "path": "audit/build_h1_review_packet.py",
+      "size": 23707
+    },
+    {
+      "file_sha256": "96cbaa2b2b6c50f5e45864497f83f16607a64a13444f1716cf0ab95fc69427e5",
       "path": "audit/build_run_admission.py",
-      "size": 10924
+      "size": 11261
     },
     {
       "file_sha256": "12f2045123843b693611761cb6739c09900a2bf237d6f8b84c4da04b3ef7a88e",
@@ -175,9 +185,9 @@
       "size": 17502
     },
     {
-      "file_sha256": "ca2a3a3387fff7f2524a36e1741cc265f2aeb2b3d94881f9f610e33362c0269b",
+      "file_sha256": "7b2a7a4c5670800cdaa7af000f675d89b3b0a650761aaf4ff9264db663cb6b81",
       "path": "audit/build_supplement.py",
-      "size": 15150
+      "size": 21606
     },
     {
       "file_sha256": "8de7ea73c87d4532e805eb7430b68f29a21cb88f762866ee0e97a64dafaed30e",
@@ -193,6 +203,11 @@
       "file_sha256": "97bacfbed7994efb071093427dc767588a5783e235af1cb7f49a5547705a2602",
       "path": "audit/compute_budget.py",
       "size": 9018
+    },
+    {
+      "file_sha256": "7975914302147ccacc4844d6c1f6ec1f8d457a77cae4d773c83861a10aa1c4f2",
+      "path": "audit/repo_guard.py",
+      "size": 3986
     },
     {
       "file_sha256": "a1d4412ae78acfbc0890967168a68dad983bb9992ed867a0ec2f3d8de51cf57a",
