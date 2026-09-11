@@ -37,10 +37,10 @@
       "stable_id": "SYNTHETIC_N_CIRCLE_V1"
     },
     {
-      "code_file_manifest_hash": "d57afa066e2299689d068b61b09fdf21ca2b74d1dd3fdbdbee94fdccd1d45797",
+      "code_file_manifest_hash": "c7f0d999816a515b255cbad600655ec142931051195fba1abbdde833d3cf6f35",
       "component_generation_id": "F01",
       "component_kind": "feature",
-      "component_registry_entry_hash": "b5298de94a80039b7cb67898d465ad8141dd3aa6f3e79ef38186b7271ee5ccb4",
+      "component_registry_entry_hash": "6f1a8c8fb62d4136ed5663a9cc995f31d6dcd60b6b9787047871fa10c0e8df3a",
       "config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -61,10 +61,10 @@
       "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
     },
     {
-      "code_file_manifest_hash": "78d3621e60c331c284af108fb91676608dc1ce6ea004ae33b195d7220ddb4d8f",
+      "code_file_manifest_hash": "2b03db836d42dd0d816c8658f7238b50124591524f706ad60f1f6d1939791ce9",
       "component_generation_id": "M01",
       "component_kind": "method",
-      "component_registry_entry_hash": "dcb3cf1282578ff6c1f782c3a2c2d169e1b2a2de0d07447ac2481b216c8e1472",
+      "component_registry_entry_hash": "daa10aaa57789edd31c93403825880dc5414df7b7209f13f64e630953fc091a0",
       "config_hash": "2a184b3835a281e0a172c40cccd3262e4c7dbaf8bef4a4869ac256d306dcec0e",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -73,10 +73,10 @@
       "stable_id": "M0_NAIVE_PERM_B999_V1"
     },
     {
-      "code_file_manifest_hash": "78d3621e60c331c284af108fb91676608dc1ce6ea004ae33b195d7220ddb4d8f",
+      "code_file_manifest_hash": "2b03db836d42dd0d816c8658f7238b50124591524f706ad60f1f6d1939791ce9",
       "component_generation_id": "M01",
       "component_kind": "method",
-      "component_registry_entry_hash": "ae3de92cf91ecbaaaa876668eef54565b4c1a5c129a32ad095d8bb8b7ac1de30",
+      "component_registry_entry_hash": "b489e25280fd69a528a6db51b25eb72b8e815536e551d5d6db91ab0e7592a5b1",
       "config_hash": "f778e68bb16160fc803263fb4d9848962130df3c7c3f91002b01913181f9b6f4",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",

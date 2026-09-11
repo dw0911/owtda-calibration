@@ -18,9 +18,9 @@
   "scipy": "1.15.3",
   "superseded_evidence_status": "HISTORICAL_DIAGNOSTIC_ONLY",
   "thread_env_observed": {
-    "MKL_NUM_THREADS": "1",
-    "NUMEXPR_NUM_THREADS": "1",
-    "OMP_NUM_THREADS": "1",
-    "OPENBLAS_NUM_THREADS": "1"
+    "MKL_NUM_THREADS": "unset",
+    "NUMEXPR_NUM_THREADS": "unset",
+    "OMP_NUM_THREADS": "unset",
+    "OPENBLAS_NUM_THREADS": "unset"
   }
 }
