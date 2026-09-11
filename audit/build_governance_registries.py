@@ -303,6 +303,50 @@ def main() -> int:
                 "closed_defect": "A08（资源准入未闭合；旧仪器不可归因）",
             },
         ),
+        "AM_RESOURCE_MEASUREMENT_SEMANTICS": _reason(
+            "AM_RESOURCE_MEASUREMENT_SEMANTICS",
+            "AM_RESOURCE_INSTRUMENT 引入的「进程树 pagefile 增长」**命名与语义不符**，故退役、不再作为"
+            "验收依据。Windows 上 psutil 的 `Process.memory_info().pagefile` 是 "
+            "`PROCESS_MEMORY_COUNTERS.PagefileUsage`，即该进程的**已提交私有内存（commit charge）**，"
+            "**不是**实际写入页文件的字节数。S04 实测：**commit 8.5 GiB、峰值 RSS 1.09 GiB、宿主页文件"
+            "增量 0 B**——若真发生 8.5 GiB 内存外溢，宿主体量必然上涨，三者互证该量不是分页活动。"
+            "本次修正把该字段改名为 `own_commit_charge_*`（名副其实），移入 diagnostics，仅用于内存"
+            "预算讨论；**验收依据回到契约原本声明的两项**：机器级页文件增长 ≤ 0 与峰值总 RSS ≤ 24 GiB。"
+            "**必须说明顺序**：本条修正在 S04 重跑**之后**登记，且它把判定**放宽**（撤回上一轮我自己"
+            "加严的那一项），因此特别声明：(1) 契约声明的判据自始未变，本修正只是撤回一个**标签错误的"
+            "额外检查**，不是改阈值；(2) 撤回的那一项在 S04 上确实**判过失败**，该事实与其证据一并保留、"
+            "不删除、不重算为通过；(3) 修正后由**独立验证器**依据 seal 中已记录的原始数字重算准入，"
+            "运行内联写下的 `admission_passed` 保持原样并如实标注其依据为已退役检查；"
+            "(4) 不重跑（避免『改判据直到通过』），S04 的两份先前记录（旧仪器判定失败者）全部留档。",
+            [
+                "governance/AUDIT_VERDICT_20260911.json",
+                "audit/resource_sampler.py",
+                "tests/test_resource_sampler.py",
+                "tests/test_admission_verdict.py",
+                "f:/BPI/_audit_r1/smoke/S04（两次留档尝试 + 本次运行）",
+            ],
+            {
+                "scope": "resource_instrument",
+                "requires_refreeze": False,
+                "freeze_id_changes": False,
+                "retired_check": "own_pagefile_growth_within_limit",
+                "retired_because": (
+                    "measures committed private bytes (commit charge), not paging"
+                ),
+                "accepted_conditions_unchanged": [
+                    "peak_total_rss_gib_max=24",
+                    "swap_growth_bytes_max=0",
+                    "unexplained_errors_max=0",
+                    "disk_rule=estimated_peak_disk<=0.8*F_free",
+                ],
+                "adverse_finding_kept": (
+                    "S04 run: commit charge 8.5 GiB with 1.09 GiB peak RSS; recorded as "
+                    "diagnostics, no threshold applied"
+                ),
+                "rerun_performed": False,
+                "inline_verdict_kept_as_recorded": True,
+            },
+        ),
         "INV_S01_SMOKE": _reason(
             "INV_S01_SMOKE",
             "F-B15c-1：B15b 的 smoke runner 借用 formal 身份函数（cells.* / scope.logical_*）与 "
@@ -465,6 +509,22 @@ def main() -> int:
             "requires_refreeze": False,
             "freeze_id_changes": False,
             "status": "ADOPTED_BEFORE_THE_S04_RERUN",
+        }
+    )
+    amendment_events.append(
+        {
+            "schema_version": 1,
+            "event_type": "AMENDMENT",
+            "amendment_id": "AM-2026-09-12-09",
+            "at_utc": at,
+            "change_id": "AM_RESOURCE_MEASUREMENT_SEMANTICS",
+            "scope": "resource_instrument",
+            "reason_object_hash": reason_hash["AM_RESOURCE_MEASUREMENT_SEMANTICS"],
+            "requires_refreeze": False,
+            "freeze_id_changes": False,
+            "retired_check": "own_pagefile_growth_within_limit",
+            "rerun_performed": False,
+            "status": "ADOPTED_AFTER_THE_S04_RERUN_CORRECTING_A_MISLABEL",
         }
     )
     amendment_tips = _write_chain(AMENDMENTS, amendment_events)

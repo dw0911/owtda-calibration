@@ -142,24 +142,32 @@ def sample_run(
         "kind": "run_resources_v1",
         "measured_wall_milliseconds": round((time.time() - started) * 1000),
         "peak_total_rss_bytes": peak,
-        # Acceptance basis: the run's own page-file demand (Windows instrument).
-        "own_pagefile_instrument": (
-            "psutil.Process.memory_info().pagefile summed over the process tree"
+        # Diagnostic (NOT an acceptance condition): the run's private *commit
+        # charge*.  On Windows ``PROCESS_MEMORY_COUNTERS.PagefileUsage`` is committed
+        # private bytes, not how much was written to the page file -- measured on the
+        # S04 run: 8.5 GiB commit with 1.09 GiB peak RSS and 0 B of machine-wide
+        # page-file movement.  Recorded for the budget discussion; the field is named
+        # for what it measures (AM_RESOURCE_MEASUREMENT_SEMANTICS).
+        "own_commit_charge_instrument": (
+            "psutil.Process.memory_info().pagefile summed over the process tree "
+            "(Windows: committed private bytes, not paging activity)"
         ),
-        "own_pagefile_before_bytes": own_before,
-        "own_pagefile_peak_bytes": own_peak,
-        "own_pagefile_after_bytes": own_after,
-        "own_pagefile_growth_bytes": (
+        "own_commit_charge_before_bytes": own_before,
+        "own_commit_charge_peak_bytes": own_peak,
+        "own_commit_charge_after_bytes": own_after,
+        "own_commit_charge_growth_bytes": (
             None if own_before is None or own_peak is None
             else int(own_peak) - int(own_before)
         ),
-        # Context only: machine-wide page-file movement, not attributable to the run.
+        # Acceptance basis: machine-wide page-file growth during the run, i.e. the
+        # declared "no swap growth" condition, unchanged.  The number is sensitive to
+        # unrelated host activity; that sensitivity is disclosed, not engineered away.
         "host_swap_before_bytes": swap_before,
         "host_swap_peak_bytes": swap_peak,
         "host_swap_growth_bytes": swap_peak - swap_before,
         "host_swap_measurement_caveat": (
-            "machine-wide page file usage: moves with unrelated host activity and is "
-            "therefore recorded as context, never as an acceptance condition"
+            "machine-wide page file usage: sensitive to unrelated host activity; "
+            "this is the declared condition and the sensitivity is disclosed"
         ),
         "evidence_root": str(evidence_root),
         "disk_free_before_bytes": free_before,
@@ -177,22 +185,24 @@ def resource_verdict(
 ) -> dict[str, Any]:
     """Evaluate one run's resources against the frozen limits (fail closed).
 
-    The acceptance condition on paging is applied to the run's **own** page-file
-    demand (``own_pagefile_growth_bytes``).  Machine-wide movement is reported under
-    ``context_checks`` and can never decide the verdict (AM_RESOURCE_INSTRUMENT).
+    Acceptance uses the **declared** quantities only: peak total RSS, machine-wide
+    page-file growth ("no swap growth"), unexplained errors and the disk rule.  The
+    run's private commit charge is reported under ``diagnostics`` -- it is a real
+    number about the run, but it is *not* paging activity and therefore cannot
+    decide admission (AM_RESOURCE_MEASUREMENT_SEMANTICS).
     """
     if not resources:
         return {
             "limits": limits,
             "observed": None,
             "checks": {"resources_recorded": False},
-            "context_checks": {},
+            "diagnostics": {},
             "passed": False,
         }
     peak_bytes = resources.get("peak_total_rss_bytes")
     peak = (peak_bytes / GIB) if isinstance(peak_bytes, int) else None
-    own_growth = resources.get("own_pagefile_growth_bytes")
     host_growth = resources.get("host_swap_growth_bytes")
+    commit_growth = resources.get("own_commit_charge_growth_bytes")
     written = resources.get("evidence_bytes_written")
     free = resources.get("disk_free_before_bytes")
     checks = {
@@ -200,8 +210,9 @@ def resource_verdict(
         "peak_total_rss_within_limit": bool(
             peak is not None and peak <= limits["peak_total_rss_gib_max"]
         ),
-        "own_pagefile_growth_within_limit": bool(
-            own_growth is not None and own_growth <= limits["swap_growth_bytes_max"]
+        "host_swap_growth_within_limit": bool(
+            host_growth is not None
+            and host_growth <= limits["swap_growth_bytes_max"]
         ),
         "unexplained_errors_within_limit": bool(
             unexplained_errors <= limits["unexplained_errors_max"]
@@ -214,21 +225,24 @@ def resource_verdict(
         "limits": limits,
         "observed": {
             "peak_total_rss_gib": peak,
-            "own_pagefile_growth_bytes": own_growth,
             "host_swap_growth_bytes": host_growth,
             "evidence_bytes_written": written,
             "disk_free_before_bytes": free,
             "unexplained_errors": unexplained_errors,
-            "instrument": resources.get("own_pagefile_instrument"),
         },
         "checks": checks,
-        "context_checks": {
-            "host_swap_growth_bytes": host_growth,
-            "host_swap_within_zero": bool(
-                host_growth is not None
-                and host_growth <= limits["swap_growth_bytes_max"]
+        "diagnostics": {
+            "own_commit_charge_growth_bytes": commit_growth,
+            "own_commit_charge_instrument": resources.get(
+                "own_commit_charge_instrument"
             ),
-            "caveat": resources.get("host_swap_measurement_caveat"),
+            "note": (
+                "commit charge is not paging activity and is never an acceptance "
+                "condition; it is recorded for the memory-budget discussion"
+            ),
+            "host_swap_measurement_caveat": resources.get(
+                "host_swap_measurement_caveat"
+            ),
         },
         "passed": all(checks.values()),
     }
