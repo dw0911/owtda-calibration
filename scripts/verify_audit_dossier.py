@@ -375,18 +375,18 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
 
     run_events = [
         json.loads(line)
-        for line in d.read("{smoke_root}/RUN_REGISTRY.jsonl")
+        for line in d.read(f"{smoke_root}/RUN_REGISTRY.jsonl")
         .decode("utf-8").splitlines() if line.strip()
     ]
     state_events = [
         json.loads(line)
-        for line in d.read("{smoke_root}/STATE_REGISTRY.jsonl")
+        for line in d.read(f"{smoke_root}/STATE_REGISTRY.jsonl")
         .decode("utf-8").splitlines() if line.strip()
     ]
     check("smoke.run_registry_present", "RUN/STATE 注册表存在且非空",
           bool(run_events) and bool(state_events),
           {"run_events": len(run_events), "state_events": len(state_events)}, ">0",
-          "{smoke_root}/RUN_REGISTRY.jsonl")
+          f"{smoke_root}/RUN_REGISTRY.jsonl")
     terminal: dict[str, str] = {}
     for event in state_events:
         terminal[str(event.get("run_id"))] = str(event.get("event_type"))
@@ -394,7 +394,7 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
           "STATE 注册表每个 run 的终态恰为 RUN_SEALED（精确匹配，非『非空即可』）",
           bool(terminal) and all(v == "RUN_SEALED" for v in terminal.values()),
           terminal, {"every run": "RUN_SEALED"},
-          "{smoke_root}/STATE_REGISTRY.jsonl")
+          f"{smoke_root}/STATE_REGISTRY.jsonl")
     for phase in ("SMOKE_NULL", "SMOKE_ALT"):
         seal = d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json")
         registry_state = terminal.get(seal["run_id"])
@@ -545,13 +545,21 @@ def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
     # context, so a packet whose ids point somewhere else cannot pass by simply
     # declaring itself consistent.
     freeze_manifest = d.json("governance/FREEZE_MANIFEST.json")
-    cells_by_key = {(c.scenario, c.stride): c for c in scope.h1_alt_cells()}
+    # Two H1 cells share (scenario, stride) and differ only in rho, so rho must be
+    # part of the lookup key -- keying on (scenario, stride) silently compares
+    # against the wrong cell.
+    cells_by_key = {
+        (c.scenario, c.rho, c.stride): c for c in scope.h1_alt_cells()
+    }
     deviations: list[dict[str, Any]] = []
     joins = packet["evidence"].get("null_scope_join", [])
     for entry in joins:
-        cell = cells_by_key.get((entry.get("scenario"), entry.get("stride")))
+        cell = cells_by_key.get(
+            (entry.get("scenario"), entry.get("rho"), entry.get("stride"))
+        )
         if cell is None:
             deviations.append({"scenario": entry.get("scenario"),
+                               "rho": entry.get("rho"),
                                "stride": entry.get("stride"), "reason": "unknown cell"})
             continue
         expected_id = scope.logical_cell_id(
