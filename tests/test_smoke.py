@@ -192,4 +192,4 @@ class TestSmokeRootIsolation:
         # scope.SMOKE_GENERATION_ID says, and it must not be a superseded one.
         assert smoke.SMOKE_GENERATION_ID == scope.SMOKE_GENERATION_ID
         assert scope.SMOKE_GENERATION_ID not in scope.SMOKE_GENERATIONS_SUPERSEDED
-        assert scope.SMOKE_GENERATIONS_SUPERSEDED == ("S01", "S02")
+        assert scope.SMOKE_GENERATIONS_SUPERSEDED == ("S01", "S02", "S03")
