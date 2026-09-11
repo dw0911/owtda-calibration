@@ -57,40 +57,30 @@ def _load(path: Path) -> dict[str, Any]:
 
 
 def _identity_closure(phase: str, ledger_path: Path) -> dict[str, Any]:
-    """Recompute the smoke ledger's identity lattice from the frozen ledger bytes.
+    """Spec-derived identity closure of the smoke ledger (audit A01/A05).
 
-    A complete G3 smoke ledger must close exactly over
-    experiment -> logical cell -> data unit -> feature-sufficient -> evaluation
-    (Plan §16), so a missing or duplicated artefact cannot hide behind the row
-    count alone.
+    The previous version compared **unique-id counts** against a re-counted
+    expectation, which is exactly what hid A01/A02: the audited ledger had the
+    right numbers of cells and evaluations while sharing no cell id with its own
+    scope, and replacing one evaluation id with ``AUDIT_WRONG_ID`` kept every count
+    intact.  The expectation is now rebuilt from the frozen specification by the
+    single smoke enumerator and compared as a set, row by row.
     """
-    n_cells = (
-        len(scope.h0_null_cells())
-        if phase == scope.PHASE_SMOKE_NULL
-        else len(scope.h1_alt_cells())
-    )
-    units = n_cells * scope.R0_SMOKE
-    cells_n = units * len(scope.FEATURE_IDS)
-    evaluations = cells_n * len(scope.METHOD_IDS)
-    expected = {
-        "experiment_id": 1,
-        "logical_cell_id": n_cells,
-        "data_unit_id": units,
-        "feature_sufficient_id": cells_n,
-        "evaluation_id": evaluations,
-        "logical_evaluation_key": evaluations,
-    }
     rows = [
         json.loads(line)
         for line in ledger_path.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
-    actual = {key: len({row[key] for row in rows}) for key in expected}
+    manifest = _load(GOV / "FREEZE_MANIFEST.json")
+    ctx = smoke.smoke_context(manifest, phase)
+    report = smoke.assert_smoke_ledger_matches_expected(
+        ctx=ctx, replicate_count=scope.R0_SMOKE, ledger_rows=rows
+    )
     return {
-        "expected": expected,
-        "actual": actual,
+        "mode": "spec_derived_set_equality_plus_foreign_keys",
+        "passed": True,  # reaching here means the assertion did not raise
         "rows": len(rows),
-        "passed": actual == expected,
+        **report,
     }
 
 

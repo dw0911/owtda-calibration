@@ -34,6 +34,7 @@ sys.path.insert(0, str(REPO / "audit"))
 import repo_guard
 
 from owtda_cal import chains, freeze, scope
+from owtda_cal import smoke as smoke_mod
 from owtda_cal.canonical import canonical_json_bytes
 
 CHECKS: list[dict[str, Any]] = []
@@ -290,31 +291,76 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
               seal["ledger_content_hash"] == _sha256(ledger),
               seal["ledger_content_hash"][:16], _sha256(ledger)[:16],
               f"evidence/smoke/S03/{phase}/evaluation_rows.jsonl")
-        check(f"smoke.{phase}.acceptance",
-              f"{phase} 计数/零错误/零泄漏/身份闭合",
-              seal["counts_match_contract"] and seal["unexplained_errors"] == 0
-              and seal["formal_id_leak_check_passed"] and seal["identity_closure_passed"]
-              and seal["missing_required_fields"] == 0
-              and seal["ph_windows"] == expected_windows,
-              {"counts": seal["counts_match_contract"],
-               "unexplained": seal["unexplained_errors"],
-               "leak_ok": seal["formal_id_leak_check_passed"],
-               "closure": seal["identity_closure_passed"],
-               "missing_fields": seal["missing_required_fields"],
-               "ph_windows": seal["ph_windows"]},
-              {"ph_windows": expected_windows}, f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
-        check(f"smoke.{phase}.seal_terminal", f"{phase} 终态已封",
-              seal["terminal_state"] in ("SEALED", "SMOKE_SEALED", "COMPLETE")
-              or bool(seal["terminal_state"]),
-              seal["terminal_state"], "terminal state present",
-              f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+        # Audit A05: the seal's own booleans are NOT the verdict.  The identity
+        # closure is recomputed from the frozen specification (set equality plus
+        # row-by-row foreign keys) and the terminal state is replayed from the
+        # registries; the declared values are only *cross-checked*.
+        rows = [
+            json.loads(line)
+            for line in ledger.decode("utf-8").splitlines()
+            if line.strip()
+        ]
+        replicates = int(d.json("governance/SMOKE_CONFIG_v1.json")["replicates_per_cell"])
+        try:
+            closure = smoke_mod.assert_smoke_ledger_matches_expected(
+                ctx=smoke_mod.smoke_context(manifest, phase),
+                replicate_count=replicates,
+                ledger_rows=rows,
+            )
+            closure_ok, closure_detail = True, closure
+        except ValueError as exc:  # the expectation is the specification's
+            closure_ok, closure_detail = False, str(exc)
+        check(f"smoke.{phase}.closure_recomputed",
+              f"{phase} 身份闭合由规格独立重算（集合相等 + 逐行外键）",
+              closure_ok, closure_detail,
+              "no exception; ledger ids == spec-derived ids",
+              f"evidence/smoke/S03/{phase}/evaluation_rows.jsonl")
 
-    run_registry = [line for line in d.read("evidence/smoke/S03/RUN_REGISTRY.jsonl")
-                    .decode("utf-8").splitlines() if line.strip()]
+        declared = (
+            bool(seal["counts_match_contract"])
+            and bool(seal["formal_id_leak_check_passed"])
+            and bool(seal["identity_closure_passed"])
+            and seal["unexplained_errors"] == 0
+            and seal["missing_required_fields"] == 0
+            and seal["ph_windows"] == expected_windows
+        )
+        check(f"smoke.{phase}.declared_matches_recomputed",
+              f"{phase} seal 自报结论与独立重算一致（不一致本身即为缺陷）",
+              declared == closure_ok,
+              {"declared": declared, "recomputed": closure_ok},
+              None, f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+
+    run_events = [
+        json.loads(line)
+        for line in d.read("evidence/smoke/S03/RUN_REGISTRY.jsonl")
+        .decode("utf-8").splitlines() if line.strip()
+    ]
+    state_events = [
+        json.loads(line)
+        for line in d.read("evidence/smoke/S03/STATE_REGISTRY.jsonl")
+        .decode("utf-8").splitlines() if line.strip()
+    ]
     check("smoke.run_registry_present", "RUN/STATE 注册表存在且非空",
-          bool(run_registry) and d.has("evidence/smoke/S03/STATE_REGISTRY.jsonl"),
-          {"run_events": len(run_registry)}, ">0",
+          bool(run_events) and bool(state_events),
+          {"run_events": len(run_events), "state_events": len(state_events)}, ">0",
           "evidence/smoke/S03/RUN_REGISTRY.jsonl")
+    terminal: dict[str, str] = {}
+    for event in state_events:
+        terminal[str(event.get("run_id"))] = str(event.get("event_type"))
+    check("smoke.terminal_states_exact",
+          "STATE 注册表每个 run 的终态恰为 RUN_SEALED（精确匹配，非『非空即可』）",
+          bool(terminal) and all(v == "RUN_SEALED" for v in terminal.values()),
+          terminal, {"every run": "RUN_SEALED"},
+          "evidence/smoke/S03/STATE_REGISTRY.jsonl")
+    for phase in ("SMOKE_NULL", "SMOKE_ALT"):
+        seal = d.json(f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+        registry_state = terminal.get(seal["run_id"])
+        check(f"smoke.{phase}.seal_terminal_matches_registry",
+              f"{phase} seal 声明的终态 == 注册表重放的终态",
+              seal["terminal_state"] == registry_state == "RUN_SEALED",
+              {"seal": seal["terminal_state"], "registry": registry_state},
+              "RUN_SEALED",
+              f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
 
 
 def verify_revision(d: Dossier, staging: Path, anchor: dict[str, Any]) -> None:

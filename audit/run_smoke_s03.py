@@ -35,6 +35,7 @@ sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "audit"))
 
 from run_registry import (
+    STATE_REGISTRY_FILE,
     ledger_content_hash,
     open_runs,
     record_seal,
@@ -233,16 +234,74 @@ def main() -> int:
 
     provenance["open_runs"] = sorted(open_runs(root))
     provenance["open_runs_zero"] = not provenance["open_runs"]
-    provenance["terminal_states"] = {
-        phase: "RUN_SEALED" for phase in reports
-    }
+    # Audit A05: three *separate* notions, each derived rather than declared.
+    #   run_terminated   -- the processes finished
+    #   evidence_sealed  -- the state registry really ends in RUN_SEALED
+    #   admission_passed -- every contract below holds
+    # A failure is still archived (the evidence above is already on disk), but it
+    # must not exit as if it had been admitted.
+    state_events = [
+        json.loads(line)
+        for line in (root / STATE_REGISTRY_FILE)
+        .read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    terminal: dict[str, str] = {}
+    for event in state_events:
+        terminal[str(event["run_id"])] = str(event["event_type"])
+    provenance["terminal_states"] = terminal
     provenance["sealed_at_utc"] = utc_now()
+    verdict = admission_verdict(
+        reports, terminal, open_runs_zero=bool(provenance["open_runs_zero"])
+    )
+    provenance["verdict"] = verdict
     (root / "provenance_manifest.json").write_text(
         json.dumps(provenance, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     print(f"[s03] open_runs={provenance['open_runs']}", flush=True)
-    return 0 if provenance["open_runs_zero"] else 1
+    print(f"[s03] verdict={json.dumps(verdict, ensure_ascii=False, sort_keys=True)}",
+          flush=True)
+    if not verdict["admission_passed"]:
+        failed = sorted(k for k, ok in verdict["checks"].items() if not ok)
+        print(f"[s03] ADMISSION FAILED: {failed}", flush=True)
+        return 1
+    return 0
+
+
+def admission_verdict(
+    reports: dict[str, dict[str, Any]],
+    terminal_states: dict[str, str],
+    *,
+    open_runs_zero: bool,
+) -> dict[str, Any]:
+    """The three-layer verdict, derived from the archived records (audit A05).
+
+    ``run_terminated`` (processes finished), ``evidence_sealed`` (the state
+    registry really ends in ``RUN_SEALED``) and ``admission_passed`` (every
+    contract holds) are kept apart: a run that terminated and sealed correctly can
+    still fail admission, and that must not be reported as success.
+    """
+    checks = {
+        "counts_match_contract": all(r["counts_match_contract"] for r in reports.values()),
+        "no_unexplained_errors": all(r["unexplained_errors"] == 0 for r in reports.values()),
+        "no_missing_required_fields": all(
+            r["missing_required_fields"] == 0 for r in reports.values()
+        ),
+        "identity_closure": all(r["identity_closure"]["passed"] for r in reports.values()),
+        "formal_id_leak_clean": all(
+            r["formal_id_leak_check"]["passed"] for r in reports.values()
+        ),
+        "open_runs_zero": bool(open_runs_zero),
+        "every_run_sealed": bool(terminal_states)
+        and all(state == "RUN_SEALED" for state in terminal_states.values()),
+    }
+    return {
+        "run_terminated": True,
+        "evidence_sealed": checks["every_run_sealed"],
+        "admission_passed": all(checks.values()),
+        "checks": checks,
+    }
 
 
 def _head() -> str:
