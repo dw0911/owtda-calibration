@@ -332,11 +332,35 @@
 - **未受影响的保证**：本批交付包内的两条链均为**完整且自洽**（哈希链可复算、
   事件数与 reason 对象齐备），F-R1-1 影响的是**未来重建**，不是已交付对象。
 
+## 2026-09-11 — 采纳 `AM_TOOLING_SCOPE`：哈希范围收窄 + 治理链追加化（含 F-R1-1/2/4 修复，`v1.5`）
+
+采纳 `governance/AMENDMENT_PROPOSAL_TOOLING_SCOPE.md` 的两项建议：
+
+- **两个范围拆开**（`audit/repo_guard.py`）：
+  `HASHED_SOURCE_PATHS = ("src", "configs")` —— `source_tree_hash` 只锚定「决定数值的工件」；
+  `GUARDED_SCOPE_PATHS = ("src", "configs", "audit")` —— 构建与运行前仍要求**全部已提交**，
+  使 `compute_git_commit` 仍涵盖实际运行的工具。「是否哈希」与「是否必须已提交」是两个不同
+  问题，此前被混为一谈，导致任何工具改进都要重跑编号 smoke（本轮已为此付出 `v1.3→v1.4`）。
+  `FREEZE_MANIFEST` 新增 `source_tree_scope` / `source_tree_scope_note` 显式声明覆盖面；
+  工具的完整内容由 `revision/OWTDA-CAL-R1.bundle` + `revision/source_manifest.json` 锚定；
+- **F-R1-1 修复**：`build_governance_registries._write_chain` 由「截断+重写」改为
+  **保序保字节追加器**：既有事件原样保留（`at_utc`/哈希不变）、只追加新 `change_id`、
+  CAS 绑定当前 tip；同一 `change_id` 内容不一致时 fail-closed（信封字段除外）。
+  新增 `tests/test_registry_chains.py`（外部追加事件在重建中存活、字节不变、幂等、冲突拒绝、
+  交付链自洽且含 `INV_V12_SOURCE_ANCHOR`）；
+- **F-R1-2 修复**：补件包冻结 tag 派生改为解析 `MAJOR.MINOR`（`v1.4` 曾判为 `UNKNOWN`）；
+- **F-R1-4 修复**：`audit/append_invalidation.py` 首版漏写链自身的 `prev_event_hash`，
+  会使 `verify_chain` 报链断。受影响事件为 `INV_V12_SOURCE_ANCHOR`
+  （`1ba265ae…` → `efaedd03…`，内容其余部分未变），由新增的
+  `audit/repair_chain_linkage.py` 修复并记录于
+  `governance/reasons/F_R1_4_LINKAGE_REPAIR.json`；该工具对健康链为空操作；
+- **身份后果**：`freeze_id`、四个 spec hash、`SCOPE_DESIGN_*` 行哈希与全部合成身份**不变**；
+  只有 `source_tree_hash` 的覆盖面与取值改变（`requires_refreeze=true`、`freeze_id_changes=false`），
+  故重建 manifest 并重跑编号 smoke；标签 **`v1.5-freeze-owtda-cal-r1`**（`v1.0` 未移动）。
+- 全量测试与 ruff 通过；S03 在新身份下重跑并封 seal。
+
 ## 待登记（未发生）
 
-- **F-R1-1 修复**：治理链追加化（`_write_chain`）+ 冻结源域收窄
-  （`governance/AMENDMENT_PROPOSAL_TOOLING_SCOPE.md`，提案未生效；建议与 B15d 的身份变更
-  合并实施，不额外增加一次编号 smoke）；
 - B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
   正式 H0/H1 run 的 runner 与 phase seal 链；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

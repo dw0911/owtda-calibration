@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import zipfile
 from datetime import UTC, datetime
@@ -213,19 +214,26 @@ def _copy_governance(staging: Path) -> list[dict[str, Any]]:
     return copied
 
 
+_FREEZE_TAG_RE = re.compile(r"^refs/tags/v(\d+)\.(\d+)-freeze-owtda-cal-r1$")
+
+
 def _derive_freeze_tag(staging: Path) -> str:
-    """The active freeze tag, read from the collected revision artifacts (D-1)."""
+    """The active freeze tag, read from the collected revision artifacts (D-1).
+
+    F-R1-2: the numeric part is ``MAJOR.MINOR`` (``v1.4``), so an ``isdigit()``
+    test on the whole component always failed and the derivation silently returned
+    ``UNKNOWN``; parse both components explicitly instead.
+    """
     path = staging / "revision" / "git_show_ref_tags.txt"
     if not path.exists():
         return "UNKNOWN"
-    tags = [
-        line.split("refs/tags/", 1)[1]
-        for line in path.read_text(encoding="utf-8").split()
-        if line.startswith("refs/tags/v")
-    ]
-    numbered = [
-        (int(t.split("-")[0][1:]), t) for t in tags if t.split("-")[0][1:].isdigit()
-    ]
+    numbered: list[tuple[tuple[int, int], str]] = []
+    for token in path.read_text(encoding="utf-8").split():
+        match = _FREEZE_TAG_RE.match(token)
+        if match:
+            numbered.append(
+                ((int(match.group(1)), int(match.group(2))), token.split("/", 2)[2])
+            )
     return max(numbered)[1] if numbered else "UNKNOWN"
 
 

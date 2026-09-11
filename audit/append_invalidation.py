@@ -72,6 +72,9 @@ def main() -> int:
         "target": args.target,
         "reason_object_hash": reason_hash,
         "replacement": args.replacement,
+        # F-R1-4: the chain's own linkage field must be written too, otherwise
+        # verify_chain (which enforces prev_event_hash == previous tip) breaks.
+        "prev_event_hash": tip,
     }
     new_tip = chains.append_cas(
         str(REGISTRY), event, expected_tip=tip, hash_field=HASH_FIELD

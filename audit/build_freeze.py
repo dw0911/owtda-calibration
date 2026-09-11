@@ -56,9 +56,11 @@ COMPONENT_GENERATIONS = {
     "feature_generation_id": {"bpi": "F01", "moments": "F01"},
     "method_generation_id": {"M0": "M01", "M1": "M01"},
 }
-# Single source of truth: ``repo_guard`` owns the frozen-scope definition, so the
-# cleanliness guard can never drift from the scope this hash actually collects.
-SOURCE_TREE_PREFIXES = tuple(f"{p}/" for p in repo_guard.FROZEN_SCOPE_PATHS)
+# Single source of truth: ``repo_guard`` owns both scope definitions, so the hash
+# and the cleanliness guard can never drift apart.  AM_TOOLING_SCOPE: the hash
+# anchors only what determines results (src/ + configs/); the guard additionally
+# requires the evidence-assembly tooling (audit/) to be committed.
+SOURCE_TREE_PREFIXES = tuple(f"{p}/" for p in repo_guard.HASHED_SOURCE_PATHS)
 TASK_INDEX_GENERATION_ID = "T01"
 SEED_ROOT_FAMILIES = (
     ("SMOKE_NULL", "smoke", scope.SMOKE_GENERATION_ID),
@@ -599,8 +601,11 @@ def _write_real_disposition(fid: str) -> dict[str, Any]:
 
 def main() -> int:
     # Fail closed: never write a freeze whose run identity could point at a
-    # revision that does not contain the frozen scope as built.
-    repo_guard.assert_clean_frozen_scope(REPO, context="build_freeze")
+    # revision that does not contain the frozen scope *or the tooling* as built
+    # (the guard covers src/, configs/ and audit/; only the first two are hashed).
+    repo_guard.assert_clean_frozen_scope(
+        REPO, context="build_freeze", scope_paths=repo_guard.GUARDED_SCOPE_PATHS
+    )
     gov = REPO / "governance"
 
     scope_spec = _scope_spec()
@@ -706,6 +711,14 @@ def main() -> int:
     )
     manifest["estimand_spec_registry_hash"] = e_hash
     manifest["source_tree_manifest"] = src_entries
+    manifest["source_tree_scope"] = list(SOURCE_TREE_PREFIXES)
+    manifest["source_tree_scope_note"] = (
+        "AM_TOOLING_SCOPE: source_tree_hash anchors only the content that "
+        "determines results; evidence-assembly tooling under audit/ is anchored by "
+        "revision/OWTDA-CAL-R1.bundle + revision/source_manifest.json. The build "
+        "guard still requires audit/ to be committed before a build or run "
+        "(repo_guard.GUARDED_SCOPE_PATHS)."
+    )
     manifest["environment_lock_manifest"] = env_entries
     manifest["seed_registry_snapshot_hash"] = registry.registry_snapshot_hash(
         [e["root_entry_hash"] for e in seed_entries]

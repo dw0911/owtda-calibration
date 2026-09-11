@@ -1,6 +1,9 @@
 # 提案：把「证据装配工具」移出冻结源域，并让治理链只追加不重写
 
-状态：**提案，未生效**（未改动任何身份）。拟定时间（UTC）：2026-09-11。
+状态：**已采纳并实施**（2026-09-11）。对应 amendment `AM_TOOLING_SCOPE`
+（`v1.5-freeze-owtda-cal-r1`；`freeze_id` 不变，`source_tree_hash` 覆盖面与取值改变）。
+本文保留提案原文，下方 §4 记录实施结果。
+
 关联 amendment：`AM_PARALLELISM_DECOUPLING`（`v1.4-freeze-owtda-cal-r1`）。
 
 ## 1. 本轮暴露的第二个同类缺陷：治理链被「重写」而非「追加」
@@ -52,3 +55,25 @@
 
 在裁定之前，本文件仅为提案：仓库内**没有任何**关于上述两项的已应用改动，
 当前冻结身份仍为 `v1.4-freeze-owtda-cal-r1` / `AM_PARALLELISM_DECOUPLING`。
+
+## 4. 实施结果（2026-09-11 采纳后追加）
+
+- **§1 采纳**：`_write_chain` 改为**保序保字节追加器**——既有事件按 `change_id` 原样保留
+  （`at_utc` 与哈希不变），仅追加新的 `change_id`，`expected_tip` 取当前 tip（CAS）；
+  同一 `change_id` 内容不一致时 **fail-closed 拒绝**（除 `at_utc`/`amendment_id`/
+  `invalidation_id`/链接字段这些信封字段外逐一比对）。测试见
+  `tests/test_registry_chains.py`（外部追加事件在重建中存活、既有事件字节不变、幂等、
+  冲突拒绝、信封字段不算冲突）。
+- **§2 采纳**：`repo_guard` 拆为两个范围——`HASHED_SOURCE_PATHS = ("src", "configs")`
+  （`source_tree_hash` 的覆盖面，即「决定数值的工件」）与
+  `GUARDED_SCOPE_PATHS = ("src", "configs", "audit")`（构建/运行前必须已提交的范围，
+  使 `compute_git_commit` 仍涵盖实际运行的工具）。`FREEZE_MANIFEST` 新增
+  `source_tree_scope` 与 `source_tree_scope_note`，显式声明哈希覆盖面；工具的完整内容由
+  `revision/OWTDA-CAL-R1.bundle` + `revision/source_manifest.json` 锚定。
+- **附带的两个缺陷修复**：F-R1-1（本文件 §1 的问题）与 F-R1-2（补件包冻结 tag 派生把
+  `v1.4` 判为 `UNKNOWN`，已改为解析 `MAJOR.MINOR`）；另修复 F-R1-4
+  （`audit/append_invalidation.py` 首版漏写链链接字段 `prev_event_hash`，导致
+  `verify_chain` 报链断；已补写并用 `audit/repair_chain_linkage.py` 修复受影响的那一条事件，
+  旧哈希记录于 `governance/reasons/F_R1_4_LINKAGE_REPAIR.json`）。
+- **不变项**：`freeze_id` 与四个 spec hash、`SCOPE_DESIGN_*` 行哈希、全部合成身份不变；
+  只有 `source_tree_hash` 的覆盖面与取值改变，因此重建 manifest 并重跑编号 smoke（合规）。

@@ -119,13 +119,23 @@ class TestAssertCleanFrozenScope:
 
 
 class TestGuardIsWiredAndConsistent:
-    def test_scope_is_the_single_source_of_truth(self):
-        """build_freeze must hash exactly the scope the guard protects."""
+    def test_hashed_and_guarded_scopes_are_distinct_and_nested(self):
+        """AM_TOOLING_SCOPE: hash what determines results, guard what must commit.
+
+        ``audit/`` holds evidence-assembly tooling: it must be committed before a
+        build or run (so ``compute_git_commit`` covers the code that produced the
+        evidence) but it must NOT move ``source_tree_hash``, or every tooling
+        improvement would force a re-freeze.
+        """
         import build_freeze
 
-        assert build_freeze.SOURCE_TREE_PREFIXES == tuple(
-            f"{p}/" for p in repo_guard.FROZEN_SCOPE_PATHS
-        )
+        hashed = tuple(f"{p}/" for p in repo_guard.HASHED_SOURCE_PATHS)
+        guarded = tuple(f"{p}/" for p in repo_guard.GUARDED_SCOPE_PATHS)
+        assert build_freeze.SOURCE_TREE_PREFIXES == hashed
+        assert hashed == ("src/", "configs/")
+        assert guarded == ("src/", "configs/", "audit/")
+        assert set(hashed) < set(guarded)
+        assert "audit/" not in hashed and "audit/" in guarded
 
     @pytest.mark.parametrize("name", ["build_freeze.py", "build_run_admission.py"])
     def test_builders_call_the_guard(self, name: str):

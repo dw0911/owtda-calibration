@@ -37,12 +37,13 @@ REPO = Path(__file__).resolve().parents[1]
 LAUNCHER = REPO / "scripts/frozen_env.py"
 VENV_PY = REPO / ".venv/Scripts/python.exe"
 SCOPE_FILE = REPO / "src/owtda_cal/scope.py"
-NEW_TAG = "v1.4-freeze-owtda-cal-r1"
+NEW_TAG = "v1.5-freeze-owtda-cal-r1"
 TAG_MESSAGE = (
-    "OW-TDA-CAL-R1 R1 freeze amendment (AM_PARALLELISM_DECOUPLING: parallelism is "
-    "a contract, not a frozen value)"
+    "OW-TDA-CAL-R1 R1 freeze amendment (AM_TOOLING_SCOPE: hash only what "
+    "determines results; append-only governance chains)"
 )
-SUPERSEDED_SMOKE_DIR = "S03_superseded_pre_parallelism_amendment"
+#: Superseded S03 evidence is archived next to the delivered tree as
+#: ``S03_superseded_at_<tag>`` (never deleted, never mixed into one chain).
 STAGES = (
     "generation",
     "commit_src",
@@ -202,8 +203,7 @@ def main() -> int:
         ).returncode
         if pending == 1 and _run("git_commit_anchor", [
             "git", "commit", "-q", "-m",
-            "docs(governance): record the run/source anchor move to v1.3 "
-            "(fail-closed guard + H1 review packet)",
+            f"docs(governance): record the run/source anchor move to {NEW_TAG}",
         ]) != 0:
             return 1
 
@@ -215,11 +215,15 @@ def main() -> int:
         )
         workers = int(smoke_config["default_workers"])
         current = root / "smoke/S03"
-        archived = root / "smoke" / SUPERSEDED_SMOKE_DIR
-        if current.exists() and not archived.exists():
+        archived = root / "smoke" / f"S03_superseded_at_{NEW_TAG}"
+        if current.exists() and any(current.iterdir()):
             # The previous S03 evidence belongs to the pre-amendment identity: keep
             # it (never delete evidence) but move it out of the delivered tree so
             # the package cannot mix two identities in one append-only chain.
+            if archived.exists():
+                raise SystemExit(
+                    f"REFUSED: {current} and {archived} both exist; resolve manually"
+                )
             print(f"archiving superseded S03 evidence -> {archived}")
             current.rename(archived)
         if _frozen(

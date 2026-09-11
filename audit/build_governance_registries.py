@@ -50,15 +50,61 @@ def _reason(code: str, statement: str, evidence: list[str], extra: dict) -> dict
     }
 
 
+#: Envelope fields that legitimately differ between two renderings of the *same*
+#: logical event and therefore must not count as a content conflict.
+_CHAIN_ENVELOPE_FIELDS = frozenset(
+    {"event_hash", "prev_event_hash", "at_utc", "amendment_id", "invalidation_id"}
+)
+
+
 def _write_chain(path: Path, events: list[dict]) -> list[str]:
+    """Append-only writer for the amendment / invalidation chains (F-R1-1).
+
+    The previous implementation truncated the file and re-appended only the events
+    it knew about, so an event appended by another tool
+    (``audit/append_invalidation.py``) was **silently dropped** — it happened to
+    ``INV_V12_SOURCE_ANCHOR``.  Now:
+
+      * events already in the file are kept **verbatim** (their ``at_utc`` and
+        therefore their hash never change), keyed by ``change_id``;
+      * only genuinely new ``change_id``s are appended, in list order, CAS-bound to
+        the current tip;
+      * a ``change_id`` already present with *different* content fails closed
+        instead of being rewritten — a changed verdict belongs in a new event.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("", encoding="utf-8")
-    tips: list[str] = []
+    existing: list[dict[str, Any]] = []
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                existing.append(json.loads(line))
+    tips = [event["event_hash"] for event in existing]
+    by_change: dict[str, dict[str, Any]] = {
+        event["change_id"]: event for event in existing if "change_id" in event
+    }
+
+    def comparable(event: dict[str, Any]) -> dict[str, Any]:
+        return {
+            k: v for k, v in event.items() if k not in _CHAIN_ENVELOPE_FIELDS
+        }
+
     for event in events:
-        prev = tips[-1] if tips else None
-        body = {**event, "prev_event_hash": prev}
+        prior = by_change.get(event.get("change_id"))
+        if prior is not None and comparable(prior) != comparable(event):
+            raise SystemExit(
+                f"REFUSED: change_id {event.get('change_id')!r} already exists in "
+                f"{path.name} with different content.  The chain is append-only: "
+                "record a new change_id instead of rewriting an event."
+            )
+
+    known = set(by_change)
+    tip = tips[-1] if tips else None
+    for event in events:
+        if event.get("change_id") in known:
+            continue
+        body = {**event, "prev_event_hash": tip}
         tip = chains.append_cas(
-            str(path), body, expected_tip=prev, hash_field="event_hash"
+            str(path), body, expected_tip=tip, hash_field="event_hash"
         )
         tips.append(tip)
     return tips
@@ -185,6 +231,40 @@ def main() -> int:
                     "其裁决转为契约证据）"
                 ),
                 "closed_defect": "real_disposition_decision（freeze_id 变更时不再静默复用旧链）",
+            },
+        ),
+        "AM_TOOLING_SCOPE": _reason(
+            "AM_TOOLING_SCOPE",
+            "两个不同的问题此前被混为一谈：source_tree_hash 覆盖 src/+configs/+audit/，但 audit/ 中多数"
+            "文件只**装配证据**（collect_* / build_supplement / run_registry / "
+            "build_governance_registries / validate_*），不决定任何数值。后果是任何工具改进都会移动"
+            "「运行/来源锚点」，按已确立的纪律强制重跑编号 smoke 并新建标签（本轮已为此付出"
+            "v1.3→v1.4）。本修正把两者拆开：(1) `HASHED_SOURCE_PATHS = src/+configs/` 作为 "
+            "source_tree_hash 的覆盖面，即「决定数值的工件」；(2) `GUARDED_SCOPE_PATHS = "
+            "src/+configs/+audit/` 仍要求构建与运行前全部已提交，使 compute_git_commit 仍涵盖"
+            "实际运行的工具。工具的完整内容由 revision bundle + revision/source_manifest.json 锚定"
+            "（包内另有 SHA256SUMS.txt 与 git fsck 证据），内容锚定并未减弱。"
+            "同时修复 F-R1-1：治理链写入改为保序保字节的追加器，既有事件不再被重写；"
+            "同一 change_id 内容不一致时 fail-closed，而不是静默改写。"
+            "freeze_id 与四个 spec hash 不变；source_tree_hash 的覆盖面与取值改变，"
+            "故需重建 manifest 并重跑编号 smoke。",
+            [
+                "audit/repo_guard.py",
+                "audit/build_freeze.py",
+                "audit/build_governance_registries.py",
+                "governance/FREEZE_MANIFEST.json",
+                "governance/AMENDMENT_PROPOSAL_TOOLING_SCOPE.md",
+            ],
+            {
+                "scope": "source_identity",
+                "requires_refreeze": True,
+                "freeze_id_changes": False,
+                "hashed_source_paths": ["src/", "configs/"],
+                "guarded_scope_paths": ["src/", "configs/", "audit/"],
+                "tooling_content_anchor": (
+                    "revision/OWTDA-CAL-R1.bundle + revision/source_manifest.json"
+                ),
+                "closed_defect": "F-R1-1（注册链重写丢弃外部追加事件）",
             },
         ),
         "INV_S01_SMOKE": _reason(
@@ -318,6 +398,22 @@ def main() -> int:
             "requires_refreeze": True,
             "freeze_id_changes": True,
             "removed_identity_input": "COMPUTE_SPEC.w_star",
+            "status": "ADOPTED_BEFORE_FORMAL_RUNS",
+        }
+    )
+    amendment_events.append(
+        {
+            "schema_version": 1,
+            "event_type": "AMENDMENT",
+            "amendment_id": "AM-2026-09-11-07",
+            "at_utc": at,
+            "change_id": "AM_TOOLING_SCOPE",
+            "scope": "source_identity",
+            "reason_object_hash": reason_hash["AM_TOOLING_SCOPE"],
+            "requires_refreeze": True,
+            "freeze_id_changes": False,
+            "hashed_source_paths": ["src/", "configs/"],
+            "guarded_scope_paths": ["src/", "configs/", "audit/"],
             "status": "ADOPTED_BEFORE_FORMAL_RUNS",
         }
     )

@@ -1,0 +1,21 @@
+{
+  "change_id": "F_R1_4_LINKAGE_REPAIR",
+  "defect_id": "F-R1-4",
+  "evidence": [
+    "governance/INVALIDATION_REGISTRY.jsonl",
+    "audit/repair_chain_linkage.py",
+    "audit/append_invalidation.py",
+    "governance/CHANGELOG.md"
+  ],
+  "kind": "governance_reason",
+  "reason_code": "F_R1_4_LINKAGE_REPAIR",
+  "repaired_event": {
+    "change_id": "INV_V12_SOURCE_ANCHOR",
+    "new_hash": "efaedd03b161abdc9e953de0d96b2e453c433c93398f9baae9f067e6eb21ac54",
+    "new_prev_event_hash": "d84efa353f0488025014c40dbcfd2d4704ef4516987d45c6adc4d7e710331756",
+    "old_hash": "1ba265aee246ab3e4748a56c0e32c66579438aee6714a31ab39df97e91e6930e",
+    "old_prev_event_hash": null
+  },
+  "schema_version": 1,
+  "statement": "F-R1-4：audit/append_invalidation.py 的首版在追加事件时未写入链自身的链接字段 prev_event_hash，导致 build_governance_registries.verify_chain（强制 prev_event_hash == 前一事件哈希）在下一次运行时会报链断；受影响的只有 INV_V12_SOURCE_ANCHOR 一条（同期被 F-R1-1 的重写覆盖，重新追加后才稳定存在）。事件内容其余部分未变：修复只补写链接字段并按规范序列化重算该事件哈希，旧哈希记录于本对象。修复工具 audit/repair_chain_linkage.py 对健康链为空操作，且仅重写链接不正确的事件。"
+}

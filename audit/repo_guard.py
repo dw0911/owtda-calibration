@@ -1,5 +1,13 @@
 """Fail-closed guard for the freeze / run-identity builders.
 
+Two scopes, two questions (AM_TOOLING_SCOPE):
+
+  * :data:`HASHED_SOURCE_PATHS` (``src/``, ``configs/``) — the content that
+    *determines results*, and therefore all that ``source_tree_hash`` anchors;
+  * :data:`GUARDED_SCOPE_PATHS` (the above plus ``audit/``) — everything that must
+    be committed before a build/run, so ``compute_git_commit`` still names a
+    revision containing the tooling that produced the evidence.
+
 The same defect class has now appeared twice, both times as a **silent omission**:
 
   * B15c/S02 — the freeze was rebuilt *before* the source revision was committed,
@@ -25,8 +33,20 @@ import subprocess
 from collections.abc import Iterable, Sequence
 from pathlib import Path
 
-#: Paths whose *content* is anchored by ``source_tree_hash`` / component manifests.
-FROZEN_SCOPE_PATHS: tuple[str, ...] = ("src", "configs", "audit")
+#: Paths whose content *determines results*: these are what ``source_tree_hash``
+#: anchors (AM_TOOLING_SCOPE).  Evidence-assembly tooling under ``audit/`` is
+#: deliberately outside this set, so improving a report builder no longer moves the
+#: run identity (that churn cost one re-freeze per tooling change).
+HASHED_SOURCE_PATHS: tuple[str, ...] = ("src", "configs")
+
+#: Paths that must be *committed and clean* before a build or a run: this includes
+#: the tooling, because ``compute_git_commit`` must name a revision that contains
+#: the very code that produced the evidence.  Cleanliness and hashing are two
+#: different questions and this guard answers the first one.
+GUARDED_SCOPE_PATHS: tuple[str, ...] = (*HASHED_SOURCE_PATHS, "audit")
+
+#: Backwards-compatible alias (the guard's default scope).
+FROZEN_SCOPE_PATHS: tuple[str, ...] = GUARDED_SCOPE_PATHS
 
 
 def _porcelain_lines(
