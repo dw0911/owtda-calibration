@@ -34,6 +34,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "audit"))
 
+import resource_sampler
 from run_registry import (
     STATE_REGISTRY_FILE,
     ledger_content_hash,
@@ -107,6 +108,7 @@ def main() -> int:
         "replicates_per_cell": replicates,
         "phases": {},
     }
+    resources_by_phase: dict[str, dict[str, Any]] = {}
 
     for phase in phases:
         runner = (
@@ -130,10 +132,17 @@ def main() -> int:
             environment_lock_hash=manifest["environment_lock_hash"],
             workers_used=workers_used,
         )
-        result = runner(
+        # Audit A08: the resources are sampled around *this* run and stored with it,
+        # so wall/RSS/swap/disk can never be quoted from a different execution.
+        result, resources = resource_sampler.sample_run(
+            runner, evidence_root=root,
             manifest=manifest, seed_registry=seed_registry, workers=args.workers,
             replicate_limit=args.replicates,
         )
+        # A08: name the run inside the record itself, so "these resources belong to
+        # this run" is a checkable fact rather than an assumption about file layout.
+        resources = {**resources, "run_id": run_id, "phase": phase}
+        resources_by_phase[phase] = resources
         ledger_dir = root / phase
         ledger_dir.mkdir(parents=True, exist_ok=True)
         ledger = ledger_dir / "evaluation_rows.jsonl"
@@ -166,6 +175,8 @@ def main() -> int:
             "expected_counts": expected,
             "expected_counts_scaled": expected_scaled,
             "counts_match_contract": counts_match,
+            # A08: resource evidence bound to this run (same run_id below).
+            "resources": resources,
             "missing_required_fields": missing,
             "unexplained_errors": result.errors,
             "formal_id_leak_check": leak,
@@ -188,6 +199,7 @@ def main() -> int:
             "data_units": result.data_units,
             "ph_windows": result.ph_windows,
             "feature_windows": result.feature_windows,
+            "resources": resources,
             "expected_counts": expected,
             "counts_match_contract": counts_match,
             "unexplained_errors": result.errors,
@@ -222,6 +234,7 @@ def main() -> int:
                 "ph_windows": result.ph_windows,
                 "feature_windows": result.feature_windows,
             },
+            "resources": resources,
             "unexplained_errors": result.errors,
             "terminal_state": "RUN_SEALED",
         }
@@ -252,7 +265,8 @@ def main() -> int:
     provenance["terminal_states"] = terminal
     provenance["sealed_at_utc"] = utc_now()
     verdict = admission_verdict(
-        reports, terminal, open_runs_zero=bool(provenance["open_runs_zero"])
+        reports, terminal, open_runs_zero=bool(provenance["open_runs_zero"]),
+        limits=resource_sampler.load_limits(), resources=resources_by_phase,
     )
     provenance["verdict"] = verdict
     (root / "provenance_manifest.json").write_text(
@@ -274,6 +288,8 @@ def admission_verdict(
     terminal_states: dict[str, str],
     *,
     open_runs_zero: bool,
+    limits: dict[str, Any] | None = None,
+    resources: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """The three-layer verdict, derived from the archived records (audit A05).
 
@@ -282,7 +298,20 @@ def admission_verdict(
     contract holds) are kept apart: a run that terminated and sealed correctly can
     still fail admission, and that must not be reported as success.
     """
+    limits = limits if limits is not None else resource_sampler.load_limits()
+    resources = resources or {}
+    per_phase_resources = {
+        phase: resource_sampler.resource_verdict(
+            resources.get(phase) if resources else report.get("resources"),
+            limits=limits,
+            unexplained_errors=int(report["unexplained_errors"]),
+        )
+        for phase, report in reports.items()
+    }
     checks = {
+        # A08: resources are part of admission, evaluated against the frozen limits.
+        "resource_admission": bool(reports)
+        and all(v["passed"] for v in per_phase_resources.values()),
         "counts_match_contract": all(r["counts_match_contract"] for r in reports.values()),
         "no_unexplained_errors": all(r["unexplained_errors"] == 0 for r in reports.values()),
         "no_missing_required_fields": all(
@@ -301,6 +330,7 @@ def admission_verdict(
         "evidence_sealed": checks["every_run_sealed"],
         "admission_passed": all(checks.values()),
         "checks": checks,
+        "resources": per_phase_resources,
     }
 
 

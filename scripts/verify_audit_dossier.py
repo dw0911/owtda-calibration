@@ -32,6 +32,7 @@ sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "audit"))
 
 import repo_guard
+import resource_sampler
 
 from owtda_cal import chains, freeze, scope
 from owtda_cal import smoke as smoke_mod
@@ -324,6 +325,28 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
             and seal["missing_required_fields"] == 0
             and seal["ph_windows"] == expected_windows
         )
+        # A08: the resource claims are recomputed against the frozen limits, and
+        # must name the run they were sampled from.
+        limits = resource_sampler.load_limits()
+        resource_verdict = resource_sampler.resource_verdict(
+            seal.get("resources"),
+            limits=limits,
+            unexplained_errors=int(seal["unexplained_errors"]),
+        )
+        check(f"smoke.{phase}.resources_recomputed",
+              f"{phase} 资源（峰值 RSS／swap 增长／磁盘）按冻结限值独立重算",
+              resource_verdict["passed"],
+              resource_verdict["observed"], limits,
+              f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+        check(f"smoke.{phase}.resources_bound_to_run",
+              f"{phase} 资源记录绑定到同一次 run（run_id 一致）",
+              bool(seal.get("resources"))
+              and seal["resources"].get("run_id") == seal["run_id"]
+              and seal["resources"].get("phase") == phase,
+              {"resources_run_id": (seal.get("resources") or {}).get("run_id"),
+               "seal_run_id": seal["run_id"]},
+              "equal run ids", f"evidence/smoke/S03/SMOKE_SEAL_{phase}.json")
+
         check(f"smoke.{phase}.declared_matches_recomputed",
               f"{phase} seal 自报结论与独立重算一致（不一致本身即为缺陷）",
               declared == closure_ok,

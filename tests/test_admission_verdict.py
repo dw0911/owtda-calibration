@@ -23,6 +23,21 @@ if str(AUDIT) not in sys.path:
 import run_smoke_s03
 
 
+def _resources(**overrides: Any) -> dict[str, Any]:
+    """A benign resource record (audit A08): every claim bound to this run."""
+    record = {
+        "schema_version": 1,
+        "kind": "run_resources_v1",
+        "wall_seconds": 1.0,
+        "peak_total_rss_gib": 1.5,
+        "swap_growth_bytes": 0,
+        "disk_free_before_bytes": 500 * 1024**3,
+        "evidence_bytes_written": 1024,
+    }
+    record.update(overrides)
+    return record
+
+
 def _report(phase: str = "SMOKE_NULL") -> dict[str, Any]:
     return {
         "phase": phase,
@@ -31,6 +46,7 @@ def _report(phase: str = "SMOKE_NULL") -> dict[str, Any]:
         "missing_required_fields": 0,
         "identity_closure": {"passed": True},
         "formal_id_leak_check": {"passed": True},
+        "resources": _resources(),
     }
 
 
@@ -53,7 +69,9 @@ class TestLayeredVerdict:
             "counts_match_contract", "no_unexplained_errors",
             "no_missing_required_fields", "identity_closure",
             "formal_id_leak_clean", "open_runs_zero", "every_run_sealed",
+            "resource_admission",
         }
+        assert all(verdict["resources"][phase]["passed"] for phase in ("SMOKE_NULL", "SMOKE_ALT"))
 
     def test_terminated_is_always_reported(self):
         """The process finished even when nothing else holds."""
@@ -87,6 +105,43 @@ class TestLayeredVerdict:
         assert verdict["admission_passed"] is False
         assert verdict["checks"][expected_key] is False
         assert expected_key in [k for k, ok in verdict["checks"].items() if not ok]
+
+    @pytest.mark.parametrize(
+        "mutate",
+        [
+            # A08: the audited NULL record showed a 4 MB swap increase.
+            lambda r: r["SMOKE_ALT"]["resources"].update(swap_growth_bytes=4 * 1024 * 1024),
+            lambda r: r["SMOKE_ALT"]["resources"].update(peak_total_rss_gib=25.0),
+            lambda r: r["SMOKE_ALT"]["resources"].update(
+                evidence_bytes_written=10**15, disk_free_before_bytes=10**15
+            ),
+        ],
+        ids=["swap_growth", "peak_rss_over_24_gib", "disk_over_0.8_free"],
+    )
+    def test_resource_breach_blocks_admission(self, mutate):
+        reports = _reports()
+        mutate(reports)
+        verdict = run_smoke_s03.admission_verdict(reports, TERMINAL, open_runs_zero=True)
+        assert verdict["admission_passed"] is False
+        assert verdict["checks"]["resource_admission"] is False
+        assert verdict["resources"]["SMOKE_ALT"]["passed"] is False
+
+    def test_missing_resource_evidence_blocks_admission(self):
+        """Fail closed: no resource record is not the same as a clean record."""
+        reports = _reports()
+        reports["SMOKE_ALT"].pop("resources")
+        verdict = run_smoke_s03.admission_verdict(reports, TERMINAL, open_runs_zero=True)
+        assert verdict["admission_passed"] is False
+        assert verdict["checks"]["resource_admission"] is False
+        assert verdict["resources"]["SMOKE_ALT"]["checks"]["resources_recorded"] is False
+
+    def test_limits_come_from_the_frozen_compute_spec(self):
+        """The thresholds are quoted, not restated in code."""
+        verdict = run_smoke_s03.admission_verdict(_reports(), TERMINAL, open_runs_zero=True)
+        limits = verdict["resources"]["SMOKE_NULL"]["limits"]
+        assert limits["peak_total_rss_gib_max"] == 24.0
+        assert limits["swap_growth_bytes_max"] == 0
+        assert limits["source"].endswith("parallelism_contract.acceptance")
 
     def test_open_runs_block_admission_and_sealing(self):
         verdict = run_smoke_s03.admission_verdict(
