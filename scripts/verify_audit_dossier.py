@@ -405,6 +405,68 @@ def verify_smoke(d: Dossier, manifest: dict[str, Any], staging: Path) -> None:
               "RUN_SEALED",
               f"{smoke_root}/SMOKE_SEAL_{phase}.json")
 
+    # --- admission recomputed with the *current* semantics ------------------- #
+    # AM_RESOURCE_MEASUREMENT_SEMANTICS retired a check that was named for paging but
+    # measured commit charge.  The sealed runs still carry the verdict they were
+    # computed with, so the dossier must show a *recomputed* verdict and prove that
+    # the only reason the inline one differs is that retired check.
+    limits = resource_sampler.load_limits()
+    recomputed_resources = {
+        phase: resource_sampler.resource_verdict(
+            d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json").get("resources"),
+            limits=limits,
+            unexplained_errors=int(
+                d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json")["unexplained_errors"]
+            ),
+        )
+        for phase in ("SMOKE_NULL", "SMOKE_ALT")
+    }
+    check("smoke.resource_admission_recomputed",
+          "按现行语义重算：两 phase 的声明资源条件均满足（峰值 RSS / 机器级页文件增长 / 错误 / 磁盘）",
+          all(v["passed"] for v in recomputed_resources.values()),
+          {phase: v["checks"] for phase, v in recomputed_resources.items()},
+          "all true", f"{smoke_root}/SMOKE_SEAL_*.json")
+
+    amendments = [
+        json.loads(line)
+        for line in d.read("governance/AMENDMENT_REGISTRY.jsonl").decode("utf-8").splitlines()
+        if line.strip()
+    ]
+    retired = sorted(
+        {
+            event["retired_check"]
+            for event in amendments
+            if event.get("retired_check") and event.get("change_id")
+            == "AM_RESOURCE_MEASUREMENT_SEMANTICS"
+        }
+    )
+    inline = provenance.get("verdict") or {}
+    inline_failing = sorted(k for k, ok in (inline.get("checks") or {}).items() if not ok)
+    inline_resource_failures = {
+        phase: sorted(
+            name
+            for name, ok in (
+                (inline.get("resources") or {}).get(phase, {}).get("checks") or {}
+            ).items()
+            if not ok
+        )
+        for phase in ("SMOKE_NULL", "SMOKE_ALT")
+    }
+    disclosed = (
+        bool(retired)
+        and inline_failing in ([], ["resource_admission"])
+        and all(set(names) <= set(retired) for names in inline_resource_failures.values())
+        and all(recomputed_resources[phase]["passed"] for phase in recomputed_resources)
+    )
+    check("smoke.inline_verdict_disclosed",
+          "运行内联判定与重算不一致时：其唯一依据是已登记的退役检查（不是未解释的分歧）",
+          disclosed,
+          {"inline_failing": inline_failing,
+           "inline_resource_failures": inline_resource_failures,
+           "retired_checks": retired,
+           "recomputed_passed": {p: v["passed"] for p, v in recomputed_resources.items()}},
+          None, "governance/AMENDMENT_REGISTRY.jsonl")
+
 
 def verify_revision(d: Dossier, staging: Path, anchor: dict[str, Any]) -> None:
     acceptance = d.json("evidence/revision/REVISION_ACCEPTANCE.json")
