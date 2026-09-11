@@ -14,27 +14,34 @@
   ],
   "config_kind": "compute_spec",
   "no_cross_cell_cache_reuse": true,
+  "parallelism_contract": {
+    "acceptance": {
+      "peak_total_rss_gib_max": "24",
+      "swap_growth_bytes_max": 0,
+      "unexplained_errors_max": 0
+    },
+    "invariance_requirement": "bitwise_identical_payload",
+    "thread_env": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "worker_consistency": "bitwise_identical_payload",
+    "workers_range": "1..cpu_count",
+    "workers_used_must_be_recorded_per_run": true
+  },
   "ph_windows": {
     "h0": 5750000,
     "h1": 2457600,
     "total": 8207600
   },
-  "reference_environment": "registered_windows11_host_float64_frozen_lock_w_star",
+  "reference_environment": "registered_windows11_host_float64_frozen_lock",
   "ripser": {
     "coeff": 2,
     "engine": "cpu",
     "maxdim": 1,
     "thresh": "inf"
   },
-  "schema_version": 1,
-  "thread_env": {
-    "MKL_NUM_THREADS": "1",
-    "NUMEXPR_NUM_THREADS": "1",
-    "OMP_NUM_THREADS": "1",
-    "OPENBLAS_NUM_THREADS": "1"
-  },
-  "w_star": 8,
-  "w_star_confirmation_protocol": "configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json",
-  "w_star_source": "f:\\BPI\\_audit_r1\\wstar\\worker_confirmation_RC.json:NOT_CONFIRMED_PREVIOUS_VALUE_KEPT measured_selection=[12]",
-  "worker_consistency": "bitwise_identical_payload"
+  "schema_version": 1
 }
