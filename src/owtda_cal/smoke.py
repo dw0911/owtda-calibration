@@ -479,12 +479,17 @@ def assert_smoke_ledger_matches_expected(
     Two independent checks, neither of which can be satisfied by a count:
 
     1. **set equality** of the evaluation ids built from the specification;
-    2. **row-by-row foreign keys** — every other identity field of every ledger row
-       must equal the expected row's value (looked up by evaluation id).
+    2. **row-by-row foreign keys** — every identity field that *is* a ledger column
+       must equal the expected row's value (looked up by evaluation id).  Ledger rows
+       must also carry every column (no field may be dropped to dodge the check).
+
+    Not every identity field is a column: ``smoke_generation_id``, ``replicate_id``,
+    ``W``/``stride``/``T``/``M`` and the data-model hash are baked into the ids, and
+    check 1 compares those ids exactly -- which is why a 0-based replicate numbering
+    is rejected (its ids are disjoint from the specification's).
 
     The expectation comes from :func:`enumerate_smoke_expected`, i.e. from the
-    frozen specification, never from a runner-produced ID column.  A 0-based
-    replicate numbering is rejected by the same equality (its ids are disjoint).
+    frozen specification, never from a runner-produced ID column.
     """
     expected = enumerate_smoke_expected(ctx=ctx, replicate_count=replicate_count)
     expected_ids = expected.evaluation_ids()
@@ -498,13 +503,23 @@ def assert_smoke_ledger_matches_expected(
             f"(expected {len(expected_ids)}, got {len(actual_ids)})"
         )
     by_id = {row["evaluation_id"]: row for row in expected.rows}
+    comparable = [name for name in SMOKE_IDENTITY_FIELDS if name in ROW_FIELDS]
     for row in ledger_rows:
+        # Identity columns may not be dropped to dodge the check; the *result*
+        # columns are the runner's own contract (``assert_row_fields``), not part of
+        # the identity closure.
+        absent = sorted(name for name in comparable if name not in row)
+        if absent:
+            raise ValueError(
+                f"ledger row {str(row.get('evaluation_id'))[:12]} is missing "
+                f"columns: {absent}"
+            )
         reference = by_id[row["evaluation_id"]]
-        for name in SMOKE_IDENTITY_FIELDS:
-            if row.get(name) != reference[name]:
+        for name in comparable:
+            if row[name] != reference[name]:
                 raise ValueError(
                     f"identity mismatch in {name!r} for evaluation "
-                    f"{row['evaluation_id'][:12]}: {row.get(name)!r} != "
+                    f"{row['evaluation_id'][:12]}: {row[name]!r} != "
                     f"{reference[name]!r}"
                 )
     per_cell = expected.replicates_per_cell()
@@ -520,6 +535,10 @@ def assert_smoke_ledger_matches_expected(
         "replicate_count": replicate_count,
         "data_units": len(expected.data_unit_ids()),
         "feature_sufficient_ids": len(expected.feature_sufficient_ids()),
+        "column_fields_compared": comparable,
+        "identity_fields_carried_by_ids": sorted(
+            set(SMOKE_IDENTITY_FIELDS) - set(comparable)
+        ),
     }
 
 
