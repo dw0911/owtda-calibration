@@ -183,10 +183,68 @@
 - 冻结科学内容不变：`freeze_id`、五类 spec hash、`SCOPE_DESIGN_NULL/ALT`、REAL 链 tip、
   tag `v1.0-freeze-owtda-cal-r1` 均未移动；本条目属治理层归档记录，不进入 `source_tree_hash`。
 
+## 2026-09-10/11 — 审计补件 R1：`OWTDA-CAL-R1-AUDIT-SUPPLEMENT-R1-20260910`
+
+审计裁定（材料准入层）要求补件，原 B15c 包保持只读。本轮关闭 P0-1..P0-7：
+
+- **P0-2 真实环境锁**：`pyproject.toml` 补齐实际直接依赖（`ripser`、证据工具 `psutil`）并
+  生成 `uv.lock`；`scripts/frozen_env.py` 在**解释器启动前**设定四个 BLAS/线程变量为 `"1"`
+  并留证（`environment/thread_env.json`，before/after import 均观测为 `"1"`）；
+  `environment/` 收录版本、BLAS、`pip freeze`、`python -VV`、并在**仓库外全新目录**跑通
+  `uv sync --frozen`（`environment_rebuild_test.json`）；`environment_lock_hash` 现覆盖
+  `pyproject.toml`、`uv.lock`、版本/OS/CPU/BLAS/线程设置。旧环境（`ripser` 未声明、线程变量
+  unset）下的时间/内存/预算结果**降为历史诊断**；
+- **P0-3 `w*` 正式确认**：预登记协议 `configs/wstar/WSTAR_CONFIRMATION_PROTOCOL.json`
+  先于测量入 git（`df17eb1c…`），两 phase 各 3 次配对、顺序固定 `8→12,12→8,8→12`、全长
+  32-replicate、中位数裁决。结果：**12 组 payload 逐位一致**、error=0、RSS≤24 GiB；
+  `SMOKE_ALT` **CONFIRMED**（w=12 比 w=8 快 12.7%），`SMOKE_NULL`
+  **VOIDED_ACCEPTANCE_CONDITION_FAILED**（一次运行出现 4 MB swap 增量）。按协议
+  「任一验收条件失败即作废且**不得重跑改善数字**」⇒ **不采纳新值**，冻结 `w* = 8` 维持，
+  `COMPUTE_SPEC.w_star_source` 显式记录该判定；更换 w* 需新的预登记；
+- **P0-4 严格 schema**：`configs/schema/` 七个对象（`scientific_row` / `_wire`、
+  `feature_sufficient_row` / `_wire`、两个 result projection、`schemas_manifest`），
+  discriminator = `row_type × phase × DGP_family × scenario_id × feature_id × method_id`
+  （24 variants）；全部对象拒绝未知字段、required-null 必须显式写入、浮点仅走
+  `f64:<16 hex>`；`audit/validate_schemas.py` **60 项 ALL_PASS**，golden row payload hash
+  `3a9f2e8a…`，`tests/test_schemas.py` 35 项锁定 round-trip / golden / 拒绝语义；
+- **P0-5 amendment/invalidation 链**：`AMENDMENT_REGISTRY.jsonl`（5 事件：环境锁修正、
+  §15.2 `smoke_shift_direction` 增行、worker 确认规则、代次提升 S02→S03、w* 采纳判定）与
+  `INVALIDATION_REGISTRY.jsonl`（S01 作废、S02 降为 pre-freeze historical evidence，另
+  追加 v1.1 冻结标签被取代）均为 `prev_event_hash` 哈希链；
+  `governance/reasons/` 收录全部 reason 对象；`B12_DISPOSITION.json` 显式处置：编号 B12
+  从未使用（无交付、无 commit、无引用），无遗漏证据；
+- **P0-6 sealed S03 smoke**：smoke generation 由 `S02` 提升为 `S03`（`S01`/`S02` 均登记
+  superseded），两 phase 重跑并封 seal（`SMOKE_SEAL_SMOKE_NULL/ALT.json`，绑定 ledger
+  content hash、`source_tree_hash`、`environment_lock_hash`、最终 `w*`、run component set、
+  smoke generation、计数/零错误/终态）；新增 `RUN_REGISTRY.jsonl` / `STATE_REGISTRY.jsonl`
+  与 `provenance_manifest.json`；`open_runs` 改为从注册表最新状态推导，**注册表缺失或为空
+  一律 FAIL**（`MISSING_RUN_REGISTRY` / `EMPTY_RUN_REGISTRY`），禁止用空文件绕过；
+  实测 SMOKE_NULL `955.83 s`（0 error）、SMOKE_ALT `275.50 s`（0 error）、`open_runs=[]`；
+- **P0-7 原始测试证据**：`verification/`（`pytest_full.log`+`.xml`、`ruff_check.log`、
+  `commands.jsonl`、`validation_exit_codes.json`、`validation_environment.json`），
+  全部在冻结 venv 与冻结 commit 上重跑：**506 passed**、ruff **All checks passed**；
+- **P0-1 Git 冻结身份**：`revision/`（`OWTDA-CAL-R1.bundle` 独立 verify、`git fsck --full`
+  无错、`git_status_porcelain_v1.txt` 与 `git_stash_list.txt` **零字节**、
+  `identity_check_*.json` `all_pass=true`、source manifest 可从冻结 commit 重算）；
+  证据一律输出到**仓库外**，避免"生成干净证明又弄脏仓库"的循环；
+- **顺序缺陷与修正（透明披露）**：第一次补充序列在 commit **之前**重建冻结，使
+  `RUN_COMPONENT_SET.compute_git_commit` 指向的 revision 不含实际运行源码（与被驳回的 S02
+  同因）。修正为「先提交源码 → 再重建 → 后运行」，并在新 revision 上重建与重跑；
+  第一次冻结的 tag `v1.1` 保留不删除但由 `v1.2-freeze-owtda-cal-r1` 取代
+  （登记为 `INV_V11_FREEZE_TAG`）；**`v1.0-freeze-owtda-cal-r1` 始终未移动**；
+- 新增工具：`audit/run_wstar_confirmation.py`、`audit/build_schemas.py`、
+  `audit/validate_schemas.py`、`audit/build_governance_registries.py`、
+  `audit/append_invalidation.py`、`audit/run_registry.py`、`audit/run_smoke_s03.py`、
+  `audit/collect_git_identity.py`、`audit/collect_verification.py`、
+  `audit/build_environment_evidence.py`、`scripts/frozen_env.py`、
+  `scripts/run_supplement_sequence.py`（均置于冻结源域之外或仅审计侧）；
+- 未闭合：`w*` 仍为 8 且确认作废（需新预登记）；`§9.4` 预算在新环境下按 S03 重算但**仍为
+  PROVISIONAL**（正式 L2 未开始）；`PAMAP2 恰 23 个合格任务` 在缺原始数据时只能标记
+  `UNVERIFIED_EXTERNAL_DATA_FACT`。
+
 ## 待登记（未发生）
 
 - B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
   正式 H0/H1 run 的 runner 与 phase seal 链；
-  **D-1 `w*` amendment 决策**（采纳 12 或维持 8，及其重新冻结代价）；
-  **D-5 具名 commit**（建立不可变审计 revision）；
+  **`w*` 新预登记**（现确认已作废，冻结值仍为 8）；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

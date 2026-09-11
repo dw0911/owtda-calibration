@@ -1,0 +1,11 @@
+{
+  "evidence": [
+    "governance/CHANGELOG.md",
+    "governance/AMENDMENT_REGISTRY.jsonl",
+    "governance/INVALIDATION_REGISTRY.jsonl"
+  ],
+  "kind": "governance_reason",
+  "reason_code": "INV_V11_FREEZE_TAG",
+  "schema_version": 1,
+  "statement": "第一次补充序列在 commit 之前重建冻结，使 RUN_COMPONENT_SET.compute_git_commit 指向的 revision 不包含实际运行源码（与被驳回的 S02 缺陷同因），故该次冻结的 tag v1.1 不可作为最终冻结身份。序列改为先提交源码、再重建、后运行，并在新 revision 上重建；原冻结 tag v1.0 未移动，v1.1 保留（不删除）但被 v1.2 取代。"
+}
