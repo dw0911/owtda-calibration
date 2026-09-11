@@ -588,7 +588,10 @@ def run_smoke_null(
         }
         for family in scope.H0_FAMILIES
         for rho in scope.RHO_LEVELS
-        for replicate in range(replicates)
+        # Audit A02: Plan §9.3 numbers smoke replicates 1..R, and the replicate id
+        # feeds both the seed payload and the derived identities, so a 0-based
+        # loop produced a worklist disjoint from the protocol's expectation.
+        for replicate in range(1, replicates + 1)
         for feature_id in scope.FEATURE_IDS
     ]
     start = time.perf_counter()
@@ -634,7 +637,8 @@ def run_smoke_alt(
         }
         for scenario in (scope.SCENARIO_ALT_SHAPE, scope.SCENARIO_ALT_MEAN)
         for rho in scope.RHO_LEVELS
-        for replicate in range(replicates)
+        # Audit A02: replicates are numbered 1..R (see the NULL builder).
+        for replicate in range(1, replicates + 1)
         for feature_id in scope.FEATURE_IDS
     ]
     start = time.perf_counter()

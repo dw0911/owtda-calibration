@@ -69,15 +69,42 @@ def _t_curve_slow(matrix: np.ndarray, ks: np.ndarray) -> np.ndarray:
     return vals
 
 
+def is_degenerate_constant(a: np.ndarray) -> bool:
+    """True iff every row is *exactly* equal to the first row.
+
+    Plan §3.3 / SAP: for a fully constant feature the frozen answer is
+    ``T_obs = 0``, ``p = 1``, ``reject = 0``.  Detecting it by exact equality (not
+    a tolerance) keeps genuinely small but non-constant signals untouched.
+    """
+    return bool(a.shape[0] > 1 and np.all(a == a[0]))
+
+
 def statistic_curve(matrix: np.ndarray, *, reference: bool = False) -> dict:
-    """T(k) over the candidate set.  ``reference=True`` uses the slow path."""
+    """T(k) over the candidate set.  ``reference=True`` uses the slow path.
+
+    Degenerate inputs are handled **exactly** (audit A03): a constant feature
+    returns an exactly zero curve instead of ~1e-30 floating-point residue, since
+    the residue is what turned a p-value of 1 into 0.001 downstream.  Non-finite
+    input and an empty feature dimension are rejected rather than propagated.
+    """
     a = np.asarray(matrix, dtype=np.float64)
     if a.ndim != 2:
         raise ValueError("feature matrix must be [M,p]")
+    if a.shape[1] == 0:
+        raise ValueError("feature matrix must have at least one column")
+    if not np.all(np.isfinite(a)):
+        raise ValueError("feature matrix must be finite (no NaN/Inf)")
     M = a.shape[0]
     ks = candidate_indices(M)
+    if is_degenerate_constant(a):
+        return {
+            "M": M,
+            "ks": ks,
+            "values": np.zeros(ks.shape[0], dtype=np.float64),
+            "degenerate_constant": True,
+        }
     vals = _t_curve_slow(a, ks) if reference else _t_curve(a, ks)
-    return {"M": M, "ks": ks, "values": vals}
+    return {"M": M, "ks": ks, "values": vals, "degenerate_constant": False}
 
 
 def plateau_selection(ks: np.ndarray, values: np.ndarray) -> dict:
@@ -148,6 +175,7 @@ __all__ = [
     "EPS64",
     "candidate_bounds",
     "candidate_indices",
+    "is_degenerate_constant",
     "statistic_curve",
     "plateau_selection",
     "scan_statistic",

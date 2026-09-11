@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from .scan import statistic_curve
+from .scan import is_degenerate_constant, statistic_curve
 from .seeding import make_rng
 
 B = 999
@@ -201,8 +201,14 @@ def calibrate_m1(
     b = dmb_block_length(W=W, stride=stride, M=M)
     curve_obs = statistic_curve(a)
     t_obs = float(curve_obs["values"].max())
-    # centered rows Z_i = Y_i - Ybar (bridge weights act on centered values)
-    z = a - a.mean(axis=0, keepdims=True)
+    # centered rows Z_i = Y_i - Ybar (bridge weights act on centered values).
+    # An exactly constant feature centers to *exact* zeros (audit A03): the float
+    # residue of `a - a.mean(...)` would otherwise survive the multiplier
+    # resampling and produce a spurious rejection.  The RNG call structure is
+    # untouched (same draws, same order), only the centered matrix is exact.
+    z = np.zeros_like(a) if is_degenerate_constant(a) else a - a.mean(
+        axis=0, keepdims=True
+    )
     exceed = 0
     for r in range(1, B + 1):
         e = m1_gaussian_draw(

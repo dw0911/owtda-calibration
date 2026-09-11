@@ -17,12 +17,13 @@
   "invalidation_tips": [
     "b3b4d54c9cedd9ffb3a0bc06663636e0302f57f57baf0346656b8b012ec350be",
     "d84efa353f0488025014c40dbcfd2d4704ef4516987d45c6adc4d7e710331756",
-    "efaedd03b161abdc9e953de0d96b2e453c433c93398f9baae9f067e6eb21ac54"
+    "efaedd03b161abdc9e953de0d96b2e453c433c93398f9baae9f067e6eb21ac54",
+    "ebe8fb611f8cbbd91cdd9e59ddf76f4f736c6589b6ae1848f225ea43a2af16f8"
   ],
   "invalidations": {
-    "events": 3,
+    "events": 4,
     "file": "INVALIDATION_REGISTRY.jsonl",
-    "tip": "efaedd03b161abdc9e953de0d96b2e453c433c93398f9baae9f067e6eb21ac54"
+    "tip": "ebe8fb611f8cbbd91cdd9e59ddf76f4f736c6589b6ae1848f225ea43a2af16f8"
   },
   "reason_hashes": {
     "AM_ENVIRONMENT_LOCK_CORRECTION": "4128e50cda09b0a1bbab71ba7e7998024b71b23febff0336902e65b2e60a3664",

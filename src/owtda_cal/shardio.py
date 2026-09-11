@@ -72,6 +72,55 @@ def build_shard_manifest(
     }
 
 
+#: The three files a committed shard consists of, in comparison order.
+COMMITTED_FILES = (
+    "shard_manifest.json",
+    "evaluation.scientific.jsonl",
+    "feature.scientific.jsonl",
+)
+
+
+def assert_committed_bytes_match(
+    final_dir: str,
+    *,
+    commit_record: dict,
+    requested_manifest_bytes: bytes,
+    requested_evaluation_bytes: bytes,
+    requested_feature_bytes: bytes,
+) -> None:
+    """Fail closed unless the committed shard is byte-identical to the request.
+
+    Audit A04: "already committed" must never mask "the content differs".  Every
+    committed file is re-read from disk, the registry manifest hash is recomputed,
+    and the plan hash is compared, so a tampered file, a missing file, a changed
+    plan hash or a conflicting payload all block.
+    """
+    checks = (
+        (COMMITTED_FILES[0], requested_manifest_bytes),
+        (COMMITTED_FILES[1], requested_evaluation_bytes),
+        (COMMITTED_FILES[2], requested_feature_bytes),
+    )
+    for name, expected in checks:
+        path = os.path.join(final_dir, name)
+        if not os.path.isfile(path):
+            raise ShardError(f"MISSING_COMMITTED_FILE: {name} absent from {final_dir}")
+        with open(path, "rb") as fh:
+            got = fh.read()
+        if got != expected:
+            raise ShardError(
+                f"COMMIT_CONTENT_CONFLICT: {name} differs from the requested bytes"
+            )
+    if commit_record.get("shard_manifest_hash") != _sha256_bytes(requested_manifest_bytes):
+        raise ShardError(
+            "COMMIT_CONTENT_CONFLICT: registry manifest hash differs from the request"
+        )
+    requested_plan = json.loads(requested_manifest_bytes.decode("utf-8"))["shard_plan_hash"]
+    if commit_record.get("shard_plan_hash") != requested_plan:
+        raise ShardError(
+            "COMMIT_CONTENT_CONFLICT: shard_plan_hash differs from the committed record"
+        )
+
+
 def commit_shard(
     *,
     run_root: str,
@@ -84,21 +133,16 @@ def commit_shard(
     feature_meta: dict,
     registry_path: str,
 ) -> dict:
-    """Write/commit one shard; returns the SHARD_COMMITTED record."""
+    """Write/commit one shard; returns the SHARD_COMMITTED record.
+
+    Idempotency means *the same request repeated has one effect* (audit A04).  The
+    requested bytes are therefore materialised first and compared against what is
+    already committed before a re-commit is accepted.
+    """
     run_dir = os.path.join(run_root, run_instance_id)
     os.makedirs(run_dir, exist_ok=True)
     final = os.path.join(run_dir, f"{shard_id}.final")
     staging = os.path.join(run_dir, f"{shard_id}.tmp")
-
-    existing = find_commit(registry_path, run_instance_id=run_instance_id, shard_id=shard_id)
-    if os.path.exists(final):
-        if existing is not None:
-            return existing  # idempotent
-        raise ShardError("ORPHAN_FINAL: final exists without commit; run repair_orphan")
-
-    if os.path.exists(staging):
-        raise ShardError("staging directory already exists; clean it first")
-    os.makedirs(staging)
 
     eval_bytes = _jsonl_bytes(evaluation_lines)
     feat_bytes = _jsonl_bytes(feature_lines)
@@ -111,6 +155,24 @@ def commit_shard(
         shard_plan_hash=shard_plan_hash, evaluation=evaluation, feature=feature,
     )
     manifest_bytes = canonical_json_bytes(manifest) + b"\n"
+    manifest_hash = _sha256_bytes(manifest_bytes)
+
+    existing = find_commit(registry_path, run_instance_id=run_instance_id, shard_id=shard_id)
+    if os.path.exists(final):
+        if existing is None:
+            raise ShardError("ORPHAN_FINAL: final exists without commit; run repair_orphan")
+        assert_committed_bytes_match(
+            final,
+            commit_record=existing,
+            requested_manifest_bytes=manifest_bytes,
+            requested_evaluation_bytes=eval_bytes,
+            requested_feature_bytes=feat_bytes,
+        )
+        return existing
+
+    if os.path.exists(staging):
+        raise ShardError("staging directory already exists; clean it first")
+    os.makedirs(staging)
 
     _write_fsync(os.path.join(staging, "evaluation.scientific.jsonl"), eval_bytes)
     _write_fsync(os.path.join(staging, "feature.scientific.jsonl"), feat_bytes)
@@ -119,7 +181,6 @@ def commit_shard(
     os.rename(staging, final)
     _fsync_dir(run_dir)
 
-    manifest_hash = _sha256_bytes(manifest_bytes)
     payload = {
         "schema_version": 1,
         "event_type": COMMIT_EVENT,
@@ -232,7 +293,9 @@ def allocate_attempt(registry_path: str, *, run_instance_id: str, evaluation_id:
 
 __all__ = [
     "COMMIT_EVENT",
+    "COMMITTED_FILES",
     "ShardError",
+    "assert_committed_bytes_match",
     "build_shard_manifest",
     "commit_shard",
     "find_commit",

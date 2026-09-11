@@ -359,8 +359,53 @@
   故重建 manifest 并重跑编号 smoke；标签 **`v1.5-freeze-owtda-cal-r1`**（`v1.0` 未移动）。
 - 全量测试与 ruff 通过；S03 在新身份下重跑并封 seal。
 
+## 2026-09-11 — 全面审计裁决：正式准入 NO_GO、S03 的 G3 结论撤销（联合修复批次开启）
+
+审计对象 `OWTDA-CAL-R1-AUDIT-DOSSIER-20260911.zip`（sha256 `e15a211e…`、HEAD `0f92ee2`）。
+裁决与发现登记于 `governance/AUDIT_VERDICT_20260911.json`（8 个审计证据文件按 sha256 固定），
+并追加 invalidation 事件 **`INV_S03_G3_REVOKED`**。
+
+**裁决要点**：`FORMAL_MC_ADMISSION = NO_GO`；`SCIENCE_ROUTE = RETAIN`；
+归档字节完整性、冻结文件清单、S03 行级算术、M0/M1 配对 **PASS**；
+`SMOKE_S03_PROTOCOL_CONFORMANCE` / `SMOKE_S03_SCOPE_LEDGER_JOIN` /
+`NUMERICAL_CONSTANT_FEATURE_CONTRACT` / `SHARD_COMMIT_CONTENT_CONTRACT` **FAIL**；
+参考环境与真实 PH 输出未被审计方独立复现；L2/L3 未开始。
+
+**第一阶段处置（已执行）**：S03 冻结为历史工程诊断，**tag / seal / ledger 一律不覆盖**；
+`G3 PASS` 不再作为准入依据；本轮未启动任何正式 H0/H1 运行。
+
+**本轮已修（代码 + 攻击式测试）**：
+
+- **A03（P0，数值退化）**：`statistic_curve` 检测**精确行相等**时直接返回全零曲线
+  （此前累积和均值相减留下 ~1e-30 残差，M1 的乘子重采样把残差变成 `p=0.001 / reject=true`）；
+  同时拒绝 NaN/Inf 与零特征维数；M1 对精确常数使用**全零中心化矩阵**且**保持原随机调用结构**；
+  非恒定的小信号不做幅值截断。新增 `tests/test_numeric_degenerate.py`（含审计原输入
+  `(0.1,0.2,0.3,0,0,0,0,0,0)` 在 M=48/192/383 三档下 `T_obs==0.0 / p==1.0 / reject==false`、
+  RNG 消费次数 `999 × (M+b-1)` 不变、微小非恒定信号保留、near-constant 不走退化分支）。
+- **A04（P0，分片内容一致性）**：`commit_shard` 先物化本次请求的字节，再与已提交内容逐项比对；
+  只有文件集、manifest 哈希、plan 哈希与三份原始字节**全部一致**时才算幂等命中。
+  新增 `assert_committed_bytes_match`；文件缺失、内容篡改、manifest 篡改、metadata/plan 冲突
+  **全部阻断**。**并修正了被写错的既有测试**：`test_idempotent_recommit` 原本刻意传入
+  `b"different\n"` 却断言返回旧 commit——该断言已反转为「相同请求幂等 / 不同内容阻断」，
+  并补齐 6 项攻击测试。
+- **A02（P0，编号偏移）**：`smoke.py` 两处 `range(replicates)` → `range(1, replicates + 1)`；
+  该修复改变 seed payload 与派生身份，**必须随新 smoke generation 一起生效**（不单独拼接旧记录）。
+- 全量 **566 passed**、ruff 全清。
+
+**仍开放（本批次继续）**：A01（统一 smoke 预期工作集枚举器 + 独立验证器逐行外键）、
+A05（验证器改为**从规格重算**而非转抄自报布尔值；终态精确匹配；runner 退出码分层）、
+A06（H1 复审包 source-null 指向真实 NULL ID + 正式 ALT 行 `null_model_config_hash` 填充）、
+A07（环境内层 manifest 排除自身；pip freeze 失败须带 stderr/exit code）、
+A08（资源准入完整化）、A09（PH 精度分层与拓扑表述修正）、A10（`ph_windows_computed` 只计真实 PH
+调用，另报 feature_windows；Gate 判定改用明确 schema 字段而非字符串搜索）、A11（正式生命周期 fixture）。
+
+**纪律变更（接受审计意见）**：此后**每一条重要合同都必须带一个「故意破坏后必须失败」的测试**
+（错误 ID / 错误 phase / 错误 source-null / 删除一格复制另一格 / 错误终态 / 过期 manifest /
+分片内容冲突），不再以「检查数量或 PASS 总数」证明正确性。
+
 ## 待登记（未发生）
 
+- 联合修复剩余项（A01、A05、A06、A07、A08、A09、A10、A11）与新 smoke generation（S04）；
 - B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
   正式 H0/H1 run 的 runner 与 phase seal 链；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

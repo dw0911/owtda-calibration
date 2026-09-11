@@ -48,17 +48,72 @@ class TestCommit:
         assert manifest["evaluation"]["scientific_hash"]
         assert manifest["feature"]["row_count"] == 1
 
-    def test_idempotent_recommit(self, tmp_path):
-        run_root, registry, rec = _commit(tmp_path)
-        again = commit_shard(
-            run_root=run_root, run_instance_id=_H("r"), shard_id=_H("1"),
-            shard_plan_hash=_H("p"), evaluation_lines=[b"different\n"],
-            feature_lines=[b"different\n"], evaluation_meta={}, feature_meta={},
-            registry_path=registry,
-        )
-        assert again == rec  # existing commit returned unchanged
+    def test_identical_recommit_is_idempotent(self, tmp_path):
+        """Audit A04: idempotency is 'the same request twice, one effect'.
+
+        The previous version of this test passed *different* bytes and still
+        asserted the old record was returned, which is how the defect became a
+        green test.  That assertion is now inverted.
+        """
+        _run_root, registry, rec = _commit(tmp_path)
+        again = _commit(tmp_path)[2]
+        assert again == rec  # identical request -> committed record returned
         lines = [x for x in Path(registry).read_text(encoding="utf-8").splitlines() if x.strip()]
         assert len(lines) == 1
+
+    def test_conflicting_content_is_blocked(self, tmp_path):
+        """Same identity, different bytes -> block, never accept silently."""
+        _run_root, registry, _rec = _commit(tmp_path)
+        with pytest.raises(ShardError):
+            _commit(tmp_path, eval_lines=[b'{"value":2}\n'])
+        with pytest.raises(ShardError):
+            _commit(tmp_path, feature_lines=[b'{"f":2}\n'])
+        lines = [x for x in Path(registry).read_text(encoding="utf-8").splitlines() if x.strip()]
+        assert len(lines) == 1  # nothing was appended
+
+    def test_plan_hash_conflict_is_blocked(self, tmp_path):
+        _run_root, _registry, _rec = _commit(tmp_path)
+        with pytest.raises(ShardError):
+            _commit(tmp_path, plan=_H("q"))
+
+    def test_metadata_conflict_is_blocked(self, tmp_path):
+        _run_root, registry, _rec = _commit(tmp_path)
+        with pytest.raises(ShardError):
+            commit_shard(
+                run_root=str(tmp_path / "runs"), run_instance_id=_H("r"),
+                shard_id=_H("1"), shard_plan_hash=_H("p"),
+                evaluation_lines=[b'{"row":1}\n'], feature_lines=[b'{"f":1}\n'],
+                evaluation_meta={"row_count": 2}, feature_meta={"row_count": 1},
+                registry_path=registry,
+            )
+
+    def test_tampered_committed_file_is_blocked(self, tmp_path):
+        """The A04 probe: rewrite the committed file, re-commit, still blocked."""
+        run_root, _registry, _rec = _commit(tmp_path)
+        final = Path(run_root, _H("r"), f"{_H('1')}.final")
+        Path(final, "evaluation.scientific.jsonl").write_bytes(b'{"value":999}\n')
+        with pytest.raises(ShardError):
+            _commit(tmp_path)
+
+    def test_tampered_manifest_is_blocked(self, tmp_path):
+        run_root, _registry, _rec = _commit(tmp_path)
+        final = Path(run_root, _H("r"), f"{_H('1')}.final")
+        Path(final, "shard_manifest.json").write_bytes(b'{"tampered":true}\n')
+        with pytest.raises(ShardError):
+            _commit(tmp_path)
+
+    def test_missing_committed_file_is_blocked(self, tmp_path):
+        """Missing committed directory content must not read as 'already done'."""
+        run_root, _registry, _rec = _commit(tmp_path)
+        final = Path(run_root, _H("r"), f"{_H('1')}.final")
+        os.remove(final / "shard_manifest.json")
+        with pytest.raises(ShardError):
+            _commit(tmp_path)
+        missing_dir = Path(run_root, _H("r"), f"{_H('1')}.final")
+        for name in ("evaluation.scientific.jsonl", "feature.scientific.jsonl"):
+            os.remove(missing_dir / name)
+        with pytest.raises(ShardError):
+            _commit(tmp_path)
 
     def test_conflicting_commit_records_block(self, tmp_path):
         _run_root, registry, rec = _commit(tmp_path)

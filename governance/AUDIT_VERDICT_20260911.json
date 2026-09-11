@@ -1,0 +1,164 @@
+{
+  "audit_date": "2026-09-11",
+  "audit_evidence_files": [
+    {
+      "bytes": 30535,
+      "name": "OWTDA_CAL_R1_COMPREHENSIVE_AUDIT_20260911.md",
+      "sha256": "d628e9caf9fc4b14ebd6d444513354ca38b1cda4f40db6254c44b54085a140db"
+    },
+    {
+      "bytes": 2901,
+      "name": "integrity_results.json",
+      "sha256": "c6379284f455b555fb48b003729cb56b0d3d261c29e2a6ed9969998203139c43"
+    },
+    {
+      "bytes": 10208,
+      "name": "structural_results.json",
+      "sha256": "bf3004de47547d67ac9d05004dc4e36c0602f83761d1fc73178bf9ff56275c48"
+    },
+    {
+      "bytes": 10202,
+      "name": "structural_zero_based_results.json",
+      "sha256": "4022125f1d7401e24e71d278ef25cbfb593d01486ad38c6a8eecbe956be08cac"
+    },
+    {
+      "bytes": 12471,
+      "name": "metadata_results.json",
+      "sha256": "afb55cf19daaa47449952a94069ed0fdf32209fa8f32b3c29481886d34edeef1"
+    },
+    {
+      "bytes": 1734,
+      "name": "core_probes.json",
+      "sha256": "64d872735f75039a20f3fbda7ca35841643c0a71e758d21486678c6eb4015b9c"
+    },
+    {
+      "bytes": 161,
+      "name": "shard_probes.json",
+      "sha256": "f2d93bd95b65a5b5e0f3be97132e177f72cb17048b1cb039600238f8b19b9a02"
+    },
+    {
+      "bytes": 2934,
+      "name": "final_supplement.json",
+      "sha256": "da698959a6c105f952531c6750fddc00a7290e7744ad8bf30ab4795470d5f813"
+    }
+  ],
+  "audited_head": "0f92ee2f56a15f40f00d4a84f6bfea1a92347cc7",
+  "audited_object": "OWTDA-CAL-R1-AUDIT-DOSSIER-20260911.zip",
+  "audited_zip_sha256": "e15a211e3cda176b96191e28d7991d24242bb5e79dbc8dadbe90896ef3e9c977",
+  "auditor_environment": {
+    "note": "参考 Windows/Python 3.12.10/NumPy 2.2.6 环境的 544 项测试与真实 PH 输出未获独立复现；PH 调用数为 0。",
+    "numpy": "2.3.5",
+    "os": "Linux",
+    "python": "3.13.5",
+    "ripser": "absent"
+  },
+  "consequences": {
+    "formal_runs_blocked_until": "联合修复完成 + 攻击式验证器测试 + 新代 smoke + 小型端到端 fixture",
+    "new_smoke_generation_required": true,
+    "s03_g3_claim": "REVOKED",
+    "s03_status": "FROZEN_AS_HISTORICAL_DIAGNOSTIC",
+    "tags_seals_ledgers": "NOT_OVERWRITTEN"
+  },
+  "findings": [
+    {
+      "effect": "seal 未把计划与执行连接起来",
+      "grade": "P0",
+      "id": "A01",
+      "status": "OPEN",
+      "title": "S03 scope 与 ledger 的 cell/experiment ID 交集为零"
+    },
+    {
+      "effect": "两个 phase 的预期 evaluation 集不闭合",
+      "grade": "P0",
+      "id": "A02",
+      "status": "FIXED_PENDING_NEW_GENERATION",
+      "title": "smoke 实际 replicate 0–31，协议要求 1–32"
+    },
+    {
+      "effect": "违反退化输入固定 p=1 的科学合同",
+      "grade": "P0",
+      "id": "A03",
+      "status": "FIXED",
+      "title": "非零常数特征使 M1 返回 p=0.001"
+    },
+    {
+      "effect": "幂等与不可变证据边界失效",
+      "grade": "P0",
+      "id": "A04",
+      "status": "FIXED",
+      "title": "分片重复提交接受不同内容及已篡改文件"
+    },
+    {
+      "effect": "上述错误可被 PASS 标签掩盖",
+      "grade": "P1",
+      "id": "A05",
+      "status": "OPEN",
+      "title": "验证器使用数量/自报布尔值；任意非空终态可过"
+    },
+    {
+      "effect": "source-null 构造审查及后续标准化功效连接不完整",
+      "grade": "P1",
+      "id": "A06",
+      "status": "OPEN",
+      "title": "H1 review packet 的 8 个 source-null ID 实际指向 ALT；正式 scope 的 null signature 留空"
+    },
+    {
+      "effect": "环境证据不完全自洽",
+      "grade": "P1",
+      "id": "A07",
+      "status": "OPEN",
+      "title": "环境内层 manifest 包含旧版自身哈希；pip freeze 空文件"
+    },
+    {
+      "effect": "当前声明并行度尚不能据旧记录获得完整准入",
+      "grade": "P1",
+      "id": "A08",
+      "status": "OPEN",
+      "title": "资源准入未闭合；workers=8 的一次 NULL 记录发生 swap 增长"
+    },
+    {
+      "effect": "数值与拓扑方法描述需要修正",
+      "grade": "P2",
+      "id": "A09",
+      "status": "OPEN",
+      "title": "PH 精度与『永生 H1 截到直径』的表述不准确"
+    },
+    {
+      "effect": "PH/s 被放大 2 倍，绝对吞吐解释错误",
+      "grade": "P2",
+      "id": "A10",
+      "status": "OPEN",
+      "title": "worker 记录把 MOMENTS 窗口计入 PH 计算量"
+    },
+    {
+      "effect": "L2/L3 尚无可批准的完整执行链",
+      "grade": "P1",
+      "id": "A11",
+      "status": "OPEN",
+      "title": "正式 runner/expected indexes/shard/phase seal/分析发布尚未端到端闭合"
+    }
+  ],
+  "headline": "当前提交不能获得正式 Monte Carlo 准入；S03 的 G3『通过』结论撤销。研究路线保留，完成一次联合修复后重新申请准入。",
+  "kind": "audit_verdict_record",
+  "required_phases": [
+    "一：冻结 S03 为历史诊断并追加本裁决；一次性联合修复 A01–A07（不得借机改 W/stride/rho/B/BPI 参数/block-length）",
+    "二：先攻击验证器，再做大 smoke —— 每条重要合同须有『故意破坏后必须失败』的测试",
+    "三：登记新 smoke generation，两 phase 一起重跑（1–32 编号、逐行外键闭合），同步采集 wall/RSS/swap/磁盘",
+    "四：小型正式生命周期 fixture（TEST 身份），走通 expected→shard→seal→analysis seal，之后才签发 G4"
+  ],
+  "schema_version": 1,
+  "verdict": {
+    "ARCHIVE_BYTE_INTEGRITY": "PASS",
+    "CURRENT_FREEZE_FILE_MANIFESTS": "PASS",
+    "FORMAL_MC_ADMISSION": "NO_GO",
+    "H1_DGP_CONSTRUCT": "SUPPORTED_AT_L0_WITH_ENV_LIMIT",
+    "H1_SOURCE_NULL_EVIDENCE": "REPAIR_REQUIRED",
+    "L2_L3_FORMAL_RESULTS": "NOT_STARTED / NOT_AVAILABLE",
+    "NUMERICAL_CONSTANT_FEATURE_CONTRACT": "FAIL",
+    "REFERENCE_ENVIRONMENT_REPRODUCTION": "NOT_INDEPENDENTLY_COMPLETED",
+    "SCIENCE_ROUTE": "RETAIN",
+    "SHARD_COMMIT_CONTENT_CONTRACT": "FAIL",
+    "SMOKE_S03_PROTOCOL_CONFORMANCE": "FAIL",
+    "SMOKE_S03_SCOPE_LEDGER_JOIN": "FAIL"
+  }
+}
