@@ -600,11 +600,15 @@ def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
           d.has("DISCLOSURES.md") and d.has("GATE_RELABEL.json"),
           {"disclosures": d.has("DISCLOSURES.md"),
            "relabel": d.has("GATE_RELABEL.json")}, None, "包根")
+    readme = d.read("README.md").decode("utf-8")
+    tags_evidence = d.read("revision/git_show_ref_tags.txt").decode("utf-8").split()
+    freeze_tags = [t for t in tags_evidence if t.startswith("v1") and "freeze" in t]
     check("dossier.cover_generated_from_artifacts",
-          "README 的 tag 与 revision 自工件派生",
-          manifest["head"][:12] in d.read("README.md").decode("utf-8")
-          and "v1.5-freeze-owtda-cal-r1" in d.read("README.md").decode("utf-8"),
-          None, None, "README.md")
+          "README 的 revision 与冻结 tag 自工件派生（tag 不硬编码）",
+          manifest["head"][:12] in readme and bool(freeze_tags)
+          and any(tag in readme for tag in freeze_tags),
+          {"head": manifest["head"][:12], "freeze_tags": freeze_tags[-3:]},
+          None, "README.md")
 
 
 def _markdown(report: dict[str, Any]) -> str:
