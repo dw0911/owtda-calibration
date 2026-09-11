@@ -213,6 +213,17 @@ def _cover(*, now: str, head: str, manifest: dict[str, Any]) -> str:
 | P0-6 sealed S03 smoke | `smoke/S03/` | ledgers、seals、RUN/STATE 注册表、provenance |
 | P0-7 原始测试证据 | `verification/` | `pytest_full.log/.xml`、`ruff_check.log`、环境 |
 
+## 补件后处置（本轮追加，不改变任何身份）
+
+- `governance/H1_CONSTRUCT_REVIEW_PACKET.{{json,md}}` —— 回答
+  `H1-ALTERNATIVE-CONSTRUCT-CONTRACTS = PENDING_CODE_REVIEW`：受审函数按源码 SHA256 固定，
+  8 条构造合同全部 PASS，并列出刻意不作的声明；
+- `governance/AMENDMENT_PROPOSAL_PARALLELISM_DECOUPLING.md` —— §1 为**已生效**的 `w*`
+  处置（维持 8）；§2 为**未生效**的并行度解耦提案（待裁定，未改动任何身份）；
+- fail-closed 冻结守卫（`audit/repo_guard.py`）：`build_freeze` / `build_run_admission`
+  在写任何字节前拒绝脏的 `src/ configs/ audit/`，杜绝「静默漏项」这一类缺陷（S02 的
+  stale `compute_git_commit`、F-B15c-4 的 `source_tree_hash` 漏项）。
+
 ## 锚点
 
 - 冻结 tag：`v1.2-freeze-owtda-cal-r1`（`v1.0` 未移动；`v1.1` 已取代，见 `DISCLOSURES.md`）

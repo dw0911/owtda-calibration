@@ -9,7 +9,7 @@ H0 ``null_model_config_hash``, and the alternative-specific data-model identity.
 import numpy as np
 import pytest
 
-from owtda_cal import cells, dgp, scope, smoke_ids
+from owtda_cal import cells, dgp, scan, scope, smoke_ids
 
 ROOT_KEY = "ab" * 32
 GENERATION = "S02"
@@ -50,6 +50,35 @@ class TestChangePoint:
             centre_96 = (96 - 1) * cell.stride + cell.W / 2
             centre_97 = (97 - 1) * cell.stride + cell.W / 2
             assert (centre_96 + centre_97) / 2 == tau
+
+    def test_tau_true_is_the_k96_candidate_centre(self):
+        """Plan §12.4 blocking gate, enforced rather than merely documented.
+
+        Two centre conventions appear in the code and differ by the half-sample
+        offset (both are correct, they describe different objects):
+
+        * scan convention, ``(k-1/2)s + (W+1)/2`` -- the raw *time* of window k,
+          which is ``tau_true = tau + 1/2`` at k=96;
+        * sample-centre convention, ``(k-1)s + W/2`` -- whose k=96/k=97 midpoint
+          is ``tau`` itself.
+
+        A builder that cannot satisfy the first equality must be blocked.  The gate
+        is stated per *geometry*, not per cross product: the non-overlapping H1
+        cell is (s=64, T=12288) and the overlapping one is (s=16, T=3120).
+        """
+        for cell in scope.h1_alt_cells():
+            tau = dgp.h1_change_point(cell.T)
+            centre_96 = scan.estimated_change_raw_time(
+                96, stride=cell.stride, W=cell.W
+            )
+            centre_97 = scan.estimated_change_raw_time(
+                97, stride=cell.stride, W=cell.W
+            )
+            assert centre_96 == tau + 0.5
+            assert centre_97 - centre_96 == cell.stride
+            sample_centre_96 = (96 - 1) * cell.stride + cell.W / 2
+            sample_centre_97 = (97 - 1) * cell.stride + cell.W / 2
+            assert (sample_centre_96 + sample_centre_97) / 2 == float(tau)
 
     def test_pre_effect_covers_exactly_the_first_tau_samples(self):
         for scenario in dgp.H1_SCENARIOS:
@@ -336,6 +365,56 @@ class TestNullSignatureRejoining:
             T=cell.T,
             M=cell.M,
         )
+
+
+class TestMapLaws:
+    """The two maps' *laws*: identical mean and covariance, exactly (Plan §12.1)."""
+
+    @staticmethod
+    def _maps(u: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        return (
+            np.column_stack([np.cos(2 * np.pi * u), np.sin(2 * np.pi * u)]),
+            np.column_stack([np.sin(2 * np.pi * u), np.sin(4 * np.pi * u)]),
+        )
+
+    def test_the_two_maps_share_mean_and_covariance(self):
+        # The trapezoid rule is exact for these integer harmonics, so the values
+        # below are machine-precision, not Monte-Carlo estimates.
+        u = (np.arange(4096) + 0.5) / 4096
+        circle, figure = self._maps(u)
+        c_mean = circle.mean(axis=0)
+        f_mean = figure.mean(axis=0)
+        c_cov = np.cov(circle, rowvar=False, bias=True)
+        f_cov = np.cov(figure, rowvar=False, bias=True)
+        assert np.abs(c_mean - f_mean).max() <= 1e-12
+        assert np.abs(c_cov - f_cov).max() <= 1e-12
+        assert np.abs(c_cov - 0.5 * np.eye(2)).max() <= 1e-12
+        assert np.abs(f_cov - 0.5 * np.eye(2)).max() <= 1e-12
+        assert np.abs(f_mean).max() <= 1e-12
+
+
+class TestMasterPrefixConsistency:
+    def test_short_length_is_a_bitwise_prefix_of_the_long_length(self):
+        """One master serves every T, but the change point is a *cell* property.
+
+        Only two things carry across lengths: the draws are shared prefixes, and
+        the pre-effect segment agrees bitwise up to the *shorter* tau.  Beyond it
+        the series intentionally differ, because ``tau = floor(T/2)`` differs --
+        this test pins that difference so it can never be mistaken for reuse.
+        """
+        for scenario in dgp.H1_SCENARIOS:
+            master = _master(scenario, "0.8")
+            tau_short = dgp.h1_change_point(cells.T_FIXED_T)
+            tau_long = dgp.h1_change_point(cells.L_MASTER)
+            assert tau_short < tau_long
+            assert np.array_equal(
+                master.noise[: cells.T_FIXED_T],
+                master.noise[: cells.L_MASTER][: cells.T_FIXED_T],
+            )
+            short = master.raw_prefix(cells.T_FIXED_T)
+            long = master.raw_prefix(cells.L_MASTER)
+            assert np.array_equal(short[:tau_short], long[:tau_short])
+            assert not np.array_equal(short, long[: cells.T_FIXED_T])
 
 
 class TestSmokeStreamOverride:

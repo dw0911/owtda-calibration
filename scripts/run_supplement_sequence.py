@@ -37,13 +37,14 @@ REPO = Path(__file__).resolve().parents[1]
 LAUNCHER = REPO / "scripts/frozen_env.py"
 VENV_PY = REPO / ".venv/Scripts/python.exe"
 SCOPE_FILE = REPO / "src/owtda_cal/scope.py"
-NEW_TAG = "v1.1-freeze-owtda-cal-r1"
+NEW_TAG = "v1.3-freeze-owtda-cal-r1"
 STAGES = (
     "generation",
     "commit_src",
     "rebuild",
     "registries",
     "commit_frozen",
+    "register_anchor",
     "smoke_s03",
     "verify",
     "git_identity",
@@ -165,8 +166,41 @@ def main() -> int:
             return 1
         _run("git_tag", [
             "git", "tag", "-a", NEW_TAG, "-m",
-            f"OW-TDA-CAL-R1 R1 freeze amendment (w*={w_star}, real environment lock)",
+            f"OW-TDA-CAL-R1 R1 freeze amendment (w*={w_star}, guard + H1 review packet)",
         ])
+
+    if stage("register_anchor"):
+        # The frozen scope gained the fail-closed guard and the H1 review-packet
+        # tooling, so source_tree_hash moves: the *run/source anchor* is re-tagged
+        # while freeze_id (SCOPE/PROTOCOL/ANALYSIS/COMPUTE hashes) stays unchanged.
+        # Recorded append-only; v1.0 is never moved.
+        registry_text = (REPO / "governance/INVALIDATION_REGISTRY.jsonl").read_text(
+            encoding="utf-8"
+        )
+        if "INV_V12_SOURCE_ANCHOR" not in registry_text and _run("append_invalidation", [
+            str(VENV_PY), "audit/append_invalidation.py",
+            "--change-id", "INV_V12_SOURCE_ANCHOR",
+            "--target", "freeze tag v1.2-freeze-owtda-cal-r1 as run/source anchor",
+            "--replacement", NEW_TAG,
+            "--statement",
+            "冻结源域新增 fail-closed 守卫（audit/repo_guard.py）与 H1 复审包工具后，"
+            "source_tree_hash 随内容变化，故运行/来源锚点由 v1.2 迁移至 v1.3；"
+            "四个 spec hash 与 freeze_id、SCOPE_DESIGN 行哈希均未改变（科学冻结身份不变）。"
+            "v1.0 未移动；v1.2 保留为历史冻结 revision。",
+            "--evidence", "governance/CHANGELOG.md", "governance/AMENDMENT_PROPOSAL_PARALLELISM_DECOUPLING.md",
+        ]):
+            return 1
+        if _run("git_add_anchor", ["git", "add", "-A"]) != 0:
+            return 1
+        pending = subprocess.run(
+            ["git", "diff", "--cached", "--quiet"], cwd=str(REPO), check=False
+        ).returncode
+        if pending == 1 and _run("git_commit_anchor", [
+            "git", "commit", "-q", "-m",
+            "docs(governance): record the run/source anchor move to v1.3 "
+            "(fail-closed guard + H1 review packet)",
+        ]) != 0:
+            return 1
 
     if stage("smoke_s03") and _frozen(
         "smoke_s03", root / "smoke/S03",

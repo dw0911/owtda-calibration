@@ -31,6 +31,9 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # audit/ -> repo_guard
+
+import repo_guard
 
 from owtda_cal import chains, components, disposition, freeze, registry, scope
 
@@ -53,7 +56,9 @@ COMPONENT_GENERATIONS = {
     "feature_generation_id": {"bpi": "F01", "moments": "F01"},
     "method_generation_id": {"M0": "M01", "M1": "M01"},
 }
-SOURCE_TREE_PREFIXES = ("src/", "configs/", "audit/")
+# Single source of truth: ``repo_guard`` owns the frozen-scope definition, so the
+# cleanliness guard can never drift from the scope this hash actually collects.
+SOURCE_TREE_PREFIXES = tuple(f"{p}/" for p in repo_guard.FROZEN_SCOPE_PATHS)
 TASK_INDEX_GENERATION_ID = "T01"
 SEED_ROOT_FAMILIES = (
     ("SMOKE_NULL", "smoke", scope.SMOKE_GENERATION_ID),
@@ -520,6 +525,9 @@ def _write_real_disposition(fid: str) -> dict[str, Any]:
 
 
 def main() -> int:
+    # Fail closed: never write a freeze whose run identity could point at a
+    # revision that does not contain the frozen scope as built.
+    repo_guard.assert_clean_frozen_scope(REPO, context="build_freeze")
     gov = REPO / "governance"
 
     scope_spec = _scope_spec()

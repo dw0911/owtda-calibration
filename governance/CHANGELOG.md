@@ -244,9 +244,47 @@
   PROVISIONAL**（正式 L2 未开始）；`PAMAP2 恰 23 个合格任务` 在缺原始数据时只能标记
   `UNVERIFIED_EXTERNAL_DATA_FACT`。
 
+## 2026-09-11 — 补件后处置：fail-closed 冻结守卫、H1 复审包、`w*` 决定与并行度解耦提案
+
+对应审计建议 A/B/C/D 的落地（证据标签 `v1.2-freeze-owtda-cal-r1`）：
+
+- **D（fail-closed 冻结守卫，已生效）**：新增 `audit/repo_guard.py`；
+  `audit/build_freeze.py` 与 `audit/build_run_admission.py` 在写出**任何字节之前**调用
+  `assert_clean_frozen_scope`——若 `src/ configs/ audit/` 存在已修改、已暂存未提交或未跟踪
+  的文件即**拒绝构建**；「无法证明干净」一律视为不干净（非 git 目录/取不到状态同样拒绝）。
+  `SOURCE_TREE_PREFIXES` 改为由 `repo_guard.FROZEN_SCOPE_PATHS` 派生（单一事实来源，
+  守卫与被哈希的范围永不漂移）。动机：同类**静默漏项**已发生两次——S02 的
+  `compute_git_commit` 指向不含实际源码的 revision、F-B15c-4 的 `source_tree_hash` 漏掉未
+  `git add` 的新模块。测试 `tests/test_repo_guard.py` 12 项（在临时仓库上验证拒绝语义，
+  不依赖被运行时的仓库状态）；
+- **C（H1 复审包，已生成）**：新增 `audit/build_h1_review_packet.py` →
+  `governance/H1_CONSTRUCT_REVIEW_PACKET.{json,md}`，回答审计项
+  `H1-ALTERNATIVE-CONSTRUCT-CONTRACTS = PENDING_CODE_REVIEW`。受审函数按**源码文本 SHA256**
+  固定；8 条构造合同**全部 PASS**，含：§12.4 builder 阻塞门（`τ_true = τ + 1/2` 精确等于
+  k=96 候选窗口中心，逐 H1 几何）、两映射的均值/协方差在 trapezoid 意义下**精确相同**
+  （`0` 与 `½I₂`，机器精度而非 MC）、raw 序列与文档化组合**逐位相等**、RNG 消费形状
+  `(), [13288], [12288,2]`、共享 latent/noise、8 个 H1 cell → 4 个 null signature；
+  引用不存在的测试会自判 `MISSING_TEST`/FAIL；并显式列出**刻意不作的声明**
+  （无二阶过程匹配、H1 不复用 H0 抽样、不含任何 L2 结论）。
+  测试 +3：`test_tau_true_is_the_k96_candidate_centre`、
+  `test_the_two_maps_share_mean_and_covariance`、
+  `test_short_length_is_a_bitwise_prefix_of_the_long_length`。
+  过程中修正了两处我自己先前的**过强表述**：跨 `T` 的 raw 序列**只在前段**一致（变点是
+  cell 级属性，后段按设计不同）；骨架从 raw 反解只到 float64 舍入（`≈1e-16`），
+  逐位相等只对「raw = skeleton + 0.08η」这一组合成立；
+- **A（`w*` 处置，已定）**：冻结值**维持 `w* = 8`**、不采纳 12。理由：预登记协议含「无 swap
+  增长」验收条件，`SMOKE_NULL` 因一次 4 MB swap 判 `VOIDED`，协议明禁重跑改善数字，
+  采纳 12 等于推翻自身验收规则；且无任何 Gate 结论依赖该取值。记录见
+  `governance/AMENDMENT_PROPOSAL_PARALLELISM_DECOUPLING.md` §1；
+- **B（并行度解耦提案，未生效）**：提案把并行度从 `compute_spec_hash` 覆盖面移出，只冻结
+  「线程变量=1 + 逐位不变性 + 资源验收」这一**契约**，实际 `workers_used` 每 run 记录
+  （同上 §2）。**未改动任何身份**，需裁定；采纳应在正式 run 之前完成；
+- 全量 **521 项测试通过**、ruff **All checks passed**；随后按「先提交源码 → 再重建 →
+  后运行」的纪律重建冻结并重跑 S03。
+
 ## 待登记（未发生）
 
+- **B 提案裁定**（并行度解耦：采纳则需在正式 run 前重建 + 新建 `v1.3`）；
 - B15d：NULL/ALT phase 的 expected indexes（ID-only pass）与 G4 admission 收尾；
   正式 H0/H1 run 的 runner 与 phase seal 链；
-  **`w*` 新预登记**（现确认已作废，冻结值仍为 8）；
 - 后续批次：正式 H0/H1 运行、分析冻结、release。

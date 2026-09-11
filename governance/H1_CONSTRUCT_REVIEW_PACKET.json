@@ -1,0 +1,635 @@
+{
+  "all_contracts_pass": true,
+  "answers_audit_item": "H1-ALTERNATIVE-CONSTRUCT-CONTRACTS = PENDING_CODE_REVIEW",
+  "claims_not_made": [
+    "no second-order process matching between the two segments: only pointwise mean and covariance of the maps coincide",
+    "H1 cells do NOT reuse the N-CIRCLE H0 draws (streams differ); they rejoin the H0 *model identity*, which is what size/power comparison requires",
+    "no size, power or rejection-rate value is claimed here; those are L2 and remain unstarted",
+    "the finite-sample empirical moments of one realised path are not claimed to be exactly equal; equality holds for the maps' laws"
+  ],
+  "contracts": [
+    {
+      "anchor": "dgp.h1_change_point + scan.estimated_change_raw_time",
+      "cited_tests_present": true,
+      "claim": "tau = floor(T/2), the true continuous boundary is tau_true = tau + 1/2, and tau_true coincides exactly with the k=96 candidate window centre under the scan convention (Plan §12.4 blocking gate) for every H1 geometry; equivalently tau is the midpoint of the k=96/k=97 sample centres",
+      "kind": "STRUCTURAL",
+      "missing_tests": [],
+      "observed": [
+        {
+          "T": 12288,
+          "W": 64,
+          "k96_centre": 6144.5,
+          "k97_centre": 6208.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 64.0,
+          "stride": 64,
+          "tau": 6144,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 6144.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 3120,
+          "W": 64,
+          "k96_centre": 1560.5,
+          "k97_centre": 1576.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 16.0,
+          "stride": 16,
+          "tau": 1560,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 1560.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 12288,
+          "W": 64,
+          "k96_centre": 6144.5,
+          "k97_centre": 6208.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 64.0,
+          "stride": 64,
+          "tau": 6144,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 6144.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 3120,
+          "W": 64,
+          "k96_centre": 1560.5,
+          "k97_centre": 1576.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 16.0,
+          "stride": 16,
+          "tau": 1560,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 1560.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 12288,
+          "W": 64,
+          "k96_centre": 6144.5,
+          "k97_centre": 6208.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 64.0,
+          "stride": 64,
+          "tau": 6144,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 6144.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 3120,
+          "W": 64,
+          "k96_centre": 1560.5,
+          "k97_centre": 1576.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 16.0,
+          "stride": 16,
+          "tau": 1560,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 1560.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 12288,
+          "W": 64,
+          "k96_centre": 6144.5,
+          "k97_centre": 6208.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 64.0,
+          "stride": 64,
+          "tau": 6144,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 6144.5,
+          "tau_true_equals_k96_centre": true
+        },
+        {
+          "T": 3120,
+          "W": 64,
+          "k96_centre": 1560.5,
+          "k97_centre": 1576.5,
+          "max_abs_error": 0.0,
+          "sample_centre_step": 16.0,
+          "stride": 16,
+          "tau": 1560,
+          "tau_equals_midpoint_of_k96_k97": true,
+          "tau_true": 1560.5,
+          "tau_true_equals_k96_centre": true
+        }
+      ],
+      "status": "PASS",
+      "tolerance": "exact float equality (error 0.0)",
+      "verified_by_tests": [
+        "test_floor_half_of_T",
+        "test_boundary_sits_between_k96_and_k97_centres",
+        "test_19_window_index_to_raw_time_hand_reversal",
+        "test_hand_mapping"
+      ]
+    },
+    {
+      "anchor": "dgp.generate_h1_master / H1Master.raw_prefix",
+      "cited_tests_present": true,
+      "claim": "shape alternative: the raw series is bitwise the documented composition (skeleton + 0.08 eta, skeleton = C(u) before tau and F(u) = (sin 2pi u, sin 4pi u) after it); recovering the skeleton back out of the raw series is only exact to float64 rounding",
+      "kind": "NUMERICAL",
+      "missing_tests": [],
+      "observed": {
+        "max_abs_figure_eight_identity_residual": 6.505213034913027e-16,
+        "max_abs_skeleton_residual": 1.1102230246251565e-16,
+        "post_skeleton_equal_within_fp_rounding": true,
+        "pre_skeleton_equal_within_fp_rounding": true,
+        "raw_series_bitwise_equal_to_documented_composition": true
+      },
+      "status": "PASS",
+      "tolerance": "raw series bitwise; skeleton recovery and implicit identity <= 1e-15",
+      "verified_by_tests": [
+        "test_shape_change_switches_circle_to_figure_eight",
+        "test_figure_eight_identity_on_the_post_effect_half",
+        "test_pre_effect_half_is_the_unit_circle"
+      ]
+    },
+    {
+      "anchor": "dgp.generate_h1_master / H1Master.raw_prefix",
+      "cited_tests_present": true,
+      "claim": "mean shift: the raw series is bitwise the documented composition (C(u) + 0.5 v 1(t>tau) + 0.08 eta) with |v| = 1",
+      "kind": "NUMERICAL",
+      "missing_tests": [],
+      "observed": {
+        "delta": "0.5",
+        "max_abs_offset_residual": 2.7755575615628914e-16,
+        "max_abs_unit_norm_error": 1.1102230246251565e-16,
+        "post_offset_equals_delta_v_within_fp_rounding": true,
+        "pre_skeleton_equal_within_fp_rounding": true,
+        "raw_series_bitwise_equal_to_documented_composition": true,
+        "shape_alternative_reports_null_shift": true,
+        "shift_direction_seed_len": 32,
+        "shift_value": 0.7510813924572987
+      },
+      "status": "PASS",
+      "tolerance": "raw series bitwise; recovered offset <= 1e-15; |v|-1 <= 1e-15",
+      "verified_by_tests": [
+        "test_mean_shift_is_a_constant_unit_circle_offset",
+        "test_shift_direction_is_a_single_random_draw"
+      ]
+    },
+    {
+      "anchor": "audit/build_h1_review_packet.py::_map_moments",
+      "cited_tests_present": true,
+      "claim": "both maps have identical mean (0) and covariance (1/2 I_2) under U ~ Uniform(0,1); no claim of second-order process equality is made",
+      "kind": "NUMERICAL",
+      "missing_tests": [],
+      "observed": {
+        "circle_covariance": [
+          [
+            0.49999999999999994,
+            -7.37257477290143e-18
+          ],
+          [
+            -7.37257477290143e-18,
+            0.5
+          ]
+        ],
+        "circle_mean": [
+          3.3637372401362775e-17,
+          -3.519705122483356e-17
+        ],
+        "figure_eight_covariance": [
+          [
+            0.5,
+            -8.673617379884035e-19
+          ],
+          [
+            -8.673617379884035e-19,
+            0.5000000000000001
+          ]
+        ],
+        "figure_eight_mean": [
+          -3.519705122483356e-17,
+          7.056779714341346e-17
+        ],
+        "grid_points": 4096,
+        "max_abs_covariance_difference": 1.1102230246251565e-16,
+        "max_abs_covariance_to_half_identity": 5.551115123125783e-17,
+        "max_abs_mean_difference": 1.0576484836824702e-16
+      },
+      "status": "PASS",
+      "tolerance": "trapezoid grid exact for these harmonics; <= 1e-12",
+      "verified_by_tests": [
+        "test_the_two_maps_share_mean_and_covariance",
+        "test_marginal_moments_are_close_on_both_sides"
+      ]
+    },
+    {
+      "anchor": "dgp.generate_h1_master",
+      "cited_tests_present": true,
+      "claim": "both alternatives consume one shared latent path and one shared noise master (independent of rho, scenario, s, T, M)",
+      "kind": "IDENTITY",
+      "missing_tests": [],
+      "observed": {
+        "innovation_hash_equal": true,
+        "latent_path_equal": true,
+        "noise_hash_equal": true
+      },
+      "status": "PASS",
+      "tolerance": "hash equality + array equality",
+      "verified_by_tests": [
+        "test_rho_free_and_scenario_free_base_draws",
+        "test_alternatives_differ_only_in_scenario"
+      ]
+    },
+    {
+      "anchor": "dgp.generate_h1_master",
+      "cited_tests_present": true,
+      "claim": "RNG consumption shapes are exactly (), [13288], [12288,2] in float64 C order with a 1000-step burn-in",
+      "kind": "CONTRACT",
+      "missing_tests": [],
+      "observed": {
+        "burn_in_discarded_index": -1000,
+        "formal_length": 12288,
+        "latent_innovation_dtype": "float64",
+        "latent_innovation_shape": [
+          13288
+        ],
+        "observation_noise_c_order": true,
+        "observation_noise_shape": [
+          12288,
+          2
+        ]
+      },
+      "status": "PASS",
+      "tolerance": "exact shapes/dtypes",
+      "verified_by_tests": [
+        "test_draw_shapes_and_dtypes",
+        "test_raw_prefix_is_float64_c_order"
+      ]
+    },
+    {
+      "anchor": "H1Master.raw_prefix",
+      "cited_tests_present": true,
+      "claim": "one master serves every T: the draws are shared prefixes and the pre-effect segment agrees bitwise up to the shorter tau; beyond it the series intentionally differ because tau = floor(T/2) is a cell property",
+      "kind": "STRUCTURAL",
+      "missing_tests": [],
+      "observed": {
+        "draws_are_shared_prefixes": true,
+        "long_tau": 6144,
+        "post_effect_segments_differ_by_design": true,
+        "pre_effect_segments_agree_bitwise": true,
+        "short_tau": 1560
+      },
+      "status": "PASS",
+      "tolerance": "bitwise equality on the pre-effect segment; deliberate divergence after",
+      "verified_by_tests": [
+        "test_short_length_is_a_bitwise_prefix_of_the_long_length",
+        "test_shared_draws_agree_between_strides"
+      ]
+    },
+    {
+      "anchor": "dgp.build_null_signature",
+      "cited_tests_present": true,
+      "claim": "every H1 cell rejoins the N-CIRCLE H0 model identity: eight distinct cells collapse to four null signatures, one per (rho, s)",
+      "kind": "IDENTITY",
+      "missing_tests": [],
+      "observed": {
+        "cells": 8,
+        "distinct_signatures": 4
+      },
+      "status": "PASS",
+      "tolerance": "8 cells -> 4 signatures",
+      "verified_by_tests": [
+        "test_signature_is_scenario_and_phase_independent",
+        "test_signature_separates_geometries",
+        "test_geometry_matches_the_n_circle_h0_cells"
+      ]
+    }
+  ],
+  "evidence": {
+    "cells": [
+      {
+        "M": 192,
+        "T": 12288,
+        "W": 64,
+        "change_point_tau": 6144,
+        "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+        "rho": "0",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "0a4960068f9c54c39959a29d68cb9630c8b653bc7285bef4ed65478055665796",
+        "stride": 64
+      },
+      {
+        "M": 192,
+        "T": 3120,
+        "W": 64,
+        "change_point_tau": 1560,
+        "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+        "rho": "0",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "b56f8f4859fad86ac260452cac96900872cd7bd718d8a8e54473f2763b4be276",
+        "stride": 16
+      },
+      {
+        "M": 192,
+        "T": 12288,
+        "W": 64,
+        "change_point_tau": 6144,
+        "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+        "rho": "0.8",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "e8ae6c9a4c14240ed93595aa0791fe94b40b718fdaf6de9564ab560240312b45",
+        "stride": 64
+      },
+      {
+        "M": 192,
+        "T": 3120,
+        "W": 64,
+        "change_point_tau": 1560,
+        "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+        "rho": "0.8",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "0583e21e2f3d8f1c6b7eb80fee6d55fbaae452cacbe99ff4cc8bebbcd61a7d4e",
+        "stride": 16
+      },
+      {
+        "M": 192,
+        "T": 12288,
+        "W": 64,
+        "change_point_tau": 6144,
+        "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+        "rho": "0",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "d7c7f2dc51b99b2bd36310d763c4fb67e62b49bd7f0c2d1c44482e0ae0895957",
+        "stride": 64
+      },
+      {
+        "M": 192,
+        "T": 3120,
+        "W": 64,
+        "change_point_tau": 1560,
+        "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+        "rho": "0",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "ef2f9bcc6799bb30228d654db77a228b5540534378ae1fc364f53a962bd1216a",
+        "stride": 16
+      },
+      {
+        "M": 192,
+        "T": 12288,
+        "W": 64,
+        "change_point_tau": 6144,
+        "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+        "rho": "0.8",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "1fc7451b341c006326422d11f1d3745aad35fc5520fcaf5e441acd73fb9b039b",
+        "stride": 64
+      },
+      {
+        "M": 192,
+        "T": 3120,
+        "W": 64,
+        "change_point_tau": 1560,
+        "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+        "rho": "0.8",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "779e6a069cdfb4a63957f7719bed80d74613e3b86062f293d141475be9f62308",
+        "stride": 16
+      }
+    ],
+    "change_point_alignment": [
+      {
+        "T": 12288,
+        "W": 64,
+        "k96_centre": 6144.5,
+        "k97_centre": 6208.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 64.0,
+        "stride": 64,
+        "tau": 6144,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 6144.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 3120,
+        "W": 64,
+        "k96_centre": 1560.5,
+        "k97_centre": 1576.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 16.0,
+        "stride": 16,
+        "tau": 1560,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 1560.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 12288,
+        "W": 64,
+        "k96_centre": 6144.5,
+        "k97_centre": 6208.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 64.0,
+        "stride": 64,
+        "tau": 6144,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 6144.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 3120,
+        "W": 64,
+        "k96_centre": 1560.5,
+        "k97_centre": 1576.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 16.0,
+        "stride": 16,
+        "tau": 1560,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 1560.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 12288,
+        "W": 64,
+        "k96_centre": 6144.5,
+        "k97_centre": 6208.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 64.0,
+        "stride": 64,
+        "tau": 6144,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 6144.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 3120,
+        "W": 64,
+        "k96_centre": 1560.5,
+        "k97_centre": 1576.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 16.0,
+        "stride": 16,
+        "tau": 1560,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 1560.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 12288,
+        "W": 64,
+        "k96_centre": 6144.5,
+        "k97_centre": 6208.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 64.0,
+        "stride": 64,
+        "tau": 6144,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 6144.5,
+        "tau_true_equals_k96_centre": true
+      },
+      {
+        "T": 3120,
+        "W": 64,
+        "k96_centre": 1560.5,
+        "k97_centre": 1576.5,
+        "max_abs_error": 0.0,
+        "sample_centre_step": 16.0,
+        "stride": 16,
+        "tau": 1560,
+        "tau_equals_midpoint_of_k96_k97": true,
+        "tau_true": 1560.5,
+        "tau_true_equals_k96_centre": true
+      }
+    ],
+    "cross_length_prefix_consistency": {
+      "draws_are_shared_prefixes": true,
+      "long_tau": 6144,
+      "post_effect_segments_differ_by_design": true,
+      "pre_effect_segments_agree_bitwise": true,
+      "short_tau": 1560
+    },
+    "distinct_null_signatures": [
+      "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+      "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+      "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+      "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0"
+    ],
+    "map_moments": {
+      "circle_covariance": [
+        [
+          0.49999999999999994,
+          -7.37257477290143e-18
+        ],
+        [
+          -7.37257477290143e-18,
+          0.5
+        ]
+      ],
+      "circle_mean": [
+        3.3637372401362775e-17,
+        -3.519705122483356e-17
+      ],
+      "figure_eight_covariance": [
+        [
+          0.5,
+          -8.673617379884035e-19
+        ],
+        [
+          -8.673617379884035e-19,
+          0.5000000000000001
+        ]
+      ],
+      "figure_eight_mean": [
+        -3.519705122483356e-17,
+        7.056779714341346e-17
+      ],
+      "grid_points": 4096,
+      "max_abs_covariance_difference": 1.1102230246251565e-16,
+      "max_abs_covariance_to_half_identity": 5.551115123125783e-17,
+      "max_abs_mean_difference": 1.0576484836824702e-16
+    },
+    "mean_shift_identity": {
+      "delta": "0.5",
+      "max_abs_offset_residual": 2.7755575615628914e-16,
+      "max_abs_unit_norm_error": 1.1102230246251565e-16,
+      "post_offset_equals_delta_v_within_fp_rounding": true,
+      "pre_skeleton_equal_within_fp_rounding": true,
+      "raw_series_bitwise_equal_to_documented_composition": true,
+      "shape_alternative_reports_null_shift": true,
+      "shift_direction_seed_len": 32,
+      "shift_value": 0.7510813924572987
+    },
+    "rng_consumption": {
+      "burn_in_discarded_index": -1000,
+      "formal_length": 12288,
+      "latent_innovation_dtype": "float64",
+      "latent_innovation_shape": [
+        13288
+      ],
+      "observation_noise_c_order": true,
+      "observation_noise_shape": [
+        12288,
+        2
+      ]
+    },
+    "shape_map_identity": {
+      "max_abs_figure_eight_identity_residual": 6.505213034913027e-16,
+      "max_abs_skeleton_residual": 1.1102230246251565e-16,
+      "post_skeleton_equal_within_fp_rounding": true,
+      "pre_skeleton_equal_within_fp_rounding": true,
+      "raw_series_bitwise_equal_to_documented_composition": true
+    },
+    "shared_draws_across_alternatives": {
+      "innovation_hash_equal": true,
+      "latent_path_equal": true,
+      "noise_hash_equal": true
+    }
+  },
+  "generated_at_utc": "2026-09-11T08:45:00Z",
+  "kind": "h1_construct_review_packet",
+  "reviewed_function_source_sha256": {
+    "H1Master.raw_prefix": "5448e31415b3530477c01c9aeb17e9ebd59fd3d21df8ed6e26292a1a30c208b5",
+    "build_null_signature": "e9ee1ae1cbf8b7b87f0a846943842b14009304b990572f0a664dd9acd8a9d92e",
+    "generate_h1_master": "462f939a15c9efd5179c085ecd8a5ce2ffab3a881d23f9477305b0e1a881852c",
+    "h1_change_point": "340c014fdd1a49e0ae1eef9febf8b323905ac025091478192233f367f65e5049",
+    "h1_data_model_spec": "de2a8cf30e441ac273afbe387938bc27e409429c4bc7e921d28b037c32c0c144"
+  },
+  "reviewed_functions": [
+    {
+      "file": "src/owtda_cal/dgp.py",
+      "first_line": 118,
+      "line_count": 35,
+      "qualname": "h1_data_model_spec",
+      "source_sha256": "de2a8cf30e441ac273afbe387938bc27e409429c4bc7e921d28b037c32c0c144"
+    },
+    {
+      "file": "src/owtda_cal/dgp.py",
+      "first_line": 193,
+      "line_count": 5,
+      "qualname": "h1_change_point",
+      "source_sha256": "340c014fdd1a49e0ae1eef9febf8b323905ac025091478192233f367f65e5049"
+    },
+    {
+      "file": "src/owtda_cal/dgp.py",
+      "first_line": 387,
+      "line_count": 89,
+      "qualname": "generate_h1_master",
+      "source_sha256": "462f939a15c9efd5179c085ecd8a5ce2ffab3a881d23f9477305b0e1a881852c"
+    },
+    {
+      "file": "src/owtda_cal/dgp.py",
+      "first_line": 161,
+      "line_count": 30,
+      "qualname": "build_null_signature",
+      "source_sha256": "e9ee1ae1cbf8b7b87f0a846943842b14009304b990572f0a664dd9acd8a9d92e"
+    },
+    {
+      "file": "src/owtda_cal/dgp.py",
+      "first_line": 365,
+      "line_count": 16,
+      "qualname": "H1Master.raw_prefix",
+      "source_sha256": "5448e31415b3530477c01c9aeb17e9ebd59fd3d21df8ed6e26292a1a30c208b5"
+    }
+  ],
+  "schema_version": 1
+}

@@ -23,6 +23,9 @@ from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # audit/ -> repo_guard
+
+import repo_guard
 
 from owtda_cal import freeze, registry, runs, scope
 from owtda_cal.identity import H, config_hash
@@ -179,6 +182,9 @@ def _bindings(
 
 
 def main() -> int:
+    # Fail closed: the run identity records compute_git_commit, which must name a
+    # revision that really contains the frozen scope being bound here.
+    repo_guard.assert_clean_frozen_scope(REPO, context="build_run_admission")
     manifest = _load("FREEZE_MANIFEST.json")
     seed_registry = _load("SEED_REGISTRY_v1.0.json")
     component_registry = _load("COMPONENT_REGISTRY_v1.json")
