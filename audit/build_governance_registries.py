@@ -251,9 +251,7 @@ def main() -> int:
                 "confirmed": confirmed,
                 # Only a confirmation for *every* phase may change the frozen value;
                 # a voided confirmation keeps it and the open item is recorded.
-                "adopted_w_star": (
-                    wstar.get("frozen_w_star") if confirmed else wstar.get("frozen_w_star")
-                ),
+                "adopted_w_star": wstar.get("frozen_w_star"),
                 "status": "CONFIRMED_NO_CHANGE" if confirmed
                 else "VOIDED_OR_NOT_CONFIRMED_PREVIOUS_VALUE_KEPT",
                 "follow_up": None if confirmed else (

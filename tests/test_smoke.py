@@ -125,4 +125,8 @@ class TestSmokeRootIsolation:
 
     def test_stream_prefix_is_smoke(self):
         assert smoke.SMOKE_STREAM_PREFIX == "smoke_"
-        assert smoke.SMOKE_GENERATION_ID == scope.SMOKE_GENERATION_ID == "S02"
+        # The *current* generation is never hard-coded: it is whatever
+        # scope.SMOKE_GENERATION_ID says, and it must not be a superseded one.
+        assert smoke.SMOKE_GENERATION_ID == scope.SMOKE_GENERATION_ID
+        assert scope.SMOKE_GENERATION_ID not in scope.SMOKE_GENERATIONS_SUPERSEDED
+        assert scope.SMOKE_GENERATIONS_SUPERSEDED == ("S01", "S02")
