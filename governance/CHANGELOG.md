@@ -231,7 +231,9 @@
   `RUN_COMPONENT_SET.compute_git_commit` 指向的 revision 不含实际运行源码（与被驳回的 S02
   同因）。修正为「先提交源码 → 再重建 → 后运行」，并在新 revision 上重建与重跑；
   第一次冻结的 tag `v1.1` 保留不删除但由 `v1.2-freeze-owtda-cal-r1` 取代
-  （登记为 `INV_V11_FREEZE_TAG`）；**`v1.0-freeze-owtda-cal-r1` 始终未移动**；
+  （登记为 `INV_V11_FREEZE_TAG`）；`v1.2` 亦在同一未闭合步骤内、于最终 lint-clean revision
+  上重建一次（此前一次创建对应 revision 尚含一条未用 `noqa` 的 lint 发现）；
+  **`v1.0-freeze-owtda-cal-r1` 始终未移动**；
 - 新增工具：`audit/run_wstar_confirmation.py`、`audit/build_schemas.py`、
   `audit/validate_schemas.py`、`audit/build_governance_registries.py`、
   `audit/append_invalidation.py`、`audit/run_registry.py`、`audit/run_smoke_s03.py`、
