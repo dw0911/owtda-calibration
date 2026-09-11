@@ -27,6 +27,7 @@ from .dgp import (
     DGP_FAMILY_N_CIRCLE,
     H1_SCENARIO_MEAN,
     H1_SCENARIO_SHAPE,
+    build_null_signature,
 )
 from .features import BPI_STABLE_ID, MOMENTS_STABLE_ID
 from .identity import H
@@ -349,7 +350,16 @@ def scope_design_rows(
                             "expected_logical_evaluations": count,
                             "required": True,
                             "source_null_logical_cell_id": None,
-                            "null_model_config_hash": None,
+                            # A06: the N-CIRCLE NULL rows carry the same signature
+                            # the H1 ALT rows point at (N_AR rows have no such model).
+                            "null_model_config_hash": (
+                                build_null_signature(
+                                    rho=cell.rho, W=cell.W, stride=cell.stride,
+                                    T=cell.T, M=cell.M,
+                                )
+                                if cell.family == DGP_FAMILY_N_CIRCLE
+                                else None
+                            ),
                         }
                     )
     elif phase == PHASE_ALT:
@@ -381,7 +391,14 @@ def scope_design_rows(
                             "expected_logical_evaluations": count,
                             "required": True,
                             "source_null_logical_cell_id": src_id,
-                            "null_model_config_hash": None,
+                            # Audit A06: the ALT row must name the *same* null
+                            # signature as the N-CIRCLE NULL cell it points at, so
+                            # that "same zero model" / "same cell" / "same evidence"
+                            # are all checkable rather than assumed.
+                            "null_model_config_hash": build_null_signature(
+                                rho=cell.rho, W=cell.W, stride=cell.stride,
+                                T=cell.T, M=cell.M,
+                            ),
                         }
                     )
     else:

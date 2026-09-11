@@ -1,6 +1,6 @@
 # H1 alternative 构造效度复审包
 
-生成时间（UTC）：2026-09-11T08:45:00Z；回答审计项：`H1-ALTERNATIVE-CONSTRUCT-CONTRACTS = PENDING_CODE_REVIEW`。
+生成时间（UTC）：2026-09-11T14:02:00Z；回答审计项：`H1-ALTERNATIVE-CONSTRUCT-CONTRACTS = PENDING_CODE_REVIEW`。
 
 > 本包所有取值均可在交付 revision 上重算：`python audit/build_h1_review_packet.py`。引用不存在的测试会判 `MISSING_TEST`（自校验，失败即 FAIL）。
 
@@ -26,6 +26,7 @@
 | 6 | RNG consumption shapes are exactly (), [13288], [12288,2] in float64 C order with a 1000-step burn-in | CONTRACT | `{"latent_innovation_shape": [13288], "latent_innovation_dtype": "float64", "observation_noise_shape": [12288, 2], "observation_noise_c_order": true, "burn_in…` | PASS |
 | 7 | one master serves every T: the draws are shared prefixes and the pre-effect segment agrees bitwise up to the shorter tau; beyond it the series intentionally differ because tau = floor(T/2) is a cell property | STRUCTURAL | `{"draws_are_shared_prefixes": true, "pre_effect_segments_agree_bitwise": true, "post_effect_segments_differ_by_design": true, "short_tau": 1560, "long_tau": …` | PASS |
 | 8 | every H1 cell rejoins the N-CIRCLE H0 model identity: eight distinct cells collapse to four null signatures, one per (rho, s) | IDENTITY | `{"cells": 8, "distinct_signatures": 4}` | PASS |
+| 9 | every H1 cell's source-null field joins the formal N-CIRCLE NULL scope on (logical cell id, null model signature): phase=NULL, DGP_family=N_CIRCLE, scenario=NULL - not an ALT row of the current alternative | IDENTITY | `[{"scenario": "shape_change", "stride": 64, "rho": "0", "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b", "n…` | PASS |
 
 ### 各合同锁定的测试
 
@@ -37,6 +38,7 @@
 - **6** 锚点 `dgp.generate_h1_master`（容差：exact shapes/dtypes）→ `test_draw_shapes_and_dtypes`、`test_raw_prefix_is_float64_c_order`
 - **7** 锚点 `H1Master.raw_prefix`（容差：bitwise equality on the pre-effect segment; deliberate divergence after）→ `test_short_length_is_a_bitwise_prefix_of_the_long_length`、`test_shared_draws_agree_between_strides`
 - **8** 锚点 `dgp.build_null_signature`（容差：8 cells -> 4 signatures）→ `test_signature_is_scenario_and_phase_independent`、`test_signature_separates_geometries`、`test_geometry_matches_the_n_circle_h0_cells`
+- **9** 锚点 `scope.scope_design_rows(PHASE_NULL) / dgp.build_null_signature`（容差：8/8 rows join on (cell id, signature)）→ `test_geometry_matches_the_n_circle_h0_cells`、`test_signature_is_scenario_and_phase_independent`、`test_signature_separates_geometries`
 
 ## 3. 刻意不作的声明
 
@@ -47,5 +49,5 @@
 
 ## 4. 结论
 
-- 合同数 8，全部 PASS：**True**；
+- 合同数 9，全部 PASS：**True**；
 - H1 cell 8 个 → null signature 4 个（每 (rho, s) 一个），与对应 N-CIRCLE H0 单元一致。

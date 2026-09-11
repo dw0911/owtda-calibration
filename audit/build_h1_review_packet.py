@@ -99,12 +99,40 @@ def _map_moments(u: np.ndarray) -> dict[str, Any]:
     }
 
 
+def _freeze_context() -> dict[str, str]:
+    """The live freeze ids when available, so the ids join the formal scope.
+
+    Audit A06: the packet used to hard-code a placeholder context and, worse,
+    built the ``source_null_logical_cell_id`` from ``phase=ALT`` with the H1
+    family and the *current* alternative scenario, so all eight values pointed at
+    ALT rows instead of the N-CIRCLE NULL rows they claim to name.
+    """
+    manifest_path = REPO / "governance/FREEZE_MANIFEST.json"
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        return {
+            "project_id": manifest["project_id"],
+            "protocol_id": manifest["protocol_id"],
+            "freeze_id": manifest["freeze_id"],
+            "evidence_generation_id": manifest["evidence_generation_id"],
+            "source": "governance/FREEZE_MANIFEST.json",
+        }
+    return {
+        "project_id": "owtda-cal-r1",
+        "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+        "freeze_id": "0" * 64,
+        "evidence_generation_id": "G01",
+        "source": "placeholder (freeze manifest absent)",
+    }
+
+
 def _cell_evidence() -> dict[str, Any]:
     fields = {
         "data_generation_id": "G01",
         "master_replicate_id": "review-packet",
     }
     root = "5a" * 32
+    ctx = _freeze_context()
     per_cell: list[dict[str, Any]] = []
     for cell in scope.h1_alt_cells():
         signature = dgp.build_null_signature(
@@ -120,14 +148,16 @@ def _cell_evidence() -> dict[str, Any]:
                 "M": cell.M,
                 "change_point_tau": dgp.h1_change_point(cell.T),
                 "null_model_config_hash": signature,
+                # The source-null is the *N-CIRCLE NULL* cell of the same geometry,
+                # i.e. the same construction the formal ALT scope rows use.
                 "source_null_logical_cell_id": scope.logical_cell_id(
-                    project_id="owtda-cal-r1",
-                    protocol_id="OWTDA-CAL-R1-PROTOCOL-v1.0",
-                    freeze_id="0" * 64,
-                    evidence_generation_id="G01",
-                    phase=scope.PHASE_ALT,
-                    DGP_family=dgp.DGP_FAMILY_H1,
-                    scenario_id=cell.scenario,
+                    project_id=ctx["project_id"],
+                    protocol_id=ctx["protocol_id"],
+                    freeze_id=ctx["freeze_id"],
+                    evidence_generation_id=ctx["evidence_generation_id"],
+                    phase=scope.PHASE_NULL,
+                    DGP_family=dgp.DGP_FAMILY_N_CIRCLE,
+                    scenario_id=scope.SCENARIO_NULL,
                     rho=cell.rho,
                     W=cell.W,
                     stride=cell.stride,
@@ -136,6 +166,34 @@ def _cell_evidence() -> dict[str, Any]:
                 ),
             }
         )
+
+    # Audit A06: the source-null fields must *join* the formal N-CIRCLE NULL scope,
+    # not merely exist.  Before the fix all eight pointed at ALT rows built from the
+    # current alternative scenario, so the check below could never have passed.
+    null_rows = {
+        (row["logical_cell_id"], row["null_model_config_hash"])
+        for row in scope.scope_design_rows(
+            project_id=ctx["project_id"],
+            protocol_id=ctx["protocol_id"],
+            freeze_id=ctx["freeze_id"],
+            evidence_generation_id=ctx["evidence_generation_id"],
+            phase=scope.PHASE_NULL,
+        )
+    }
+    null_scope_join = [
+        {
+            "scenario": c["scenario"],
+            "stride": c["stride"],
+            "rho": c["rho"],
+            "source_null_logical_cell_id": c["source_null_logical_cell_id"],
+            "null_model_config_hash": c["null_model_config_hash"],
+            "joins_null_scope": (
+                (c["source_null_logical_cell_id"], c["null_model_config_hash"])
+                in null_rows
+            ),
+        }
+        for c in per_cell
+    ]
 
     shape = dgp.generate_h1_master(
         scenario=dgp.H1_SCENARIO_SHAPE, rho="0.8", root_key_hex=root,
@@ -199,6 +257,8 @@ def _cell_evidence() -> dict[str, Any]:
 
     return {
         "cells": per_cell,
+        "freeze_context_source": ctx["source"],
+        "null_scope_join": null_scope_join,
         "distinct_null_signatures": sorted({c["null_model_config_hash"] for c in per_cell}),
         # The k=96 gate is stated per H1 geometry (s=64 <-> T=12288,
         # s=16 <-> T=3120), not for the cross product.
@@ -422,6 +482,21 @@ def _contracts(evidence: dict[str, Any], tests: set[str]) -> list[dict[str, Any]
             }, "8 cells -> 4 signatures",
             len(evidence["cells"]) == 8
             and len(evidence["distinct_null_signatures"]) == 4,
+        ),
+        ok(
+            "every H1 cell's source-null field joins the formal N-CIRCLE NULL scope "
+            "on (logical cell id, null model signature): phase=NULL, "
+            "DGP_family=N_CIRCLE, scenario=NULL - not an ALT row of the current "
+            "alternative",
+            "IDENTITY",
+            "scope.scope_design_rows(PHASE_NULL) / dgp.build_null_signature",
+            ["test_geometry_matches_the_n_circle_h0_cells",
+             "test_signature_is_scenario_and_phase_independent",
+             "test_signature_separates_geometries"],
+            evidence["null_scope_join"], "8/8 rows join on (cell id, signature)",
+            bool(evidence["null_scope_join"])
+            and all(j["joins_null_scope"] for j in evidence["null_scope_join"])
+            and len({j["source_null_logical_cell_id"] for j in evidence["null_scope_join"]}) == 4,
         ),
     ]
 

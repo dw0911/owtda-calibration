@@ -302,6 +302,86 @@
         "test_signature_separates_geometries",
         "test_geometry_matches_the_n_circle_h0_cells"
       ]
+    },
+    {
+      "anchor": "scope.scope_design_rows(PHASE_NULL) / dgp.build_null_signature",
+      "cited_tests_present": true,
+      "claim": "every H1 cell's source-null field joins the formal N-CIRCLE NULL scope on (logical cell id, null model signature): phase=NULL, DGP_family=N_CIRCLE, scenario=NULL - not an ALT row of the current alternative",
+      "kind": "IDENTITY",
+      "missing_tests": [],
+      "observed": [
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+          "rho": "0",
+          "scenario": "shape_change",
+          "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+          "stride": 64
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+          "rho": "0",
+          "scenario": "shape_change",
+          "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+          "stride": 16
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+          "rho": "0.8",
+          "scenario": "shape_change",
+          "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+          "stride": 64
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+          "rho": "0.8",
+          "scenario": "shape_change",
+          "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+          "stride": 16
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+          "rho": "0",
+          "scenario": "mean_shift",
+          "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+          "stride": 64
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+          "rho": "0",
+          "scenario": "mean_shift",
+          "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+          "stride": 16
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+          "rho": "0.8",
+          "scenario": "mean_shift",
+          "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+          "stride": 64
+        },
+        {
+          "joins_null_scope": true,
+          "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+          "rho": "0.8",
+          "scenario": "mean_shift",
+          "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+          "stride": 16
+        }
+      ],
+      "status": "PASS",
+      "tolerance": "8/8 rows join on (cell id, signature)",
+      "verified_by_tests": [
+        "test_geometry_matches_the_n_circle_h0_cells",
+        "test_signature_is_scenario_and_phase_independent",
+        "test_signature_separates_geometries"
+      ]
     }
   ],
   "evidence": {
@@ -314,7 +394,7 @@
         "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
         "rho": "0",
         "scenario": "shape_change",
-        "source_null_logical_cell_id": "0a4960068f9c54c39959a29d68cb9630c8b653bc7285bef4ed65478055665796",
+        "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
         "stride": 64
       },
       {
@@ -325,7 +405,7 @@
         "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
         "rho": "0",
         "scenario": "shape_change",
-        "source_null_logical_cell_id": "b56f8f4859fad86ac260452cac96900872cd7bd718d8a8e54473f2763b4be276",
+        "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
         "stride": 16
       },
       {
@@ -336,7 +416,7 @@
         "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
         "rho": "0.8",
         "scenario": "shape_change",
-        "source_null_logical_cell_id": "e8ae6c9a4c14240ed93595aa0791fe94b40b718fdaf6de9564ab560240312b45",
+        "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
         "stride": 64
       },
       {
@@ -347,7 +427,7 @@
         "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
         "rho": "0.8",
         "scenario": "shape_change",
-        "source_null_logical_cell_id": "0583e21e2f3d8f1c6b7eb80fee6d55fbaae452cacbe99ff4cc8bebbcd61a7d4e",
+        "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
         "stride": 16
       },
       {
@@ -358,7 +438,7 @@
         "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
         "rho": "0",
         "scenario": "mean_shift",
-        "source_null_logical_cell_id": "d7c7f2dc51b99b2bd36310d763c4fb67e62b49bd7f0c2d1c44482e0ae0895957",
+        "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
         "stride": 64
       },
       {
@@ -369,7 +449,7 @@
         "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
         "rho": "0",
         "scenario": "mean_shift",
-        "source_null_logical_cell_id": "ef2f9bcc6799bb30228d654db77a228b5540534378ae1fc364f53a962bd1216a",
+        "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
         "stride": 16
       },
       {
@@ -380,7 +460,7 @@
         "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
         "rho": "0.8",
         "scenario": "mean_shift",
-        "source_null_logical_cell_id": "1fc7451b341c006326422d11f1d3745aad35fc5520fcaf5e441acd73fb9b039b",
+        "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
         "stride": 64
       },
       {
@@ -391,7 +471,7 @@
         "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
         "rho": "0.8",
         "scenario": "mean_shift",
-        "source_null_logical_cell_id": "779e6a069cdfb4a63957f7719bed80d74613e3b86062f293d141475be9f62308",
+        "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
         "stride": 16
       }
     ],
@@ -514,6 +594,7 @@
       "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
       "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0"
     ],
+    "freeze_context_source": "governance/FREEZE_MANIFEST.json",
     "map_moments": {
       "circle_covariance": [
         [
@@ -559,6 +640,72 @@
       "shift_direction_seed_len": 32,
       "shift_value": 0.7510813924572987
     },
+    "null_scope_join": [
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+        "rho": "0",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+        "stride": 64
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+        "rho": "0",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+        "stride": 16
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+        "rho": "0.8",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+        "stride": 64
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+        "rho": "0.8",
+        "scenario": "shape_change",
+        "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+        "stride": 16
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+        "rho": "0",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+        "stride": 64
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+        "rho": "0",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+        "stride": 16
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+        "rho": "0.8",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+        "stride": 64
+      },
+      {
+        "joins_null_scope": true,
+        "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+        "rho": "0.8",
+        "scenario": "mean_shift",
+        "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+        "stride": 16
+      }
+    ],
     "rng_consumption": {
       "burn_in_discarded_index": -1000,
       "formal_length": 12288,
@@ -585,7 +732,7 @@
       "noise_hash_equal": true
     }
   },
-  "generated_at_utc": "2026-09-11T08:45:00Z",
+  "generated_at_utc": "2026-09-11T14:02:00Z",
   "kind": "h1_construct_review_packet",
   "reviewed_function_source_sha256": {
     "H1Master.raw_prefix": "5448e31415b3530477c01c9aeb17e9ebd59fd3d21df8ed6e26292a1a30c208b5",
