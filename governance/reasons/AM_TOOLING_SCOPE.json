@@ -1,0 +1,27 @@
+{
+  "closed_defect": "F-R1-1（注册链重写丢弃外部追加事件）",
+  "evidence": [
+    "audit/repo_guard.py",
+    "audit/build_freeze.py",
+    "audit/build_governance_registries.py",
+    "governance/FREEZE_MANIFEST.json",
+    "governance/AMENDMENT_PROPOSAL_TOOLING_SCOPE.md"
+  ],
+  "freeze_id_changes": false,
+  "guarded_scope_paths": [
+    "src/",
+    "configs/",
+    "audit/"
+  ],
+  "hashed_source_paths": [
+    "src/",
+    "configs/"
+  ],
+  "kind": "governance_reason",
+  "reason_code": "AM_TOOLING_SCOPE",
+  "requires_refreeze": true,
+  "schema_version": 1,
+  "scope": "source_identity",
+  "statement": "两个不同的问题此前被混为一谈：source_tree_hash 覆盖 src/+configs/+audit/，但 audit/ 中多数文件只**装配证据**（collect_* / build_supplement / run_registry / build_governance_registries / validate_*），不决定任何数值。后果是任何工具改进都会移动「运行/来源锚点」，按已确立的纪律强制重跑编号 smoke 并新建标签（本轮已为此付出v1.3→v1.4）。本修正把两者拆开：(1) `HASHED_SOURCE_PATHS = src/+configs/` 作为 source_tree_hash 的覆盖面，即「决定数值的工件」；(2) `GUARDED_SCOPE_PATHS = src/+configs/+audit/` 仍要求构建与运行前全部已提交，使 compute_git_commit 仍涵盖实际运行的工具。工具的完整内容由 revision bundle + revision/source_manifest.json 锚定（包内另有 SHA256SUMS.txt 与 git fsck 证据），内容锚定并未减弱。同时修复 F-R1-1：治理链写入改为保序保字节的追加器，既有事件不再被重写；同一 change_id 内容不一致时 fail-closed，而不是静默改写。freeze_id 与四个 spec hash 不变；source_tree_hash 的覆盖面与取值改变，故需重建 manifest 并重跑编号 smoke。",
+  "tooling_content_anchor": "revision/OWTDA-CAL-R1.bundle + revision/source_manifest.json"
+}

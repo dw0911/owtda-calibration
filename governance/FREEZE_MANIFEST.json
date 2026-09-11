@@ -98,7 +98,7 @@
   "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
   "real_disposition": {
     "chain_file": "governance/REAL_DISPOSITION.jsonl",
-    "decision": "REANCHOR",
+    "decision": "REUSE",
     "event_count": 2,
     "freeze_id_anchored": true,
     "latest_stage": "REAL_DATA_FROZEN",
@@ -110,8 +110,8 @@
   "run_admission": {
     "NULL": {
       "replicate_count": 2500,
-      "run_component_set_file": "RUN_COMPONENT_SET_bbeb8c7d07a7d4e9a42e51c328a4d017c6f057c494494554ed1119d80de5d1c4.json",
-      "run_component_set_hash": "bbeb8c7d07a7d4e9a42e51c328a4d017c6f057c494494554ed1119d80de5d1c4",
+      "run_component_set_file": "RUN_COMPONENT_SET_680a42419739c2afcec2ddbb62939407241b8820fe5b6867980116f8aa318eb2.json",
+      "run_component_set_hash": "680a42419739c2afcec2ddbb62939407241b8820fe5b6867980116f8aa318eb2",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_6bd52349d6067bc018a51993adc8b861c34d17f398c6964515fc462f3b60ce15.jsonl",
       "run_input_bindings_hash": "6bd52349d6067bc018a51993adc8b861c34d17f398c6964515fc462f3b60ce15",
       "run_input_bindings_row_count": 9,
@@ -121,8 +121,8 @@
     },
     "SMOKE_ALT": {
       "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_a5a52114bc7ff7a83a5e66eb37a9e4da14d53d92b43c61fb53fd9d86a2aac581.json",
-      "run_component_set_hash": "a5a52114bc7ff7a83a5e66eb37a9e4da14d53d92b43c61fb53fd9d86a2aac581",
+      "run_component_set_file": "RUN_COMPONENT_SET_416ba1e976dd701e62ab517067a2a0915622775c09166ebe06d910a227dc91a5.json",
+      "run_component_set_hash": "416ba1e976dd701e62ab517067a2a0915622775c09166ebe06d910a227dc91a5",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_95fe9bc66cebe369dabcb758a821cc83632119e63aaa2776901cbf238de525e3.jsonl",
       "run_input_bindings_hash": "95fe9bc66cebe369dabcb758a821cc83632119e63aaa2776901cbf238de525e3",
       "run_input_bindings_row_count": 10,
@@ -132,8 +132,8 @@
     },
     "SMOKE_NULL": {
       "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_ee4aa6d4be442b2a5366013cef6801b1cb253887cda289c1eab4ee6c5bfec981.json",
-      "run_component_set_hash": "ee4aa6d4be442b2a5366013cef6801b1cb253887cda289c1eab4ee6c5bfec981",
+      "run_component_set_file": "RUN_COMPONENT_SET_56d85974c7682c0b8962de0680172c1e75536172dc8d47441435cb48f51206e4.json",
+      "run_component_set_hash": "56d85974c7682c0b8962de0680172c1e75536172dc8d47441435cb48f51206e4",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_95fe9bc66cebe369dabcb758a821cc83632119e63aaa2776901cbf238de525e3.jsonl",
       "run_input_bindings_hash": "95fe9bc66cebe369dabcb758a821cc83632119e63aaa2776901cbf238de525e3",
       "run_input_bindings_row_count": 10,
@@ -162,118 +162,8 @@
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "a9f786580eea0ce0ac2060d2f6fd96151fd3a2155f57c3a35e0238df67d91f66",
   "smoke_config_hash": "97b778097a026e61109c69565618135e79a9874298473444851ef3ae9eb47e89",
-  "source_tree_hash": "48cb99d6765bf82e131d98a57e31dd5efeaffc2687403ad7218a46ec82638687",
+  "source_tree_hash": "265c9151b551c538c0cfa99238482ca1dc1f41783064f595a483bb1a7a7ec72d",
   "source_tree_manifest": [
-    {
-      "file_sha256": "997808336e88cc94ef4d3ad6ed52717a5ad31b4ec21c5b3a702a599d27a8b147",
-      "path": "audit/append_invalidation.py",
-      "size": 3329
-    },
-    {
-      "file_sha256": "11fb4136575eb059380e791fca3dd8238b3328b18d8c1cb51e32d2c5207faea1",
-      "path": "audit/build_environment_evidence.py",
-      "size": 7693
-    },
-    {
-      "file_sha256": "efa1439f1685b3386b4268131634010541e14d832e6873cccce9c39450ca8c7e",
-      "path": "audit/build_freeze.py",
-      "size": 31819
-    },
-    {
-      "file_sha256": "152bf6f0490e04722ccf8b628733cec2cabeefb70629ed3b02d709ea345d64df",
-      "path": "audit/build_governance_registries.py",
-      "size": 18512
-    },
-    {
-      "file_sha256": "a0f97f0648e29bbca23842d8b11d001bdc74fd77795e5cc9f1052c473017f237",
-      "path": "audit/build_h1_review_packet.py",
-      "size": 23707
-    },
-    {
-      "file_sha256": "49b40f60d4d17bac727d87f729b6ec6dbb0d7faa919975dcaf68929e6b004eef",
-      "path": "audit/build_run_admission.py",
-      "size": 11653
-    },
-    {
-      "file_sha256": "12f2045123843b693611761cb6739c09900a2bf237d6f8b84c4da04b3ef7a88e",
-      "path": "audit/build_schemas.py",
-      "size": 17502
-    },
-    {
-      "file_sha256": "2be5efe1fcf024856bad3f24d6d77968bdd6942d7d7e5f93cf9e5a3e63c9373d",
-      "path": "audit/build_supplement.py",
-      "size": 24746
-    },
-    {
-      "file_sha256": "8de7ea73c87d4532e805eb7430b68f29a21cb88f762866ee0e97a64dafaed30e",
-      "path": "audit/collect_git_identity.py",
-      "size": 5980
-    },
-    {
-      "file_sha256": "61fcc628eafe1bb6b129bcf745e9aa891615d1e22b22f9b9a1c5cfb68dc3eb76",
-      "path": "audit/collect_verification.py",
-      "size": 5176
-    },
-    {
-      "file_sha256": "97bacfbed7994efb071093427dc767588a5783e235af1cb7f49a5547705a2602",
-      "path": "audit/compute_budget.py",
-      "size": 9018
-    },
-    {
-      "file_sha256": "7975914302147ccacc4844d6c1f6ec1f8d457a77cae4d773c83861a10aa1c4f2",
-      "path": "audit/repo_guard.py",
-      "size": 3986
-    },
-    {
-      "file_sha256": "2c10779c1fdde35ae0a40e4aae65e4fcbf89e41ef4f24aead4e39ff1749ba652",
-      "path": "audit/run_registry.py",
-      "size": 7641
-    },
-    {
-      "file_sha256": "bb355a8ac23c9a0620d74f0c9cde7535a4d571b0eeb2913cf58bca821c4f8003",
-      "path": "audit/run_smoke.py",
-      "size": 15199
-    },
-    {
-      "file_sha256": "1f229e718366e689761480250d39b9d78ec397af22270b2f6c184cd68eee4d1d",
-      "path": "audit/run_smoke_s03.py",
-      "size": 10639
-    },
-    {
-      "file_sha256": "e59c5993c81d1ffc32a7418612eb093eb5655ae705e95963a1072f413bd30b34",
-      "path": "audit/run_worker_sweep.py",
-      "size": 7318
-    },
-    {
-      "file_sha256": "803acca825b04ec2ddf364c7dbe7d6d42c5099ba416b2129e5fd41d649fb87c6",
-      "path": "audit/run_wstar_confirmation.py",
-      "size": 11780
-    },
-    {
-      "file_sha256": "cc5551ffda0d0e071a08955c6fd7fe0c5be162acd3447ee5ad023a16c1b8defe",
-      "path": "audit/validate_admission.py",
-      "size": 11802
-    },
-    {
-      "file_sha256": "d6f8022bea33ea83de683fb2d30c07824349a49ee35dddd63cbf3e5c1b908e04",
-      "path": "audit/validate_freeze.py",
-      "size": 10926
-    },
-    {
-      "file_sha256": "a708d33d4acc830bdf2b88d375375cd2c93266ec941239892048f7542041069b",
-      "path": "audit/validate_identity.py",
-      "size": 6118
-    },
-    {
-      "file_sha256": "d1cc951d8f10b88b684da608b673c9aa070af020387f575908f3dbdfda97f497",
-      "path": "audit/validate_runs.py",
-      "size": 7175
-    },
-    {
-      "file_sha256": "9a14c301741e8b8244768bd0c0213c8358432a0f8f3c3580e8d2b295c99a4fca",
-      "path": "audit/validate_schemas.py",
-      "size": 9969
-    },
     {
       "file_sha256": "aa52392a1094127ff1fef365fab748c95ddde46e83c6864a20c0c476ed363a87",
       "path": "configs/real/DATA_MANIFEST.json",
@@ -495,5 +385,10 @@
       "size": 7952
     }
   ],
+  "source_tree_scope": [
+    "src/",
+    "configs/"
+  ],
+  "source_tree_scope_note": "AM_TOOLING_SCOPE: source_tree_hash anchors only the content that determines results; evidence-assembly tooling under audit/ is anchored by revision/OWTDA-CAL-R1.bundle + revision/source_manifest.json. The build guard still requires audit/ to be committed before a build or run (repo_guard.GUARDED_SCOPE_PATHS).",
   "status": "FROZEN"
 }
