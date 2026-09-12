@@ -234,7 +234,90 @@ def environment_subset(names: Iterable[str]) -> dict[str, str]:
     return {name: os.environ[name] for name in sorted(names) if name in os.environ}
 
 
+def build_manifest_bundle(
+    *,
+    root: str | Path,
+    out_dir: str | Path,
+    entries: Sequence[str | Path],
+    command: Sequence[str],
+    policy_sha256: str,
+    science_files: Iterable[str | Path],
+    config_files: Iterable[str | Path] = (),
+    test_files: Iterable[str | Path] = (),
+    roots: Sequence[str | Path] = (),
+    junit_xml: str | bytes | None = None,
+    collected_nodeids: Sequence[dict[str, str]] | None = None,
+    approved_skips: Iterable[str] = (),
+    exit_code: int | None = None,
+    stdout: bytes = b"",
+    stderr: bytes = b"",
+    plan_summary_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Produce the three manifests for one run and bind them together (C1).
+
+    The bundle is what makes "科学、执行、环境、策略、验证清单与实际文件、命令、
+    预期任务一致" checkable: each manifest carries its own file hashes, the
+    execution manifest carries the import closure of the entries, and the bundle
+    records the plan it was produced for.
+    """
+    base = Path(root)
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    science = scientific_manifest(files=science_files, root=base, config_files=config_files)
+    execution = execution_manifest(
+        entries=entries, command=command, environment=environment_subset(
+            ("PYTHONHASHSEED", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "PYTHONUTF8")),
+        policy_sha256=policy_sha256, roots=roots or [base], root=base)
+    validation = validation_manifest(
+        test_files=test_files, config_files=config_files,
+        collected_nodeids=collected_nodeids, junit_xml=junit_xml,
+        approved_skips=approved_skips, exit_code=exit_code, stdout=stdout,
+        stderr=stderr, root=base)
+    plan_binding = None
+    if plan_summary_path is not None and Path(plan_summary_path).is_file():
+        import json as _json
+
+        plan = _json.loads(Path(plan_summary_path).read_text(encoding="utf-8"))
+        plan_binding = {
+            "plan_summary": str(Path(plan_summary_path).name),
+            "plan_summary_sha256": sha256_file(plan_summary_path),
+            "formal_scale": plan.get("formal_scale"),
+            "totals": plan.get("totals"),
+            "evaluation_index_hashes": {
+                phase: report["index_hashes"]["evaluation"]
+                for phase, report in (plan.get("phases") or {}).items()
+            },
+        }
+    bundle = {
+        "schema_version": 1,
+        "kind": "MANIFEST_BUNDLE",
+        "scientific_manifest": science,
+        "execution_manifest": execution,
+        "validation_manifest": validation,
+        "plan_binding": plan_binding,
+        "bundle_hash": _manifest_hash(
+            "MANIFEST_BUNDLE", science["manifest_hash"],
+            execution["manifest_hash"], validation["manifest_hash"],
+            plan_binding),
+    }
+    (out / "SCIENTIFIC_MANIFEST.json").write_text(
+        json.dumps(science, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8")
+    (out / "EXECUTION_MANIFEST.json").write_text(
+        json.dumps(execution, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8")
+    (out / "VALIDATION_MANIFEST.json").write_text(
+        json.dumps(validation, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8")
+    (out / "MANIFEST_BUNDLE.json").write_text(
+        json.dumps({k: v for k, v in bundle.items()
+                    if not k.endswith("_manifest")}, ensure_ascii=False, indent=2,
+                   sort_keys=True) + "\n", encoding="utf-8")
+    return bundle
+
+
 __all__ = [
+    "build_manifest_bundle",
     "environment_subset",
     "execution_manifest",
     "hash_files",

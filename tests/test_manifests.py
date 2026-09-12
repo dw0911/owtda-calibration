@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import json
+
 from owtda_cal.manifests import (
+    build_manifest_bundle,
     environment_subset,
     execution_manifest,
     hash_files,
@@ -160,6 +163,45 @@ class TestValidationManifest:
         )
         codes = {issue["code"] for issue in manifest["junit"]["issues"]}
         assert "JUNIT_MISSING_TESTCASE" in codes
+
+
+class TestBundle:
+    def test_the_bundle_writes_three_manifests_and_binds_the_plan(self, tmp_path):
+
+        src, script = _fake_repo(tmp_path)
+        plan = tmp_path / "PLAN_SUMMARY.json"
+        plan.write_text(json.dumps({"formal_scale": True, "totals": {"evaluation_rows": 8},
+                                    "phases": {"NULL": {"index_hashes": {
+                                        "evaluation": "a" * 64}}}}), encoding="utf-8")
+        bundle = build_manifest_bundle(
+            root=tmp_path, out_dir=tmp_path / "manifests",
+            entries=[script / "entry.py"], command=["python", "x"],
+            policy_sha256="f" * 64, science_files=[src / "core.py"],
+            test_files=[tmp_path / "tests" / "test_x.py"],
+            roots=[tmp_path / "src"], plan_summary_path=plan,
+        )
+        out = tmp_path / "manifests"
+        for name in ("SCIENTIFIC_MANIFEST.json", "EXECUTION_MANIFEST.json",
+                     "VALIDATION_MANIFEST.json", "MANIFEST_BUNDLE.json"):
+            assert (out / name).is_file(), name
+        assert bundle["plan_binding"]["formal_scale"] is True
+        assert bundle["plan_binding"]["evaluation_index_hashes"] == {"NULL": "a" * 64}
+        assert len(bundle["bundle_hash"]) == 64
+        assert bundle["bundle_hash"] == json.loads(
+            (out / "MANIFEST_BUNDLE.json").read_text(encoding="utf-8"))["bundle_hash"]
+
+    def test_the_bundle_hash_changes_with_the_plan_binding(self, tmp_path):
+
+        src, script = _fake_repo(tmp_path)
+        kwargs = {"root": tmp_path, "entries": [script / "entry.py"], "command": ["x"],
+                  "policy_sha256": "f" * 64, "science_files": [src / "core.py"],
+                  "roots": [tmp_path / "src"]}
+        first = build_manifest_bundle(out_dir=tmp_path / "m1", **kwargs)
+        plan = tmp_path / "PLAN_SUMMARY.json"
+        plan.write_text(json.dumps({"formal_scale": False, "phases": {}}), encoding="utf-8")
+        second = build_manifest_bundle(out_dir=tmp_path / "m2",
+                                       plan_summary_path=plan, **kwargs)
+        assert first["bundle_hash"] != second["bundle_hash"]
 
 
 class TestHelpers:
