@@ -347,6 +347,48 @@ def main() -> int:
                 "inline_verdict_kept_as_recorded": True,
             },
         ),
+        "AM_RESOURCE_CAPACITY_V2": _reason(
+            "AM_RESOURCE_CAPACITY_V2",
+            "前瞻工程资源契约修订（裁定 2026-09-13）。旧判据『宿主页文件占用最大抬升 <= 0』"
+            "（G_T = max U(t) - U(0)，U 为整机页文件当前占用）退出**未来准入用途**：该量单调受观察"
+            "时长影响，只描述系统占用的最大抬升，不记录来源，也不记录累计分页读写；对本项目记录的"
+            "准确表述是——它受系统背景活动影响，无法由当前记录识别本任务对页文件占用变化的贡献，"
+            "既不足以证明任务造成了内存压力，也不足以证明任务完全没有贡献。"
+            "新契约以**容量余量与完整执行**为准入：峰值 RSS <= 24 GiB、宿主提交分数 <= 0.80、"
+            "宿主可用物理内存 >= max(2 GiB, 10% 物理总量)、资源分配失败 = 0、未解释错误 = 0、"
+            "磁盘规则不变，并要求容量采样记录**完整**（缺失或缺口 → INCOMPLETE，禁止填零通过）。"
+            "页文件占用、进程树页故障、系统分页速率降为**诊断信息**，不参与判定。"
+            "明确**不采纳**『进程树页故障 <= X』（混合软/硬缺页）与『系统 Page Reads/sec』"
+            "（系统级且含映射文件来源）作为硬门槛。"
+            "保留：旧策略、旧记录与旧判决全部保留不回写；不得反向补出旧运行缺失的 V2 时间序列，"
+            "也不得给旧运行追加无证据的 V2 PASS。恢复须沿用同一任务 ID、输入与随机种子。",
+            [
+                "governance/RESOURCE_POLICY_V2.json",
+                "audit/resource_sampler.py",
+                "tests/test_resource_sampler.py",
+                "tests/test_admission_verdict.py",
+            ],
+            {
+                "scope": "resource_instrument",
+                "requires_refreeze": False,
+                "freeze_id_changes": False,
+                "retired_gate": "swap_growth_bytes_max = 0（未来准入用途）",
+                "hard_conditions": {
+                    "workers": 8,
+                    "peak_total_rss_gib_max": 24,
+                    "host_commit_fraction_max": 0.80,
+                    "host_available_phys_min": "max(2 GiB, 0.10*PhysicalTotal)",
+                    "resource_allocation_failures_max": 0,
+                    "unexplained_errors_max": 0,
+                    "disk_rule": "estimated_peak_disk <= 0.8*F_free",
+                },
+                "diagnostic_only": [
+                    "host_pagefile_used_growth", "process_tree_page_faults", "system_paging_rates",
+                ],
+                "coefficients_are_project_settings": True,
+                "history_retained": True,
+            },
+        ),
         "INV_S01_SMOKE": _reason(
             "INV_S01_SMOKE",
             "F-B15c-1：B15b 的 smoke runner 借用 formal 身份函数（cells.* / scope.logical_*）与 "
@@ -525,6 +567,23 @@ def main() -> int:
             "retired_check": "own_pagefile_growth_within_limit",
             "rerun_performed": False,
             "status": "ADOPTED_AFTER_THE_S04_RERUN_CORRECTING_A_MISLABEL",
+        }
+    )
+    amendment_events.append(
+        {
+            "schema_version": 1,
+            "event_type": "AMENDMENT",
+            "amendment_id": "AM-2026-09-13-10",
+            "at_utc": at,
+            "change_id": "AM_RESOURCE_CAPACITY_V2",
+            "scope": "resource_instrument",
+            "reason_object_hash": reason_hash["AM_RESOURCE_CAPACITY_V2"],
+            "requires_refreeze": False,
+            "freeze_id_changes": False,
+            "retires_for_future_admission": "swap_growth_bytes_max = 0",
+            "policy_file": "governance/RESOURCE_POLICY_V2.json",
+            "history_retained": True,
+            "status": "ADOPTED_PROSPECTIVELY_FOR_FUTURE_RUNS",
         }
     )
     amendment_tips = _write_chain(AMENDMENTS, amendment_events)

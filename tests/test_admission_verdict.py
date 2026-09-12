@@ -132,7 +132,7 @@ class TestLayeredVerdict:
                 evidence_bytes_written=10**15, disk_free_before_bytes=10**15
             ),
         ],
-        ids=["swap_growth", "peak_rss_over_24_gib", "disk_over_0.8_free"],
+        ids=["allocation_failures", "peak_rss_over_24_gib", "disk_over_0.8_free"],
     )
     def test_resource_breach_blocks_admission(self, mutate):
         reports = _reports()
