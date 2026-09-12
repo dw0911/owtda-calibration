@@ -13,6 +13,7 @@ from owtda_cal.chains import (
     phase_state_event,
     read_tip,
     validity_event,
+    verify_chain,
 )
 
 _H = lambda ch: ch * 64
@@ -60,10 +61,47 @@ class TestAppendCas:
         with pytest.raises(ChainError):
             append_cas(path, {"event_hash": "x"}, expected_tip=None, hash_field="event_hash")
 
-    def test_lock_released(self, tmp_path):
+    def test_lock_file_persists_and_is_reacquirable(self, tmp_path):
+        """Re-audit 2026-09-13: the holder must not delete the lock file.
+
+        The old ``<path>.lock`` sentinel was removed in a ``finally`` block, so a
+        process killed while holding it blocked every later writer forever, and a
+        cleaner could delete the file while another caller was waiting on it.
+        The lock file now persists for the lifetime of the chain and ownership
+        belongs to the OS, which releases it when the holding handle closes.
+        """
+        path = str(tmp_path / "chain.jsonl")
+        first = append_cas(path, {"n": 1}, expected_tip=None, hash_field="event_hash")
+        assert (tmp_path / "chain.jsonl.kernellock").exists()
+        second = append_cas(path, {"n": 2}, expected_tip=first, hash_field="event_hash")
+        assert read_tip(path, hash_field="event_hash") == second
+
+    def test_tail_tamper_blocks_further_appends(self, tmp_path):
+        """An event whose content is edited while its hash is kept must block."""
         path = str(tmp_path / "chain.jsonl")
         append_cas(path, {"n": 1}, expected_tip=None, hash_field="event_hash")
-        assert not (tmp_path / "chain.jsonl.lock").exists()
+        lines = Path(path).read_text(encoding="utf-8").splitlines()
+        tampered = json.loads(lines[0])
+        tampered["n"] = 99  # content edited, stored hash kept
+        Path(path).write_text(json.dumps(tampered) + "\n", encoding="utf-8")
+        with pytest.raises(ChainError, match="CHAIN_TAIL_TAMPERED"):
+            append_cas(path, {"n": 2}, expected_tip=tampered["event_hash"],
+                       hash_field="event_hash")
+
+    def test_full_chain_verification_detects_a_rewritten_middle(self, tmp_path):
+        """O(1) tail checks cannot see the middle; the full verifier must."""
+        path = str(tmp_path / "chain.jsonl")
+        h1 = append_cas(path, {"n": 1}, expected_tip=None, hash_field="event_hash")
+        h2 = append_cas(path, {"n": 2}, expected_tip=h1, hash_field="event_hash")
+        lines = Path(path).read_text(encoding="utf-8").splitlines()
+        middle = json.loads(lines[0])
+        middle["n"] = 42  # hash kept -> tail check alone would not notice
+        Path(path).write_text(
+            json.dumps(middle) + "\n" + lines[1] + "\n", encoding="utf-8"
+        )
+        issues = verify_chain(path, hash_field="event_hash")
+        assert issues and issues[0].startswith("line 1")
+        assert h2 == read_tip(path, hash_field="event_hash")
 
 
 class TestEventBuilders:

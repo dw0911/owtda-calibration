@@ -252,9 +252,14 @@ def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
     orphan_id = _id("shard", unit="orphan")
     orphan_dir = Path(run_root, RUN_INSTANCE_ID, f"{orphan_id}.final")
     orphan_dir.mkdir(parents=True, exist_ok=True)
+    # Task pack §2.2/§4.2: the manifest must *declare* the real payload hashes --
+    # repair_orphan now verifies that declaration instead of trusting the caller.
+    orphan_eval = b'{"row":1}\n'
+    orphan_feat = b'{"f":1}\n'
     manifest = shardio.build_shard_manifest(
         run_instance_id=RUN_INSTANCE_ID, shard_id=orphan_id, shard_plan_hash=plan_hash,
-        evaluation={}, feature={},
+        evaluation={"scientific_hash": hashlib.sha256(orphan_eval).hexdigest()},
+        feature={"scientific_hash": hashlib.sha256(orphan_feat).hexdigest()},
     )
     manifest_bytes = canonical_json_bytes(manifest) + b"\n"
     (orphan_dir / "shard_manifest.json").write_bytes(manifest_bytes)
@@ -275,8 +280,9 @@ def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
         run_root=run_root, run_instance_id=RUN_INSTANCE_ID, shard_id=orphan_id,
         registry_path=registry, recompute_to=str(out_dir / "orphan_recompute"),
         expected_manifest_bytes=manifest_bytes,
-        expected_evaluation_bytes=b'{"row":1}\n',
-        expected_feature_bytes=b'{"f":1}\n',
+        expected_evaluation_bytes=orphan_eval,
+        expected_feature_bytes=orphan_feat,
+        expected_shard_plan_hash=plan_hash,
     )
     orphan_committed = True
     return {

@@ -316,6 +316,7 @@ def scenario_5(work: Path) -> None:
         expected_manifest_bytes=manifest_bytes,
         expected_evaluation_bytes=b"".join(payload(21)),
         expected_feature_bytes=b'{"f":1}\n',
+        expected_shard_plan_hash=H("bench_plan"),
     )
     recovered = Path(b, RUN, f"{shard_b}.final", "evaluation.scientific.jsonl").read_bytes()
     ok_b = refused and bool(repaired) and recovered == b"".join(payload(21))
@@ -421,6 +422,7 @@ def scenario_5_equality(work: Path) -> None:
         expected_manifest_bytes=manifest_bytes,
         expected_evaluation_bytes=baseline,
         expected_feature_bytes=b'{"f":1}\n',
+        expected_shard_plan_hash=H("bench_plan"),
     )
     recovered_orphan = Path(orphan, RUN, f"{shard}.final",
                             "evaluation.scientific.jsonl").read_bytes()

@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "kind": "resource_policy_executable",
+  "resource_policy_id": "AM_RESOURCE_CAPACITY_V2",
+  "source_policy": {
+    "file": "governance/RESOURCE_POLICY_V2.json",
+    "sha256": "b0096b006347adbf93ef189daf6153e8db30719e396322b7febda27385e91771",
+    "binding": "本文件是 V2 文档的精确实施表示；两处哈希在执行身份中共同绑定。任何系数只能在此处修改，禁止在代码里另设一套宽松系数。"
+  },
+  "note": "所有比例一律写成整数有理数 {num, den}；比较时整数交叉相乘，禁止浮点除法。所有字节量与纳秒量为整数。",
+  "limits": {
+    "workers": 8,
+    "peak_total_rss_bytes_max": 25769803776,
+    "peak_total_rss_gib_max": 24,
+    "host_commit_fraction_max": { "num": 4, "den": 5 },
+    "host_available_phys_floor": {
+      "absolute_bytes": 2147483648,
+      "fraction_of_physical_total": { "num": 1, "den": 10 },
+      "rule": "min_k A_k >= max(absolute_bytes, fraction_of_physical_total * R_phys)"
+    },
+    "disk_fraction_max": { "num": 4, "den": 5 },
+    "resource_allocation_failures_max": 0,
+    "unexplained_errors_max": 0
+  },
+  "capacity_rule": {
+    "statement": "R_max = max_k C_k / L_k <= host_commit_fraction_max，其中 C_k 与 L_k 必须来自同一次采样行（同一时点）",
+    "comparison": "C_k * den <= num * L_k（整数交叉相乘）",
+    "forbidden": [
+      "max_k C_k / L_last（提交上限被覆盖后与提交量峰值不同源）",
+      "用最后一次 CommitLimit 代表整个阶段",
+      "用浮点数做比例比较"
+    ]
+  },
+  "preflight": {
+    "inequality": "C_baseline + delta_C_hat <= host_commit_fraction_max * L",
+    "delta_margin_multiplier": { "num": 5, "den": 4 },
+    "insufficient_alone": "baseline <= 0.70 不能替代该不等式",
+    "on_refusal": "PREFLIGHT_REFUSED（只登记，不启动 smoke/正式试次）"
+  },
+  "sampling": {
+    "source": "Windows GetPerformanceInfo（psapi.dll）",
+    "interval_ns": 1000000000,
+    "max_interval_ns": 3000000000,
+    "monotonic_clock": "time.monotonic_ns",
+    "coverage": [
+      "worker_startup",
+      "compute",
+      "scientific_payload_write",
+      "shard_commit",
+      "merge",
+      "seal"
+    ],
+    "raw_record_fields": [
+      "schema_version",
+      "run_id",
+      "policy_sha256",
+      "seq",
+      "monotonic_ns",
+      "ok",
+      "error",
+      "stage",
+      "commit_total_bytes",
+      "commit_limit_bytes",
+      "physical_total_bytes",
+      "physical_available_bytes",
+      "rss_tree_bytes"
+    ],
+    "failed_read_policy": "读取失败也写一行（ok=false, error=<code>）；禁止以 0 代替未知值"
+  },
+  "latching": {
+    "incomplete_latches": [
+      "sampler_exception",
+      "sampler_thread_exit",
+      "missing_sample",
+      "zero_samples",
+      "gap_exceeds_max_interval_ns",
+      "negative_counter",
+      "boundary_sample_missing"
+    ],
+    "fail_latches": [
+      "commit_ratio_breach",
+      "available_physical_below_floor",
+      "rss_above_max",
+      "disk_estimate_above_free_fraction"
+    ],
+    "rule": "锁存后不得清空；同一次执行收到停止请求后不自动进入下一个 phase"
+  },
+  "enums": {
+    "verdict": ["PASS", "FAIL", "INCOMPLETE", "PREFLIGHT_REFUSED"],
+    "execution_terminal_state": ["COMPLETE", "INCOMPLETE", "FAILED", "REFUSED"],
+    "stop_reason": [
+      "NONE",
+      "RESOURCE_BREACH",
+      "MONITOR_INCOMPLETE",
+      "SUPERVISOR_EXPIRY",
+      "OPERATOR_REQUEST"
+    ],
+    "error_class": [
+      "RESOURCE_ALLOCATION_ERROR",
+      "WORKER_EXIT",
+      "IO_ERROR",
+      "SAMPLER_ERROR",
+      "TASK_EXCEPTION",
+      "CANCELLED_BEFORE_START",
+      "RESOURCE_STOP"
+    ],
+    "stage": [
+      "preflight",
+      "startup",
+      "compute",
+      "persist",
+      "commit",
+      "merge",
+      "seal",
+      "analysis",
+      "teardown"
+    ],
+    "diagnostic_only": [
+      "host_pagefile_used_growth",
+      "process_tree_page_faults",
+      "system_paging_rates"
+    ]
+  },
+  "prohibited": [
+    "把 0.80 调整到接近已观测读数（如 0.977）",
+    "移除物理内存余量条件",
+    "在正式运行内部无记录地变更并行度",
+    "把未知/INCOMPLETE 事后补成 0"
+  ]
+}
