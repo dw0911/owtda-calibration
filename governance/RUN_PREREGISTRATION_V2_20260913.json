@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "kind": "run_preregistration",
+  "preregistration_id": "PREREG-SMOKE-V2-20260913",
+  "registered_at_utc": "2026-09-13",
+  "resource_policy": "AM_RESOURCE_CAPACITY_V2（governance/RESOURCE_POLICY_V2.json）",
+  "supersedes_for_this_run": "PREREG-SMOKE-V1（未单独成文；其判据 swap_growth_bytes_max = 0 已退出未来准入用途）",
+  "purpose": "在最终待准入版本上执行一次 V2 资源与完整执行验收（工程验收，不产生任何 L2/L3 结论）",
+  "run_plan": {
+    "phases": ["SMOKE_NULL", "SMOKE_ALT"],
+    "smoke_generation": "由 scope.SMOKE_GENERATION_ID 指定（运行时记录于 seal/provenance）",
+    "workers": 8,
+    "replicates_per_cell": 32,
+    "ordering": "两 phase 在同一轮执行；不并行运行多个 phase",
+    "concurrency_policy": "固定已验收的 8 workers；试次增加不伴随并发增加"
+  },
+  "acceptance_conditions": {
+    "peak_total_rss_gib_max": 24,
+    "host_commit_fraction_max": "0.80（max_k C_k / L_k）",
+    "host_available_phys_min": "max(2 GiB, 0.10 * PhysicalTotal)",
+    "resource_allocation_failures_max": 0,
+    "unexplained_errors_max": 0,
+    "disk_rule": "estimated_peak_disk <= 0.8 * F_free（登记公式 + 具名组件保守包络）",
+    "capacity_record_complete": true,
+    "diagnostic_only": ["host_pagefile_used_growth", "process_tree_page_faults", "system_paging_rates"]
+  },
+  "sampling_rules": {
+    "source": "Windows GetPerformanceInfo（psapi.dll）",
+    "interval_seconds": 1,
+    "coverage": "worker 启动、计算、输出写入、分片提交、合并与封存全过程",
+    "reported_as": "采样峰值/谷值，附采样数与最大采样间隔",
+    "incomplete_rule": "关键字段读取失败或采样链缺口 → INCOMPLETE；禁止填零后继续 PASS",
+    "allowed_gap": "> 3 倍采样间隔即判 INCOMPLETE（与 RESOURCE_POLICY_V2.json 一致）"
+  },
+  "recorded_evidence": [
+    "每 phase 的 RC（含 resources 与 expected/实际计数）",
+    "每 phase 的 SMOKE_SEAL（含 resources 与 identity_closure 等判定字段）",
+    "provenance_manifest（含 verdict、open_runs、双 phase 资源）",
+    "RUN_REGISTRY / STATE_REGISTRY（哈希链与终态）",
+    "账本 evaluation_rows.jsonl 及其内容哈希"
+  ],
+  "failure_handling": {
+    "on_breach": "停止派发新任务，按已登记恢复流程处理在途工作并保留记录",
+    "forbidden": [
+      "在同一次执行中静默减少 worker",
+      "清空失败状态后把该次运行记为通过",
+      "用新的 worker 数在未登记的情况下补跑"
+    ],
+    "attempt_kept": "无论结果如何，本次运行作为独立 attempt 保留，不覆盖旧尝试"
+  },
+  "resumption_contract": "资源中断后恢复须沿用同一科学任务 ID、输入与随机种子；不得丢弃资源失败试次、不得换种子补一个、不得仅分析成功完成的子集",
+  "no_rerun_rule": "本预登记只授权**一次**计划内运行。若失败：按实际原因修复、调整已登记运行配置或更换宿主，并**另行登记**；禁止重复运行直到偶然出现满意读数",
+  "chain_discipline": [
+    "工具改动 → 提交 → 重建冻结/运行身份 → 重采集测试证据（绑定新指纹）→ 重取身份证据（打包前最后一步）→ 运行",
+    "运行与打包必须在同一冻结 revision 上；运行后不得再改工具（否则交付工具 ≠ 产出证据工具）"
+  ],
+  "impact_analysis_vs_last_run": "相对上一次运行（attempt 6），本次仅变更资源判据与采样实现（AM_RESOURCE_CAPACITY_V2）；科学参数、DGP、窗口/ρ/B/BPI 参数、方法实现与身份生成规则均未改动",
+  "not_claimed": [
+    "本预登记不构成对任何既有运行的改判",
+    "不签发 G4；正式 H0/H1 仍需另行准入"
+  ]
+}
