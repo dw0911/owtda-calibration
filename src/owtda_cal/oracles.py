@@ -40,10 +40,16 @@ def _issue(code: str, where: str, detail: str) -> dict:
     return {"code": code, "where": where, "detail": detail}
 
 
+#: The frozen ledgers name these columns differently from the prose; the oracle
+#: accepts the registered spellings and nothing else.
+K_ALIASES = ("K", "exceed", "exceed_count")
+P_ALIASES = ("p", "p_value")
+
+
 def check_p_arithmetic(row: dict, *, where: str = "row", B: int = B_DEFAULT) -> list[dict]:
     """Recompute ``p`` and ``reject`` forward from ``K``; never the reverse."""
     issues: list[dict] = []
-    k = row.get("K", row.get("exceed"))
+    k = next((row[name] for name in K_ALIASES if name in row), None)
     if isinstance(k, bool) or not isinstance(k, int):
         issues.append(_issue("K_NOT_INT", where, f"K/exceed must be a strict int, got {k!r}"))
         return issues
@@ -51,7 +57,7 @@ def check_p_arithmetic(row: dict, *, where: str = "row", B: int = B_DEFAULT) -> 
         issues.append(_issue("K_OUT_OF_RANGE", where, f"K={k} outside [0, {B}]"))
         return issues
 
-    p = row.get("p")
+    p = next((row[name] for name in P_ALIASES if name in row), None)
     if isinstance(p, bool) or not isinstance(p, (int, float)):
         issues.append(_issue("P_NOT_NUMERIC", where, f"p must be numeric, got {p!r}"))
         return issues

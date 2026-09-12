@@ -302,7 +302,11 @@ def commit_shard(
                 commit_hash = append_cas(
                     registry_path, payload, expected_tip=tip, hash_field=_HASH_FIELD
                 )
-            except ChainError:
+            except ChainError as exc:
+                if "CHAIN_TAIL_TAMPERED" in str(exc):
+                    # a tampered history is not contention: retrying cannot fix it,
+                    # and swallowing it into "unstable snapshot" would hide it
+                    raise ShardError(f"CHAIN_TAIL_TAMPERED: {exc}") from exc
                 continue
             return {**payload, _HASH_FIELD: commit_hash}
     raise ShardError("commit could not obtain a stable registry snapshot")
