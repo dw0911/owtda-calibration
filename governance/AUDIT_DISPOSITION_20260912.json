@@ -162,9 +162,28 @@
       "next": "需官方归档身份（来源/许可证/archive SHA256）+ 9 个 subject 逐文件哈希 + enumeration 原始输出"
     },
     {
-      "item": "交付包尚未重建、导出与逐项本地校核",
-      "impact": "**本轮未完成**；不得据此声称材料包可提交",
-      "next": "重建 dossier（含 fixture 证据）→ 本地独立验证 56/56 → 重跑攻击电池 → 导出到桌面 → 逐项校验 SHA256SUMS"
+      "item": "交付包重建、导出与逐项本地校核",
+      "impact": "已完成（2026-09-12）",
+      "result": {
+        "zip": "OWTDA-CAL-R1-AUDIT-DOSSIER-20260911.zip",
+        "zip_bytes": 11440067,
+        "zip_sha256": "57129739d2ce915b958610314fb4c40c64a9531dc7f5a3081182c188f6750b98",
+        "self_verification": "58/58 PASS, failed []",
+        "attack_battery": "8/8 detected, 8/8 attributable, baseline_all_pass true",
+        "local_export_check": "521 SHA256SUMS entries, 0 mismatched; zip sha == sidecar; 523 members == 523 extracted files",
+        "export_dir": "C:/Users/94277/Desktop/OWTDA-CAL-R1-AUDIT-DOSSIER-20260912"
+      },
+      "next": "若 §9.4/G3 定级或 commit-charge 约束需裁定，另行登记；否则本包可提交"
+    },
+    {
+      "item": "验证器 --out 目录需预先存在（自身不创建）",
+      "impact": "调用姿势限制，不影响任何检查结论",
+      "next": "择机让验证器自建 out 目录（属工具改动，须在下次打包前完成并重取身份证据）"
+    },
+    {
+      "item": "fixture 的四条故障拒绝未作为包内证据文件",
+      "impact": "包内自证依赖 repo/tests/test_lifecycle_fixture.py（已随包）",
+      "next": "如需包内自证：让 fixture 额外写 FAULT_PROBES.json 并加一条验证器检查"
     }
   ],
   "not_claimed": [
