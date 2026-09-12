@@ -58,7 +58,7 @@ EXCLUDED_PREFIXES = ("artifacts/archive/", "secrets/")
 EXCLUDED_PARTS = ("__pycache__", ".pytest_cache", ".ruff_cache", ".git")
 GOV = REPO / "governance"
 #: sections that live in the evidence root (``_audit_r1``)
-EVIDENCE_SECTIONS = ("revision", "schemas", "smoke", "verification", "wstar")
+EVIDENCE_SECTIONS = ("revision", "schemas", "smoke", "verification", "wstar", "fixture")
 #: sections that live in the repository itself
 REPO_EVIDENCE_SECTIONS = ("environment",)
 #: the sealed increment that answered the material-admission verdict

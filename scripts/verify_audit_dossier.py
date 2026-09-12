@@ -587,6 +587,31 @@ def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
           bool(joins) and not deviations,
           {"entries": len(joins), "deviations": deviations[:3]},
           "0 deviations", "governance/H1_CONSTRUCT_REVIEW_PACKET.json")
+    # Audit A11 (verdict phase four): the TEST-identity lifecycle fixture is
+    # delivered as evidence, and its chain must actually close: expected indexes ->
+    # shard plan -> phase seal -> analysis seal bound to it, with the TEST identity
+    # domain provably disjoint from the formal one.
+    fixture = d.json("evidence/fixture/LIFECYCLE_FIXTURE.json")
+    chain = fixture["chain"]
+    check("fixture.lifecycle_chain",
+          "TEST 生命周期 fixture：链走通、分析封存绑定 phase seal、终态激活",
+          fixture["verdict"]["admitted"] is True
+          and fixture["verdict"]["chain_walked"] is True
+          and fixture["verdict"]["analysis_bound_to_phase_seal"] is True
+          and fixture["verdict"]["terminal_state"] == "PHASE_ACTIVATED"
+          and len(chain) == 2
+          and chain[1]["expected_parent_phase_seal_hash"] == chain[0]["new_phase_seal_hash"],
+          {"phases": [e["phase"] for e in chain], "counts": fixture["counts"],
+           "tip": fixture["hashes"]["phase_state_tip"][:16]},
+          None, "evidence/fixture/LIFECYCLE_FIXTURE.json")
+    check("fixture.test_identity_domain",
+          "TEST 身份域与正式域隔离（构造性不同 id）",
+          fixture["identity_domain"] == "TEST"
+          and str(fixture["project_id"]).startswith("TEST-")
+          and fixture["project_id"] != manifest.get("project_id"),
+          {"project_id": fixture["project_id"]}, None,
+          "evidence/fixture/LIFECYCLE_FIXTURE.json")
+
     smoke_config = d.json("governance/SMOKE_CONFIG_v1.json")
     contract = d.json("governance/COMPUTE_SPEC_v1.json")["parallelism_contract"]
     check("parallelism.declared_in_range",
