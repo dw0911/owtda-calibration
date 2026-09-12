@@ -149,6 +149,11 @@ def main() -> int:
         with ledger.open("w", encoding="utf-8", newline="\n") as fh:
             for row in result.rows:
                 fh.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+        # The disk evidence must cover the persisted ledger, not just the compute
+        # step (re-audit 2026-09-12): re-measure now that the bytes are on disk,
+        # before the record is sealed.
+        resource_sampler.finalize_persistence(resources, evidence_root=root)
+        resources_by_phase[phase] = resources
 
         expected = smoke.expected_smoke_counts(phase)
         scale = replicates / scope.R0_SMOKE

@@ -180,6 +180,23 @@ def sample_run(
     return result, resources
 
 
+def finalize_persistence(resources: dict[str, Any], *, evidence_root: Path) -> dict[str, Any]:
+    """Re-measure the evidence root **after** the run's artifacts were written.
+
+    Re-audit 2026-09-12: the sampler wrapped only the compute step, so
+    ``evidence_bytes_written`` read 0 while the phase ledgers were 3.5 MB / 1.0 MB --
+    the disk evidence did not cover what the run persisted, which is exactly what the
+    frozen disk rule is about.  Call this once the ledger (and any other run output)
+    is on disk, before the record is sealed.
+    """
+    after = tree_bytes(evidence_root)
+    before = int(resources.get("evidence_bytes_before") or 0)
+    resources["evidence_bytes_after"] = after
+    resources["evidence_bytes_written"] = after - before
+    resources["persistence_included"] = True
+    return resources
+
+
 def resource_verdict(
     resources: dict[str, Any] | None, *, limits: dict[str, Any], unexplained_errors: int
 ) -> dict[str, Any]:

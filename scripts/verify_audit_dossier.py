@@ -31,10 +31,13 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "audit"))
 
+import csv
+import io
+
 import repo_guard
 import resource_sampler
 
-from owtda_cal import chains, dgp, freeze, scope
+from owtda_cal import chains, dgp, freeze, indexes, scope
 from owtda_cal import smoke as smoke_mod
 from owtda_cal.canonical import canonical_json_bytes
 
@@ -530,6 +533,225 @@ def verify_verification(d: Dossier) -> None:
           None, None, "evidence/verification/")
 
 
+def _csv_rows(raw: bytes) -> list[dict[str, str]]:
+    text = raw.decode("utf-8").lstrip("\ufeff")
+    return [row for row in csv.DictReader(io.StringIO(text)) if row]
+
+
+def verify_internal_contracts(
+    d: Dossier, manifest: dict[str, Any], smoke_root: str
+) -> None:
+    """Recompute what the seals claim, from the files they point at.
+
+    Re-audit 2026-09-12: eight probes that re-signed the outer integrity hashes were
+    all accepted (58/58), so the internal contracts are re-derived here rather than
+    read off summary booleans: the scope CSV a seal names, the p-value arithmetic of
+    every ledger row, the internal consistency of the resource record, the ``state``
+    field of every state event, both registry hash chains, the full H1 join set, and
+    the delivered lifecycle-fixture seals.
+    """
+    limits = resource_sampler.load_limits()
+
+    # 1) the scope CSV the seal names must exist, hash to that name, and carry
+    #    exactly the specification's cells (this is the gate that keeps the A01
+    #    class of defect from recurring).
+    for phase in ("SMOKE_NULL", "SMOKE_ALT"):
+        seal = d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json")
+        scope_hash = seal["scope_design_hash"]
+        rel = f"governance/SCOPE_DESIGN_{phase}_{scope_hash}.csv"
+        if not d.has(rel):
+            check(f"scope.{phase}.file_present", f"{phase} seal 引用的 scope CSV 随包",
+                  False, rel, None, rel)
+            continue
+        rows = _csv_rows(d.read(rel))
+        expected = smoke_mod.enumerate_smoke_expected(
+            ctx=smoke_mod.smoke_context(manifest, phase),
+            replicate_count=int(seal["replicates_per_cell"]),
+        )
+        # Compare the delivered rows against the *specification*, as a set of
+        # (cell, feature, method) triples: a swapped or edited cell id changes the
+        # set, which a count or a summary boolean cannot see.  (The hash in the file
+        # name is the builder's own scope-design hash over rows, not the file bytes.)
+        triples = {
+            (r["logical_cell_id"], r["feature_id"], r["method_id"]) for r in rows
+        }
+        expected_triples = {
+            (r["logical_cell_id"], r["feature_id"], r["method_id"])
+            for r in expected.rows
+        }
+        counts_ok = all(
+            int(r["expected_logical_evaluations"]) == int(seal["replicates_per_cell"])
+            for r in rows
+        )
+        check(f"scope.{phase}.rows_equal_spec",
+              f"{phase} scope 行集合 == 规格派生集合（cell×feature×method，逐行比对）",
+              bool(expected_triples) and triples == expected_triples and counts_ok,
+              {"rows": len(rows), "expected_rows": len(expected_triples),
+               "scope_only": sorted(triples - expected_triples)[:2],
+               "spec_only": sorted(expected_triples - triples)[:2],
+               "replicates_per_row_ok": counts_ok},
+              None, rel)
+
+    # 2) p-value arithmetic, row by row: p = (K+1)/1000, 0 <= K <= 999,
+    #    reject = 1{K <= 49} (re-audit §一).
+    for phase in ("SMOKE_NULL", "SMOKE_ALT"):
+        rel = f"{smoke_root}/{phase}/evaluation_rows.jsonl"
+        rows = [json.loads(line) for line in d.read(rel).decode("utf-8").splitlines()
+                if line.strip()]
+        bad: list[dict[str, Any]] = []
+        for row in rows:
+            p = row.get("p_value")
+            k = row.get("exceed_count")
+            if not isinstance(p, (int, float)) or not (0.001 <= float(p) <= 1.0):
+                bad.append({"id": str(row.get("evaluation_id"))[:12], "p": p})
+                continue
+            expected_k = round(float(p) * 1000) - 1
+            if k != expected_k:
+                bad.append({"id": str(row.get("evaluation_id"))[:12], "p": p,
+                            "exceed_count": k, "expected": expected_k})
+            elif bool(row.get("reject")) != bool(expected_k <= 49):
+                bad.append({"id": str(row.get("evaluation_id"))[:12], "p": p,
+                            "reject": row.get("reject"), "expected_reject": expected_k <= 49})
+        check(f"ledger.{phase}.p_value_formula",
+              f"{phase} 每行 p=(K+1)/1000 且 reject=1{{K<=49}}（逐行重算）",
+              bool(rows) and not bad,
+              {"rows": len(rows), "bad": bad[:3]}, None, rel)
+
+    # 3) the resource record must be internally consistent, and the paging metric
+    #    must actually cover what was persisted (re-audit §二/5).
+    for phase in ("SMOKE_NULL", "SMOKE_ALT"):
+        seal = d.json(f"{smoke_root}/SMOKE_SEAL_{phase}.json")
+        res = seal.get("resources") or {}
+        pairs = (
+            ("host_swap", "host_swap_peak_bytes", "host_swap_before_bytes",
+             "host_swap_growth_bytes"),
+            ("own_commit_charge", "own_commit_charge_peak_bytes",
+             "own_commit_charge_before_bytes", "own_commit_charge_growth_bytes"),
+        )
+        deltas = {}
+        consistent = True
+        for name, peak, before, growth in pairs:
+            p, b, g = res.get(peak), res.get(before), res.get(growth)
+            if all(isinstance(v, int) for v in (p, b, g)):
+                deltas[name] = {"peak_minus_before": p - b, "growth": g}
+                consistent = consistent and (p - b == g) and g >= 0
+            else:
+                consistent = False
+                deltas[name] = {"missing": [peak, before, growth]}
+        check(f"resources.{phase}.internally_consistent",
+              f"{phase} 资源记录自洽（peak-before == growth，且 growth >= 0）",
+              consistent, deltas, None, f"{smoke_root}/SMOKE_SEAL_{phase}.json")
+        written = res.get("evidence_bytes_written")
+        persisted = int(seal["ledger_bytes"])
+        check(f"resources.{phase}.covers_persistence",
+              f"{phase} 资源记录覆盖持久化输出（写入字节 >= 账本字节）",
+              isinstance(written, int) and written >= persisted,
+              {"evidence_bytes_written": written, "ledger_bytes": persisted},
+              None, f"{smoke_root}/SMOKE_SEAL_{phase}.json")
+        free = res.get("disk_free_before_bytes")
+        estimate = int(1.25 * (persisted * 2))  # both ledgers, 25% headroom
+        check(f"resources.{phase}.disk_estimate_within_rule",
+              f"{phase} 磁盘估计满足冻结规则 estimated_peak_disk <= 0.8*F_free",
+              isinstance(free, int) and free > 0 and estimate <= 0.8 * free,
+              {"estimate_bytes": estimate, "free_bytes": free},
+              {"rule": limits["disk_rule"]}, f"{smoke_root}/SMOKE_SEAL_{phase}.json")
+
+    # 4) every state event must agree with its own ``state`` field.
+    state_events = [
+        json.loads(line)
+        for line in d.read(f"{smoke_root}/STATE_REGISTRY.jsonl").decode("utf-8").splitlines()
+        if line.strip()
+    ]
+    mismatched = [
+        {"run_id": e.get("run_id"), "event_type": e.get("event_type"),
+         "state": e.get("state")}
+        for e in state_events if e.get("state") != e.get("event_type")
+    ]
+    check("state.events_self_consistent",
+          "STATE 每个事件的 state 字段 == event_type（封存事件名配 RUN_OPEN 必须被抓）",
+          bool(state_events) and not mismatched, {"events": len(state_events),
+                                                 "mismatched": mismatched[:3]},
+          None, f"{smoke_root}/STATE_REGISTRY.jsonl")
+
+    # 5) both registry hash chains must recompute and link.
+    for name, field in (
+        ("RUN_REGISTRY.jsonl", "run_registry_event_hash"),
+        ("STATE_REGISTRY.jsonl", "state_registry_event_hash"),
+    ):
+        tip = None
+        linked = True
+        recomputes = True
+        events = [
+            json.loads(line)
+            for line in d.read(f"{smoke_root}/{name}").decode("utf-8").splitlines()
+            if line.strip()
+        ]
+        for event in events:
+            body = {k: v for k, v in event.items() if k != field}
+            if body.get("prev_event_hash") != tip:
+                linked = False
+            if chains.event_hash(body) != event.get(field):
+                recomputes = False
+            tip = event.get(field)
+        check(f"registry.{name}.chain",
+              f"{name} 事件哈希可复算且 prev 链接完整",
+              bool(events) and linked and recomputes,
+              {"events": len(events), "linked": linked, "recomputes": recomputes},
+              None, f"{smoke_root}/{name}")
+
+    # 6) the H1 source-null join must be the *full* set, not a surviving subset.
+    packet = d.json("governance/H1_CONSTRUCT_REVIEW_PACKET.json")
+    joins = packet["evidence"].get("null_scope_join", [])
+    expected_keys = {(c.scenario, c.rho, c.stride) for c in scope.h1_alt_cells()}
+    joined_keys = {
+        (entry.get("scenario"), entry.get("rho"), entry.get("stride")) for entry in joins
+    }
+    check("h1.join_complete",
+          "H1 source-null 外键覆盖全部 8 个 cell（缺项即失败，不接受子集）",
+          bool(expected_keys) and joined_keys == expected_keys,
+          {"joined": len(joined_keys), "expected": len(expected_keys),
+           "missing": sorted(str(k) for k in expected_keys - joined_keys)[:3]},
+          None, "governance/H1_CONSTRUCT_REVIEW_PACKET.json")
+
+    # 7) the delivered fixture seals must exist and be the ones the chain names.
+    fixture_dir = "evidence/fixture"
+    required = (
+        "PHASE_SEAL_TEST_PREDICTION.json", "PHASE_SEAL_TEST_ANALYSIS.json",
+        "LIFECYCLE_FIXTURE.json", "expected_evaluation_index.json",
+    )
+    missing = [name for name in required if not d.has(f"{fixture_dir}/{name}")]
+    check("fixture.seals_present",
+          "fixture 的 seal 与工件全部随包（缺任一即失败，而不是整段中止）",
+          not missing, {"missing": missing}, None, fixture_dir)
+    if missing:
+        return
+    prediction = d.json(f"{fixture_dir}/PHASE_SEAL_TEST_PREDICTION.json")
+    analysis = d.json(f"{fixture_dir}/PHASE_SEAL_TEST_ANALYSIS.json")
+    report = d.json(f"{fixture_dir}/LIFECYCLE_FIXTURE.json")
+    evaluation_rows = json.loads(
+        d.read(f"{fixture_dir}/expected_evaluation_index.json").decode("utf-8")
+    )
+    ledger = b"".join(canonical_json_bytes(r) + b"\n" for r in evaluation_rows)
+    chain = report["chain"]
+    check("fixture.seals_match_chain",
+          "fixture 两段 phase seal 与链事件互相印证（含分析封存的父链与账本绑定）",
+          indexes.phase_seal_hash(prediction) == chain[0]["new_phase_seal_hash"]
+          and indexes.phase_seal_hash(analysis) == chain[1]["new_phase_seal_hash"]
+          and analysis["parent_phase_seal_hash"]
+          == indexes.phase_seal_hash(prediction)
+          and analysis["active_ledger_content_hash"]
+          == hashlib.sha256(ledger).hexdigest(),
+          {"prediction_matches": indexes.phase_seal_hash(prediction)
+           == chain[0]["new_phase_seal_hash"],
+           "analysis_matches": indexes.phase_seal_hash(analysis)
+           == chain[1]["new_phase_seal_hash"],
+           "parent_bound": analysis["parent_phase_seal_hash"]
+           == indexes.phase_seal_hash(prediction),
+           "ledger_recomputes": analysis["active_ledger_content_hash"]
+           == hashlib.sha256(ledger).hexdigest()},
+          None, fixture_dir)
+
+
 def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
     packet = d.json("governance/H1_CONSTRUCT_REVIEW_PACKET.json")
     statuses = [c["status"] for c in packet["contracts"]]
@@ -714,6 +936,10 @@ def main() -> int:
         section("revision", verify_revision, d, staging, anchor)
         section("verification", verify_verification, d)
         section("governance", verify_governance_extras, d, manifest)
+        contracts_root = _smoke_root(d)
+        if contracts_root and freeze_manifest:
+            section("contracts", verify_internal_contracts, d, freeze_manifest,
+                    contracts_root)
 
     report = {
         "schema_version": 1,

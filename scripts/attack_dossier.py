@@ -31,7 +31,9 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -315,6 +317,188 @@ ATTACKS: list[dict[str, Any]] = [
 
 
 # --------------------------------------------------------------------------- #
+# re-audit 2026-09-12 probes: the outer hashes are re-signed, so only the internal
+# contracts are under test.  All eight were accepted by the verifier before the
+# internal-contract checks were added.
+# --------------------------------------------------------------------------- #
+def _dossier_root(root: Path) -> Path:
+    dirs = [p for p in root.iterdir() if p.is_dir()]
+    if len(dirs) != 1:
+        raise RuntimeError(f"expected one top-level dir, found {len(dirs)}")
+    return dirs[0]
+
+
+def _resign(root: Path) -> None:
+    """Recompute SHA256SUMS.txt and dossier_manifest.json after a mutation."""
+    dossier = _dossier_root(root)
+    sums_path = dossier / "SHA256SUMS.txt"
+    lines: list[str] = []
+    updated: dict[str, str] = {}
+    for line in sums_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        _, rel = re.split(r"\s+", line.strip(), maxsplit=1)
+        rel = rel.strip()
+        target = dossier / rel
+        digest = (
+            hashlib.sha256(target.read_bytes()).hexdigest() if target.exists() else "0" * 64
+        )
+        updated[rel] = digest
+        lines.append(f"{digest}  {rel}\n")
+    sums_path.write_text("".join(lines), encoding="utf-8")
+    manifest_path = dossier / "dossier_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for obj in manifest.get("objects", []):
+        rel = obj.get("path")
+        if rel in updated:
+            target = dossier / rel
+            obj["sha256"] = updated[rel]
+            obj["size"] = target.stat().st_size if target.exists() else 0
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def p1_fixture_missing_seal(root: Path) -> list[str]:
+    seal = _one(root, "PHASE_SEAL_TEST_ANALYSIS.json")
+    seal.unlink()
+    return [str(seal)]
+
+
+def p2_fixture_wrong_ledger_hash(root: Path) -> list[str]:
+    seal = _one(root, "PHASE_SEAL_TEST_ANALYSIS.json")
+
+    def mutate(payload: dict) -> None:
+        payload["active_ledger_content_hash"] = "0" * 64
+
+    _edit_json(seal, mutate)
+    return [str(seal)]
+
+
+def p3_smoke_invalid_p_value(root: Path) -> list[str]:
+    path = _one(root, "SMOKE_NULL/evaluation_rows.jsonl")
+
+    def mutate(rows: list[dict]) -> None:
+        rows[0]["p_value"] = 2.0
+
+    _edit_jsonl(path, mutate)
+    return [str(path)]
+
+
+def p4_resource_false_delta(root: Path) -> list[str]:
+    path = _seal(root, "SMOKE_NULL")
+
+    def mutate(seal: dict) -> None:
+        res = seal["resources"]
+        res["host_swap_peak_bytes"] = int(res["host_swap_peak_bytes"]) + 4 * 1024 * 1024
+
+    _edit_json(path, mutate)
+    return [str(path)]
+
+
+def p5_state_field_open_event_sealed(root: Path) -> list[str]:
+    path = _one(root, "STATE_REGISTRY.jsonl")
+
+    def mutate(rows: list[dict]) -> None:
+        for row in rows:
+            if row.get("event_type") == "RUN_SEALED":
+                row["state"] = "RUN_OPEN"
+
+    _edit_jsonl(path, mutate)
+    return [str(path)]
+
+
+def p6_broken_run_chain_hash(root: Path) -> list[str]:
+    path = _one(root, "RUN_REGISTRY.jsonl")
+
+    def mutate(rows: list[dict]) -> None:
+        rows[0]["run_registry_event_hash"] = "0" * 64
+
+    _edit_jsonl(path, mutate)
+    return [str(path)]
+
+
+def p7_h1_join_truncated(root: Path) -> list[str]:
+    path = _one(root, "H1_CONSTRUCT_REVIEW_PACKET.json")
+
+    def mutate(packet: dict) -> None:
+        joins = packet["evidence"]["null_scope_join"]
+        packet["evidence"]["null_scope_join"] = joins[:1]
+
+    _edit_json(path, mutate)
+    return [str(path)]
+
+
+def p8_smoke_scope_bad_cell(root: Path) -> list[str]:
+    import csv as _csv
+    import io as _io
+
+    # Resolve the CSV the seal actually names: several SCOPE_DESIGN variants ship,
+    # and the sorted-first glob would attack a file nobody references.
+    seal = _seal(root, "SMOKE_NULL")
+    scope_hash = json.loads(seal.read_text(encoding="utf-8"))["scope_design_hash"]
+    path = _one(root, f"SCOPE_DESIGN_SMOKE_NULL_{scope_hash}.csv")
+    raw = path.read_text(encoding="utf-8")
+    rows = list(_csv.DictReader(_io.StringIO(raw.lstrip("\ufeff"))))
+    bad = rows[0]["logical_cell_id"]
+    path.write_text(raw.replace(bad, "0" * 64, 1), encoding="utf-8")
+    return [str(path)]
+
+
+ATTACKS.extend([
+    {
+        "id": "R1_fixture_missing_analysis_seal", "finding": "re-audit A11",
+        "description": "删除真正的分析 seal 文件（重签外层哈希后）",
+        "mutate": p1_fixture_missing_seal, "resign": True,
+        "targets": ["fixture.seals_present"],
+    },
+    {
+        "id": "R2_fixture_wrong_ledger_hash", "finding": "re-audit A11",
+        "description": "把分析 seal 的账本哈希改成全零",
+        "mutate": p2_fixture_wrong_ledger_hash, "resign": True,
+        "targets": ["fixture.seals_match_chain"],
+    },
+    {
+        "id": "R3_smoke_invalid_p_value", "finding": "re-audit 数值",
+        "description": "把一行 smoke 的 p 值改成 2.0",
+        "mutate": p3_smoke_invalid_p_value, "resign": True,
+        "targets": ["ledger.SMOKE_NULL.p_value_formula"],
+    },
+    {
+        "id": "R4_resource_false_delta", "finding": "re-audit A08",
+        "description": "swap peak 加 4 MiB 却保留 growth=0",
+        "mutate": p4_resource_false_delta, "resign": True,
+        "targets": ["resources.SMOKE_NULL.internally_consistent"],
+    },
+    {
+        "id": "R5_state_open_event_sealed", "finding": "re-audit A05",
+        "description": "保留封存事件名，把实际 state 改成 RUN_OPEN",
+        "mutate": p5_state_field_open_event_sealed, "resign": True,
+        "targets": ["state.events_self_consistent"],
+    },
+    {
+        "id": "R6_broken_run_chain_hash", "finding": "re-audit A05",
+        "description": "破坏 RUN 注册表的事件哈希",
+        "mutate": p6_broken_run_chain_hash, "resign": True,
+        "targets": ["registry.RUN_REGISTRY.jsonl.chain"],
+    },
+    {
+        "id": "R7_h1_join_truncated", "finding": "re-audit A06",
+        "description": "H1 source-null 只保留 8 项中的 1 项",
+        "mutate": p7_h1_join_truncated, "resign": True,
+        "targets": ["h1.join_complete"],
+    },
+    {
+        "id": "R8_smoke_scope_bad_cell", "finding": "re-audit A01 gate",
+        "description": "修改实际 scope CSV 中一个 logical cell ID",
+        "mutate": p8_smoke_scope_bad_cell, "resign": True,
+        "targets": ["scope.SMOKE_NULL.rows_equal_spec"],
+    },
+])
+
+
+# --------------------------------------------------------------------------- #
 # driver
 # --------------------------------------------------------------------------- #
 def run_attacks(zip_path: Path, out_dir: Path, only: str | None) -> dict[str, Any]:
@@ -348,6 +532,10 @@ def run_attacks(zip_path: Path, out_dir: Path, only: str | None) -> dict[str, An
                     "failed_checks_on_mutant": [],
                 })
                 continue
+            if attack.get("resign"):
+                # Re-sign the outer hashes so the *internal* contracts are tested
+                # (the re-audit's probes did the same: `resigned_integrity_only`).
+                _resign(mutant_dir)
             mutant_zip = tmpdir / f"{attack['id']}.zip"
             repackage(mutant_dir, mutant_zip)
             try:
