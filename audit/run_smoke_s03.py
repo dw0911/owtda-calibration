@@ -45,7 +45,7 @@ from run_registry import (
 )
 from run_smoke import formal_id_leak_check, identity_closure
 
-from owtda_cal import scope, smoke
+from owtda_cal import execution, scope, smoke
 
 GOV = REPO / "governance"
 
@@ -61,9 +61,18 @@ def main() -> int:
     parser.add_argument("--replicates", type=int, default=None)
     parser.add_argument("--phase", choices=[*scope.SMOKE_PHASES, "both"], default="both")
     parser.add_argument("--label", default=None)
+    # Task pack §2.1/P3: every new run gets its own execution root, created
+    # exclusively; re-using one requires --resume, never exist_ok=True.
+    parser.add_argument("--execution-id", default=None,
+                        help="execution root id (defaults to the smoke generation)")
+    parser.add_argument("--resume", action="store_true",
+                        help="attach to an existing execution root instead of creating one")
     args = parser.parse_args()
 
     generation = smoke.SMOKE_GENERATION_ID
+    execution_root = execution.create_execution_root(
+        args.root, args.execution_id or f"smoke-{generation}", resume=args.resume
+    )
     root = Path(args.root).expanduser() / "smoke" / generation
     root.mkdir(parents=True, exist_ok=True)
     (root / "stdout_stderr").mkdir(exist_ok=True)
@@ -160,6 +169,19 @@ def main() -> int:
         # being left at None by mistake -- the wiring, not the semantics, was missing).
         resources["resource_allocation_failures"] = 0 if result.errors == 0 else None
         resources_by_phase[phase] = resources
+        # The resource evidence of *this* phase lives inside the execution root,
+        # next to the dispatch chain, so it can never be quoted from another run.
+        (execution_root.resources_dir / f"capacity_{phase}.json").write_text(
+            json.dumps(resources, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        execution.append_execution_event(execution_root, {
+            "event_type": "PHASE_RECORDED", "phase": phase, "run_id": run_id,
+            "ledger_content_hash": ledger_content_hash(ledger) if ledger.exists() else None,
+            "unexplained_errors": result.errors,
+            "resource_allocation_failures": resources["resource_allocation_failures"],
+            "capacity_status": (resources.get("capacity_sampling") or {}).get("status"),
+        })
 
         expected = smoke.expected_smoke_counts(phase)
         scale = replicates / scope.R0_SMOKE
@@ -280,6 +302,28 @@ def main() -> int:
         limits=resource_sampler.load_limits(), resources=resources_by_phase,
     )
     provenance["verdict"] = verdict
+    provenance["execution_root"] = execution_root.as_dict()
+    # §2.1: the execution record closes the chain for this run's own directory.
+    execution.append_execution_event(execution_root, {
+        "event_type": "EXECUTION_FINISHED", "mode": "SMOKE",
+        "execution_id": execution_root.execution_id,
+        "admission_passed": bool(verdict["admission_passed"]),
+        "phases": sorted(reports),
+    })
+    execution.write_execution_record(execution_root, {
+        "schema_version": 1,
+        "kind": "execution_record",
+        "mode": "SMOKE",
+        "execution_id": execution_root.execution_id,
+        "smoke_generation_id": generation,
+        "phases": sorted(reports),
+        "admission_passed": bool(verdict["admission_passed"]),
+        "verdict": verdict,
+        "resources_by_phase": {
+            phase: (resources or {}).get("capacity_raw_path") for phase, resources
+            in resources_by_phase.items()
+        },
+    })
     (root / "provenance_manifest.json").write_text(
         json.dumps(provenance, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
