@@ -601,7 +601,9 @@ def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
           {"disclosures": d.has("DISCLOSURES.md"),
            "relabel": d.has("GATE_RELABEL.json")}, None, "包根")
     readme = d.read("README.md").decode("utf-8")
-    tags_evidence = d.read("revision/git_show_ref_tags.txt").decode("utf-8").split()
+    tags_evidence = (
+        d.read("evidence/revision/git_show_ref_tags.txt").decode("utf-8").split()
+    )
     freeze_tags = [t for t in tags_evidence if t.startswith("v1") and "freeze" in t]
     check("dossier.cover_generated_from_artifacts",
           "README 的 revision 与冻结 tag 自工件派生（tag 不硬编码）",
