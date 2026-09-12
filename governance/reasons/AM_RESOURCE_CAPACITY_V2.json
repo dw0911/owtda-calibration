@@ -15,10 +15,10 @@
   "hard_conditions": {
     "disk_rule": "estimated_peak_disk <= 0.8*F_free",
     "host_available_phys_min": "max(2 GiB, 0.10*PhysicalTotal)",
-    "host_commit_fraction_max": 0.8,
-    "peak_total_rss_gib_max": 24,
-    "resource_allocation_failures_max": 0,
-    "unexplained_errors_max": 0,
+    "host_commit_fraction_max": "0.80",
+    "peak_total_rss_gib_max": "24",
+    "resource_allocation_failures_max": "0",
+    "unexplained_errors_max": "0",
     "workers": 8
   },
   "history_retained": true,

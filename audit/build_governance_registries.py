@@ -373,13 +373,15 @@ def main() -> int:
                 "requires_refreeze": False,
                 "freeze_id_changes": False,
                 "retired_gate": "swap_growth_bytes_max = 0（未来准入用途）",
+                # Canonical payloads forbid bare floats: the coefficients are recorded as
+                # decimal text here (the policy file itself keeps its numeric form).
                 "hard_conditions": {
                     "workers": 8,
-                    "peak_total_rss_gib_max": 24,
-                    "host_commit_fraction_max": 0.80,
+                    "peak_total_rss_gib_max": "24",
+                    "host_commit_fraction_max": "0.80",
                     "host_available_phys_min": "max(2 GiB, 0.10*PhysicalTotal)",
-                    "resource_allocation_failures_max": 0,
-                    "unexplained_errors_max": 0,
+                    "resource_allocation_failures_max": "0",
+                    "unexplained_errors_max": "0",
                     "disk_rule": "estimated_peak_disk <= 0.8*F_free",
                 },
                 "diagnostic_only": [

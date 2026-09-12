@@ -8,12 +8,13 @@
     "25ba93f056bcb022ad7e749a8adc3d7165e4cb277c1095b3ae1bf238d29332e7",
     "0644dcd2a82a2c6540fc85d82f8cb3583ff48e240a93ca4fae71d4293e53bd88",
     "65b4479bfe0a5d70fd574d41a7267050c1dffba67e85f4c0fc1352b0d9b71a61",
-    "e8836d9247ef64dd1b31e14bdedd6f26947082b4eacf647b9ea4183c73136a02"
+    "e8836d9247ef64dd1b31e14bdedd6f26947082b4eacf647b9ea4183c73136a02",
+    "71d70383a565f8ebe9d8e4be8f929066010a52bfffd29f53c94b1ca7791a6d81"
   ],
   "amendments": {
-    "events": 9,
+    "events": 10,
     "file": "AMENDMENT_REGISTRY.jsonl",
-    "tip": "e8836d9247ef64dd1b31e14bdedd6f26947082b4eacf647b9ea4183c73136a02"
+    "tip": "71d70383a565f8ebe9d8e4be8f929066010a52bfffd29f53c94b1ca7791a6d81"
   },
   "current_smoke_generation": "S04",
   "invalidation_tips": [
@@ -30,6 +31,7 @@
   "reason_hashes": {
     "AM_ENVIRONMENT_LOCK_CORRECTION": "4128e50cda09b0a1bbab71ba7e7998024b71b23febff0336902e65b2e60a3664",
     "AM_PARALLELISM_DECOUPLING": "c0547d332164dfe9b7781b5a63f69d28aa987c7be7b8a1e3d3592ed6bb33beb8",
+    "AM_RESOURCE_CAPACITY_V2": "88fb35ae5c4a42e2bd83c80ca110778e792f760f7cd05f946ef96cfcc4f1cdd6",
     "AM_RESOURCE_INSTRUMENT": "99f5749c1a46f2fade3238a79d010d89eecef7171adfa2e95c1daecad74dd97e",
     "AM_RESOURCE_MEASUREMENT_SEMANTICS": "bcc5f5b22f0780acabe25ff791a8b909c78a3aed022a3af57d27f61bb0a42463",
     "AM_SMOKE_SHIFT_DIRECTION": "f6f6c25807d7f6e8bb841e8f3fcbadd47c9d0bf1a566255d2f4c292d5f2dffec",
