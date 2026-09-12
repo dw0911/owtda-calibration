@@ -43,7 +43,7 @@ STEPS: dict[int, dict[str, Any]] = {
                 "{out}/test-lifecycle"]},
     4: {"name": "verify_concurrency_recovery",
         "cmd": [sys.executable, "scripts/verify_fault_points.py", "{out}/faults"]},
-    5: {"name": "build_formal_expected_plan", "cmd": None},
+    5: {"name": "build_formal_expected_plan", "cmd": None, "internal": "plan"},
     6: {"name": "build_full_budget", "cmd": None, "internal": "budget"},
     7: {"name": "preflight_capacity", "cmd": None, "internal": "preflight"},
 }
@@ -59,6 +59,16 @@ def _run(cmd: list[str], *, cwd: Path) -> dict[str, Any]:
         "stdout_tail": done.stdout[-2000:],
         "stderr_tail": done.stderr[-2000:],
     }
+
+
+def _plan_step(out: Path) -> dict[str, Any]:
+    """§9 step 5: the frozen-scale expected plan (no MC, pure enumeration)."""
+    from owtda_cal.planbuild import build_expected_plan
+
+    target = out / "plan"
+    if target.is_dir():
+        shutil.rmtree(target)
+    return build_expected_plan(out_dir=target)
 
 
 def _budget_step(out: Path) -> dict[str, Any]:
@@ -88,6 +98,17 @@ def _budget_step(out: Path) -> dict[str, Any]:
                           storage_policy=storage, profile=profile,
                           volumes=[{"name": str(out.drive or out), "free_bytes": free}],
                           disk_fraction=policy["limits"]["disk_fraction_max"])
+    plan_summary = out / "plan" / "PLAN_SUMMARY.json"
+    if plan_summary.is_file():
+        plan = json.loads(plan_summary.read_text(encoding="utf-8"))
+        budget["bound_plan"] = {
+            "formal_scale": plan["formal_scale"],
+            "totals": plan["totals"],
+            "evaluation_index_hashes": {
+                phase: report["index_hashes"]["evaluation"]
+                for phase, report in plan["phases"].items()
+            },
+        }
     (out / "budget" ).mkdir(parents=True, exist_ok=True)
     (out / "budget" / "budget.json").write_text(
         json.dumps(budget, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -139,15 +160,13 @@ def main() -> int:
     for step in requested:
         spec = STEPS[step]
         entry: dict[str, Any] = {"step": step, "name": spec["name"]}
-        if step == 5:
-            entry.update({
-                "status": "BLOCKED",
-                "reason": (
-                    "expanding the frozen plan needs the DGP identity derivation "
-                    "(master_replicate_id / physical_cell_id / data_unit_id) per cell; "
-                    "a plan built without it would not join to the real ledgers"
-                ),
-            })
+        if spec.get("internal") == "plan":
+            plan = _plan_step(out)
+            entry.update({"status": "PASS" if plan["formal_scale"] else "REDUCED_SCALE",
+                          "totals": plan["totals"],
+                          "formal_scale": plan["formal_scale"],
+                          "index_hashes": {phase: report["index_hashes"]
+                                           for phase, report in plan["phases"].items()}})
         elif spec.get("internal") == "budget":
             budget = _budget_step(out)
             entry.update({"status": budget["status"],
