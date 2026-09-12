@@ -120,6 +120,56 @@ def _normalize(obj: Any, *, _depth: int = 0) -> Any:
     )
 
 
+def non_canonical_nodes(obj: Any, *, path: str = "$") -> list[dict[str, str]]:
+    """Every node that cannot enter a canonical payload, with its location.
+
+    Task pack §7/P6: governance, identity and seal objects are all canonical, so
+    the check has to walk them recursively -- a bare float nested three levels
+    down in a registry entry is exactly the kind of thing a top-level schema
+    test misses.
+    """
+    issues: list[dict[str, str]] = []
+    if isinstance(obj, bool) or obj is None or isinstance(obj, (int, str)):
+        return issues
+    if isinstance(obj, float):
+        issues.append({"path": path, "code": "BARE_FLOAT",
+                       "detail": repr(obj)})
+        return issues
+    if isinstance(obj, Decimal):
+        if not obj.is_finite():
+            issues.append({"path": path, "code": "NON_FINITE_DECIMAL", "detail": repr(obj)})
+        return issues
+    if isinstance(obj, (bytes, bytearray)):
+        issues.append({"path": path, "code": "RAW_BYTES", "detail": f"{len(obj)} bytes"})
+        return issues
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if not isinstance(key, str):
+                issues.append({"path": f"{path}.<key>", "code": "NON_STRING_KEY",
+                               "detail": repr(key)})
+                continue
+            issues.extend(non_canonical_nodes(value, path=f"{path}.{key}"))
+        return issues
+    if isinstance(obj, (list, tuple)):
+        for index, value in enumerate(obj):
+            issues.extend(non_canonical_nodes(value, path=f"{path}[{index}]"))
+        return issues
+    issues.append({"path": path, "code": "UNSUPPORTED_TYPE",
+                   "detail": type(obj).__name__})
+    return issues
+
+
+def assert_canonical(obj: Any, *, what: str = "object") -> None:
+    """Refuse an object that cannot be sealed as canonical (governance schema check)."""
+    issues = non_canonical_nodes(obj)
+    if issues:
+        first = issues[0]
+        raise CanonicalizationError(
+            f"{what} is not canonical: {len(issues)} offending node(s); "
+            f"first at {first['path']} ({first['code']}: {first['detail']})"
+        )
+
+
 def canonical_json(obj: Any) -> str:
     """Strict canonical JSON text (Plan §15.2)."""
     normalized = _normalize(obj)
