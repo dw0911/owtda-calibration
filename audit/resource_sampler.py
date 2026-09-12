@@ -22,7 +22,9 @@ The thresholds are the frozen ones, quoted rather than restated::
 
 from __future__ import annotations
 
+import ctypes
 import json
+import os
 import threading
 import time
 from collections.abc import Callable
@@ -30,7 +32,62 @@ from pathlib import Path
 from typing import Any
 
 SAMPLE_INTERVAL_S = 0.25
+CAPACITY_INTERVAL_S = 1.0
+#: A gap beyond this multiple of the interval makes the capacity record INCOMPLETE.
+CAPACITY_MAX_GAP_FACTOR = 3.0
 GIB = 1024**3
+POLICY_PATH = Path(__file__).resolve().parents[1] / "governance/RESOURCE_POLICY_V2.json"
+
+
+def load_resource_policy() -> dict[str, Any]:
+    """The V2 resource contract (capacity + complete execution)."""
+    return json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+
+
+class _PERFORMANCE_INFORMATION(ctypes.Structure):
+    _fields_ = [
+        ("cb", ctypes.c_ulong),
+        ("CommitTotal", ctypes.c_size_t),
+        ("CommitLimit", ctypes.c_size_t),
+        ("CommitPeak", ctypes.c_size_t),
+        ("PhysicalTotal", ctypes.c_size_t),
+        ("PhysicalAvailable", ctypes.c_size_t),
+        ("SystemCache", ctypes.c_size_t),
+        ("KernelTotal", ctypes.c_size_t),
+        ("KernelPaged", ctypes.c_size_t),
+        ("KernelNonpaged", ctypes.c_size_t),
+        ("PageSize", ctypes.c_size_t),
+        ("HandleCount", ctypes.c_ulong),
+        ("ProcessCount", ctypes.c_ulong),
+        ("ThreadCount", ctypes.c_ulong),
+    ]
+
+
+def performance_info() -> dict[str, int] | None:
+    """Windows host capacity counters; ``None`` when they cannot be read.
+
+    ``CommitPeak`` is a since-boot peak: recorded, never used as this run's peak.
+    Absence is reported, never defaulted to zero.
+    """
+    if os.name != "nt":
+        return None
+    try:
+        info = _PERFORMANCE_INFORMATION()
+        info.cb = ctypes.sizeof(_PERFORMANCE_INFORMATION)
+        ok = ctypes.windll.psapi.GetPerformanceInfo(ctypes.byref(info), info.cb)
+        page = int(info.PageSize)
+    except Exception:  # noqa: BLE001 - absence is a finding, not a zero
+        return None
+    if not ok or page <= 0:
+        return None
+    return {
+        "commit_total_bytes": int(info.CommitTotal) * page,
+        "commit_limit_bytes": int(info.CommitLimit) * page,
+        "commit_peak_bytes_since_boot": int(info.CommitPeak) * page,
+        "physical_total_bytes": int(info.PhysicalTotal) * page,
+        "physical_available_bytes": int(info.PhysicalAvailable) * page,
+        "page_size_bytes": page,
+    }
 COMPUTE_SPEC = Path(__file__).resolve().parents[1] / "governance/COMPUTE_SPEC_v1.json"
 LIMITS_SOURCE = "governance/COMPUTE_SPEC_v1.json:parallelism_contract.acceptance"
 
@@ -93,7 +150,14 @@ def own_pagefile_bytes(proc: Any) -> int | None:
 def sample_run(
     runner: Callable[..., Any], *, evidence_root: Path, **kwargs: Any
 ) -> tuple[Any, dict[str, Any]]:
-    """Run ``runner(**kwargs)`` while sampling the resources that run consumes."""
+    """Run ``runner(**kwargs)`` while sampling the resources that run consumes.
+
+    Alongside the process-level quantities this samples the **host capacity** counters
+    the V2 policy is built on (``GetPerformanceInfo``: commit total/limit, physical
+    total/available) once per second, and reports them as sampled peak/valley together
+    with the sample count and the largest gap.  A missing field or a sampling gap is
+    reported as ``incomplete`` -- it is never filled with a zero and passed.
+    """
     import psutil
 
     proc = psutil.Process()
@@ -105,9 +169,20 @@ def sample_run(
     free_before = disk_free_bytes(evidence_root)
     bytes_before = tree_bytes(evidence_root)
     stop = threading.Event()
+    # Integers only: this record is embedded in the seal, whose hash is canonical and
+    # in which bare floats are forbidden.  Ratios are derived by the verdict.
+    capacity: dict[str, Any] = {
+        "source": "GetPerformanceInfo",
+        "interval_milliseconds": int(CAPACITY_INTERVAL_S * 1000),
+        "samples": 0, "missing": 0, "max_gap_milliseconds": 0,
+        "physical_available_min_bytes": None, "physical_total_bytes": None,
+        "commit_limit_bytes": None, "commit_total_peak_bytes": None,
+        "commit_total_min_bytes": None,
+    }
+    last_capacity_at = 0.0
 
     def sampler() -> None:
-        nonlocal swap_peak, own_peak
+        nonlocal swap_peak, own_peak, last_capacity_at
         while not stop.is_set():
             total = int(proc.memory_info().rss)
             for child in proc.children(recursive=True):
@@ -120,6 +195,34 @@ def sample_run(
             current = own_pagefile_bytes(proc)
             if current is not None:
                 own_peak = max(own_peak or 0, current)
+            now = time.time()
+            if now - last_capacity_at >= CAPACITY_INTERVAL_S:
+                if last_capacity_at:
+                    gap_ms = round((now - last_capacity_at) * 1000)
+                    capacity["max_gap_milliseconds"] = max(
+                        capacity["max_gap_milliseconds"], gap_ms
+                    )
+                last_capacity_at = now
+                info = performance_info()
+                if info is None:
+                    capacity["missing"] += 1
+                else:
+                    capacity["samples"] += 1
+                    total_c = info["commit_total_bytes"]
+                    available = info["physical_available_bytes"]
+                    capacity["commit_total_peak_bytes"] = max(
+                        capacity["commit_total_peak_bytes"] or 0, total_c
+                    )
+                    capacity["commit_total_min_bytes"] = (
+                        total_c if capacity["commit_total_min_bytes"] is None
+                        else min(capacity["commit_total_min_bytes"], total_c)
+                    )
+                    capacity["physical_available_min_bytes"] = (
+                        available if capacity["physical_available_min_bytes"] is None
+                        else min(capacity["physical_available_min_bytes"], available)
+                    )
+                    capacity["physical_total_bytes"] = info["physical_total_bytes"]
+                    capacity["commit_limit_bytes"] = info["commit_limit_bytes"]
             stop.wait(SAMPLE_INTERVAL_S)
 
     thread = threading.Thread(target=sampler, daemon=True)
@@ -185,6 +288,18 @@ def sample_run(
         "evidence_bytes_written": bytes_after - bytes_before,
         "samples": len(samples),
         "sample_interval_milliseconds": int(SAMPLE_INTERVAL_S * 1000),
+        # V2 capacity record (hard conditions live on these; page-file usage below is
+        # diagnostic only).  Missing samples or a gap -> incomplete, never a zero.
+        "capacity_sampling": {
+            **capacity,
+            "incomplete": bool(
+                capacity["missing"]
+                or capacity["samples"] == 0
+                or capacity["max_gap_milliseconds"]
+                > CAPACITY_INTERVAL_S * CAPACITY_MAX_GAP_FACTOR * 1000
+            ),
+        },
+        "resource_allocation_failures": None,  # set by the runner once errors are known
     }
     return result, resources
 

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "resource_policy",
+  "resource_policy_id": "AM_RESOURCE_CAPACITY_V2",
+  "status": "ADOPTED_PROSPECTIVELY",
+  "effective_from": "2026-09-13（本文件时间戳之后的新执行；不得倒填为旧标准，不得回写旧判决）",
+  "supersedes_for_future_admission": "swap_growth_bytes_max = 0（旧策略的该条**退出未来准入用途**；旧策略、旧记录、旧判决全部保留）",
+  "objective": "在登记的宿主环境与并行配置下，任务资源占用不超过项目上限，宿主保有规定的提交额度与物理内存余量，执行、持久化与恢复流程完整；分页相关计数器用于诊断，不用于证明绝对零分页。",
+  "hard_conditions": {
+    "workers": 8,
+    "peak_total_rss_gib_max": 24,
+    "host_commit_fraction_max": 0.80,
+    "host_available_phys_min": "max(2 GiB, 0.10 * PhysicalTotal)",
+    "resource_allocation_failures_max": 0,
+    "unexplained_errors_max": 0,
+    "disk_rule": "estimated_peak_disk <= 0.8 * F_free",
+    "formulae": [
+      "max_k C_k / L_k <= 0.80   （C_k 宿主总提交量，L_k 当时提交上限）",
+      "min_k A_k >= max(2 GiB, 0.10 * R_phys)   （A_k 可用物理内存，R_phys 物理内存总量）"
+    ]
+  },
+  "diagnostic_only": [
+    "host_pagefile_used_growth",
+    "process_tree_page_faults",
+    "system_paging_rates"
+  ],
+  "coefficient_note": "80%、2 GiB、10% 为本项目保守工程设定，不是微软通用安全标准，也不构成永不发生分页或分配失败的保证；它们按容量预留设计，不是围绕已观测到的 7.4 MB / 4.2 MB 反推的『刚好能过』阈值。",
+  "why_system_level_is_allowed_here": "本条回答的是『整台机器是否仍适合继续承载任务』，无需先判定是谁消耗了余量；其他程序把可用容量耗尽时，暂停正式计算同样合理。反之，『页文件占用上升几 MB』本身并不说明机器已不适合运行。系统级指标可用于宿主安全条件，用于单独证明本任务的因果责任则证据不足。",
+  "explicitly_not_adopted": {
+    "process_tree_page_faults_threshold": "不采纳为硬门槛：混合软/硬缺页，首次访问已分配页面也会触发正常软缺页",
+    "system_page_reads_per_second_threshold": "不采纳为替代：仍是系统级，且可能来自程序映像或内存映射文件；改成窗口均值并未增加进程归因能力",
+    "note": "只追踪本进程也可能漏掉任务对其他进程造成的间接内存压力（内存管理器会裁减工作集）；完整的硬缺页因果调查（如 ETW 线程/文件对象级关联）属异常诊断工具，不作为本轮正式实验的前置项目。"
+  },
+  "sampling": {
+    "source": "Windows GetPerformanceInfo（psapi.dll）",
+    "fields": ["CommitTotal", "CommitLimit", "CommitPeak", "PhysicalTotal", "PhysicalAvailable", "PageSize"],
+    "units": "页；须乘以 PageSize 转换为字节",
+    "caution": "CommitPeak 是自系统启动以来的峰值，不能冒充本次运行峰值",
+    "interval_seconds": 1,
+    "coverage": "worker 启动、计算、输出写入、分片提交、合并与封存全过程",
+    "reporting": "报告为采样峰值/谷值，并附采样数与最大间隔",
+    "degradation": "关键字段读取失败或采样链出现缺口 → 返回 INCOMPLETE；禁止填零后继续 PASS",
+    "gap_policy": "允许的最大采样间隔与缺口处置随本文件一并生效；超出即 INCOMPLETE"
+  },
+  "breach_handling": "任一硬条件越界时：停止派发新任务，按已登记恢复流程处理在途工作并保留记录；不得在同一次执行中静默减少 worker、清空失败状态后再把整次运行记为通过。",
+  "resumption_contract": "资源中断后恢复必须沿用同一科学任务 ID、输入与随机种子；不得丢弃资源失败试次、不得换种子补一个、不得仅分析成功完成的子集。",
+  "history_retained": {
+    "attempts_under_old_policy": [
+      "S04_attempt_2_admission_failed_on_the_host_wide_instrument",
+      "S04_attempt_3_admission_failed_on_the_retired_commit_charge_check",
+      "S04_attempt_4_run_under_the_pre_shardfix_identity",
+      "S04_attempt_5_superseded_by_the_shardio_concurrency_fix",
+      "S04_attempt_6（本轮：NULL +7.4 MB / ALT +4.2 MB → 旧策略 FAIL，保留）"
+    ],
+    "rule": "旧策略下的判决保留、不回写；不得反向补出 V2 所需的原始时间序列，也不得给旧运行追加无证据的 V2 PASS"
+  },
+  "statement_of_the_retired_gate": {
+    "measured": "G_T = max_{0<=t<=T} U(t) - U(0)，U(t) 为整台宿主页文件当前占用",
+    "limits": [
+      "只描述窗口内系统占用的最大抬升，不记录占用来自哪个任务，也不记录期间累计分页读写",
+      "单调性：延长窗口 T2 >= T1 ⇒ G_T2 >= G_T1，零增长门天然受观察时长影响",
+      "对本项目记录的准确表述：该指标受系统背景活动影响，无法由当前记录识别本任务对页文件占用变化的贡献；本轮资源 FAIL **不足以**证明任务造成了内存压力，也**不足以**证明任务完全没有贡献"
+    ]
+  },
+  "not_claimed": [
+    "未据此把旧策略下的任何运行改判 PASS",
+    "未签发 G4",
+    "『零分页已获证明』的表述自本文件起停止使用"
+  ]
+}
