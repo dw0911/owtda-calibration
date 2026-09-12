@@ -162,6 +162,14 @@ def main() -> int:
         else:
             cmd = [part.format(out=str(out)) for part in spec["cmd"]]
             entry["command"] = cmd
+            # each step's evidence directory is regenerated from scratch: a
+            # fixture re-run over its own previous output would be judged against
+            # stale commits (the first run left a repaired orphan behind)
+            target_dirs = sorted({Path(part) for part in cmd
+                                  if str(out) in part and Path(part) != out})
+            for target in target_dirs:
+                if target.is_dir():
+                    shutil.rmtree(target)
             outcome = _run(cmd, cwd=REPO)
             entry.update(outcome)
             entry["status"] = "PASS" if outcome["exit_code"] == 0 else "FAIL"
