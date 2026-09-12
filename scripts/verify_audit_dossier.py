@@ -695,12 +695,27 @@ def verify_internal_contracts(
               isinstance(written, int) and written >= persisted,
               {"evidence_bytes_written": written, "ledger_bytes": persisted},
               None, f"{smoke_root}/SMOKE_SEAL_{phase}.json")
+        # Disk: the registered formula is estimated_peak_disk = SCALE * persisted, with
+        # SCALE = 1.25; the acceptance envelope additionally names the copies a formal
+        # run has on disk at peak, so "not yet counted" never hides behind a single
+        # number (re-audit ruling 2026-09-12: save / merge / seal / recovery overhead
+        # must be listed separately).
+        SCALE = 1.25
+        components = {
+            "ledger": persisted,
+            "staging_copy": persisted,      # written before the rename
+            "sealed_final_copy": persisted,  # coexists with staging only transiently
+            "recovery_copy": persisted,      # repair/orphan recomputation keeps both
+            "archive_copy": persisted,       # the delivered archive
+        }
+        worst_case = int(SCALE * sum(components.values()))
         free = res.get("disk_free_before_bytes")
-        estimate = int(1.25 * (persisted * 2))  # both ledgers, 25% headroom
         check(f"resources.{phase}.disk_estimate_within_rule",
-              f"{phase} 磁盘估计满足冻结规则 estimated_peak_disk <= 0.8*F_free",
-              isinstance(free, int) and free > 0 and estimate <= 0.8 * free,
-              {"estimate_bytes": estimate, "free_bytes": free},
+              f"{phase} 磁盘峰值估计（登记公式 + 单列未计入开销）满足 <= 0.8*F_free",
+              isinstance(free, int) and free > 0 and worst_case <= 0.8 * free,
+              {"components_bytes": components, "estimated_peak_disk": worst_case,
+               "free_bytes": free, "scale": SCALE,
+               "note": "conservative envelope, not an expected value"},
               {"rule": limits["disk_rule"]}, f"{smoke_root}/SMOKE_SEAL_{phase}.json")
 
     # 4) every state event must agree with its own ``state`` field.

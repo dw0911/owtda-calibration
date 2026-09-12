@@ -143,14 +143,20 @@ def sample_run(
         "measured_wall_milliseconds": round((time.time() - started) * 1000),
         "peak_total_rss_bytes": peak,
         # Diagnostic (NOT an acceptance condition): the run's private *commit
-        # charge*.  On Windows ``PROCESS_MEMORY_COUNTERS.PagefileUsage`` is committed
-        # private bytes, not how much was written to the page file -- measured on the
-        # S04 run: 8.5 GiB commit with 1.09 GiB peak RSS and 0 B of machine-wide
-        # page-file movement.  Recorded for the budget discussion; the field is named
+        # charge*.  Windows ``PROCESS_MEMORY_COUNTERS_EX.PagefileUsage`` is the process
+        # commit charge, not page-file writes.
+        #
+        # Three quantities must not be conflated: reserved address space
+        # (MEM_RESERVE: no commitment), commit charge (MEM_COMMIT: the system has
+        # promised the storage), and working set (what is resident now).  Measured on
+        # the S04 runs: commit ~8.5-9.1 GiB against ~1.05 GiB peak RSS.  The *cause* of
+        # that gap is NOT localised by these numbers: it cannot be attributed to the
+        # numeric libraries, and it cannot be used to rule out growth that accumulates
+        # with the workload.  Recorded for the capacity discussion; the field is named
         # for what it measures (AM_RESOURCE_MEASUREMENT_SEMANTICS).
         "own_commit_charge_instrument": (
             "psutil.Process.memory_info().pagefile summed over the process tree "
-            "(Windows: committed private bytes, not paging activity)"
+            "(Windows: process commit charge, not page-file writes)"
         ),
         "own_commit_charge_before_bytes": own_before,
         "own_commit_charge_peak_bytes": own_peak,
@@ -166,8 +172,11 @@ def sample_run(
         "host_swap_peak_bytes": swap_peak,
         "host_swap_growth_bytes": swap_peak - swap_before,
         "host_swap_measurement_caveat": (
-            "machine-wide page file usage: sensitive to unrelated host activity; "
-            "this is the declared condition and the sensitivity is disclosed"
+            "machine-wide page file *usage*: capacity, current usage, cumulative I/O and "
+            "process commit are distinct quantities, so zero net change over the window "
+            "does not prove that no paging occurred; the number is also sensitive to "
+            "unrelated host activity. This is the declared condition and its limits are "
+            "disclosed rather than overclaimed"
         ),
         "evidence_root": str(evidence_root),
         "disk_free_before_bytes": free_before,

@@ -67,7 +67,9 @@ class TestSampling:
         # the Windows instrument is available, elsewhere it is None (fail closed).
         commit = resources["own_commit_charge_growth_bytes"]
         assert commit is None or isinstance(commit, int)
-        assert "committed private bytes" in resources["own_commit_charge_instrument"]
+        instrument = resources["own_commit_charge_instrument"]
+        assert "commit charge" in instrument and "not page-file writes" in instrument
+        assert "does not prove" in resources["host_swap_measurement_caveat"]
 
     def test_record_is_canonical_encodable(self, tmp_path):
         """The record is embedded in the seal, whose hash is canonical.
