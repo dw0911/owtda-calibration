@@ -604,7 +604,14 @@ def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
     tags_evidence = (
         d.read("evidence/revision/git_show_ref_tags.txt").decode("utf-8").split()
     )
-    freeze_tags = [t for t in tags_evidence if t.startswith("v1") and "freeze" in t]
+    # `git show-ref --tags` prints "<hash> refs/tags/<tag>": take the tag half.
+    freeze_tags = sorted(
+        {
+            token.split("refs/tags/")[-1]
+            for token in tags_evidence
+            if "refs/tags/" in token and "freeze" in token
+        }
+    )
     check("dossier.cover_generated_from_artifacts",
           "README 的 revision 与冻结 tag 自工件派生（tag 不硬编码）",
           manifest["head"][:12] in readme and bool(freeze_tags)

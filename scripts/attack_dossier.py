@@ -164,7 +164,7 @@ def _inject_resources(seal: dict) -> dict:
             "schema_version": 1,
             "kind": "run_resources_v1",
             "peak_total_rss_bytes": 1024**3,
-            "swap_growth_bytes": 0,
+            "host_swap_growth_bytes": 0,
             "disk_free_before_bytes": 500 * 1024**3,
             "evidence_bytes_written": 1024,
             "run_id": seal.get("run_id"),
@@ -178,7 +178,7 @@ def a08_swap_growth(root: Path) -> list[str]:
     path = _seal(root, "SMOKE_NULL")
 
     def mutate(seal: dict) -> None:
-        _inject_resources(seal)["swap_growth_bytes"] = 4 * 1024 * 1024
+        _inject_resources(seal)["host_swap_growth_bytes"] = 4 * 1024 * 1024
 
     _edit_json(path, mutate)
     return [str(path)]
@@ -197,7 +197,7 @@ def a08_resource_unbound(root: Path) -> list[str]:
 
 def a01_wrong_cell_id(root: Path) -> list[str]:
     """Replace one ledger cell id: counts stay right, the identity does not."""
-    path = _one(root, "evaluation_rows.jsonl")
+    path = _one(root, "SMOKE_NULL/evaluation_rows.jsonl")
 
     def mutate(rows: list[dict]) -> None:
         rows[0]["logical_cell_id"] = "0" * 64
@@ -216,7 +216,7 @@ def a02_zero_based_replicate(root: Path) -> list[str]:
     """
     from owtda_cal import smoke_ids
 
-    path = _one(root, "evaluation_rows.jsonl")
+    path = _one(root, "SMOKE_NULL/evaluation_rows.jsonl")
     rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()
             if line.strip()]
     manifest = json.loads(
