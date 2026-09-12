@@ -79,9 +79,7 @@
         "**分析入口与输出**：analysis_input 绑定 phase seal 哈希；analysis_output 标 descriptive_only 且绑定账本哈希",
         "验证器把上述四项变为**必需**（fixture.execution_chain / phase_seals_carry_source_run_seal / analysis_entry_bound）"
       ],
-      "open": [
-        "交付包需由最终序列重建以携带这些工件（当前包内是旧版 fixture 证据）"
-      ],
+      "open": [],
       "evidence": [
         "audit/run_lifecycle_fixture.py", "tests/test_lifecycle_fixture.py（9 项）",
         "evidence/fixture/EXECUTION_CHAIN.json（随包）"
@@ -109,6 +107,28 @@
       "commits": ["c130fed"]
     }
   ],
+  "final_sequence": {
+    "performed_utc": "2026-09-12",
+    "order": "改工具 → 提交 → 重建冻结/运行身份 → 重采集测试证据（绑定新指纹）→ 重取身份证据 → 最终 smoke（双 phase）→ 重建 dossier → 攻击电池 → 导出并逐项校核",
+    "smoke": {
+      "SMOKE_NULL": {"wall_seconds": 990.12, "rows": 3584, "ph_windows": 73600, "errors": 0, "seal": "a6d68c52efbb"},
+      "SMOKE_ALT": {"rows": 1024, "ph_windows": 49152, "errors": 0},
+      "admission_passed": true,
+      "open_runs": []
+    },
+    "self_verification": "80 / 80 PASS, failed []",
+    "attack_battery": "16 / 16 detected, 16 / 16 attributable, baseline_all_pass true, baseline_failed []",
+    "export_check": {
+      "zip_bytes": 14518048,
+      "zip_sha256": "963747406a451914ed3c56a169ece1f1881e9c4688322d3a81d697a6159db2b4",
+      "sums_mismatched": 0,
+      "unlisted": 0,
+      "members": 588,
+      "members_equal_extracted": true,
+      "all_pass": true
+    },
+    "test_evidence": "641 collected == 641 JUnit testcases, 41 delivered test files, exit codes 0"
+  },
   "not_claimed": [
     "未产出任何 L2/L3 科学结论；未估计拒绝率或功效",
     "未把 G3/§9.4 写成最终 PASS（仍为 PROVISIONAL）",
