@@ -65,34 +65,56 @@ def _id(kind: str, *, project_id: str = PROJECT_ID, **fields: Any) -> str:
     )
 
 
-def build_scope(*, units: int = 2, features: int = 2, methods: int = 2) -> dict[str, list[dict]]:
-    """A tiny TEST scope: every id is domain-separated by the TEST project id."""
+#: The frozen TEST scope (task pack §4.2): 2 NULL/ALT data tasks x 2 representations
+#: x 2 calibrations = 8 real evaluations.  One definition, used by *both* the
+#: expected index and the real computation -- the re-audit found the two had drifted
+#: apart (8 expected ids, 4 real rows, intersection 0).
+TEST_TASKS = ("NULL", "ALT")
+TEST_FEATURES = ("bpi", "moments")
+
+
+def _method_ids() -> tuple[str, str]:
+    from owtda_cal.calibrate import M0_STABLE_ID, M1_STABLE_ID
+
+    return (M0_STABLE_ID, M1_STABLE_ID)
+
+
+def build_scope() -> dict[str, list[dict]]:
+    """The TEST scope: every id is domain-separated by the TEST project id.
+
+    The ids are derived from the same (task, feature, method) triple the
+    computation uses, so ``E_expected`` and ``E_actual`` are the same set by
+    construction -- and the fixture then *checks* that they still are.
+    """
     data: list[dict] = []
     feature: list[dict] = []
     evaluation: list[dict] = []
-    for u in range(units):
-        logical_data_key = _id("logical_data_key", unit=u)
-        data_unit_id = _id("data_unit", unit=u)
+    for task in TEST_TASKS:
+        logical_data_key = _id("logical_data_key", task=task)
+        data_unit_id = _id("data_unit_id", task=task)
         data.append({"logical_data_key": logical_data_key, "data_unit_id": data_unit_id})
-        for f in range(features):
-            logical_feature_key = _id("logical_feature_key", unit=u, feature=f)
-            feature_sufficient_id = _id("feature_sufficient", unit=u, feature=f)
+        for feature_id in TEST_FEATURES:
+            logical_feature_key = _id("logical_feature_key", task=task, feature=feature_id)
+            feature_sufficient_id = _id("feature_sufficient", task=task, feature=feature_id)
             feature.append({
                 "logical_data_key": logical_data_key,
                 "logical_feature_key": logical_feature_key,
                 "data_unit_id": data_unit_id,
                 "feature_sufficient_id": feature_sufficient_id,
             })
-            for m in range(methods):
+            for method_id in _method_ids():
                 evaluation.append({
                     "logical_data_key": logical_data_key,
                     "logical_feature_key": logical_feature_key,
                     "logical_evaluation_key": _id(
-                        "logical_evaluation_key", unit=u, feature=f, method=m
+                        "logical_evaluation_key", task=task, feature=feature_id,
+                        method=method_id,
                     ),
                     "data_unit_id": data_unit_id,
                     "feature_sufficient_id": feature_sufficient_id,
-                    "evaluation_id": _id("evaluation", unit=u, feature=f, method=m),
+                    "evaluation_id": _id(
+                        "evaluation", task=task, feature=feature_id, method=method_id
+                    ),
                 })
     return {"data": data, "feature": feature, "evaluation": evaluation}
 
@@ -163,55 +185,100 @@ def real_computation(
         calibrate_m1,
     )
     W, stride, M = 64, 16, 8
-    # The real point-cloud contract requires a 2-D (multi-channel) window whenever
-    # delay=False, i.e. for every scenario but N_AR.
-    series = np.random.default_rng(20260912).standard_normal(((M - 1) * stride + W, 2))
-    windows = [series[i * stride:i * stride + W] for i in range(M)]
     rows: list[dict[str, Any]] = []
-    for feature_id in ("bpi", "moments"):
-        matrix = features.feature_matrix_for_windows(
-            windows, feature_kind=feature_id, scenario=features.SCENARIO_N_CIRCLE
-        )
-        for method_id, out in (
-            (M0_STABLE_ID, calibrate_m0(
-                matrix, root_key_hex=root_key_hex,
-                stream_kind="fixture_M0_permutation",
-                stream_fields={"feature_id": feature_id, "shard_plan_hash": shard_plan_hash},
-            )),
-            (M1_STABLE_ID, calibrate_m1(
-                matrix, root_key_hex=root_key_hex, W=W, stride=stride,
-                stream_kind="fixture_M1_gaussian_innovation",
-                stream_fields={"feature_id": feature_id, "shard_plan_hash": shard_plan_hash},
-            )),
-        ):
-            evaluation_id = _id("evaluation", feature=feature_id, method=method_id[:8])
-            rows.append({
-                "phase": PHASE_PREDICTION,
-                "experiment_id": _id("experiment", unit="fixture"),
-                "logical_cell_id": _id("logical_cell", unit="fixture"),
-                "logical_data_key": _id("logical_data_key", unit="fixture"),
-                "logical_feature_key": _id("logical_feature_key", feature=feature_id),
-                "logical_evaluation_key": _id(
-                    "logical_evaluation_key", feature=feature_id, method=method_id[:8]
-                ),
-                "data_unit_id": _id("data_unit", unit="fixture"),
-                "feature_sufficient_id": _id("feature_sufficient", feature=feature_id),
-                "evaluation_id": evaluation_id,
-                "DGP_family": "fixture_family",
-                "scenario_id": features.SCENARIO_N_CIRCLE,
-                "rho": "0",
-                "feature_id": feature_id,
-                "method_id": method_id,
-                "observed_statistic": float(out["observed_statistic"]),
-                "exceed_count": int(out["exceed_count"]),
-                "p_value": float(out["p_value"]),
-                "reject": bool(out["reject"]),
-            })
+    shards: list[dict[str, Any]] = []
+    for task in TEST_TASKS:
+        # One data task -> one shard.  The two tasks differ in their seed stream and
+        # in whether a change point is injected (ALT), so the eight evaluations are
+        # eight genuinely distinct computations.
+        rng = np.random.default_rng(20260912 if task == "NULL" else 20260913)
+        # The real point-cloud contract requires a 2-D (multi-channel) window whenever
+        # delay=False, i.e. for every scenario but N_AR.
+        series = rng.standard_normal(((M - 1) * stride + W, 2))
+        if task == "ALT":
+            series[M // 2 * stride:] += 1.0  # one injected change point
+        windows = [series[i * stride:i * stride + W] for i in range(M)]
+        task_rows: list[dict[str, Any]] = []
+        for feature_id in TEST_FEATURES:
+            matrix = features.feature_matrix_for_windows(
+                windows, feature_kind=feature_id, scenario=features.SCENARIO_N_CIRCLE
+            )
+            for method_id, out in (
+                (M0_STABLE_ID, calibrate_m0(
+                    matrix, root_key_hex=root_key_hex,
+                    stream_kind="fixture_M0_permutation",
+                    stream_fields={"task": task, "feature_id": feature_id,
+                                   "shard_plan_hash": shard_plan_hash},
+                )),
+                (M1_STABLE_ID, calibrate_m1(
+                    matrix, root_key_hex=root_key_hex, W=W, stride=stride,
+                    stream_kind="fixture_M1_gaussian_innovation",
+                    stream_fields={"task": task, "feature_id": feature_id,
+                                   "shard_plan_hash": shard_plan_hash},
+                )),
+            ):
+                row = {
+                    "phase": PHASE_PREDICTION,
+                    "experiment_id": _id("experiment", task=task),
+                    "logical_cell_id": _id("logical_cell", task=task),
+                    "logical_data_key": _id("logical_data_key", task=task),
+                    "logical_feature_key": _id(
+                        "logical_feature_key", task=task, feature=feature_id
+                    ),
+                    "logical_evaluation_key": _id(
+                        "logical_evaluation_key", task=task, feature=feature_id,
+                        method=method_id,
+                    ),
+                    "data_unit_id": _id("data_unit_id", task=task),
+                    "feature_sufficient_id": _id(
+                        "feature_sufficient", task=task, feature=feature_id
+                    ),
+                    "evaluation_id": _id(
+                        "evaluation", task=task, feature=feature_id, method=method_id
+                    ),
+                    "DGP_family": "fixture_family",
+                    "scenario_id": features.SCENARIO_N_CIRCLE,
+                    "rho": "0",
+                    "task": task,
+                    "feature_id": feature_id,
+                    "method_id": method_id,
+                    "observed_statistic": float(out["observed_statistic"]),
+                    "exceed_count": int(out["exceed_count"]),
+                    "p_value": float(out["p_value"]),
+                    "reject": bool(out["reject"]),
+                }
+                task_rows.append(row)
+        evaluation_lines = [
+            (json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n").encode()
+            for row in task_rows
+        ]
+        feature_lines = [
+            (json.dumps(
+                {
+                    "task": task, "feature_id": feature_id,
+                    "feature_sufficient_id": _id(
+                        "feature_sufficient", task=task, feature=feature_id
+                    ),
+                    "data_unit_id": _id("data_unit_id", task=task),
+                    "windows": M,
+                },
+                ensure_ascii=False, sort_keys=True,
+            ) + "\n").encode()
+            for feature_id in TEST_FEATURES
+        ]
+        shards.append({
+            "task": task,
+            "shard_id": _id("shard", task=task),
+            "evaluation_lines": evaluation_lines,
+            "feature_lines": feature_lines,
+            "evaluation_ids": [r["evaluation_id"] for r in task_rows],
+        })
+        rows.extend(task_rows)
     ledger = out_dir / "evaluation_rows.jsonl"
-    ledger.write_text(
-        "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows),
-        encoding="utf-8",
-    )
+    ledger.write_bytes(b"".join(
+        (json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n").encode()
+        for row in rows
+    ))
     return {
         "rows": len(rows),
         "ledger": ledger.name,
@@ -221,18 +288,91 @@ def real_computation(
         "methods": sorted({row["method_id"] for row in rows}),
         "B": 999,
         "windows": M,
+        "tasks": list(TEST_TASKS),
+        "shards": shards,
+        "evaluation_ids": [r["evaluation_id"] for r in rows],
     }
 
 
-def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
-    """Real shard commit, idempotent re-commit, deletion block and orphan recovery."""
+def shard_roundtrip(*, out_dir: Path, computation: dict[str, Any]) -> dict[str, Any]:
+    """Commit the real shards, then run the negative probes in their own root.
+
+    Task pack §4.2/§4.3.  Previously the shards carried a ``{"row":1}`` placeholder,
+    the expected 8 ids and the 4 real ids were disjoint, and the *positive* registry
+    was left holding a commit whose directory the deletion probe had removed.  Now:
+
+    * one shard per data task, carrying the real evaluation/feature lines;
+    * the merged ledger is built by reading back what was actually committed, so
+      ``∪E_committed`` is what the phase seal hashes;
+    * the deletion and orphan probes run under ``<out_dir>/negative`` -- a separate
+      TEST execution root -- so their debris can never mix into the active ledger.
+    """
     from owtda_cal import shardio
 
     commit_shard = shardio.commit_shard
     run_root = str(out_dir / "runs")
     registry = str(out_dir / "shard_registry.jsonl")
-    shard_id = _id("shard", unit="fixture")
     plan_hash = _id("shard_plan", unit="fixture")
+
+    committed: list[dict[str, Any]] = []
+    evaluation_payload = b""
+    feature_payload = b""
+    for shard in computation["shards"]:
+        kw = {
+            "run_root": run_root, "run_instance_id": RUN_INSTANCE_ID,
+            "shard_id": shard["shard_id"], "shard_plan_hash": plan_hash,
+            "evaluation_lines": shard["evaluation_lines"],
+            "feature_lines": shard["feature_lines"],
+            "evaluation_meta": {"row_count": len(shard["evaluation_lines"])},
+            "feature_meta": {"row_count": len(shard["feature_lines"])},
+            "registry_path": registry,
+        }
+        record = commit_shard(**kw)
+        again = commit_shard(**kw)  # idempotent re-commit: one record, same bytes
+        final = Path(run_root, RUN_INSTANCE_ID, f"{shard['shard_id']}.final")
+        evaluation_payload += (final / "evaluation.scientific.jsonl").read_bytes()
+        feature_payload += (final / "feature.scientific.jsonl").read_bytes()
+        committed.append({
+            "task": shard["task"], "shard_id": shard["shard_id"],
+            "shard_commit_hash": record["shard_commit_hash"],
+            "idempotent_recommit": again["shard_commit_hash"] == record["shard_commit_hash"],
+            "evaluation_ids": list(shard["evaluation_ids"]),
+        })
+
+    (out_dir / "evaluation_ledger.jsonl").write_bytes(evaluation_payload)
+    (out_dir / "feature_ledger.jsonl").write_bytes(feature_payload)
+
+    negative = _negative_shard_probes(out_dir=out_dir, plan_hash=plan_hash)
+
+    return {
+        "committed_shards": committed,
+        "committed_evaluation_ids": sorted(
+            evaluation_id for shard in committed for evaluation_id in shard["evaluation_ids"]
+        ),
+        "ledger": "evaluation_ledger.jsonl",
+        "feature_ledger": "feature_ledger.jsonl",
+        "idempotent_recommit": all(c["idempotent_recommit"] for c in committed),
+        "deleted_final_blocked": negative["deleted_final_blocked"],
+        "orphan_refused": negative["orphan_refused"],
+        "orphan_committed_by_repair": negative["orphan_committed_by_repair"],
+        "registry_records": len(
+            [line for line in Path(registry).read_text(encoding="utf-8").splitlines()
+             if line.strip()]
+        ),
+        "negative_root": "negative",
+        "negative_registry_records": negative["registry_records"],
+    }
+
+
+def _negative_shard_probes(*, out_dir: Path, plan_hash: str) -> dict[str, Any]:
+    """The destructive probes, isolated in their own TEST execution root."""
+    from owtda_cal import shardio
+
+    commit_shard = shardio.commit_shard
+    negative_dir = out_dir / "negative"
+    run_root = str(negative_dir / "runs")
+    registry = str(negative_dir / "shard_registry.jsonl")
+    shard_id = _id("shard", unit="negative")
     kw = {
         "run_root": run_root, "run_instance_id": RUN_INSTANCE_ID, "shard_id": shard_id,
         "shard_plan_hash": plan_hash, "evaluation_lines": [b'{"row":1}\n'],
@@ -240,7 +380,6 @@ def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
         "registry_path": registry,
     }
     commit_shard(**kw)
-    again = commit_shard(**kw)
     final = Path(run_root, RUN_INSTANCE_ID, f"{shard_id}.final")
     deleted_blocked = False
     shutil.rmtree(final)
@@ -278,7 +417,7 @@ def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
         orphan_refused = True
     shardio.repair_orphan(
         run_root=run_root, run_instance_id=RUN_INSTANCE_ID, shard_id=orphan_id,
-        registry_path=registry, recompute_to=str(out_dir / "orphan_recompute"),
+        registry_path=registry, recompute_to=str(negative_dir / "orphan_recompute"),
         expected_manifest_bytes=manifest_bytes,
         expected_evaluation_bytes=orphan_eval,
         expected_feature_bytes=orphan_feat,
@@ -286,7 +425,6 @@ def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
     )
     orphan_committed = True
     return {
-        "idempotent_recommit": bool(again),
         "deleted_final_blocked": deleted_blocked,
         "orphan_refused": orphan_refused,
         "orphan_committed_by_repair": orphan_committed,
@@ -322,13 +460,46 @@ def run_seal_and_analysis(*, out_dir: Path, ledger: dict[str, Any]) -> dict[str,
             "terminal_state": "RUN_SEALED",
         },
     )
+    return {
+        "run_seal_hash": sealed["smoke_seal_hash"],
+        "run_seal_file": sealed["seal_file"],
+        "sealed_ledger": ledger["ledger"],
+        "sealed_ledger_sha256": ledger["ledger_sha256"],
+        "sealed_row_count": ledger["rows"],
+    }
+
+
+def finalize_analysis(
+    *,
+    out_dir: Path,
+    ledger_file: str,
+    phase_seal_hashes: list[str],
+    analysis_seal_hash: str,
+    source_run_seal_hashes: list[str],
+) -> dict[str, Any]:
+    """Freeze the analysis input, then produce the output from the real ledger.
+
+    Task pack §4.2: the previous analysis entry took its numbers from the summary
+    the computation had already produced and only bolted the phase reference on
+    afterwards.  Here the input (phase seals, ledger path and hash) is frozen
+    first, and every reported figure is then recomputed by reading the actual
+    committed rows -- including the row count, the id sets and the ledger hash.
+    """
+    ledger_path = out_dir / ledger_file
+    raw = ledger_path.read_bytes()
+    rows = [
+        json.loads(line)
+        for line in raw.decode("utf-8").splitlines()
+        if line.strip()
+    ]
     analysis_input = {
         "schema_version": 1,
         "kind": "analysis_input_manifest",
-        "phase_seal_hashes": [],  # filled by the caller with the phase seal hash
-        "source_run_seal_hashes": [sealed["smoke_seal_hash"]],
-        "ledger": ledger["ledger"],
-        "ledger_sha256": ledger["ledger_sha256"],
+        "phase_seal_hashes": sorted(set(phase_seal_hashes)),
+        "analysis_seal_hash": analysis_seal_hash,
+        "source_run_seal_hashes": sorted(set(source_run_seal_hashes)),
+        "ledger": ledger_file,
+        "ledger_sha256": hashlib.sha256(raw).hexdigest(),
     }
     (out_dir / "analysis_input.json").write_text(
         json.dumps(analysis_input, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -339,21 +510,23 @@ def run_seal_and_analysis(*, out_dir: Path, ledger: dict[str, Any]) -> dict[str,
         "kind": "analysis_output",
         "descriptive_only": True,
         "note": "counts and identities only: the fixture carries no rejection rate or power",
-        "rows": ledger["rows"],
-        "features": ledger["features"],
-        "methods": ledger["methods"],
-        "ledger_sha256": ledger["ledger_sha256"],
+        "rows": len(rows),
+        "evaluation_ids": sorted({row["evaluation_id"] for row in rows}),
+        "duplicate_evaluation_ids": sorted({
+            row["evaluation_id"] for row in rows
+            if [r["evaluation_id"] for r in rows].count(row["evaluation_id"]) > 1
+        }),
+        "features": sorted({row["feature_id"] for row in rows}),
+        "methods": sorted({row["method_id"] for row in rows}),
+        "ledger_sha256": hashlib.sha256(raw).hexdigest(),
+        "ledger_bytes": len(raw),
     }
     (out_dir / "analysis_output.json").write_text(
         json.dumps(output, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    return {
-        "run_seal_hash": sealed["smoke_seal_hash"],
-        "run_seal_file": sealed["seal_file"],
-        "analysis_input": "analysis_input.json",
-        "analysis_output": "analysis_output.json",
-    }
+    return {"analysis_input": "analysis_input.json",
+            "analysis_output": "analysis_output.json", "rows": len(rows)}
 
 
 def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
@@ -393,34 +566,87 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
 
     # --- the real execution chain (re-audit: metadata alone is not a lifecycle) ---
     root_key_hex = hashlib.sha256(b"TEST-FIXTURE-ROOT-KEY").hexdigest()
-    execution: dict[str, Any] = {
-        "shards": shard_roundtrip(out_dir=out_dir),
-        "computation": real_computation(
-            out_dir=out_dir, root_key_hex=root_key_hex, shard_plan_hash=shard_hash
-        ),
-    }
-    execution.update(
-        run_seal_and_analysis(out_dir=out_dir, ledger=execution["computation"])
+    computation = real_computation(
+        out_dir=out_dir, root_key_hex=root_key_hex, shard_plan_hash=shard_hash
     )
+    shards = shard_roundtrip(out_dir=out_dir, computation=computation)
+
+    # The ledger the seals hash is the *merged committed* payload, not the expected
+    # index and not the computation's private row file.
+    merged_ledger = out_dir / shards["ledger"]
+    merged_bytes = merged_ledger.read_bytes()
+    merged_rows = [
+        json.loads(line) for line in merged_bytes.decode("utf-8").splitlines() if line.strip()
+    ]
+    expected_ids = sorted(r["evaluation_id"] for r in evaluation_rows)
+    actual_ids = sorted(computation["evaluation_ids"])
+    committed_ids = sorted(shards["committed_evaluation_ids"])
+    if not (expected_ids == actual_ids == committed_ids):
+        raise FixtureError(
+            "evaluation identity sets disagree: expected "
+            f"{len(expected_ids)}, actual {len(actual_ids)}, committed "
+            f"{len(committed_ids)} (intersection "
+            f"{len(set(expected_ids) & set(actual_ids) & set(committed_ids))})"
+        )
+    if len(set(committed_ids)) != len(committed_ids):
+        raise FixtureError("an evaluation id was committed more than once")
+    if len(merged_rows) != len(committed_ids):
+        raise FixtureError(
+            f"the merged ledger holds {len(merged_rows)} rows for "
+            f"{len(committed_ids)} committed evaluations"
+        )
+
+    # The report is JSON: the raw payload bytes stay out of it, only their ids and
+    # hashes are recorded (the bytes themselves live in the committed shards).
+    computation_public = {
+        **{k: v for k, v in computation.items() if k != "shards"},
+        "shards": [
+            {"task": s["task"], "shard_id": s["shard_id"],
+             "evaluation_ids": list(s["evaluation_ids"])}
+            for s in computation["shards"]
+        ],
+    }
+    execution: dict[str, Any] = {"computation": computation_public, "shards": shards}
+    execution.update(run_seal_and_analysis(out_dir=out_dir, ledger={
+        "ledger": shards["ledger"],
+        "ledger_bytes": len(merged_bytes),
+        "ledger_sha256": hashlib.sha256(merged_bytes).hexdigest(),
+        "rows": len(merged_rows),
+        "features": sorted({row["feature_id"] for row in merged_rows}),
+        "methods": sorted({row["method_id"] for row in merged_rows}),
+    }))
+    set_equality = {
+        "expected": expected_ids,
+        "actual": actual_ids,
+        "committed": committed_ids,
+        "identical": True,
+        "count_per_evaluation": 1,
+    }
     upstream_refs = [{
         "role": "source_run_seal",
         "stable_id": execution["run_seal_hash"],
         "generation_id": EVIDENCE_GENERATION_ID,
         "hash": execution["run_seal_hash"],
     }]
-    (out_dir / "EXECUTION_CHAIN.json").write_text(
-        json.dumps(execution, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    # written once the analysis has been bound to the sealed phases (see below)
 
-    ledger = b"".join(canonical_json_bytes(r) + b"\n" for r in evaluation_rows)
-    feature_ledger = b"".join(canonical_json_bytes(r) + b"\n" for r in feature_rows)
+    # The ledger content hash is taken over the real committed scientific bytes --
+    # re-audit 2026-09-13: it used to be the serialisation of the *expected id
+    # dictionary*, so the seal did not cover a single real row.
+    ledger = merged_bytes
+    feature_ledger = (out_dir / shards["feature_ledger"]).read_bytes()
 
+    merged_feature_rows = [
+        json.loads(line)
+        for line in (out_dir / shards["feature_ledger"]).read_text(encoding="utf-8")
+        .splitlines() if line.strip()
+    ]
     prediction_seal = indexes.build_phase_seal(**_seal_fields(
         phase=PHASE_PREDICTION, parent_phase_seal_hash=None, data_hash=data_hash,
         feature_hash=feature_hash, evaluation_hash=evaluation_hash, ledger=ledger,
-        feature_ledger=feature_ledger, evaluation_rows=evaluation_rows,
-        feature_rows=feature_rows, n_logical_keys=len(data_rows), shard_hash=shard_hash,
+        feature_ledger=feature_ledger, evaluation_rows=merged_rows,
+        feature_rows=merged_feature_rows, n_logical_keys=len(data_rows),
+        shard_hash=shard_hash,
         source_run_seal_hashes=[execution["run_seal_hash"]], upstream_refs=upstream_refs,
     ))
     prediction_seal_hash = indexes.phase_seal_hash(prediction_seal)
@@ -429,19 +655,23 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
     analysis_seal = indexes.build_phase_seal(**_seal_fields(
         phase=PHASE_ANALYSIS, parent_phase_seal_hash=parent, data_hash=data_hash,
         feature_hash=feature_hash, evaluation_hash=evaluation_hash, ledger=ledger,
-        feature_ledger=feature_ledger, evaluation_rows=evaluation_rows,
-        feature_rows=feature_rows, n_logical_keys=len(data_rows), shard_hash=shard_hash,
+        feature_ledger=feature_ledger, evaluation_rows=merged_rows,
+        feature_rows=merged_feature_rows, n_logical_keys=len(data_rows),
+        shard_hash=shard_hash,
         source_run_seal_hashes=[execution["run_seal_hash"]], upstream_refs=upstream_refs,
     ))
     analysis_seal_hash = indexes.phase_seal_hash(analysis_seal)
 
-    # Bind the analysis entry to the sealed phase (re-audit: "独立分析入口").
-    analysis_input_path = out_dir / "analysis_input.json"
-    analysis_input = json.loads(analysis_input_path.read_text(encoding="utf-8"))
-    analysis_input["phase_seal_hashes"] = sorted({prediction_seal_hash, analysis_seal_hash})
-    analysis_input["analysis_seal_hash"] = analysis_seal_hash
-    analysis_input_path.write_text(
-        json.dumps(analysis_input, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+    # Bind the analysis entry to the sealed phases: the input is frozen first, and
+    # the output is then computed from the actual committed rows (§4.2).
+    execution.update(finalize_analysis(
+        out_dir=out_dir, ledger_file=shards["ledger"],
+        phase_seal_hashes=[prediction_seal_hash, analysis_seal_hash],
+        analysis_seal_hash=analysis_seal_hash,
+        source_run_seal_hashes=[execution["run_seal_hash"]],
+    ))
+    (out_dir / "EXECUTION_CHAIN.json").write_text(
+        json.dumps(execution, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
 
@@ -568,12 +798,19 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
         "hashes": {
             "expected_data_index_hash": data_hash,
             "expected_index_hash": evaluation_hash,
+            "expected_evaluation_index_hash": evaluation_hash,
             "expected_feature_index_hash": feature_hash,
+            # 'expected index' and 'ledger content' are different roles: the first
+            # is what the plan promises, the second is what was really committed.
+            "active_ledger_content_hash": hashlib.sha256(ledger).hexdigest(),
+            "active_feature_ledger_content_hash": hashlib.sha256(feature_ledger).hexdigest(),
+            "roles_are_distinct": hashlib.sha256(ledger).hexdigest() != evaluation_hash,
             "shard_plan_hash": shard_hash,
             "prediction_phase_seal_hash": prediction_seal_hash,
             "analysis_phase_seal_hash": analysis_seal_hash,
             "phase_state_tip": tip,
         },
+        "set_equality": set_equality,
         "chain": [
             {"phase": e["phase"], "event_type": e["event_type"],
              "expected_parent_phase_seal_hash": e["expected_parent_phase_seal_hash"],
@@ -588,6 +825,11 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
             "fault_injected": fault,
             "real_computation_executed": True,
             "shard_commit_and_recovery_exercised": True,
+            "expected_actual_committed_identical": set_equality["identical"],
+            "ledger_is_the_committed_payload": (
+                hashlib.sha256(ledger).hexdigest() == execution["sealed_ledger_sha256"]
+            ),
+            "analysis_reads_the_actual_ledger": True,
             "phase_seals_carry_source_run_seal": bool(
                 prediction_seal["ordered_source_run_seal_hashes"]
             ),
