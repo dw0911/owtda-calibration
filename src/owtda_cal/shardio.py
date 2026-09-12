@@ -170,6 +170,17 @@ def commit_shard(
         )
         return existing
 
+    if existing is not None and not os.path.exists(final):
+        # Re-audit 2026-09-12: a registry record with the committed directory gone
+        # used to fall through to the first-commit path, so repeating the submission
+        # with *different* content appended a second, conflicting record.  This is a
+        # recovery situation, not an idempotent retry: block and make it explicit.
+        raise ShardError(
+            f"COMMIT_RECORD_WITHOUT_FINAL: {os.path.basename(final)} is missing while a "
+            "SHARD_COMMITTED record exists; rebuild the directory from the record and "
+            "verify byte-identity, or void the record explicitly -- do not re-commit"
+        )
+
     if os.path.exists(staging):
         raise ShardError("staging directory already exists; clean it first")
     os.makedirs(staging)
@@ -272,23 +283,33 @@ def repair_orphan(
 
 
 def allocate_attempt(registry_path: str, *, run_instance_id: str, evaluation_id: str) -> int:
-    """Atomically allocate the next 1-based attempt number for (run, evaluation)."""
-    n = 0
-    for rec in _iter_commits(registry_path) or ():
-        if rec.get("run_instance_id") == run_instance_id and rec.get("evaluation_id") == evaluation_id:
-            n = max(n, int(rec["attempt_number"]))
-    record = {
-        "schema_version": 1,
-        "run_instance_id": run_instance_id,
-        "evaluation_id": evaluation_id,
-        "attempt_number": n + 1,
-    }
-    try:
-        append_cas(registry_path, record, expected_tip=read_tip(registry_path, hash_field="attempt_id"),
-                   hash_field="attempt_id")
-    except ChainError as exc:
-        raise ShardError(f"attempt allocation CAS failed: {exc}") from exc
-    return n + 1
+    """Atomically allocate the next 1-based attempt number for (run, evaluation).
+
+    Re-audit 2026-09-12: the number used to be computed *before* the chain tip was
+    read, so two callers could both compute ``n+1`` and both CAS successfully (each
+    against a tip the other had already moved past), returning the same number twice.
+    The snapshot is now taken first and the CAS is bound to it: any concurrent append
+    between the read and the append moves the tip and fails the CAS, which is retried.
+    """
+    for _ in range(8):
+        tip = read_tip(registry_path, hash_field="attempt_id")  # snapshot FIRST
+        n = 0
+        for rec in _iter_commits(registry_path) or ():
+            if (rec.get("run_instance_id") == run_instance_id
+                    and rec.get("evaluation_id") == evaluation_id):
+                n = max(n, int(rec["attempt_number"]))
+        record = {
+            "schema_version": 1,
+            "run_instance_id": run_instance_id,
+            "evaluation_id": evaluation_id,
+            "attempt_number": n + 1,
+        }
+        try:
+            append_cas(registry_path, record, expected_tip=tip, hash_field="attempt_id")
+        except ChainError:
+            continue  # the snapshot moved: re-read and recompute, never reuse the number
+        return n + 1
+    raise ShardError("attempt allocation could not obtain a stable snapshot")
 
 
 __all__ = [
