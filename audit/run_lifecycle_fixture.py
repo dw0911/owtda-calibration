@@ -24,12 +24,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
+sys.path.insert(0, str(REPO / "audit"))
 
 from owtda_cal import chains, indexes
 from owtda_cal.canonical import canonical_json_bytes
@@ -42,7 +44,7 @@ FREEZE_ID = "0" * 64
 EVIDENCE_GENERATION_ID = "TEST-G01"
 PHASE_PREDICTION = "TEST_PREDICTION"
 PHASE_ANALYSIS = "TEST_ANALYSIS"
-RUN_INSTANCE_ID = "TEST:lifecycle:01"
+RUN_INSTANCE_ID = "TEST_LIFECYCLE_01"
 PHASE_STATE_FILE = "PHASE_STATE_REGISTRY.jsonl"
 PHASE_STATE_HASH_FIELD = "phase_state_event_hash"
 FAULTS = ("parent_seal", "shard_plan_hash", "index_hash", "terminal_state")
@@ -108,6 +110,8 @@ def _seal_fields(
     feature_rows: list[dict],
     n_logical_keys: int,
     shard_hash: str,
+    source_run_seal_hashes: list[str],
+    upstream_refs: list[dict[str, Any]],
 ) -> dict[str, Any]:
     return {
         "phase": phase,
@@ -133,8 +137,216 @@ def _seal_fields(
         "feature_sufficient_id_set_hash": indexes.id_set_hash(
             "feature_sufficient_id_set", [r["feature_sufficient_id"] for r in feature_rows]
         ),
-        "ordered_source_run_seal_hashes": [],
-        "ordered_upstream_artifact_refs": [],
+        "ordered_source_run_seal_hashes": sorted(set(source_run_seal_hashes)),
+        "ordered_upstream_artifact_refs": upstream_refs,
+    }
+
+
+def real_computation(
+    *, out_dir: Path, root_key_hex: str, shard_plan_hash: str
+) -> dict[str, Any]:
+    """Real PH/BPI/MOMENTS -> M0/M1, producing an actual ledger file (TEST scope).
+
+    Re-audit 2026-09-12: the first fixture walked the metadata chain only -- no real
+    PH, no calibration, and the "ledger" was an ID dictionary.  This runs a handful of
+    real windows through the real feature and calibration paths (B=999 as frozen) and
+    writes the rows as a genuine record file.  It proves the *path* runs; it carries no
+    scientific claim.
+    """
+    import numpy as np
+
+    from owtda_cal import features
+    from owtda_cal.calibrate import (
+        M0_STABLE_ID,
+        M1_STABLE_ID,
+        calibrate_m0,
+        calibrate_m1,
+    )
+    W, stride, M = 64, 16, 8
+    # The real point-cloud contract requires a 2-D (multi-channel) window whenever
+    # delay=False, i.e. for every scenario but N_AR.
+    series = np.random.default_rng(20260912).standard_normal(((M - 1) * stride + W, 2))
+    windows = [series[i * stride:i * stride + W] for i in range(M)]
+    rows: list[dict[str, Any]] = []
+    for feature_id in ("bpi", "moments"):
+        matrix = features.feature_matrix_for_windows(
+            windows, feature_kind=feature_id, scenario=features.SCENARIO_N_CIRCLE
+        )
+        for method_id, out in (
+            (M0_STABLE_ID, calibrate_m0(
+                matrix, root_key_hex=root_key_hex,
+                stream_kind="fixture_M0_permutation",
+                stream_fields={"feature_id": feature_id, "shard_plan_hash": shard_plan_hash},
+            )),
+            (M1_STABLE_ID, calibrate_m1(
+                matrix, root_key_hex=root_key_hex, W=W, stride=stride,
+                stream_kind="fixture_M1_gaussian_innovation",
+                stream_fields={"feature_id": feature_id, "shard_plan_hash": shard_plan_hash},
+            )),
+        ):
+            evaluation_id = _id("evaluation", feature=feature_id, method=method_id[:8])
+            rows.append({
+                "phase": PHASE_PREDICTION,
+                "experiment_id": _id("experiment", unit="fixture"),
+                "logical_cell_id": _id("logical_cell", unit="fixture"),
+                "logical_data_key": _id("logical_data_key", unit="fixture"),
+                "logical_feature_key": _id("logical_feature_key", feature=feature_id),
+                "logical_evaluation_key": _id(
+                    "logical_evaluation_key", feature=feature_id, method=method_id[:8]
+                ),
+                "data_unit_id": _id("data_unit", unit="fixture"),
+                "feature_sufficient_id": _id("feature_sufficient", feature=feature_id),
+                "evaluation_id": evaluation_id,
+                "DGP_family": "fixture_family",
+                "scenario_id": features.SCENARIO_N_CIRCLE,
+                "rho": "0",
+                "feature_id": feature_id,
+                "method_id": method_id,
+                "observed_statistic": float(out["observed_statistic"]),
+                "exceed_count": int(out["exceed_count"]),
+                "p_value": float(out["p_value"]),
+                "reject": bool(out["reject"]),
+            })
+    ledger = out_dir / "evaluation_rows.jsonl"
+    ledger.write_text(
+        "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    return {
+        "rows": len(rows),
+        "ledger": ledger.name,
+        "ledger_bytes": ledger.stat().st_size,
+        "ledger_sha256": hashlib.sha256(ledger.read_bytes()).hexdigest(),
+        "features": sorted({row["feature_id"] for row in rows}),
+        "methods": sorted({row["method_id"] for row in rows}),
+        "B": 999,
+        "windows": M,
+    }
+
+
+def shard_roundtrip(*, out_dir: Path) -> dict[str, Any]:
+    """Real shard commit, idempotent re-commit, deletion block and orphan recovery."""
+    from owtda_cal import shardio
+
+    commit_shard = shardio.commit_shard
+    run_root = str(out_dir / "runs")
+    registry = str(out_dir / "shard_registry.jsonl")
+    shard_id = _id("shard", unit="fixture")
+    plan_hash = _id("shard_plan", unit="fixture")
+    kw = {
+        "run_root": run_root, "run_instance_id": RUN_INSTANCE_ID, "shard_id": shard_id,
+        "shard_plan_hash": plan_hash, "evaluation_lines": [b'{"row":1}\n'],
+        "feature_lines": [b'{"f":1}\n'], "evaluation_meta": {}, "feature_meta": {},
+        "registry_path": registry,
+    }
+    commit_shard(**kw)
+    again = commit_shard(**kw)
+    final = Path(run_root, RUN_INSTANCE_ID, f"{shard_id}.final")
+    deleted_blocked = False
+    shutil.rmtree(final)
+    try:
+        commit_shard(**kw)
+    except shardio.ShardError:
+        deleted_blocked = True
+    # orphan recovery: a .final with no commit must refuse, then repair_orphan appends
+    orphan_id = _id("shard", unit="orphan")
+    orphan_dir = Path(run_root, RUN_INSTANCE_ID, f"{orphan_id}.final")
+    orphan_dir.mkdir(parents=True, exist_ok=True)
+    manifest = shardio.build_shard_manifest(
+        run_instance_id=RUN_INSTANCE_ID, shard_id=orphan_id, shard_plan_hash=plan_hash,
+        evaluation={}, feature={},
+    )
+    manifest_bytes = canonical_json_bytes(manifest) + b"\n"
+    (orphan_dir / "shard_manifest.json").write_bytes(manifest_bytes)
+    (orphan_dir / "evaluation.scientific.jsonl").write_bytes(b'{"row":1}\n')
+    (orphan_dir / "feature.scientific.jsonl").write_bytes(b'{"f":1}\n')
+    orphan_refused = False
+    orphan_committed = False
+    try:
+        commit_shard(
+            run_root=run_root, run_instance_id=RUN_INSTANCE_ID, shard_id=orphan_id,
+            shard_plan_hash=plan_hash, evaluation_lines=[b'{"row":1}\n'],
+            feature_lines=[b'{"f":1}\n'], evaluation_meta={}, feature_meta={},
+            registry_path=registry,
+        )
+    except shardio.ShardError:
+        orphan_refused = True
+    shardio.repair_orphan(
+        run_root=run_root, run_instance_id=RUN_INSTANCE_ID, shard_id=orphan_id,
+        registry_path=registry, recompute_to=str(out_dir / "orphan_recompute"),
+        expected_manifest_bytes=manifest_bytes,
+        expected_evaluation_bytes=b'{"row":1}\n',
+        expected_feature_bytes=b'{"f":1}\n',
+    )
+    orphan_committed = True
+    return {
+        "idempotent_recommit": bool(again),
+        "deleted_final_blocked": deleted_blocked,
+        "orphan_refused": orphan_refused,
+        "orphan_committed_by_repair": orphan_committed,
+        "registry_records": len(
+            [line for line in Path(registry).read_text(encoding="utf-8").splitlines()
+             if line.strip()]
+        ),
+    }
+
+
+def run_seal_and_analysis(*, out_dir: Path, ledger: dict[str, Any]) -> dict[str, Any]:
+    """RUN_SEAL via the production registry, then an analysis input/output pair."""
+    from run_registry import record_seal, record_start
+
+    root = out_dir / "run"
+    root.mkdir(parents=True, exist_ok=True)
+    run_id = RUN_INSTANCE_ID
+    record_start(
+        root, run_id=run_id, phase=PHASE_PREDICTION,
+        smoke_generation_id="TEST-FIXTURE", workers=1, replicates_per_cell=1,
+        run_component_set_hash="0" * 64, compute_git_commit="fixture",
+        source_tree_hash="0" * 64, environment_lock_hash="0" * 64, workers_used=1,
+    )
+    sealed = record_seal(
+        root, run_id=run_id, phase=PHASE_PREDICTION,
+        seal={
+            "ledger_file": ledger["ledger"],
+            "ledger_content_hash": ledger["ledger_sha256"],
+            "ledger_bytes": ledger["ledger_bytes"],
+            "row_count": ledger["rows"],
+            "unexplained_errors": 0,
+            "counts_match_contract": True,
+            "terminal_state": "RUN_SEALED",
+        },
+    )
+    analysis_input = {
+        "schema_version": 1,
+        "kind": "analysis_input_manifest",
+        "phase_seal_hashes": [],  # filled by the caller with the phase seal hash
+        "source_run_seal_hashes": [sealed["smoke_seal_hash"]],
+        "ledger": ledger["ledger"],
+        "ledger_sha256": ledger["ledger_sha256"],
+    }
+    (out_dir / "analysis_input.json").write_text(
+        json.dumps(analysis_input, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    output = {
+        "schema_version": 1,
+        "kind": "analysis_output",
+        "descriptive_only": True,
+        "note": "counts and identities only: the fixture carries no rejection rate or power",
+        "rows": ledger["rows"],
+        "features": ledger["features"],
+        "methods": ledger["methods"],
+        "ledger_sha256": ledger["ledger_sha256"],
+    }
+    (out_dir / "analysis_output.json").write_text(
+        json.dumps(output, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "run_seal_hash": sealed["smoke_seal_hash"],
+        "run_seal_file": sealed["seal_file"],
+        "analysis_input": "analysis_input.json",
+        "analysis_output": "analysis_output.json",
     }
 
 
@@ -173,6 +385,28 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
     if fault == "shard_plan_hash":
         shard_hash = "1" * 64
 
+    # --- the real execution chain (re-audit: metadata alone is not a lifecycle) ---
+    root_key_hex = hashlib.sha256(b"TEST-FIXTURE-ROOT-KEY").hexdigest()
+    execution: dict[str, Any] = {
+        "shards": shard_roundtrip(out_dir=out_dir),
+        "computation": real_computation(
+            out_dir=out_dir, root_key_hex=root_key_hex, shard_plan_hash=shard_hash
+        ),
+    }
+    execution.update(
+        run_seal_and_analysis(out_dir=out_dir, ledger=execution["computation"])
+    )
+    upstream_refs = [{
+        "role": "source_run_seal",
+        "stable_id": execution["run_seal_hash"],
+        "generation_id": EVIDENCE_GENERATION_ID,
+        "hash": execution["run_seal_hash"],
+    }]
+    (out_dir / "EXECUTION_CHAIN.json").write_text(
+        json.dumps(execution, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
     ledger = b"".join(canonical_json_bytes(r) + b"\n" for r in evaluation_rows)
     feature_ledger = b"".join(canonical_json_bytes(r) + b"\n" for r in feature_rows)
 
@@ -181,6 +415,7 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
         feature_hash=feature_hash, evaluation_hash=evaluation_hash, ledger=ledger,
         feature_ledger=feature_ledger, evaluation_rows=evaluation_rows,
         feature_rows=feature_rows, n_logical_keys=len(data_rows), shard_hash=shard_hash,
+        source_run_seal_hashes=[execution["run_seal_hash"]], upstream_refs=upstream_refs,
     ))
     prediction_seal_hash = indexes.phase_seal_hash(prediction_seal)
 
@@ -190,8 +425,19 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
         feature_hash=feature_hash, evaluation_hash=evaluation_hash, ledger=ledger,
         feature_ledger=feature_ledger, evaluation_rows=evaluation_rows,
         feature_rows=feature_rows, n_logical_keys=len(data_rows), shard_hash=shard_hash,
+        source_run_seal_hashes=[execution["run_seal_hash"]], upstream_refs=upstream_refs,
     ))
     analysis_seal_hash = indexes.phase_seal_hash(analysis_seal)
+
+    # Bind the analysis entry to the sealed phase (re-audit: "独立分析入口").
+    analysis_input_path = out_dir / "analysis_input.json"
+    analysis_input = json.loads(analysis_input_path.read_text(encoding="utf-8"))
+    analysis_input["phase_seal_hashes"] = sorted({prediction_seal_hash, analysis_seal_hash})
+    analysis_input["analysis_seal_hash"] = analysis_seal_hash
+    analysis_input_path.write_text(
+        json.dumps(analysis_input, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
     registry = out_dir / PHASE_STATE_FILE
     registry.unlink(missing_ok=True)
@@ -328,11 +574,18 @@ def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
              "new_phase_seal_hash": e["new_phase_seal_hash"]}
             for e in events
         ],
+        "execution": execution,
         "verdict": {
             "chain_walked": True,
             "analysis_bound_to_phase_seal": True,
             "terminal_state": "PHASE_ACTIVATED",
             "fault_injected": fault,
+            "real_computation_executed": True,
+            "shard_commit_and_recovery_exercised": True,
+            "phase_seals_carry_source_run_seal": bool(
+                prediction_seal["ordered_source_run_seal_hashes"]
+            ),
+            "analysis_output_written": (out_dir / "analysis_output.json").exists(),
             "admitted": True,
         },
     }

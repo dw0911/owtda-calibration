@@ -798,6 +798,48 @@ def verify_internal_contracts(
            == hashlib.sha256(ledger).hexdigest()},
           None, fixture_dir)
 
+    # Re-audit 2026-09-12: metadata alone is not a lifecycle.  The delivered fixture
+    # must show a real computation, a shard commit with both recovery paths, a RUN_SEAL
+    # referenced by the phase seals, and a bound analysis entry with an output.
+    execution = d.json(f"{fixture_dir}/EXECUTION_CHAIN.json")
+    check("fixture.execution_chain",
+          "fixture 真实执行链随包（真实计算 / 分片提交与两类恢复 / RUN_SEAL / 分析输出）",
+          execution["computation"]["rows"] > 0
+          and execution["computation"]["B"] == 999
+          and set(execution["computation"]["features"]) == {"bpi", "moments"}
+          and execution["shards"]["idempotent_recommit"] is True
+          and execution["shards"]["deleted_final_blocked"] is True
+          and execution["shards"]["orphan_refused"] is True
+          and execution["shards"]["orphan_committed_by_repair"] is True,
+          {"computation": execution["computation"], "shards": execution["shards"]},
+          None, f"{fixture_dir}/EXECUTION_CHAIN.json")
+    check("fixture.phase_seals_carry_source_run_seal",
+          "两段 phase seal 的 ordered_source_run_seal_hashes 指向真实 RUN_SEAL（非空且一致）",
+          bool(prediction["ordered_source_run_seal_hashes"])
+          and prediction["ordered_source_run_seal_hashes"]
+          == analysis["ordered_source_run_seal_hashes"]
+          == [execution["run_seal_hash"]]
+          and bool(prediction["ordered_upstream_artifact_refs"])
+          and bool(analysis["ordered_upstream_artifact_refs"]),
+          {"prediction": prediction["ordered_source_run_seal_hashes"][:1],
+           "analysis": analysis["ordered_source_run_seal_hashes"][:1],
+           "run_seal": execution["run_seal_hash"]},
+          None, fixture_dir)
+    analysis_input = d.json(f"{fixture_dir}/analysis_input.json")
+    analysis_output = d.json(f"{fixture_dir}/analysis_output.json")
+    check("fixture.analysis_entry_bound",
+          "分析入口绑定 phase seal，输出为描述性且绑定账本哈希",
+          analysis_input.get("analysis_seal_hash") == indexes.phase_seal_hash(analysis)
+          and bool(analysis_input.get("phase_seal_hashes"))
+          and analysis_output.get("descriptive_only") is True
+          and analysis_output.get("ledger_sha256")
+          == execution["computation"]["ledger_sha256"],
+          {"phase_seal_hashes": len(analysis_input.get("phase_seal_hashes") or []),
+           "descriptive_only": analysis_output.get("descriptive_only"),
+           "ledger_bound": analysis_output.get("ledger_sha256")
+           == execution["computation"]["ledger_sha256"]},
+          None, f"{fixture_dir}/analysis_output.json")
+
 
 def verify_governance_extras(d: Dossier, manifest: dict[str, Any]) -> None:
     packet = d.json("governance/H1_CONSTRUCT_REVIEW_PACKET.json")
