@@ -129,7 +129,7 @@
       ],
       "disclosures": [
         "fixture 第一版对三条故障仍 admitted（只断言哈希、未回读重算）——已修复并记录为同类缺陷复现",
-        "fixture 证据目前位于仓库外 f:/BPI/_fixture/，**尚未打包进 dossier**（见 residual_items）"
+        "fixture 证据原件位于仓库外 f:/BPI/_fixture/，副本已放入证据根 _audit_r1/fixture/（8 个文件），但**尚未打包进 dossier**（构建器与验证器需各加一处收录/校验，见 residual_items）"
       ],
       "commits": ["6e9fa29", "5ba7de2"]
     }
