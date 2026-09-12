@@ -139,11 +139,10 @@ def kernel_lock(
         os.makedirs(directory, exist_ok=True)
     fd = os.open(path, os.O_CREAT | os.O_RDWR, 0o600)
     try:
-        if os.name == "nt":  # pragma: no cover - platform specific
-            # msvcrt locks a byte range; guarantee the range exists so the lock
-            # is never taken "past end of file" on an empty file.
-            if os.fstat(fd).st_size < 1:
-                os.ftruncate(fd, 1)
+        # msvcrt locks a byte range; guarantee the range exists so the lock is
+        # never taken "past end of file" on an empty file.
+        if os.name == "nt" and os.fstat(fd).st_size < 1:  # pragma: no cover
+            os.ftruncate(fd, 1)
         _acquire(fd, exclusive=exclusive, deadline=time.monotonic() + timeout, poll=poll)
         try:
             yield path

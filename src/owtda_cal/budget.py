@@ -24,7 +24,6 @@ This module derives the budget from the frozen plan instead:
 from __future__ import annotations
 
 import hashlib
-import json
 
 from .canonical import canonical_json_bytes
 
@@ -207,7 +206,7 @@ def build_budget(
 
     def _ms(value: float) -> int:
         # canonical payloads forbid bare floats: milliseconds as integers
-        return int(round(value * 1000))
+        return round(value * 1000)
 
     body = {
         "counts": {"totals": totals, "phases": phases},

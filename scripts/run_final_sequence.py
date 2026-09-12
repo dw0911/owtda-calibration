@@ -97,6 +97,7 @@ def _budget_step(out: Path) -> dict[str, Any]:
 
 def _preflight_step(out: Path) -> dict[str, Any]:
     import resource_sampler
+
     from owtda_cal.resource_policy import load_policy, preflight_capacity
 
     policy = load_policy()

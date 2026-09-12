@@ -96,9 +96,9 @@ class TestLockFileLifecycle:
         )
         assert holder.stdout.readline().strip() == "held"
         try:
-            with pytest.raises(LockError, match="lock timeout"):
-                with kernel_lock(lock, scope="registry", timeout=0.5):
-                    pass
+            with pytest.raises(LockError, match="lock timeout"), \
+                    kernel_lock(lock, scope="registry", timeout=0.5):
+                pass
         finally:
             holder.kill()
             holder.wait(timeout=30)
@@ -120,7 +120,7 @@ class TestMutualExclusion:
             for index in range(8)
         ]
         for proc in procs:
-            out, err = proc.communicate(timeout=120)
+            _out, err = proc.communicate(timeout=120)
             assert proc.returncode == 0, err
         records = [
             json.loads(line)
@@ -137,12 +137,14 @@ class TestLockOrder:
         assert LOCK_ORDER == ("shard", "registry")
 
     def test_reverse_order_is_refused(self, tmp_path):
-        with kernel_lock(str(tmp_path / "registry.lock"), scope="registry"):
-            with pytest.raises(LockError, match="lock order violation"):
-                with kernel_lock(str(tmp_path / "shard.lock"), scope="shard"):
-                    pass
+        # acquiring "shard" while holding "registry" is the violation itself, so
+        # the acquisition is the statement under test
+        outer = kernel_lock(str(tmp_path / "registry.lock"), scope="registry")
+        with outer, pytest.raises(LockError, match="lock order violation"), \
+                kernel_lock(str(tmp_path / "shard.lock"), scope="shard"):
+            pass
 
     def test_unknown_scope_is_refused(self, tmp_path):
-        with pytest.raises(LockError, match="unknown lock scope"):
-            with kernel_lock(str(tmp_path / "x.lock"), scope="whatever"):
-                pass
+        with pytest.raises(LockError, match="unknown lock scope"), \
+                kernel_lock(str(tmp_path / "x.lock"), scope="whatever"):
+            pass

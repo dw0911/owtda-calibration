@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import concurrent.futures as futures
 import json
 import threading
+from concurrent import futures
 
 import pytest
 
@@ -154,7 +154,7 @@ class TestExecutePlan:
         events_path = tmp_path / "executions" / "EXEC-T2" / "events" / "dispatch.jsonl"
         events = [json.loads(x) for x in
                   events_path.read_text(encoding="utf-8").splitlines() if x.strip()]
-        assert [e["event_type"] for e in events][0] == "EXECUTION_STARTED"
+        assert events[0]["event_type"] == "EXECUTION_STARTED"
         assert [e["event_type"] for e in events][-1] == "EXECUTION_FINISHED"
         assert [e["seq"] for e in events] == list(range(len(events)))
         chains.assert_chain_valid(str(events_path), hash_field="event_hash",
@@ -174,13 +174,13 @@ class TestExecutePlan:
     def test_duplicate_unit_ids_are_refused(self, tmp_path):
         plan = _plan("TEST", n=2)
         plan["units"][1]["unit_id"] = plan["units"][0]["unit_id"]
-        with futures.ThreadPoolExecutor(max_workers=1) as pool:
-            with pytest.raises(ExecutionError, match="duplicate unit_id"):
-                execute_plan(
-                    plan, mode="TEST", evidence_root=tmp_path, execution_id="EXEC-T4",
-                    submit=lambda unit, index: pool.submit(lambda: dict(unit)),
-                    test_seed_domain=True, test_id_domain=True,
-                )
+        with futures.ThreadPoolExecutor(max_workers=1) as pool, \
+                pytest.raises(ExecutionError, match="duplicate unit_id"):
+            execute_plan(
+                plan, mode="TEST", evidence_root=tmp_path, execution_id="EXEC-T4",
+                submit=lambda unit, index: pool.submit(lambda: dict(unit)),
+                test_seed_domain=True, test_id_domain=True,
+            )
 
     def test_a_latched_stop_is_recorded_in_the_execution_record(self, tmp_path):
         plan = _plan("TEST", n=20)

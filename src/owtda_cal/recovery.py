@@ -91,11 +91,10 @@ def inspect_tail(
             return {"status": "TAMPERED", "verified_prefix": prefix, "tail": tail,
                     "offset": len(prefix), "events": number,
                     "detail": f"line {number + 1}: {hash_field} does not recompute"}
-        if parent_field in event:
-            if event[parent_field] != previous:
-                return {"status": "BROKEN_LINK", "verified_prefix": prefix, "tail": tail,
-                        "offset": len(prefix), "events": number,
-                        "detail": f"line {number + 1}: {parent_field} != previous hash"}
+        if parent_field in event and event[parent_field] != previous:
+            return {"status": "BROKEN_LINK", "verified_prefix": prefix, "tail": tail,
+                    "offset": len(prefix), "events": number,
+                    "detail": f"line {number + 1}: {parent_field} != previous hash"}
         if "seq" in event and isinstance(event["seq"], int) and event["seq"] != seq + 1:
             return {"status": "BROKEN_LINK", "verified_prefix": prefix, "tail": tail,
                     "offset": len(prefix), "events": number,
@@ -274,6 +273,7 @@ def reconcile_run(
     orphans: list[str] = []
     lost: list[dict[str, Any]] = []
     committed_ids: list[str] = []
+    unparsable: list[dict[str, Any]] = []
     payload_hashes: dict[str, str] = {}
     if run_dir.is_dir():
         for directory in sorted(run_dir.glob("*.final")):
@@ -309,13 +309,19 @@ def reconcile_run(
                 continue
             evaluation = directory / "evaluation.scientific.jsonl"
             if evaluation.is_file():
-                for row in evaluation.read_text(encoding="utf-8").splitlines():
+                for number, row in enumerate(
+                        evaluation.read_text(encoding="utf-8").splitlines(), start=1):
                     if not row.strip():
                         continue
                     try:
                         committed_ids.append(json.loads(row)["evaluation_id"])
-                    except Exception:  # noqa: BLE001 - a non-scientific line is reported
-                        pass
+                    except (ValueError, KeyError, TypeError) as exc:
+                        # a line that is not a scientific evaluation row is a
+                        # finding of its own, never a silent skip
+                        unparsable.append({
+                            "shard_id": shard_id, "line": number,
+                            "detail": f"{type(exc).__name__}: {exc}",
+                        })
             payload_hashes[shard_id] = actual
     duplicates = sorted({i for i in committed_ids if committed_ids.count(i) > 1})
     return {
@@ -324,8 +330,9 @@ def reconcile_run(
         "lost_commits": lost,
         "committed_evaluation_ids": sorted(committed_ids),
         "duplicate_evaluation_ids": duplicates,
+        "unparsable_evaluation_lines": unparsable,
         "payload_hashes": payload_hashes,
-        "reconciled": not orphans and not lost and not duplicates,
+        "reconciled": not orphans and not lost and not duplicates and not unparsable,
     }
 
 

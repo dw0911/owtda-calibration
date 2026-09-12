@@ -172,7 +172,8 @@ def verify_file_ref(ref: dict, *, evidence_root: str, where: str = "file_ref") -
     if not os.path.isfile(target):
         issues.append(_issue("FILE_REF_MISSING", where, f"{target!r} does not exist"))
         return issues
-    actual = hashlib.sha256(open(target, "rb").read()).hexdigest()
+    with open(target, "rb") as handle:
+        actual = hashlib.sha256(handle.read()).hexdigest()
     if declared and actual != declared:
         issues.append(
             _issue("FILE_REF_HASH_MISMATCH", where,

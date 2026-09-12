@@ -32,10 +32,14 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "audit"))
 
-from owtda_cal import chains, shardio  # noqa: E402
-from owtda_cal.attack_harness import check_package, run_attack, summarise_attacks  # noqa: E402
-from owtda_cal.canonical import canonical_json_bytes  # noqa: E402
-from owtda_cal.identity import H  # noqa: E402
+from owtda_cal import chains, shardio
+from owtda_cal.attack_harness import (
+    check_package,
+    run_attack,
+    summarise_attacks,
+)
+from owtda_cal.canonical import canonical_json_bytes
+from owtda_cal.identity import H
 
 RECORDS: list[dict[str, Any]] = []
 
@@ -132,7 +136,7 @@ def _mutations(package: Path) -> list[dict[str, Any]]:
         text = path.read_text(encoding="utf-8")
         start = text.index("<testcase")
         end = text.index(">", start) + 1
-        if not text[end - 2:end] == "/>":
+        if text[end - 2:end] != "/>":
             end = text.index("</testcase>", start) + len("</testcase>")
         first = text[start:end]
         path.write_text(text.replace("<testsuite", first + "<testsuite", 1),

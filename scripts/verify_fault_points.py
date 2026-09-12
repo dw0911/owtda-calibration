@@ -14,11 +14,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import shutil
 import subprocess
 import sys
-import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -26,10 +24,10 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import chains, recovery, shardio  # noqa: E402
-from owtda_cal.canonical import canonical_json_bytes  # noqa: E402
-from owtda_cal.identity import H  # noqa: E402
-from owtda_cal.kernel_lock import kernel_lock, lock_path_for  # noqa: E402
+from owtda_cal import chains, recovery, shardio
+from owtda_cal.canonical import canonical_json_bytes
+from owtda_cal.identity import H
+from owtda_cal.kernel_lock import kernel_lock, lock_path_for
 
 RUN = H("fault_run")
 RESULTS: list[dict[str, Any]] = []

@@ -46,7 +46,7 @@ class ExecutorError(RuntimeError):
 
 def classify_error(exc: BaseException) -> str:
     """Map one exception to a registered error class (§3.4)."""
-    if isinstance(exc, _futures.CancelledError) or isinstance(exc, CancelledBeforeStart):
+    if isinstance(exc, (_futures.CancelledError, CancelledBeforeStart)):
         return "CANCELLED_BEFORE_START"
     if isinstance(exc, MemoryError):
         return "RESOURCE_ALLOCATION_ERROR"
@@ -85,7 +85,7 @@ def _outcome(
 def execute_units(
     units: Sequence[Any],
     *,
-    submit: Callable[[Any, int], "_futures.Future"],
+    submit: Callable[[Any, int], _futures.Future],
     monitor: Any | None = None,
     window_size: int = 8,
     poll_interval: float = 0.1,

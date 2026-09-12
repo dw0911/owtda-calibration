@@ -9,7 +9,6 @@ event, and an explicit statement that the old seal is now stale.
 from __future__ import annotations
 
 import json
-import os
 
 import pytest
 
@@ -76,11 +75,9 @@ class TestInspect:
         lines = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines()]
         lines[1]["prev_event_hash"] = "0" * 64
         out = []
-        tip = None
         for event in lines:
             body = {k: v for k, v in event.items() if k != HASH_FIELD}
             body[HASH_FIELD] = chains.event_hash(body)
-            tip = body[HASH_FIELD]
             out.append(json.dumps(body))
         path.write_text("\n".join(out) + "\n", encoding="utf-8")
         assert inspect_tail(path, hash_field=HASH_FIELD)["status"] == "BROKEN_LINK"

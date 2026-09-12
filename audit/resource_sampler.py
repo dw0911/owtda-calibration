@@ -214,7 +214,7 @@ class CapacityMonitor:
         self._boundary = {"start": False, "end": False}
 
     # -- lifecycle --------------------------------------------------------- #
-    def __enter__(self) -> "CapacityMonitor":
+    def __enter__(self) -> CapacityMonitor:  # noqa: PYI034 - explicit return type
         self.start()
         return self
 
@@ -224,7 +224,9 @@ class CapacityMonitor:
 
     def start(self) -> None:
         self.raw_path.parent.mkdir(parents=True, exist_ok=True)
-        self._handle = open(self.raw_path, "a", encoding="utf-8")
+        # The handle stays open for the whole stage -- sampling must not reopen
+        # the file per sample, and the rows must keep their append order.
+        self._handle = open(self.raw_path, "a", encoding="utf-8")  # noqa: SIM115
         self._write_sample(stage="start")
         if self._rows and self._rows[-1].get("ok") is True:
             self._boundary["start"] = True

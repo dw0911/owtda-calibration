@@ -9,8 +9,6 @@ components.
 
 from __future__ import annotations
 
-import pytest
-
 from owtda_cal.budget import build_budget, derive_counts
 
 GIB = 1024 ** 3

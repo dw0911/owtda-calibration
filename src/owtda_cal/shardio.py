@@ -16,7 +16,13 @@ import os
 from collections.abc import Iterable
 
 from .canonical import canonical_json_bytes
-from .chains import ChainError, append_cas, assert_chain_valid, read_last_event, read_tip
+from .chains import (
+    ChainError,
+    append_cas,
+    assert_chain_valid,
+    read_last_event,
+    read_tip,
+)
 from .kernel_lock import kernel_lock, lock_path_for
 
 COMMIT_EVENT = "SHARD_COMMITTED"

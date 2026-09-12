@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import json
-
 from owtda_cal.manifests import (
     environment_subset,
     execution_manifest,
@@ -95,7 +93,7 @@ class TestExecutionManifest:
         assert len(manifest["manifest_hash"]) == 64
 
     def test_the_closure_files_carry_real_hashes(self, tmp_path):
-        src, script = _fake_repo(tmp_path)
+        _src, script = _fake_repo(tmp_path)
         manifest = execution_manifest(
             entries=[script / "entry.py"], command=["x"], environment={},
             policy_sha256="b" * 64, roots=[tmp_path / "src"], root=tmp_path,

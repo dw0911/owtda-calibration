@@ -7,9 +7,9 @@ failure carries a registered error class.
 
 from __future__ import annotations
 
-import concurrent.futures as futures
 import threading
 import time
+from concurrent import futures
 
 import pytest
 

@@ -28,7 +28,7 @@ AUDIT = REPO / "audit"
 if str(AUDIT) not in sys.path:
     sys.path.insert(0, str(AUDIT))
 
-import resource_sampler  # noqa: E402
+import resource_sampler
 
 GIB = 1024 ** 3
 
