@@ -529,7 +529,10 @@ ATTACKS.extend([
 def run_attacks(zip_path: Path, out_dir: Path, only: str | None) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, Any]] = []
-    with tempfile.TemporaryDirectory(prefix="owtda_attack_") as tmp:
+    # Short temp prefix and short mutant directory names: the package contains deep
+    # 64-hex paths (shard directories), and Windows MAX_PATH bites when a full copy is
+    # made under a long attack id.
+    with tempfile.TemporaryDirectory(prefix="oa_") as tmp:
         tmpdir = Path(tmp)
         clean = tmpdir / "clean"
         extract(zip_path, clean)
@@ -543,7 +546,7 @@ def run_attacks(zip_path: Path, out_dir: Path, only: str | None) -> dict[str, An
         for attack in ATTACKS:
             if only and attack["id"] != only:
                 continue
-            mutant_dir = tmpdir / attack["id"]
+            mutant_dir = tmpdir / f"m{len(results):02d}"
             shutil.copytree(clean, mutant_dir)
             try:
                 touched = attack["mutate"](mutant_dir)
