@@ -322,68 +322,108 @@ def finalize_persistence(resources: dict[str, Any], *, evidence_root: Path) -> d
 
 
 def resource_verdict(
-    resources: dict[str, Any] | None, *, limits: dict[str, Any], unexplained_errors: int
+    resources: dict[str, Any] | None,
+    *,
+    unexplained_errors: int,
+    limits: dict[str, Any] | None = None,
+    policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Evaluate one run's resources against the frozen limits (fail closed).
+    """Evaluate one run against AM_RESOURCE_CAPACITY_V2 (ruling 2026-09-13).
 
-    Acceptance uses the **declared** quantities only: peak total RSS, machine-wide
-    page-file growth ("no swap growth"), unexplained errors and the disk rule.  The
-    run's private commit charge is reported under ``diagnostics`` -- it is a real
-    number about the run, but it is *not* paging activity and therefore cannot
-    decide admission (AM_RESOURCE_MEASUREMENT_SEMANTICS).
+    Hard conditions are **capacity and complete execution**: peak RSS, host commit
+    fraction, host available physical memory, resource-allocation failures, unexplained
+    errors, the disk rule, and a *complete* capacity record.  Page-file usage, page
+    faults and system paging rates are diagnostics and neither pass nor fail a run; the
+    retired ``swap_growth_bytes_max = 0`` gate keeps its old records and old verdicts but
+    has no future admission use.  A missing or gapped capacity record is INCOMPLETE, and
+    INCOMPLETE never passes.
     """
+    policy = policy or load_resource_policy()
+    hard = policy["hard_conditions"]
     if not resources:
         return {
-            "limits": limits,
+            "resource_policy_id": policy["resource_policy_id"],
             "observed": None,
             "checks": {"resources_recorded": False},
             "diagnostics": {},
+            "status": "INCOMPLETE",
             "passed": False,
         }
+    capacity = resources.get("capacity_sampling") or {}
     peak_bytes = resources.get("peak_total_rss_bytes")
-    peak = (peak_bytes / GIB) if isinstance(peak_bytes, int) else None
-    host_growth = resources.get("host_swap_growth_bytes")
-    commit_growth = resources.get("own_commit_charge_growth_bytes")
+    peak_gib = (peak_bytes / GIB) if isinstance(peak_bytes, int) else None
+    commit_peak = capacity.get("commit_total_peak_bytes")
+    commit_limit = capacity.get("commit_limit_bytes")
+    fraction = (
+        (commit_peak / commit_limit)
+        if isinstance(commit_peak, int) and isinstance(commit_limit, int) and commit_limit
+        else None
+    )
+    available = capacity.get("physical_available_min_bytes")
+    physical_total = capacity.get("physical_total_bytes")
+    physical_min_required = (
+        max(2 * GIB, int(0.10 * physical_total))
+        if isinstance(physical_total, int) and physical_total else None
+    )
     written = resources.get("evidence_bytes_written")
     free = resources.get("disk_free_before_bytes")
+    allocation_failures = resources.get("resource_allocation_failures")
     checks = {
         "resources_recorded": True,
+        "capacity_sampling_complete": capacity.get("incomplete") is False,
         "peak_total_rss_within_limit": bool(
-            peak is not None and peak <= limits["peak_total_rss_gib_max"]
+            peak_gib is not None
+            and peak_gib <= float(hard["peak_total_rss_gib_max"])
         ),
-        "host_swap_growth_within_limit": bool(
-            host_growth is not None
-            and host_growth <= limits["swap_growth_bytes_max"]
+        "host_commit_fraction_within_limit": bool(
+            isinstance(fraction, (int, float))
+            and fraction <= float(hard["host_commit_fraction_max"])
         ),
+        "host_available_phys_within_minimum": bool(
+            isinstance(available, int)
+            and physical_min_required is not None
+            and available >= physical_min_required
+        ),
+        "resource_allocation_failures_within_limit": allocation_failures == 0,
         "unexplained_errors_within_limit": bool(
-            unexplained_errors <= limits["unexplained_errors_max"]
+            unexplained_errors <= int(hard["unexplained_errors_max"])
         ),
-        "disk_rule": bool(
-            written is not None and free and written <= 0.8 * free
-        ),
+        "disk_rule": bool(written is not None and free and written <= 0.8 * free),
     }
+    passed = all(checks.values())
     return {
-        "limits": limits,
+        "resource_policy_id": policy["resource_policy_id"],
+        "limits": {
+            "peak_total_rss_gib_max": hard["peak_total_rss_gib_max"],
+            "host_commit_fraction_max": hard["host_commit_fraction_max"],
+            "host_available_phys_min_bytes": physical_min_required,
+            "resource_allocation_failures_max": hard["resource_allocation_failures_max"],
+            "disk_rule": hard["disk_rule"],
+            "source": "governance/RESOURCE_POLICY_V2.json",
+        },
         "observed": {
-            "peak_total_rss_gib": peak,
-            "host_swap_growth_bytes": host_growth,
+            "peak_total_rss_gib": peak_gib,
+            "commit_total_peak_bytes": commit_peak,
+            "commit_limit_bytes": commit_limit,
+            "commit_fraction_peak": fraction,
+            "physical_available_min_bytes": available,
+            "physical_total_bytes": physical_total,
+            "capacity_samples": capacity.get("samples"),
             "evidence_bytes_written": written,
             "disk_free_before_bytes": free,
             "unexplained_errors": unexplained_errors,
+            "resource_allocation_failures": allocation_failures,
         },
         "checks": checks,
         "diagnostics": {
-            "own_commit_charge_growth_bytes": commit_growth,
-            "own_commit_charge_instrument": resources.get(
-                "own_commit_charge_instrument"
-            ),
+            "host_pagefile_used_growth_bytes": resources.get("host_swap_growth_bytes"),
+            "host_pagefile_caveat": resources.get("host_swap_measurement_caveat"),
+            "own_commit_charge_growth_bytes": resources.get("own_commit_charge_growth_bytes"),
             "note": (
-                "commit charge is not paging activity and is never an acceptance "
-                "condition; it is recorded for the memory-budget discussion"
-            ),
-            "host_swap_measurement_caveat": resources.get(
-                "host_swap_measurement_caveat"
+                "diagnostic only under AM_RESOURCE_CAPACITY_V2: page-file usage, page "
+                "faults and system paging rates neither pass nor fail a run"
             ),
         },
-        "passed": all(checks.values()),
+        "status": "PASS" if passed else "FAIL",
+        "passed": passed,
     }

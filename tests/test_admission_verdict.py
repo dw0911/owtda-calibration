@@ -28,6 +28,17 @@ def _resources(**overrides: Any) -> dict[str, Any]:
     record = {
         "schema_version": 1,
         "kind": "run_resources_v1",
+        "resource_allocation_failures": 0,
+        "capacity_sampling": {
+            "source": "GetPerformanceInfo",
+            "interval_milliseconds": 1000,
+            "samples": 600, "missing": 0, "max_gap_milliseconds": 1004,
+            "commit_total_peak_bytes": 26_124_267_520,
+            "commit_limit_bytes": 41_942_392_832,
+            "physical_total_bytes": 34_157_764_608,
+            "physical_available_min_bytes": 10_020_118_528,
+            "incomplete": False,
+        },
         "measured_wall_milliseconds": 1000,
         "peak_total_rss_bytes": int(1.5 * 1024**3),
         # Acceptance basis (machine-wide page-file growth) and a run-level diagnostic.
@@ -114,10 +125,8 @@ class TestLayeredVerdict:
     @pytest.mark.parametrize(
         "mutate",
         [
-            # A08: the declared condition is machine-wide page-file growth <= 0.
-            lambda r: r["SMOKE_ALT"]["resources"].update(
-                host_swap_growth_bytes=4 * 1024 * 1024
-            ),
+            # V2: allocation failures are a hard condition; page-file growth is not.
+            lambda r: r["SMOKE_ALT"]["resources"].update(resource_allocation_failures=1),
             lambda r: r["SMOKE_ALT"]["resources"].update(peak_total_rss_bytes=25 * 1024**3),
             lambda r: r["SMOKE_ALT"]["resources"].update(
                 evidence_bytes_written=10**15, disk_free_before_bytes=10**15
@@ -148,7 +157,7 @@ class TestLayeredVerdict:
         assert verdict["admission_passed"] is True
         diag = verdict["resources"]["SMOKE_ALT"]["diagnostics"]
         assert diag["own_commit_charge_growth_bytes"] == 9 * 1024**3
-        assert "not paging activity" in diag["note"]
+        assert "diagnostic only" in diag["note"]
 
     def test_missing_resource_evidence_blocks_admission(self):
         """Fail closed: no resource record is not the same as a clean record."""
@@ -163,9 +172,12 @@ class TestLayeredVerdict:
         """The thresholds are quoted, not restated in code."""
         verdict = run_smoke_s03.admission_verdict(_reports(), TERMINAL, open_runs_zero=True)
         limits = verdict["resources"]["SMOKE_NULL"]["limits"]
-        assert limits["peak_total_rss_gib_max"] == 24.0
-        assert limits["swap_growth_bytes_max"] == 0
-        assert limits["source"].endswith("parallelism_contract.acceptance")
+        assert limits["peak_total_rss_gib_max"] == 24
+        assert limits["host_commit_fraction_max"] == 0.80
+        assert limits["source"].endswith("RESOURCE_POLICY_V2.json")
+        assert verdict["resources"]["SMOKE_NULL"]["resource_policy_id"] == (
+            "AM_RESOURCE_CAPACITY_V2"
+        )
 
     def test_open_runs_block_admission_and_sealing(self):
         verdict = run_smoke_s03.admission_verdict(
