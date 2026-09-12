@@ -105,10 +105,35 @@ def _edit_jsonl(path: Path, mutate: Callable[[list[dict]], None]) -> None:
     )
 
 
+def _current_smoke_dir(root: Path) -> str | None:
+    """The smoke directory the delivered provenance actually describes.
+
+    The package also carries the superseded attempts (the re-audit asked for them), so
+    "sorted first match" is no longer unique: the *current* generation must be
+    resolved from the provenance rather than from directory order.
+    """
+    for provenance in sorted(root.rglob("provenance_manifest.json")):
+        try:
+            generation = json.loads(
+                provenance.read_text(encoding="utf-8")
+            ).get("smoke_generation_id")
+        except json.JSONDecodeError:
+            continue
+        if generation:
+            return f"evidence/smoke/{generation}"
+    return None
+
+
 def _one(root: Path, pattern: str) -> Path:
     hits = sorted(root.rglob(pattern))
     if not hits:
         raise RuntimeError(f"attack target not found: {pattern}")
+    if len(hits) > 1:
+        preferred = _current_smoke_dir(root)
+        if preferred:
+            scoped = [p for p in hits if preferred in p.as_posix()]
+            if scoped:
+                return scoped[0]
     return hits[0]
 
 
