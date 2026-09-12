@@ -147,8 +147,225 @@ def own_pagefile_bytes(proc: Any) -> int | None:
     return total if available else None
 
 
+def _tree_rss_bytes() -> int | None:
+    """Process-tree RSS; ``None`` when the instrument is unavailable."""
+    try:
+        import psutil
+
+        proc = psutil.Process()
+        total = int(proc.memory_info().rss)
+        for child in proc.children(recursive=True):
+            try:
+                total += int(child.memory_info().rss)
+            except Exception:  # noqa: BLE001 - a dead child is reported, not zeroed
+                return None
+        return total
+    except Exception:  # noqa: BLE001 - absence is a finding
+        return None
+
+
+class CapacityMonitor:
+    """Raw-sample capacity monitor (task pack §3.2).
+
+    What changed relative to the first implementation:
+
+    * every sample is written to a **raw JSONL** file, one row per sample, with
+      the commit total and the commit limit of *that* sample on the same row --
+      the previous summary stored ``max_k C_k`` and separately overwrote the
+      limit, so the ratio it reported was not ``max_k C_k / L_k``;
+    * a failed read writes a row too (``ok=false``) instead of being dropped or
+      turned into a zero;
+    * sampling exceptions, thread exit, a missing boundary sample and a gap over
+      the policy maximum latch ``INCOMPLETE`` **and** raise ``stop_requested``;
+    * a capacity breach latches ``FAIL`` and raises ``stop_requested`` as well --
+      a later good sample never clears it;
+    * the interval comes from the policy and cannot be overridden per run, and
+      the monitor stays alive through persistence, commit, merge and seal, not
+      only through the compute step.
+    """
+
+    def __init__(
+        self,
+        *,
+        run_id: str,
+        raw_path: Path,
+        policy: dict[str, Any] | None = None,
+        stage: str = "compute",
+    ) -> None:
+        from owtda_cal.resource_policy import load_policy, policy_sha256
+
+        self.policy = policy or load_policy()
+        self.interval_ns = int(self.policy["sampling"]["interval_ns"])
+        self.max_gap_ns = int(self.policy["sampling"]["max_interval_ns"])
+        self.policy_sha256 = policy_sha256()
+        self.run_id = run_id
+        self.raw_path = Path(raw_path)
+        self.stage = stage
+        self.stop_requested = threading.Event()  # consumed by the executor
+        self._stop = threading.Event()
+        self._rows: list[dict[str, Any]] = []
+        self._lock = threading.Lock()
+        self._seq = 0
+        self._thread: threading.Thread | None = None
+        self._handle = None
+        self._last_ns: int | None = None
+        self._incomplete: list[str] = []
+        self._breaches: list[dict[str, Any]] = []
+        self._boundary = {"start": False, "end": False}
+
+    # -- lifecycle --------------------------------------------------------- #
+    def __enter__(self) -> "CapacityMonitor":
+        self.start()
+        return self
+
+    def __exit__(self, *exc: object) -> bool:
+        self.stop()
+        return False
+
+    def start(self) -> None:
+        self.raw_path.parent.mkdir(parents=True, exist_ok=True)
+        self._handle = open(self.raw_path, "a", encoding="utf-8")
+        self._write_sample(stage="start")
+        if self._rows and self._rows[-1].get("ok") is True:
+            self._boundary["start"] = True
+        else:
+            self._latch_incomplete("boundary_sample_missing:start")
+        self._thread = threading.Thread(target=self._loop, daemon=True)
+        self._thread.start()
+
+    def set_stage(self, stage: str) -> None:
+        with self._lock:
+            self.stage = stage
+
+    def stop(self) -> dict[str, Any]:
+        self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=2.0)
+            if self._thread.is_alive():
+                self._latch_incomplete("sampler_thread_exit")
+        self._write_sample(stage="teardown")
+        if self._rows and self._rows[-1].get("ok") is True:
+            self._boundary["end"] = True
+        else:
+            self._latch_incomplete("boundary_sample_missing:end")
+        if self._handle is not None:
+            self._handle.flush()
+            os.fsync(self._handle.fileno())
+            self._handle.close()
+            self._handle = None
+        return self.summary()
+
+    # -- sampling ---------------------------------------------------------- #
+    def _loop(self) -> None:
+        try:
+            while not self._stop.is_set():
+                self._write_sample(stage=self.stage)
+                self._stop.wait(self.interval_ns / 1e9)
+        except Exception as exc:  # noqa: BLE001 - the thread must not die silently
+            self._latch_incomplete(f"sampler_exception:{type(exc).__name__}")
+            self.stop_requested.set()
+
+    def _write_sample(self, *, stage: str) -> None:
+        from owtda_cal.resource_policy import inspect_row
+
+        now_ns = time.monotonic_ns()
+        try:
+            info = performance_info()
+            rss = _tree_rss_bytes()
+            if info is None or rss is None:
+                raise RuntimeError(
+                    "capacity counters unavailable"
+                    if info is None else "rss_tree unavailable"
+                )
+            row = {
+                "schema_version": 1,
+                "run_id": self.run_id,
+                "policy_sha256": self.policy_sha256,
+                "seq": self._seq,
+                "monotonic_ns": now_ns,
+                "ok": True,
+                "error": None,
+                "stage": stage,
+                "commit_total_bytes": int(info["commit_total_bytes"]),
+                "commit_limit_bytes": int(info["commit_limit_bytes"]),
+                "physical_total_bytes": int(info["physical_total_bytes"]),
+                "physical_available_bytes": int(info["physical_available_bytes"]),
+                "rss_tree_bytes": int(rss),
+            }
+        except Exception as exc:  # noqa: BLE001 - a failed read is still a row
+            row = {
+                "schema_version": 1,
+                "run_id": self.run_id,
+                "policy_sha256": self.policy_sha256,
+                "seq": self._seq,
+                "monotonic_ns": now_ns,
+                "ok": False,
+                "error": f"SAMPLER_ERROR:{type(exc).__name__}",
+                "stage": stage,
+                "commit_total_bytes": None, "commit_limit_bytes": None,
+                "physical_total_bytes": None, "physical_available_bytes": None,
+                "rss_tree_bytes": None,
+            }
+        with self._lock:
+            self._seq += 1
+            self._rows.append(row)
+            if self._handle is not None:
+                self._handle.write(json.dumps(row, sort_keys=True) + "\n")
+                self._handle.flush()
+            previous = self._last_ns
+            self._last_ns = now_ns
+        if row["ok"] is False:
+            self._latch_incomplete(f"sample_not_ok:{row['error']}")
+        if previous is not None and now_ns - previous > self.max_gap_ns:
+            self._latch_incomplete(f"gap_exceeds_max_interval_ns:{now_ns - previous}")
+        if row["ok"] is True:
+            seen = inspect_row(row, policy=self.policy)
+            if seen["breaches"]:
+                with self._lock:
+                    self._breaches.extend(seen["breaches"])
+                self.stop_requested.set()  # latch: never cleared
+
+    def _latch_incomplete(self, reason: str) -> None:
+        with self._lock:
+            self._incomplete.append(reason)
+        self.stop_requested.set()
+
+    # -- reporting --------------------------------------------------------- #
+    def rows(self) -> list[dict[str, Any]]:
+        with self._lock:
+            return list(self._rows)
+
+    def verdict(self) -> dict[str, Any]:
+        from owtda_cal.resource_policy import evaluate_capacity
+
+        decision = evaluate_capacity(self.rows(), policy=self.policy)
+        with self._lock:
+            incomplete = list(self._incomplete)
+            breaches = list(self._breaches)
+        if incomplete or decision["issues"]:
+            status = "INCOMPLETE"
+        elif breaches or decision["breaches"]:
+            status = "FAIL"
+        else:
+            status = "PASS"
+        return {
+            "status": status,
+            "samples": decision["samples"],
+            "ok_samples": decision["ok_samples"],
+            "peak_commit_ratio": decision["peak_commit_ratio"],
+            "breaches": breaches + decision["breaches"],
+            "incomplete_reasons": incomplete,
+            "issues": decision["issues"],
+            "policy_sha256": self.policy_sha256,
+            "raw_path": str(self.raw_path),
+        }
+
+    def summary(self) -> dict[str, Any]:
+        return self.verdict()
+
+
 def sample_run(
-    runner: Callable[..., Any], *, evidence_root: Path, **kwargs: Any
+    runner: Callable[..., Any], *, evidence_root: Path, run_id: str = "run", **kwargs: Any
 ) -> tuple[Any, dict[str, Any]]:
     """Run ``runner(**kwargs)`` while sampling the resources that run consumes.
 
@@ -157,6 +374,12 @@ def sample_run(
     total/available) once per second, and reports them as sampled peak/valley together
     with the sample count and the largest gap.  A missing field or a sampling gap is
     reported as ``incomplete`` -- it is never filled with a zero and passed.
+
+    Since 2026-09-13 every capacity sample is also written to a raw JSONL file by
+    :class:`CapacityMonitor`, and the verdict is rebuilt from those rows (paired
+    counters, integer cross-multiplication).  This helper still wraps *the compute
+    step only*: a caller that needs the persistence, commit, merge and seal stages
+    covered must keep one :class:`CapacityMonitor` open across all of them.
     """
     import psutil
 
@@ -227,12 +450,16 @@ def sample_run(
 
     thread = threading.Thread(target=sampler, daemon=True)
     thread.start()
+    raw_path = Path(evidence_root) / "resources" / "capacity_raw.jsonl"
+    monitor = CapacityMonitor(run_id=run_id, raw_path=raw_path, stage="compute")
+    monitor.start()
     started = time.time()
     try:
         result = runner(**kwargs)
     finally:
         stop.set()
         thread.join(timeout=2.0)
+        monitor_verdict = monitor.stop()
 
     own_after = own_pagefile_bytes(proc)
     peak = max(samples) if samples else None
@@ -297,8 +524,18 @@ def sample_run(
                 or capacity["samples"] == 0
                 or capacity["max_gap_milliseconds"]
                 > CAPACITY_INTERVAL_S * CAPACITY_MAX_GAP_FACTOR * 1000
+                or monitor_verdict["status"] == "INCOMPLETE"
             ),
+            # The authoritative record: every sample, both counters of a ratio on
+            # the same row.  ``resource_verdict`` rebuilds the decision from it.
+            "status": monitor_verdict["status"],
+            "raw_path": str(raw_path),
+            "raw_samples": monitor_verdict["samples"],
+            "peak_commit_ratio": monitor_verdict["peak_commit_ratio"],
+            "incomplete_reasons": monitor_verdict["incomplete_reasons"],
+            "breaches": monitor_verdict["breaches"],
         },
+        "capacity_raw_path": str(raw_path),
         "resource_allocation_failures": None,  # set by the runner once errors are known
     }
     return result, resources
@@ -319,6 +556,28 @@ def finalize_persistence(resources: dict[str, Any], *, evidence_root: Path) -> d
     resources["evidence_bytes_written"] = after - before
     resources["persistence_included"] = True
     return resources
+
+
+def _checks_from_raw_rows(resources: dict[str, Any]) -> dict[str, bool] | None:
+    """Rebuild the four capacity checks from the raw JSONL rows, if they exist."""
+    from owtda_cal.resource_policy import evaluate_capacity, load_policy
+
+    raw_path = resources.get("capacity_raw_path")
+    if not raw_path or not Path(raw_path).is_file():
+        return None
+    rows = [
+        json.loads(line)
+        for line in Path(raw_path).read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    decision = evaluate_capacity(rows, policy=load_policy())
+    codes = {b["code"] for b in decision["breaches"]}
+    return {
+        "capacity_sampling_complete": decision["verdict"] != "INCOMPLETE",
+        "host_commit_fraction_within_limit": "COMMIT_RATIO_BREACH" not in codes,
+        "host_available_phys_within_minimum": "PHYSICAL_FLOOR_BREACH" not in codes,
+        "peak_total_rss_within_limit": "RSS_BREACH" not in codes,
+    }
 
 
 def resource_verdict(
@@ -365,6 +624,10 @@ def resource_verdict(
         max(2 * GIB, int(0.10 * physical_total))
         if isinstance(physical_total, int) and physical_total else None
     )
+    # Re-audit 2026-09-13: when the raw per-sample rows exist, the hard capacity
+    # checks are rebuilt from them (same-sample paired counters, integer compare)
+    # instead of trusting the summary's own "incomplete" flag.
+    raw_checks = _checks_from_raw_rows(resources)
     written = resources.get("evidence_bytes_written")
     free = resources.get("disk_free_before_bytes")
     allocation_failures = resources.get("resource_allocation_failures")
@@ -390,6 +653,8 @@ def resource_verdict(
         ),
         "disk_rule": bool(written is not None and free and written <= 0.8 * free),
     }
+    if raw_checks is not None:
+        checks.update(raw_checks)
     passed = all(checks.values())
     return {
         "resource_policy_id": policy["resource_policy_id"],
