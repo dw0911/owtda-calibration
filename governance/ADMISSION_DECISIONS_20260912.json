@@ -78,6 +78,35 @@
     "delivery_states": "「当前包可以提交审查」成立；「当前包已具备正式运行资格」须待本项验收关闭——两种状态分开表述"
   },
 
+  "CONCURRENCY_ACCEPTANCE_RESULT": {
+    "status": "PASS",
+    "performed_utc": "2026-09-12",
+    "platform": "Windows（冻结参考环境）",
+    "bench": "scripts/verify_concurrency_recovery.py",
+    "scenarios_passed": "10 / 10",
+    "results": {
+      "S1_8_processes_different_shards": "8 个进程并发提交不同分片 → 8 条唯一有效 commit",
+      "S2_same_shard_same_content": "同分片同内容并发 → 1 条规范提交，重试返回同一身份",
+      "S3_same_shard_conflicting_content": "串行冲突 → 明确拒绝，内容未被改写",
+      "S3b_multiprocess_conflicting_content": "多进程冲突 → 1 条有效提交、2 个被拒、**胜者内容保持**（失败方的字节被移开，不冒充已提交内容）",
+      "S4_concurrent_attempt_allocation": "6 个并发申请 → 编号 1..6 唯一，无重复 attempt_id",
+      "S5a_kill_after_commit_before_confirm": "commit 已写、确认未返回时强杀 → 重试幂等，仍为 1 条记录",
+      "S5b_orphan_final_repaired": "rename 后未追加 commit → ORPHAN_FINAL 拒绝，repair_orphan 逐字节恢复",
+      "S5c_staging_left_behind_blocks": "仅剩 staging → 普通通道阻断，注册表无记录",
+      "S6_lost_dir_and_tamper_blocked": "已提交目录丢失 → COMMIT_RECORD_WITHOUT_FINAL；内容被篡改 → 拒绝",
+      "S5d_payload_equality_after_recovery": "**中断恢复后载荷 == 无中断载荷**（staging 路径与 orphan 路径各一次）"
+    },
+    "defect_found_and_fixed": {
+      "class": "并发缺陷（真实，非夹具）",
+      "symptom": "8 个进程提交**不同**分片时，共享链尾的 CAS 竞争使 5 个提交直接失败（实测 records=3）",
+      "fix": "commit_shard 改为**有界重试**：每轮重读链尾、先复查身份（相同内容=同一请求→返回既有记录；不同内容=冲突→拒绝），再以新快照追加",
+      "second_fix": "冲突方已写入的 .final 字节被移到 .stray-<pid>，避免冒充已提交内容（裁定要求「不覆盖」）",
+      "commits": ["src/owtda_cal/shardio.py"]
+    },
+    "limit_kept": "强保证限于进程中断与可检测缺失；**未**外推为断电零丢失",
+    "impact_on_smoke": "shardio 属计算路径（hashed scope），故按纪律重建身份并重跑 smoke，不使用影响面豁免"
+  },
+
   "REAL_LINE": {
     "execution_scope_this_round": "OUT_OF_SCOPE / DEFERRED",
     "formal_admission": "NOT_GRANTED",

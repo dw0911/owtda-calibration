@@ -200,12 +200,38 @@ def commit_shard(
         "shard_plan_hash": shard_plan_hash,
         "shard_manifest_hash": manifest_hash,
     }
-    commit_hash = append_cas(
-        registry_path, payload,
-        expected_tip=read_tip(registry_path, hash_field=_HASH_FIELD),
-        hash_field=_HASH_FIELD,
-    )
-    return {**payload, _HASH_FIELD: commit_hash}
+    # Bounded retry on registry contention (acceptance bench 2026-09-12): several
+    # processes committing *different* shards share one chain tip, and a bare CAS would
+    # simply fail for the losers.  The snapshot is re-read each round and the identity is
+    # re-checked first, so a race can never turn into a duplicate or a conflicting commit.
+    for _ in range(16):
+        tip = read_tip(registry_path, hash_field=_HASH_FIELD)
+        current = find_commit(registry_path, run_instance_id=run_instance_id, shard_id=shard_id)
+        if current is not None:
+            if current.get("shard_manifest_hash") == manifest_hash:
+                return current  # the same request, committed by a racing caller
+            # A racing caller committed *different* content.  Our bytes must not be left
+            # where they could masquerade as the committed content: move them aside so the
+            # state is the registered "record without final" block, not a silent overwrite.
+            if os.path.isdir(final):
+                stray = f"{final}.stray-{os.getpid()}"
+                try:
+                    os.rename(final, stray)
+                except OSError:
+                    pass
+            raise ShardError(
+                "SHARD_CONTENT_CONFLICT: a commit with different content already exists; "
+                "our staged bytes were moved aside, the shard must be voided or recomputed "
+                "from its record, never overwritten"
+            )
+        try:
+            commit_hash = append_cas(
+                registry_path, payload, expected_tip=tip, hash_field=_HASH_FIELD
+            )
+        except ChainError:
+            continue
+        return {**payload, _HASH_FIELD: commit_hash}
+    raise ShardError("commit could not obtain a stable registry snapshot")
 
 
 def _iter_commits(registry_path: str):
