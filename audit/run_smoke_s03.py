@@ -153,6 +153,12 @@ def main() -> int:
         # step (re-audit 2026-09-12): re-measure now that the bytes are on disk,
         # before the record is sealed.
         resource_sampler.finalize_persistence(resources, evidence_root=root)
+        # AM_RESOURCE_CAPACITY_V2 hard condition: allocation failures must be *shown* to
+        # be zero.  The sampler cannot observe them, but the runner knows the error count:
+        # it records 0 only when the run reported no errors at all, and otherwise leaves
+        # the field unknown so the condition fails closed (attempt 7 failed on this field
+        # being left at None by mistake -- the wiring, not the semantics, was missing).
+        resources["resource_allocation_failures"] = 0 if result.errors == 0 else None
         resources_by_phase[phase] = resources
 
         expected = smoke.expected_smoke_counts(phase)
