@@ -129,6 +129,42 @@ def main() -> int:
         json.dumps(environment, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    # Collection manifest (re-audit 2026-09-12): the node IDs pytest actually
+    # collected, so the verifier can derive the expected count and bind the evidence
+    # to the delivered test tree instead of trusting a literal like "636" or ">500".
+    collected = subprocess.run(
+        [
+            sys.executable, str(LAUNCHER),
+            "--out-dir", str(ver), "--log-dir", str(ver),
+            "--label", "pytest_collect", "--python", venv_python,
+            "--cmd", "-m", "pytest", "--collect-only", "-q",
+        ],
+        cwd=str(REPO), capture_output=True, text=True, check=False,
+    )
+    node_ids = sorted(
+        line.strip() for line in collected.stdout.splitlines()
+        if "::" in line and not line.startswith("=")
+    )
+    xml_text = (ver / "pytest_full.xml").read_text(encoding="utf-8")
+    collection = {
+        "schema_version": 1,
+        "kind": "pytest_collection_manifest",
+        "generated_at_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "collected_count": len(node_ids),
+        "junit_testcases": xml_text.count("<testcase "),
+        "test_files": sorted(p.name for p in (REPO / "tests").glob("test_*.py")),
+        "node_ids": node_ids,
+        "git_head": environment["git_head"],
+        "source_tree_hash": environment["source_tree_hash"],
+        "environment_lock_hash": environment["environment_lock_hash"],
+    }
+    (ver / "collection_manifest.json").write_text(
+        json.dumps(collection, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    print(f"[verification] collected {collection['collected_count']} tests "
+          f"from {len(collection['test_files'])} delivered test files", flush=True)
+
     codes = json.loads((ver / "validation_exit_codes.json").read_text(encoding="utf-8"))
     print(f"[verification] exit codes: {codes}")
     print(f"[verification] xml present: {(ver / 'pytest_full.xml').exists()}")

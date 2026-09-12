@@ -519,13 +519,60 @@ def verify_verification(d: Dossier) -> None:
           codes.get("pytest_full") == 0 and codes.get("ruff_check") == 0, codes,
           {"pytest_full": 0, "ruff_check": 0},
           "evidence/verification/validation_exit_codes.json")
+    # Re-audit 2026-09-12: the delivered JUnit was byte-identical to the previous
+    # submission's (544 tests, source 265c9151...) while the current source collects
+    # 636 -- the evidence was from the *previous* source generation.  The evidence must
+    # therefore name the current fingerprints, and the test count must be derived from
+    # the delivered tree rather than from a literal threshold.
+    environment = d.json("evidence/verification/validation_environment.json")
+    collection = (
+        d.json("evidence/verification/collection_manifest.json")
+        if d.has("evidence/verification/collection_manifest.json") else None
+    )
+    check("verification.collection_manifest_present",
+          "收集清单随包（缺它就无法把测试数与交付测试树绑定）",
+          collection is not None,
+          {"present": collection is not None}, None,
+          "evidence/verification/collection_manifest.json")
+    freeze_manifest = d.json("governance/FREEZE_MANIFEST.json")
+    delivered_tests = sorted(
+        name.split("repo/tests/", 1)[1]
+        for name in d.members()
+        if name.startswith("repo/tests/") and name.endswith(".py")
+        and name.rsplit("/", 1)[-1].startswith("test_")
+    )
+    check("verification.bound_to_current_source",
+          "测试证据绑定当前源码/环境指纹（上一代源码的 XML 必须被拒）",
+          environment.get("source_tree_hash") == freeze_manifest["source_tree_hash"]
+          and environment.get("environment_lock_hash")
+          == freeze_manifest["environment_lock_hash"]
+          and environment.get("freeze_id") == freeze_manifest["freeze_id"],
+          {"evidence_source": str(environment.get("source_tree_hash"))[:16],
+           "current_source": freeze_manifest["source_tree_hash"][:16],
+           "evidence_env": str(environment.get("environment_lock_hash"))[:16],
+           "current_env": freeze_manifest["environment_lock_hash"][:16]},
+          None, "evidence/verification/validation_environment.json")
+    check("verification.collection_matches_delivered_tests",
+          "收集清单 == 交付的测试文件集合，且 JUnit 用例数 == 收集数（不写死门槛）",
+          bool(collection)
+          and collection["test_files"] == delivered_tests
+          and collection["collected_count"] == collection["junit_testcases"],
+          {"manifest_files": len(collection["test_files"]) if collection else None,
+           "delivered_files": len(delivered_tests),
+           "collected": collection["collected_count"] if collection else None,
+           "junit": collection["junit_testcases"] if collection else None},
+          None, "evidence/verification/collection_manifest.json")
+
     xml_bytes = d.read("evidence/verification/pytest_full.xml")
     root = ElementTree.fromstring(xml_bytes)
     suite = root if root.tag == "testsuite" else root.find("testsuite")
     tests = int(suite.get("tests", "0"))
     failures = int(suite.get("failures", "0")) + int(suite.get("errors", "0"))
-    check("verification.pytest_xml", "原始 JUnit XML：无失败且用例数 > 500",
-          failures == 0 and tests > 500, {"tests": tests, "failures": failures},
+    check("verification.pytest_xml", "原始 JUnit XML：无失败，且用例数 == 收集清单数",
+          failures == 0 and bool(collection)
+          and tests == collection["collected_count"],
+          {"tests": tests, "failures": failures,
+           "collected": collection["collected_count"] if collection else None},
           {"failures": 0, "tests": ">500"}, "evidence/verification/pytest_full.xml")
     check("verification.logs_present", "原始日志（pytest/ruff）随包",
           d.has("evidence/verification/pytest_full.log")
