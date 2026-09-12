@@ -17,7 +17,7 @@ AUDIT = REPO / "audit"
 if str(AUDIT) not in sys.path:
     sys.path.insert(0, str(AUDIT))
 
-import run_lifecycle_fixture as fixture  # noqa: E402
+import run_lifecycle_fixture as fixture
 
 FAULTS = ("parent_seal", "shard_plan_hash", "index_hash", "terminal_state")
 EXPECTED_COUNTS = {
