@@ -107,8 +107,8 @@
   "run_admission": {
     "NULL": {
       "replicate_count": 2500,
-      "run_component_set_file": "RUN_COMPONENT_SET_53b005cf7d6f3cddc4ff6a2b03dacde7a22918aa8efc3756354c849ef871cbec.json",
-      "run_component_set_hash": "53b005cf7d6f3cddc4ff6a2b03dacde7a22918aa8efc3756354c849ef871cbec",
+      "run_component_set_file": "RUN_COMPONENT_SET_0ea9818a381b61dc353ef8283adac176d833062d0320a60100247f43b864f323.json",
+      "run_component_set_hash": "0ea9818a381b61dc353ef8283adac176d833062d0320a60100247f43b864f323",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_f853f44c332966e468d7471293cae8f9264d72dd5aff50720536a0aa2f95f4f6.jsonl",
       "run_input_bindings_hash": "f853f44c332966e468d7471293cae8f9264d72dd5aff50720536a0aa2f95f4f6",
       "run_input_bindings_row_count": 9,
@@ -118,8 +118,8 @@
     },
     "SMOKE_ALT": {
       "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_52169436fda7965b81ec73aa06e1fd70ce31a90f965427595f6d50a32477dc55.json",
-      "run_component_set_hash": "52169436fda7965b81ec73aa06e1fd70ce31a90f965427595f6d50a32477dc55",
+      "run_component_set_file": "RUN_COMPONENT_SET_daadefaf0d3ab6e4e16e66926b8895beaadb2be2c31342ff34ffb501be357682.json",
+      "run_component_set_hash": "daadefaf0d3ab6e4e16e66926b8895beaadb2be2c31342ff34ffb501be357682",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a.jsonl",
       "run_input_bindings_hash": "40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a",
       "run_input_bindings_row_count": 10,
@@ -129,8 +129,8 @@
     },
     "SMOKE_NULL": {
       "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_fa249d890a6c3b9fcab9b02f72396ab05108034bc5a82e1048877cb3999e9b40.json",
-      "run_component_set_hash": "fa249d890a6c3b9fcab9b02f72396ab05108034bc5a82e1048877cb3999e9b40",
+      "run_component_set_file": "RUN_COMPONENT_SET_4bc4f369e99eb3e17e84aeb302082e47b67dc1fa809f61ea2e9843c0254e4549.json",
+      "run_component_set_hash": "4bc4f369e99eb3e17e84aeb302082e47b67dc1fa809f61ea2e9843c0254e4549",
       "run_input_bindings_file": "RUN_INPUT_BINDINGS_40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a.jsonl",
       "run_input_bindings_hash": "40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a",
       "run_input_bindings_row_count": 10,
@@ -159,7 +159,7 @@
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "48bf26f7dee592590f00dfdf9080f2e28e82bd395cc571865218c0aac0560413",
   "smoke_config_hash": "d804d3c06f4b79a6638329b5fbe61cf14a8cfa7487af3bfdaf9513d03e1ef03e",
-  "source_tree_hash": "70455a73d725362e53e44ce6d5b7ec065c2243a86a2c01c173b68bb442f30b3b",
+  "source_tree_hash": "920991e87f6a7e9f4498f17518c76ee381f3c2e1f5bf306520c4f21c0627768b",
   "source_tree_manifest": [
     {
       "file_sha256": "aa52392a1094127ff1fef365fab748c95ddde46e83c6864a20c0c476ed363a87",
@@ -367,9 +367,9 @@
       "size": 3012
     },
     {
-      "file_sha256": "d12fc790fcb540349d8021070458bb8e271c80a18258db26028494c6086690d3",
+      "file_sha256": "baf93f8d8293f46647b21fd4acc6cbcc1dd3a1b0b029dd1164b74e44a2acb6bf",
       "path": "src/owtda_cal/shardio.py",
-      "size": 12028
+      "size": 13639
     },
     {
       "file_sha256": "f60080544bb6bad0114a4cd9b858fbb15fc20bb9af27019d9910142c8806196c",
