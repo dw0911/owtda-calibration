@@ -33,6 +33,14 @@ from owtda_cal.identity import H, config_hash
 GOV = REPO / "governance"
 PHASES = (scope.PHASE_SMOKE_NULL, scope.PHASE_SMOKE_ALT, scope.PHASE_NULL)
 SMOKE_CONFIG = {
+    # Re-audit 2026-09-15 (P1): the registered parallelism is 4, not 8.  attempt 10
+    # breached the paired commit ratio for real (0.9330, 792 breaching samples) at 8
+    # workers, and the worker sweep measured the job's own increment to be linear in
+    # the worker count (~1.17 GB/worker) with throughput already saturated at 4-6.
+    # This dict is the single source of truth: it is hashed into smoke_config_hash
+    # and *rewrites* governance/SMOKE_CONFIG_v1.json, so editing that file alone
+    # silently reverts (which is exactly how the first dispatch of attempt 11 was
+    # refused for declaring 8 while launched with 4).
     "schema_version": 1,
     "config_kind": "smoke_config",
     "replicates_per_cell": scope.R0_SMOKE,
@@ -41,7 +49,7 @@ SMOKE_CONFIG = {
     # feeds RUN_INPUT_BINDINGS, i.e. the run, and never freeze_id) alongside the
     # contract in COMPUTE_SPEC.parallelism_contract; the realised value is written
     # per run as ``workers_used``.
-    "default_workers": 8,
+    "default_workers": 4,
     "smoke_generation_id": scope.SMOKE_GENERATION_ID,
     "smoke_data_units": {"SMOKE_NULL": 896, "SMOKE_ALT": 256},
     "smoke_evaluations": {"SMOKE_NULL": 3584, "SMOKE_ALT": 1024},
