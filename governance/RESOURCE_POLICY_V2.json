@@ -7,7 +7,7 @@
   "supersedes_for_future_admission": "swap_growth_bytes_max = 0（旧策略的该条**退出未来准入用途**；旧策略、旧记录、旧判决全部保留）",
   "objective": "在登记的宿主环境与并行配置下，任务资源占用不超过项目上限，宿主保有规定的提交额度与物理内存余量，执行、持久化与恢复流程完整；分页相关计数器用于诊断，不用于证明绝对零分页。",
   "hard_conditions": {
-    "workers": 8,
+    "workers": 4,
     "peak_total_rss_gib_max": 24,
     "host_commit_fraction_max": 0.80,
     "host_available_phys_min": "max(2 GiB, 0.10 * PhysicalTotal)",
@@ -18,6 +18,14 @@
       "max_k C_k / L_k <= 0.80   （C_k 宿主总提交量，L_k 当时提交上限）",
       "min_k A_k >= max(2 GiB, 0.10 * R_phys)   （A_k 可用物理内存，R_phys 物理内存总量）"
     ]
+  },
+  "parallelism_registration": {
+    "registered_on": "2026-09-15",
+    "decision": "前瞻登记固定并行度 4（原 8）；0.80 / 24 GiB / 可用物理内存条件不变",
+    "basis": "attempt 10 在 8 workers 下真实越界：新配对判定器从 1301 条原始行算出峰值 36,381,429,760 / 38,989,602,816 = 0.9330（越界样本 792），而旧式摘要只报 0.8866 —— 旧式 max/last 低估峰值，本轮同时证实了该缺陷与失败的真实性。随后按 worker 数测量作业自身提交增量：w=2 -> 2.32 GB，w=4 -> 4.71 GB，w=6 -> 7.14 GB，w=8 -> 9.40 GB（近似线性，约 1.17 GB/worker），吞吐在 4-6 已饱和，故取 4：增量减半而 wall 仅增约 18%。",
+    "evidence": "artifacts/audit/worker_commit_sweep_RC.json（测量记录，不是验收证据；不得用于取代任何阶段的原始采样）",
+    "preflight_required": "启动前必须通过 C_baseline + 1.25 * dC(4) <= 0.8 * L 的加法预检；不通过即拒绝启动，禁止在同一次执行中静默降低并行度（见 breach_handling）",
+    "not_retroactive": "不追溯：attempt 7-10 的判决、封存与记录原样保留，不倒填为旧标准，也不给旧运行补 V2 PASS"
   },
   "diagnostic_only": [
     "host_pagefile_used_growth",
@@ -45,6 +53,12 @@
   "breach_handling": "任一硬条件越界时：停止派发新任务，按已登记恢复流程处理在途工作并保留记录；不得在同一次执行中静默减少 worker、清空失败状态后再把整次运行记为通过。",
   "resumption_contract": "资源中断后恢复必须沿用同一科学任务 ID、输入与随机种子；不得丢弃资源失败试次、不得换种子补一个、不得仅分析成功完成的子集。",
   "history_retained": {
+    "attempts_under_v2": [
+      "S04_attempt_7_capacity_v2_failed（V2 判据下的容量 FAIL，保留）",
+      "S04_attempt_8_failed_before_the_first_phase_missing_run_admission（冻结清单缺 run_admission，分派即失败，零科学证据，保留）",
+      "S04_attempt_9_alt_refused_by_the_shared_execution_root（两相位共用执行根 id，ALT 未写一字节，保留）",
+      "S04_attempt_10_complete_evidence_resource_admission_failed_paired_peak（科学证据完整并封存，容量配对峰值 0.9330 > 0.80，按容量 FAIL 保留）"
+    ],
     "attempts_under_old_policy": [
       "S04_attempt_2_admission_failed_on_the_host_wide_instrument",
       "S04_attempt_3_admission_failed_on_the_retired_commit_charge_check",

@@ -4,12 +4,12 @@
   "resource_policy_id": "AM_RESOURCE_CAPACITY_V2",
   "source_policy": {
     "file": "governance/RESOURCE_POLICY_V2.json",
-    "sha256": "b0096b006347adbf93ef189daf6153e8db30719e396322b7febda27385e91771",
+    "sha256": "cc6bd3cca725354f9e78ccece6d3391afc6373081402aac2062fabcf23785b79",
     "binding": "本文件是 V2 文档的精确实施表示；两处哈希在执行身份中共同绑定。任何系数只能在此处修改，禁止在代码里另设一套宽松系数。"
   },
   "note": "所有比例一律写成整数有理数 {num, den}；比较时整数交叉相乘，禁止浮点除法。所有字节量与纳秒量为整数。",
   "limits": {
-    "workers": 8,
+    "workers": 4,
     "peak_total_rss_bytes_max": 25769803776,
     "peak_total_rss_gib_max": 24,
     "host_commit_fraction_max": { "num": 4, "den": 5 },

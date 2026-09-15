@@ -116,6 +116,29 @@ def _budget_step(out: Path) -> dict[str, Any]:
     return budget
 
 
+def _registered_increment_bytes(workers: int) -> int:
+    """Measured own-commit increment for the registered parallelism; fail-closed.
+
+    Re-audit 2026-09-15 (P1): the constant that used to sit here (9.167 GB) was the
+    *8-worker* exposure.  The policy now registers 4 workers, and applying the
+    8-worker number would refuse runs the measured increment predicts fit.  The
+    measured value is used when the sweep evidence is present; otherwise the old
+    conservative constant is kept -- never a smaller, invented one.
+    """
+    conservative = int(9.167 * 1024 ** 3)
+    path = Path(__file__).resolve().parents[1] / "artifacts/audit/worker_commit_sweep_RC.json"
+    if not path.is_file():
+        return conservative
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for row in (data.get("decision") or {}).get("measured", []):
+            if row.get("workers") == workers and row.get("own_increment_bytes"):
+                return int(row["own_increment_bytes"])
+    except (json.JSONDecodeError, TypeError, KeyError, ValueError):
+        return conservative
+    return conservative
+
+
 def _preflight_step(out: Path) -> dict[str, Any]:
     import resource_sampler
 
@@ -126,11 +149,12 @@ def _preflight_step(out: Path) -> dict[str, Any]:
     if info is None:
         return {"status": "PREFLIGHT_REFUSED",
                 "reasons": ["capacity counters unavailable: the host cannot be measured"]}
-    # the job's own increment is taken from the recorded attempt-7 style exposure
-    # (~9.167 GB) with the policy's 5/4 margin applied inside preflight_capacity
+    # the job's own increment is the measured exposure at the *registered* parallelism,
+    # with the policy's 5/4 margin applied inside preflight_capacity
+    delta = _registered_increment_bytes(policy["limits"]["workers"])
     outcome = preflight_capacity(
         baseline_commit_bytes=int(info["commit_total_bytes"]),
-        delta_commit_bytes=int(9.167 * 1024 ** 3),
+        delta_commit_bytes=delta,
         commit_limit_bytes=int(info["commit_limit_bytes"]),
         physical_available_bytes=int(info["physical_available_bytes"]),
         physical_total_bytes=int(info["physical_total_bytes"]),
@@ -141,8 +165,14 @@ def _preflight_step(out: Path) -> dict[str, Any]:
     )
     (out / "preflight").mkdir(parents=True, exist_ok=True)
     (out / "preflight" / "preflight.json").write_text(
-        json.dumps({**outcome, "host": info}, ensure_ascii=False, indent=2,
-                   sort_keys=True) + "\n", encoding="utf-8")
+        json.dumps({**outcome, "host": info,
+                    "registered_workers": policy["limits"]["workers"],
+                    "delta_commit_bytes_used": delta,
+                    "delta_source": ("artifacts/audit/worker_commit_sweep_RC.json"
+                                     " (measured)" if delta != int(9.167 * 1024 ** 3)
+                                     else "conservative 8-worker constant")},
+                   ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8")
     return outcome
 
 

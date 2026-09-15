@@ -1,6 +1,6 @@
 {
   "config_kind": "smoke_config",
-  "default_workers": 8,
+  "default_workers": 4,
   "derivation": "Plan §9.3: H0 = 28 cells x 32 reps = 896 data units, x4 feature/method = 3,584 rows, 128 master paths x 575 windows = 73,600 PH windows; H1 = 8 cells x 32 reps = 256 data units, x4 = 1,024 rows, 256 x 192 = 49,152 PH windows",
   "feeds_parameter_selection": false,
   "forbidden_outputs": [
