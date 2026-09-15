@@ -1,10 +1,10 @@
 {
   "entries": [
     {
-      "code_file_manifest_hash": "c36df69296cb5b03234ff3e9bf96e95bcc9c383839f667b132092dcd5e612dd6",
+      "code_file_manifest_hash": "4ca970353ad1c3d0eb1a040c783e444fc0b9f770479933bfc6ce293e642ddc5d",
       "component_generation_id": "D01",
       "component_kind": "data",
-      "component_registry_entry_hash": "f28876911e675b078748972fa872586993eaf379697790c74f4b2fe346f949b0",
+      "component_registry_entry_hash": "95ca841305c3dc04f651812b929b1e305004ae436f6c3ebb6fe4cffaf06a5c75",
       "config_hash": "03b87941c153babb9ed123513df03eda482f400b24fccf84d321dcc0c876aec4",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -13,10 +13,10 @@
       "stable_id": "SYNTHETIC_CIRCLE_BASED_H1_V1"
     },
     {
-      "code_file_manifest_hash": "c36df69296cb5b03234ff3e9bf96e95bcc9c383839f667b132092dcd5e612dd6",
+      "code_file_manifest_hash": "4ca970353ad1c3d0eb1a040c783e444fc0b9f770479933bfc6ce293e642ddc5d",
       "component_generation_id": "D01",
       "component_kind": "data",
-      "component_registry_entry_hash": "96c9a45e4ad2f164920594b635bde3b4abac1711f4579e3b92d54253af131b5f",
+      "component_registry_entry_hash": "cb780b26ef55a8b154366bd8e0fd3da9daf7cb453a38d6a358d5ad3b972ceb90",
       "config_hash": "ca75bfeb3a045a5cac40a40a472fc4c9538c7c66255492e6d729862bbc2c1f78",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -25,10 +25,10 @@
       "stable_id": "SYNTHETIC_N_AR_V1"
     },
     {
-      "code_file_manifest_hash": "c36df69296cb5b03234ff3e9bf96e95bcc9c383839f667b132092dcd5e612dd6",
+      "code_file_manifest_hash": "4ca970353ad1c3d0eb1a040c783e444fc0b9f770479933bfc6ce293e642ddc5d",
       "component_generation_id": "D01",
       "component_kind": "data",
-      "component_registry_entry_hash": "da8f667408afe6fa946751c6f270ae4a937a784555ebed79ffa9843fc9621fc6",
+      "component_registry_entry_hash": "fb6004a0700ee77b575e6ec04cfa236913262ff34ea97a2b835ac1a02582681c",
       "config_hash": "077aeb981a76d9e8ff6315dbfc158a05c28040e85a48cc798d47345ed0a83b0d",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -37,10 +37,10 @@
       "stable_id": "SYNTHETIC_N_CIRCLE_V1"
     },
     {
-      "code_file_manifest_hash": "c7f0d999816a515b255cbad600655ec142931051195fba1abbdde833d3cf6f35",
+      "code_file_manifest_hash": "d561ee2e5b252b31e5e4588b512a978b8015992a021e8c738cb28c38463769ce",
       "component_generation_id": "F01",
       "component_kind": "feature",
-      "component_registry_entry_hash": "6f1a8c8fb62d4136ed5663a9cc995f31d6dcd60b6b9787047871fa10c0e8df3a",
+      "component_registry_entry_hash": "af69decef3aa92ab5c37e2f5875215d62a7806949d8704587639290d3672355c",
       "config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -49,10 +49,10 @@
       "stable_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"
     },
     {
-      "code_file_manifest_hash": "fac4f1bc1447af2abf9af78fb107435f2c71823a3709ee6aef9f030bb5c02b76",
+      "code_file_manifest_hash": "81eb2458a7fdad124288fed7dc1ea05d3fc1267639ea8c63b262e1a204625492",
       "component_generation_id": "F01",
       "component_kind": "feature",
-      "component_registry_entry_hash": "6a329e9cb99ce7c2bc47198d1fac722e1ce65e724cc47aae0d0ccc64402a68c8",
+      "component_registry_entry_hash": "31983cef0e1cac54d8d0379bb03b64071c27087ab221d1d1f2fe2f12da27ac07",
       "config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -61,10 +61,10 @@
       "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
     },
     {
-      "code_file_manifest_hash": "2b03db836d42dd0d816c8658f7238b50124591524f706ad60f1f6d1939791ce9",
+      "code_file_manifest_hash": "7bbe5ca22839a5bc6aee9219fe5dc8096a0fffd58746c87e53ddbde81ecbf750",
       "component_generation_id": "M01",
       "component_kind": "method",
-      "component_registry_entry_hash": "daa10aaa57789edd31c93403825880dc5414df7b7209f13f64e630953fc091a0",
+      "component_registry_entry_hash": "92a35611ea2ca661b6bc049f9590ecbeaeb856634a0df073135aff7bcd54d058",
       "config_hash": "2a184b3835a281e0a172c40cccd3262e4c7dbaf8bef4a4869ac256d306dcec0e",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
@@ -73,10 +73,10 @@
       "stable_id": "M0_NAIVE_PERM_B999_V1"
     },
     {
-      "code_file_manifest_hash": "2b03db836d42dd0d816c8658f7238b50124591524f706ad60f1f6d1939791ce9",
+      "code_file_manifest_hash": "7bbe5ca22839a5bc6aee9219fe5dc8096a0fffd58746c87e53ddbde81ecbf750",
       "component_generation_id": "M01",
       "component_kind": "method",
-      "component_registry_entry_hash": "b489e25280fd69a528a6db51b25eb72b8e815536e551d5d6db91ab0e7592a5b1",
+      "component_registry_entry_hash": "81e067e92daa7f79cfa67b795722092d70d70ed5e9ba454868ac3e1fe1aef899",
       "config_hash": "f778e68bb16160fc803263fb4d9848962130df3c7c3f91002b01913181f9b6f4",
       "evidence_generation_id": "G01",
       "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",

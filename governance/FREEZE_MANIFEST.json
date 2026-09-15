@@ -11,7 +11,7 @@
       "M1": "M01"
     }
   },
-  "component_registry_snapshot_hash": "ed8c2d2bcbb3450e48515c1c1c4ab99fd0826e11d362e36545b11d07854423e7",
+  "component_registry_snapshot_hash": "9476d7f72e461edae8ec3d70f00ff7e55fcd446fec5e1599fd63ff924d235a97",
   "compute_spec_hash": "57367cb7d3436f1f2f83c4339ef0b4e30ed39465cd7fc94209b0c07c17f1db60",
   "environment_lock_hash": "636bf50745a375e7d286ff9530bbc56885625dc164876b88efc7c12715a668e0",
   "environment_lock_manifest": [
@@ -104,42 +104,6 @@
     "tip_hash": "0e31a5cbb04cda94a06a409a42d0ed54173bad1c33591b108d0316f6c734ffab",
     "truth_unsealed": false
   },
-  "run_admission": {
-    "NULL": {
-      "replicate_count": 2500,
-      "run_component_set_file": "RUN_COMPONENT_SET_a989344b667e99174be94f7a1291346a7f7602da908ae46224c554fa97632d44.json",
-      "run_component_set_hash": "a989344b667e99174be94f7a1291346a7f7602da908ae46224c554fa97632d44",
-      "run_input_bindings_file": "RUN_INPUT_BINDINGS_f853f44c332966e468d7471293cae8f9264d72dd5aff50720536a0aa2f95f4f6.jsonl",
-      "run_input_bindings_hash": "f853f44c332966e468d7471293cae8f9264d72dd5aff50720536a0aa2f95f4f6",
-      "run_input_bindings_row_count": 9,
-      "scope_design_file": "SCOPE_DESIGN_NULL_d1916fe4987a803341c65a38ebf1595f950b3a627ae31318c4130d31dd3f6864.csv",
-      "scope_design_hash": "d1916fe4987a803341c65a38ebf1595f950b3a627ae31318c4130d31dd3f6864",
-      "scope_design_rows": 112
-    },
-    "SMOKE_ALT": {
-      "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_5ed04527de62a82552ab5b6bc926dea4af79d4c0b52a26cbf187f909e7cfd592.json",
-      "run_component_set_hash": "5ed04527de62a82552ab5b6bc926dea4af79d4c0b52a26cbf187f909e7cfd592",
-      "run_input_bindings_file": "RUN_INPUT_BINDINGS_40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a.jsonl",
-      "run_input_bindings_hash": "40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a",
-      "run_input_bindings_row_count": 10,
-      "scope_design_file": "SCOPE_DESIGN_SMOKE_ALT_71075b80ff8b55a54bf747769ff5888cee71b93c068d3ed81fa3129e01ba9fdf.csv",
-      "scope_design_hash": "71075b80ff8b55a54bf747769ff5888cee71b93c068d3ed81fa3129e01ba9fdf",
-      "scope_design_rows": 32
-    },
-    "SMOKE_NULL": {
-      "replicate_count": 32,
-      "run_component_set_file": "RUN_COMPONENT_SET_9b36dff92f22615f07c5ff921f5b7a1e32b218c16579c828b8b1c071c6b749bc.json",
-      "run_component_set_hash": "9b36dff92f22615f07c5ff921f5b7a1e32b218c16579c828b8b1c071c6b749bc",
-      "run_input_bindings_file": "RUN_INPUT_BINDINGS_40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a.jsonl",
-      "run_input_bindings_hash": "40d1c542f5fec82a333cf4071e68ae0ea39bd9d607854894fadb66e670b9bc3a",
-      "run_input_bindings_row_count": 10,
-      "scope_design_file": "SCOPE_DESIGN_SMOKE_NULL_7e167ba69c0b962d6687b870353735800ce54d454b2eb1f2f06a4d8f57c01319.csv",
-      "scope_design_hash": "7e167ba69c0b962d6687b870353735800ce54d454b2eb1f2f06a4d8f57c01319",
-      "scope_design_rows": 112
-    }
-  },
-  "run_admission_note": "ALT run component set is deferred until the authoritative H0 phase seal exists (parent_phase_seal_hash); smoke phases carry parent=null.",
   "schema_version": 1,
   "scope_design": {
     "ALT": {
@@ -158,8 +122,7 @@
   "scope_spec_hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "48bf26f7dee592590f00dfdf9080f2e28e82bd395cc571865218c0aac0560413",
-  "smoke_config_hash": "d804d3c06f4b79a6638329b5fbe61cf14a8cfa7487af3bfdaf9513d03e1ef03e",
-  "source_tree_hash": "920991e87f6a7e9f4498f17518c76ee381f3c2e1f5bf306520c4f21c0627768b",
+  "source_tree_hash": "48c7187eb303ac6b7cbb215b28954986c76ecef702d1a710b5f62bc6beb94a18",
   "source_tree_manifest": [
     {
       "file_sha256": "aa52392a1094127ff1fef365fab748c95ddde46e83c6864a20c0c476ed363a87",
@@ -232,9 +195,19 @@
       "size": 1841
     },
     {
+      "file_sha256": "9280474bff48d8ccdd00f8d63647e018f9da8922357ddeba6f0bfe9e08f79b86",
+      "path": "src/owtda_cal/attack_harness.py",
+      "size": 11894
+    },
+    {
       "file_sha256": "ecbb36e7cb3a8b499825fa1bd29e360a67c29f43b712bc934541565844107d1c",
       "path": "src/owtda_cal/bpi.py",
       "size": 2199
+    },
+    {
+      "file_sha256": "30c30884ead62d8551ae3bcd367a72dfbc93ad1bd140b6100850bd87ab7439d9",
+      "path": "src/owtda_cal/budget.py",
+      "size": 10055
     },
     {
       "file_sha256": "af8cec7f3f76c40675536c45c68f9ed46a1771f129d8ea16e29aee043ead5c72",
@@ -242,9 +215,9 @@
       "size": 8949
     },
     {
-      "file_sha256": "3c637115bf1c3a9049d00064f14ab9378b2c8ae150c35ffd7666acfce908a2bc",
+      "file_sha256": "8e8c68ca9549138e786596b9a04b8e6f7d39571a1ec4667ee9b0940f17a8e5da",
       "path": "src/owtda_cal/canonical.py",
-      "size": 5296
+      "size": 7510
     },
     {
       "file_sha256": "9507b7ba9c3f68e49816fbd4a7a4655d57d5a26fe7aebaee630feca0ea0bf940",
@@ -252,9 +225,9 @@
       "size": 7137
     },
     {
-      "file_sha256": "e152bdafe78a0e348d695d5d2465cec491356e5a3590ea60f2417a5d6cd32b02",
+      "file_sha256": "0a280e9adc4e281aaedd26348d24a0f27c70718734496264b322ac5d1e5abdb0",
       "path": "src/owtda_cal/chains.py",
-      "size": 5320
+      "size": 8492
     },
     {
       "file_sha256": "2e3e8c145c8474ebd48745e4c86e13c81738981a7d751293b19fd677faf65ab3",
@@ -272,9 +245,29 @@
       "size": 8780
     },
     {
+      "file_sha256": "3bbb92fd9fb5ae90e7c591d971fcd9eb528ca2fc7ef0c1ec712752b00c680286",
+      "path": "src/owtda_cal/execution.py",
+      "size": 12099
+    },
+    {
+      "file_sha256": "db849d69ca0b533ada0b1c92b759ba366de911054cbeeb8d5383db340920e74d",
+      "path": "src/owtda_cal/executor.py",
+      "size": 9126
+    },
+    {
       "file_sha256": "3e31186791ddaf8bd1af0ea147a63cb145db9ca52ab03c04789fc517c0cd3d59",
       "path": "src/owtda_cal/features.py",
       "size": 4555
+    },
+    {
+      "file_sha256": "9866343dde76488504d291ec196ea6d06d155d819b8e24905c2d3bca42978841",
+      "path": "src/owtda_cal/formal_admission.py",
+      "size": 5160
+    },
+    {
+      "file_sha256": "8c58ce11da6ac8ceaa2de2a763f6d5188343d246b4807df1174566dc63194e8c",
+      "path": "src/owtda_cal/formal_ids.py",
+      "size": 3513
     },
     {
       "file_sha256": "2955c3862e6d1508a473870dcfbb085b66f229376ba71fccd7cce647fae5d747",
@@ -297,9 +290,24 @@
       "size": 16654
     },
     {
+      "file_sha256": "a584b91d0b7d5dea5c2b2639277295abf1884fb542b3405b861c89b0f2f8560c",
+      "path": "src/owtda_cal/kernel_lock.py",
+      "size": 5861
+    },
+    {
+      "file_sha256": "a87538664bbce4ffb3a941cf7c7a99f3fdc043b173abe0e060f83d1a1ab5184e",
+      "path": "src/owtda_cal/manifests.py",
+      "size": 13349
+    },
+    {
       "file_sha256": "82739cc3ae3a57ca8ff369525cd32e701fb43f97fb175f88f2aae81b22ee11db",
       "path": "src/owtda_cal/moments.py",
       "size": 1330
+    },
+    {
+      "file_sha256": "d465a7db4bd22299320bf50a4ef823d93ee4b060651003825df3beeae630e118",
+      "path": "src/owtda_cal/oracles.py",
+      "size": 10728
     },
     {
       "file_sha256": "359566500fe9966dc3b31acdba1d39d37d36db0142416e68f1f1e2d0ab58c525",
@@ -322,6 +330,11 @@
       "size": 3079
     },
     {
+      "file_sha256": "6246880d32859c7c6570355453a812ce6af81948ac6d30be39f9b4ad0854d508",
+      "path": "src/owtda_cal/planbuild.py",
+      "size": 12602
+    },
+    {
       "file_sha256": "459773b9f22137378c7aecfc0931dea78b825282b75201b23a78aeddb96ce8c5",
       "path": "src/owtda_cal/pointcloud.py",
       "size": 2962
@@ -337,9 +350,19 @@
       "size": 3001
     },
     {
+      "file_sha256": "de43f9b6763900fe32aa80bf99f3322a583dbb4c1c62cb151c0465a120f70216",
+      "path": "src/owtda_cal/recovery.py",
+      "size": 14811
+    },
+    {
       "file_sha256": "3579b6c4628514866d77eb9e179937090e519baad09aaf8d41b3bd707ca31f8b",
       "path": "src/owtda_cal/registry.py",
       "size": 10016
+    },
+    {
+      "file_sha256": "632d3d96be9e936ad0fb4e6967eebb722424d96618e3c3fed5147e8e53047dc4",
+      "path": "src/owtda_cal/resource_policy.py",
+      "size": 13032
     },
     {
       "file_sha256": "a9eb4a8c67807904503d9d394d4cdd3d0aa27c878bf7e9d63355f2a0f2ceebad",
@@ -367,9 +390,9 @@
       "size": 3012
     },
     {
-      "file_sha256": "baf93f8d8293f46647b21fd4acc6cbcc1dd3a1b0b029dd1164b74e44a2acb6bf",
+      "file_sha256": "5d7a2e66706fa2da732ae3de5d4e2ed014f345a68261bfeb48befa1d50f328c0",
       "path": "src/owtda_cal/shardio.py",
-      "size": 13639
+      "size": 20634
     },
     {
       "file_sha256": "f60080544bb6bad0114a4cd9b858fbb15fc20bb9af27019d9910142c8806196c",
