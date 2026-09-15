@@ -129,6 +129,51 @@ def check_c5(sequence_dir: Path, plan: dict, budget_dir: Path | None = None) -> 
                       "budget_status": budget.get("status")})
 
 
+def _test_evidence(tests_dir: Path) -> tuple[int | None, list[str]]:
+    """Read the test evidence the frozen-env collector actually writes.
+
+    Re-audit 2026-09-15: this used to read ``<tests_dir>/verification.json``, which
+    **no tool produces** -- the collected evidence lives in ``verification/`` as
+    ``collection_manifest.json``, ``pytest_full.xml`` and
+    ``validation_exit_codes.json``.  A contract that can only report
+    TEST_EVIDENCE_MISSING verifies nothing, so the real artifacts are read and the
+    JUnit identity set is checked here rather than trusted.
+    """
+    import xml.etree.ElementTree as ET
+
+    ver = tests_dir / "verification" if (tests_dir / "verification").is_dir() else tests_dir
+    codes: list[str] = []
+    exits = _read(ver / "validation_exit_codes.json")
+    if not exits:
+        codes.append("TEST_EXIT_CODES_MISSING")
+    elif any(int(v) != 0 for v in exits.values()):
+        bad = ",".join(sorted(k for k, v in exits.items() if int(v) != 0))
+        codes.append("TEST_EXIT_CODES_FAILED:" + bad)
+    xml_path = ver / "pytest_full.xml"
+    collected = _read(ver / "collection_manifest.json")
+    if not xml_path.is_file() or not collected:
+        codes.append("TEST_EVIDENCE_MISSING")
+        return None, codes
+    root = ET.fromstring(xml_path.read_text(encoding="utf-8", errors="replace"))
+    identities: list[str] = []
+    failures = 0
+    for case in root.iter("testcase"):
+        identities.append(f"{case.get('classname')}::{case.get('name')}")
+        # A <skipped/> child is not a failure: this suite's single skip is the
+        # disclosed "S03 evidence root not available on this machine" case, which is
+        # approved in the validation manifest.  Only failure/error children count.
+        if case.find("failure") is not None or case.find("error") is not None:
+            failures += 1
+    if failures:
+        codes.append(f"TEST_FAILURES:{failures}")
+    if len(set(identities)) != len(identities):
+        codes.append("TEST_IDENTITY_DUPLICATED")
+    expected = collected.get("collected_count")
+    if isinstance(expected, int) and expected != len(identities):
+        codes.append(f"TEST_IDENTITY_COUNT_MISMATCH:{expected}!={len(identities)}")
+    return len(identities), codes
+
+
 def check_c6(attacks_dir: Path, tests_dir: Path) -> dict:
     summary = _read(attacks_dir / "SUMMARY.json")
     verification = _read(tests_dir / "verification.json") if tests_dir else {}
@@ -144,7 +189,8 @@ def check_c6(attacks_dir: Path, tests_dir: Path) -> dict:
             codes.append("DETECTION_RATE_NOT_ONE")
     junit = ((verification.get("junit") or {}).get("issues")) if verification else None
     if tests_dir and not verification:
-        codes.append("TEST_EVIDENCE_MISSING")
+        junit, evidence_codes = _test_evidence(tests_dir)
+        codes.extend(evidence_codes)
     status = "PASS" if not codes else ("INCOMPLETE" if not summary else "FAIL")
     return _contract("C6_final_evidence", status, codes,
                      {"attacks": summary.get("attacks"),

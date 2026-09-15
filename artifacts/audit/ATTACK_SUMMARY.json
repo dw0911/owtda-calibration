@@ -1,0 +1,218 @@
+{
+  "attacks": 13,
+  "detected": 13,
+  "detection_rate": 1.0,
+  "eligible_baselines": 13,
+  "not_scored": [],
+  "note": "the rate is computed over attacks whose target contract passed on the baseline; a package that already failed the target cannot demonstrate detection for it",
+  "package": {
+    "baseline_admissible": true,
+    "baseline_layers": {
+      "experiment_evidence_consistency": "PASS",
+      "formal_admission": "PASS",
+      "package_integrity": "PASS"
+    },
+    "scope_rows": 8
+  },
+  "platform": "win32",
+  "records": [
+    {
+      "attack_id": "V1_delete_ledger",
+      "attributable_error_code": "LEDGER_MISSING",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "delete the real ledger",
+      "new_error_codes": [
+        "LEDGER_MISSING"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "evaluation_ledger.jsonl"
+    },
+    {
+      "attack_id": "V2_delete_run_seal",
+      "attributable_error_code": "FILE_REF_MISSING",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "delete the referenced RUN seal",
+      "new_error_codes": [
+        "FILE_REF_MISSING"
+      ],
+      "target_contract": "package_integrity",
+      "target_file": "RUN_SEAL.json"
+    },
+    {
+      "attack_id": "V3_analysis_row_count",
+      "attributable_error_code": "ANALYSIS_ROW_COUNT_MISMATCH",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "rewrite the analysis row count to 999999",
+      "new_error_codes": [
+        "ANALYSIS_ROW_COUNT_MISMATCH"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "analysis_output.json"
+    },
+    {
+      "attack_id": "V4_junit_duplicate_identity",
+      "attributable_error_code": "JUNIT_UNPARSEABLE",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "duplicate one testcase identity, total unchanged",
+      "new_error_codes": [
+        "JUNIT_UNPARSEABLE"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "junit.xml"
+    },
+    {
+      "attack_id": "V5_p_off_grid",
+      "attributable_error_code": "ANALYSIS_LEDGER_HASH_MISMATCH",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "p + 0.0001 (off the legal grid)",
+      "new_error_codes": [
+        "ANALYSIS_LEDGER_HASH_MISMATCH",
+        "P_OFF_GRID"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "evaluation_ledger.jsonl"
+    },
+    {
+      "attack_id": "V6_reject_not_bool",
+      "attributable_error_code": "ANALYSIS_LEDGER_HASH_MISMATCH",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "reject stored as an integer",
+      "new_error_codes": [
+        "ANALYSIS_LEDGER_HASH_MISMATCH",
+        "REJECT_NOT_BOOL"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "evaluation_ledger.jsonl"
+    },
+    {
+      "attack_id": "V7_duplicate_scope_row",
+      "attributable_error_code": "DUPLICATE_ENTRY",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "duplicate one scope row",
+      "new_error_codes": [
+        "DUPLICATE_ENTRY"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "scope_rows.jsonl"
+    },
+    {
+      "attack_id": "S1 repair of an already-committed shard",
+      "attributable_error_code": "NOT_AN_ORPHAN",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "S1 repair of an already-committed shard",
+      "new_error_codes": [
+        "NOT_AN_ORPHAN"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "shard_registry.jsonl"
+    },
+    {
+      "attack_id": "S2 wrong identity",
+      "attributable_error_code": "ORPHAN_IDENTITY_MISMATCH",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "S2 wrong identity",
+      "new_error_codes": [
+        "ORPHAN_IDENTITY_MISMATCH"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "shard_registry.jsonl"
+    },
+    {
+      "attack_id": "S3 wrong identity",
+      "attributable_error_code": "ORPHAN_IDENTITY_MISMATCH",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "S3 wrong identity",
+      "new_error_codes": [
+        "ORPHAN_IDENTITY_MISMATCH"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "shard_registry.jsonl"
+    },
+    {
+      "attack_id": "S4 all-zero payload hash",
+      "attributable_error_code": "MANIFEST_PAYLOAD_HASH_INVALID",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "S4 all-zero payload hash",
+      "new_error_codes": [
+        "MANIFEST_PAYLOAD_HASH_INVALID"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "shard_registry.jsonl"
+    },
+    {
+      "attack_id": "S5 rewritten event with its old hash kept",
+      "attributable_error_code": "CHAIN_TAIL_TAMPERED",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "S5 rewritten event with its old hash kept",
+      "new_error_codes": [
+        "CHAIN_TAIL_TAMPERED"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "shard_registry.jsonl"
+    },
+    {
+      "attack_id": "S6 schema-2 event with no parent link",
+      "attributable_error_code": "MISSING_PARENT_LINK",
+      "baseline_all_pass": true,
+      "baseline_target_status": "PASS",
+      "detected": true,
+      "mutant_all_pass": false,
+      "mutant_target_status": "FAIL",
+      "mutation": "S6 schema-2 event with no parent link",
+      "new_error_codes": [
+        "MISSING_PARENT_LINK"
+      ],
+      "target_contract": "experiment_evidence_consistency",
+      "target_file": "shard_registry.jsonl"
+    }
+  ],
+  "undetected": []
+}
