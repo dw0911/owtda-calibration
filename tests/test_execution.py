@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import threading
 from concurrent import futures
+from pathlib import Path
 
 import pytest
 
@@ -199,3 +200,64 @@ class TestExecutePlan:
 
     def test_modes_are_the_four_registered_domains(self):
         assert set(MODES) == {"TEST", "SMOKE", "FORMAL_H0", "FORMAL_H1"}
+
+
+class TestFailureAttribution:
+    """Re-audit 2026-09-15: a failed unit must leave its reason on disk.
+
+    The first real smoke dispatch ended with ``error_class=TASK_EXCEPTION`` for
+    phase ``SMOKE_ALT`` and nothing else -- the traceback died with the worker
+    thread, so the failure could not be attributed without re-running the whole
+    phase.  These tests pin the fix.
+    """
+
+    def _run(self, tmp_path, boom: Exception):
+        plan = _plan("TEST", n=2)
+        with futures.ThreadPoolExecutor(max_workers=2) as pool:
+            def submit(unit, index):
+                def task():
+                    if index == 1:
+                        raise boom
+                    return {"ok": index}
+
+                return pool.submit(task)
+
+            return execute_plan(
+                plan, mode="TEST", evidence_root=tmp_path,
+                execution_id="EXEC-FAIL", submit=submit, window_size=1,
+                test_seed_domain=True, test_id_domain=True,
+            )
+
+    def test_the_failure_reason_is_in_the_dispatch_chain(self, tmp_path):
+        record = self._run(tmp_path, ValueError("phase SMOKE_ALT disagrees"))
+        events = [
+            json.loads(line)
+            for line in (tmp_path / "executions" / "EXEC-FAIL" / "events" / "dispatch.jsonl")
+            .read_text(encoding="utf-8").splitlines() if line.strip()
+        ]
+        failed = [e for e in events if e["event_type"] == "UNIT_RECORDED"
+                  and e["status"] == "FAILED"]
+        assert len(failed) == 1
+        assert failed[0]["error_class"] == "TASK_EXCEPTION"
+        assert "phase SMOKE_ALT disagrees" in failed[0]["error_detail"]
+
+    def test_the_traceback_is_written_to_the_execution_root(self, tmp_path):
+        self._run(tmp_path, ValueError("phase SMOKE_ALT disagrees"))
+        failure = tmp_path / "executions" / "EXEC-FAIL" / "logs" / "failure_001.txt"
+        text = failure.read_text(encoding="utf-8")
+        assert "Traceback (most recent call last)" in text
+        assert "phase SMOKE_ALT disagrees" in text
+        assert "error_class: TASK_EXCEPTION" in text
+
+    def test_the_execution_record_lists_every_failure(self, tmp_path):
+        record = self._run(tmp_path, ValueError("phase SMOKE_ALT disagrees"))
+        assert record["failed"] == 1
+        assert len(record["failures"]) == 1
+        entry = record["failures"][0]
+        assert entry["index"] == 1 and entry["error_class"] == "TASK_EXCEPTION"
+        assert Path(entry["failure_file"]).is_file()
+        written = json.loads(
+            (tmp_path / "executions" / "EXEC-FAIL" / "logs" / "execution.json")
+            .read_text(encoding="utf-8")
+        )
+        assert written["failures"][0]["error_detail"] == entry["error_detail"]

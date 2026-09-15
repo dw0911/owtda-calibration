@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import concurrent.futures as _futures
 import time
+import traceback
 from collections.abc import Callable, Sequence
 from concurrent.futures.process import BrokenProcessPool
 from typing import Any
@@ -70,6 +71,7 @@ def _outcome(
     payload: Any = None,
     error_class: str | None = None,
     error_detail: str | None = None,
+    error_traceback: str | None = None,
     started: bool = True,
 ) -> dict[str, Any]:
     return {
@@ -78,6 +80,7 @@ def _outcome(
         "payload": payload,
         "error_class": error_class,
         "error_detail": error_detail,
+        "error_traceback": error_traceback,
         "started": started,
     }
 
@@ -122,6 +125,11 @@ def execute_units(
             return _outcome(
                 index=index, status="FAILED", error_class=classify_error(exc),
                 error_detail=f"{type(exc).__name__}: {exc}",
+                # Re-audit 2026-09-15: the first smoke dispatch failed with
+                # error_class=TASK_EXCEPTION and *no* reason anywhere on disk --
+                # the traceback died with the worker thread, so the failure was
+                # not attributable.  It is now carried out of the worker.
+                error_traceback=traceback.format_exc(),
             )
 
     while pending or next_submit < number_of_units:

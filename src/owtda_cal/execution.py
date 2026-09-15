@@ -247,13 +247,42 @@ def execute_plan(
         poll_interval=poll_interval,
     )
 
+    failures: list[dict[str, Any]] = []
     for record in result["records"]:
+        unit_id = units[record["index"]]["unit_id"]
         _append_event(events_path, {
             "event_type": "UNIT_RECORDED", "execution_id": execution_id,
-            "unit_id": units[record["index"]]["unit_id"],
+            "unit_id": unit_id,
             "index": record["index"], "status": record["status"],
             "error_class": record.get("error_class"),
+            # Re-audit 2026-09-15: the reason must survive the dispatch.  The
+            # first smoke dispatch recorded TASK_EXCEPTION for phase SMOKE_ALT
+            # and nothing else -- no message, no traceback, so the failure could
+            # not be attributed without re-running the phase.
+            "error_detail": record.get("error_detail"),
         })
+        if record["status"] != "COMPLETED":
+            failure_file = root.logs_dir / f"failure_{record['index']:03d}.txt"
+            failure_file.write_text(
+                "\n".join([
+                    f"unit_id: {unit_id}",
+                    f"index: {record['index']}",
+                    f"status: {record['status']}",
+                    f"error_class: {record.get('error_class')}",
+                    f"error_detail: {record.get('error_detail')}",
+                    "",
+                    record.get("error_traceback") or "(no traceback captured)",
+                ]) + "\n",
+                encoding="utf-8",
+            )
+            failures.append({
+                "index": record["index"],
+                "unit_id": unit_id,
+                "status": record["status"],
+                "error_class": record.get("error_class"),
+                "error_detail": record.get("error_detail"),
+                "failure_file": str(failure_file),
+            })
 
     resources_ref = None
     if monitor is not None:
@@ -285,6 +314,9 @@ def execute_plan(
         "failed": result["failed"],
         "cancelled": result["cancelled"],
         "errors_by_class": result["errors_by_class"],
+        # one entry per non-completed unit, with its reason and the file that holds
+        # the traceback -- execution.json alone must be enough to attribute a stop
+        "failures": failures,
         "resources": resources_ref,
         "produces_formal_scientific_summary":
             MODE_CONTRACT[mode]["produces_formal_scientific_summary"],
