@@ -45,6 +45,39 @@ _STUB = (
 )
 
 
+def phase_command(
+    *,
+    phase: str,
+    out: Path,
+    workers: int,
+    replicates: int | None,
+    dispatch_id: str,
+    stub: bool,
+) -> list[str]:
+    """The subprocess command for one phase.
+
+    Re-audit 2026-09-15: ``audit/run_smoke_s03.py`` creates its execution root
+    **exclusively** and defaults the id to ``smoke-<generation>``.  Dispatching
+    two phases under one root with that default meant the second phase was
+    refused ("execution root already exists") before it wrote a single byte --
+    attempt 9 failed exactly this way, with the reason swallowed as
+    ``error_class=TASK_EXCEPTION``.  The per-phase id is therefore explicit here
+    and must stay unique per phase; the character set is limited to what a
+    Windows directory name accepts.
+    """
+    marker = out / f"dispatch_{phase}.json"
+    if stub:
+        return [sys.executable, "-c", _STUB, str(marker), phase]
+    command = [
+        sys.executable, str(REPO / "audit" / "run_smoke_s03.py"),
+        "--root", str(out), "--workers", str(workers), "--phase", phase,
+        "--execution-id", f"{dispatch_id}-{phase}",
+    ]
+    if replicates is not None:
+        command += ["--replicates", str(replicates)]
+    return command
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="smoke phases through execute_plan")
     parser.add_argument("--out", required=True, help="evidence root (outside the repo)")
@@ -69,15 +102,13 @@ def main() -> int:
         "outputs": [],
     }
 
+    dispatch_id = args.execution_id or f"smoke-{args.workers}w"
+
     def run_phase(unit: dict) -> str:
         phase = unit["phase"]
-        marker = out / f"dispatch_{phase}.json"
-        command = (
-            [sys.executable, "-c", _STUB, str(marker), phase] if args.stub
-            else [sys.executable, str(REPO / "audit" / "run_smoke_s03.py"),
-                  "--root", str(out), "--workers", str(args.workers),
-                  "--phase", phase]
-            + (["--replicates", str(args.replicates)] if args.replicates else [])
+        command = phase_command(
+            phase=phase, out=out, workers=args.workers,
+            replicates=args.replicates, dispatch_id=dispatch_id, stub=args.stub,
         )
         done = subprocess.run(command, cwd=str(REPO), capture_output=True, text=True,
                               encoding="utf-8", errors="replace", check=False)
@@ -96,7 +127,7 @@ def main() -> int:
             plan, mode="SMOKE", evidence_root=out,
             manifests={"policy_sha256": policy_sha256(),
                        "workers": args.workers, "stub": bool(args.stub)},
-            execution_id=args.execution_id or f"smoke-{args.workers}w",
+            execution_id=dispatch_id,
             resume=args.resume, submit=submit, window_size=1,
             frozen_engineering_plan=True,
             replicates_32=(args.replicates in (None, 32)),
