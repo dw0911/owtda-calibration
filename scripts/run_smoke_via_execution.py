@@ -56,7 +56,7 @@ def main() -> int:
                         help="validate the wiring without running the real phases")
     args = parser.parse_args()
 
-    policy = load_policy()
+    load_policy()  # refuses an unbound or non-integer policy before any dispatch
     out = Path(args.out).expanduser().resolve()
     out.mkdir(parents=True, exist_ok=True)
     phases = ["SMOKE_NULL", "SMOKE_ALT"]
