@@ -104,6 +104,42 @@
     "tip_hash": "0e31a5cbb04cda94a06a409a42d0ed54173bad1c33591b108d0316f6c734ffab",
     "truth_unsealed": false
   },
+  "run_admission": {
+    "NULL": {
+      "replicate_count": 2500,
+      "run_component_set_file": "RUN_COMPONENT_SET_ab1f18e4f94b4d200b545a38dfb095fff3e3b8e31d9fd833dd97f333fe1db1cc.json",
+      "run_component_set_hash": "ab1f18e4f94b4d200b545a38dfb095fff3e3b8e31d9fd833dd97f333fe1db1cc",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_bb1f314de8fa7e0040160b478ce7b1930625f3b55a2a8cf6b7ef67792c8f3f6d.jsonl",
+      "run_input_bindings_hash": "bb1f314de8fa7e0040160b478ce7b1930625f3b55a2a8cf6b7ef67792c8f3f6d",
+      "run_input_bindings_row_count": 9,
+      "scope_design_file": "SCOPE_DESIGN_NULL_d1916fe4987a803341c65a38ebf1595f950b3a627ae31318c4130d31dd3f6864.csv",
+      "scope_design_hash": "d1916fe4987a803341c65a38ebf1595f950b3a627ae31318c4130d31dd3f6864",
+      "scope_design_rows": 112
+    },
+    "SMOKE_ALT": {
+      "replicate_count": 32,
+      "run_component_set_file": "RUN_COMPONENT_SET_066b9ef22d644f2e73e09ef28ae7f9e04bff08fcbe564098b4aee27cb94f9dd8.json",
+      "run_component_set_hash": "066b9ef22d644f2e73e09ef28ae7f9e04bff08fcbe564098b4aee27cb94f9dd8",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_b87355a30c08011394628a484dfff4b516dbc75042fd309d2f84f254b33ddc47.jsonl",
+      "run_input_bindings_hash": "b87355a30c08011394628a484dfff4b516dbc75042fd309d2f84f254b33ddc47",
+      "run_input_bindings_row_count": 10,
+      "scope_design_file": "SCOPE_DESIGN_SMOKE_ALT_71075b80ff8b55a54bf747769ff5888cee71b93c068d3ed81fa3129e01ba9fdf.csv",
+      "scope_design_hash": "71075b80ff8b55a54bf747769ff5888cee71b93c068d3ed81fa3129e01ba9fdf",
+      "scope_design_rows": 32
+    },
+    "SMOKE_NULL": {
+      "replicate_count": 32,
+      "run_component_set_file": "RUN_COMPONENT_SET_7bdb8e35ffecd43e3dcc81c18df05687585438d17531768575dd75fa89e04ea5.json",
+      "run_component_set_hash": "7bdb8e35ffecd43e3dcc81c18df05687585438d17531768575dd75fa89e04ea5",
+      "run_input_bindings_file": "RUN_INPUT_BINDINGS_b87355a30c08011394628a484dfff4b516dbc75042fd309d2f84f254b33ddc47.jsonl",
+      "run_input_bindings_hash": "b87355a30c08011394628a484dfff4b516dbc75042fd309d2f84f254b33ddc47",
+      "run_input_bindings_row_count": 10,
+      "scope_design_file": "SCOPE_DESIGN_SMOKE_NULL_7e167ba69c0b962d6687b870353735800ce54d454b2eb1f2f06a4d8f57c01319.csv",
+      "scope_design_hash": "7e167ba69c0b962d6687b870353735800ce54d454b2eb1f2f06a4d8f57c01319",
+      "scope_design_rows": 112
+    }
+  },
+  "run_admission_note": "ALT run component set is deferred until the authoritative H0 phase seal exists (parent_phase_seal_hash); smoke phases carry parent=null.",
   "schema_version": 1,
   "scope_design": {
     "ALT": {
@@ -122,6 +158,7 @@
   "scope_spec_hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
   "secret_registry_snapshot_hash": "ca01d46ee912af54d1f00e13d0087599412d68f72df49614cfc3ddc18b020bc0",
   "seed_registry_snapshot_hash": "48bf26f7dee592590f00dfdf9080f2e28e82bd395cc571865218c0aac0560413",
+  "smoke_config_hash": "d804d3c06f4b79a6638329b5fbe61cf14a8cfa7487af3bfdaf9513d03e1ef03e",
   "source_tree_hash": "48c7187eb303ac6b7cbb215b28954986c76ecef702d1a710b5f62bc6beb94a18",
   "source_tree_manifest": [
     {
