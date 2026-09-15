@@ -25,10 +25,10 @@ Usage::
 from __future__ import annotations
 
 import argparse
-import concurrent.futures as futures
 import json
 import subprocess
 import sys
+from concurrent import futures
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
