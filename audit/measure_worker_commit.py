@@ -41,10 +41,10 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "audit"))
 
-import resource_sampler  # noqa: E402
+import resource_sampler
 
-from owtda_cal import scope, smoke  # noqa: E402
-from owtda_cal.resource_policy import load_policy  # noqa: E402
+from owtda_cal import scope, smoke
+from owtda_cal.resource_policy import load_policy
 
 GOV = REPO / "governance"
 MARGIN_NUM, MARGIN_DEN = 5, 4  # 1.25, the policy's own margin

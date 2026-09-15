@@ -71,7 +71,10 @@ class TestFrozenLimits:
         policy = resource_sampler.load_resource_policy()
         assert policy["resource_policy_id"] == "AM_RESOURCE_CAPACITY_V2"
         assert policy["hard_conditions"]["host_commit_fraction_max"] == 0.80
-        assert policy["hard_conditions"]["workers"] == 8
+        # Re-audit 2026-09-15 (P1): the registered parallelism is prospective and was
+        # lowered 8 -> 4 after attempt 10 breached the paired commit ratio (0.9330)
+        # and the worker sweep measured the job's own increment (~1.17 GB/worker).
+        assert policy["hard_conditions"]["workers"] == 4
         assert "host_pagefile_used_growth" in policy["diagnostic_only"]
 
     def test_retired_gate_is_kept_in_history_not_in_admission(self):

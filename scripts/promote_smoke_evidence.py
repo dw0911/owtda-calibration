@@ -37,7 +37,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from owtda_cal import scope  # noqa: E402
+from owtda_cal import scope
 
 GOV = REPO / "governance"
 PHASE_SLOT = {

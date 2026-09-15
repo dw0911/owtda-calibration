@@ -229,7 +229,7 @@ class TestFailureAttribution:
             )
 
     def test_the_failure_reason_is_in_the_dispatch_chain(self, tmp_path):
-        record = self._run(tmp_path, ValueError("phase SMOKE_ALT disagrees"))
+        self._run(tmp_path, ValueError("phase SMOKE_ALT disagrees"))
         events = [
             json.loads(line)
             for line in (tmp_path / "executions" / "EXEC-FAIL" / "events" / "dispatch.jsonl")
