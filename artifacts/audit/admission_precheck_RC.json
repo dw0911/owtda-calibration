@@ -1,11 +1,11 @@
 {
   "all_pass": true,
   "budget": {
-    "t_0_32_seconds": 842.0347019000037,
-    "t_1_32_seconds": 272.51739369999996,
-    "t_core_hat_hours": 27.57285790657562,
-    "t_h0_hat_hours": 22.84165315483951,
-    "t_h1_hat_hours": 4.731204751736111,
+    "t_0_32_seconds": 1270.7295687000005,
+    "t_1_32_seconds": 367.0494763999959,
+    "t_core_hat_hours": 40.843132421766434,
+    "t_h0_hat_hours": 34.47074567871095,
+    "t_h1_hat_hours": 6.372386743055484,
     "wall_limits_hours": {
       "core": 268.8,
       "h0": 192.0,
@@ -40,17 +40,17 @@
     },
     {
       "check": "g3_provenance_bound_smoke",
-      "detail": "8614dee622e1",
+      "detail": "e6c635c79826",
       "pass": true
     },
     {
       "check": "g3_smoke_generation_smoke",
-      "detail": "S02",
+      "detail": "S04",
       "pass": true
     },
     {
       "check": "g3_identity_closure_smoke",
-      "detail": "cells=28 units=896 evaluations=3584",
+      "detail": "cells=28 units=896 evaluations=3584 replicates=32",
       "pass": true
     },
     {
@@ -80,37 +80,37 @@
     },
     {
       "check": "g3_provenance_bound_smoke_alt",
-      "detail": "89298ac17c7c",
+      "detail": "129e31aca035",
       "pass": true
     },
     {
       "check": "g3_smoke_generation_smoke_alt",
-      "detail": "S02",
+      "detail": "S04",
       "pass": true
     },
     {
       "check": "g3_identity_closure_smoke_alt",
-      "detail": "cells=8 units=256 evaluations=1024",
+      "detail": "cells=8 units=256 evaluations=1024 replicates=32",
       "pass": true
     },
     {
       "check": "wall_gate_h0",
-      "detail": "t_H0_hat=22.842h",
+      "detail": "t_H0_hat=34.471h",
       "pass": true
     },
     {
       "check": "wall_gate_h1",
-      "detail": "t_H1_hat=4.731h",
+      "detail": "t_H1_hat=6.372h",
       "pass": true
     },
     {
       "check": "wall_gate_core",
-      "detail": "t_core_hat=27.573h",
+      "detail": "t_core_hat=40.843h",
       "pass": true
     },
     {
       "check": "memory_gate_total_rss",
-      "detail": "peak_total=1495216128 bytes",
+      "detail": "peak_total=1499238400 bytes",
       "pass": true
     },
     {
@@ -120,41 +120,41 @@
     },
     {
       "check": "disk_gate",
-      "detail": "est_peak=386.1 MiB free=455.6 GiB",
+      "detail": "est_peak=386.1 MiB free=451.9 GiB",
       "pass": true
     },
     {
       "check": "open_runs_zero",
-      "detail": "open_runs=0",
+      "detail": "registry=F:\\BPI\\_smoke_20260915_a11c\\smoke\\S04 open_runs=[]",
       "pass": true
     }
   ],
-  "generated_at_utc": "2026-09-10T05:55:44Z",
+  "generated_at_utc": "2026-09-15T12:41:41Z",
   "kind": "admission_precheck_v1",
   "resource_sample": [
     {
       "errors": 0,
-      "peak_total_rss_bytes": 1495216128,
+      "peak_total_rss_bytes": 1499238400,
       "phase": "SMOKE_NULL",
       "replicates": 2,
-      "swap_before_bytes": 56680448,
+      "swap_before_bytes": 84783104,
       "swap_growth_bytes": 0,
-      "swap_peak_bytes": 56680448,
-      "wall_seconds": 66.50312380000105,
+      "swap_peak_bytes": 84783104,
+      "wall_seconds": 64.70468880000408,
       "workers": 8
     },
     {
       "errors": 0,
-      "peak_total_rss_bytes": 1463922688,
+      "peak_total_rss_bytes": 1466425344,
       "phase": "SMOKE_ALT",
       "replicates": 2,
-      "swap_before_bytes": 56680448,
+      "swap_before_bytes": 84783104,
       "swap_growth_bytes": 0,
-      "swap_peak_bytes": 56680448,
-      "wall_seconds": 21.831592399998044,
+      "swap_peak_bytes": 84783104,
+      "wall_seconds": 20.719845200001146,
       "workers": 8
     }
   ],
   "schema_version": 1,
-  "smoke_generation_id": "S02"
+  "smoke_generation_id": "S04"
 }

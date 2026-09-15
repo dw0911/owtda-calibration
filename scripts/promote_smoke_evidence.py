@@ -43,13 +43,13 @@ GOV = REPO / "governance"
 PHASE_SLOT = {
     scope.PHASE_SMOKE_NULL: {
         "rc_out": REPO / "artifacts/audit/smoke_RC.json",
-        "ledger_out": REPO / "artifacts/smoke/SMOKE_NULL/evaluation_rows_w8_r32.jsonl",
+        "ledger_out": REPO / "artifacts/smoke/SMOKE_NULL/evaluation_rows_w4_r32.jsonl",
         "rc_name": "smoke_null_RC.json",
         "ledger_name": "evaluation_rows.jsonl",
     },
     scope.PHASE_SMOKE_ALT: {
         "rc_out": REPO / "artifacts/audit/smoke_alt_RC.json",
-        "ledger_out": REPO / "artifacts/smoke/SMOKE_ALT/evaluation_rows_w8_r32.jsonl",
+        "ledger_out": REPO / "artifacts/smoke/SMOKE_ALT/evaluation_rows_w4_r32.jsonl",
         "rc_name": "smoke_alt_RC.json",
         "ledger_name": "evaluation_rows.jsonl",
     },
@@ -120,9 +120,23 @@ def promote(evidence_root: Path, *, dry_run: bool = False) -> dict:
             "the attempt is not bound to the current freeze "
             f"(attempt={bound}, freeze={current}); it may not be promoted"
         )
-    if provenance.get("verdict") not in ("PASS", "COMPLETE"):
+    verdict = provenance.get("verdict")
+    if isinstance(verdict, dict):
+        # the run's own verdict object: admission must have passed, the evidence must
+        # be sealed, and every named check must be true -- no check may be missing
+        checks = verdict.get("checks") or {}
+        verdict_ok = (
+            verdict.get("admission_passed") is True
+            and verdict.get("evidence_sealed") is True
+            and bool(checks)
+            and all(value is True for value in checks.values())
+        )
+    else:
+        verdict_ok = verdict in ("PASS", "COMPLETE")
+    if not verdict_ok:
         raise PromotionRefused(
-            f"the attempt's own verdict is {provenance.get('verdict')!r}; "
+            f"the attempt's own verdict is {verdict!r} "
+            "(admission_passed / evidence_sealed / every check must be true); "
             "failed evidence is archived, never promoted"
         )
 
@@ -136,9 +150,35 @@ def promote(evidence_root: Path, *, dry_run: bool = False) -> dict:
 
     promoted: list[dict] = []
     for phase, slot in PHASE_SLOT.items():
-        entry = (provenance.get("phases") or {}).get(phase)
-        if not entry:
-            raise PromotionRefused(f"the attempt carries no {phase} phase record")
+        # Re-audit 2026-09-15: the smoke dispatcher runs one phase per subprocess, and
+        # ``audit/run_smoke_s03.py`` rewrites ``provenance_manifest.json`` on every
+        # invocation -- so the combined manifest only describes the *last* phase
+        # (attempt 11c's manifest lists SMOKE_ALT alone).  The promotion therefore
+        # verifies each phase from that phase's own seal and run record instead of
+        # trusting a manifest that cannot see both, and says so in the promoted
+        # provenance block.
+        seal_path = attempt / f"SMOKE_SEAL_{phase}.json"
+        if not seal_path.is_file():
+            raise PromotionRefused(f"the attempt carries no seal for {phase}: {seal_path}")
+        seal = _load(seal_path)
+        if seal.get("terminal_state") != "RUN_SEALED":
+            raise PromotionRefused(
+                f"{phase}: terminal_state {seal.get('terminal_state')!r}, not RUN_SEALED"
+            )
+        entry = {
+            "run_id": seal.get("run_id"),
+            "run_component_set_hash": seal.get("run_component_set_hash"),
+            "run_input_bindings_hash": seal.get("run_input_bindings_hash"),
+            "scope_design_hash": seal.get("scope_design_hash"),
+            "smoke_seal_hash": seal.get("smoke_seal_hash"),
+            "seal_file": seal_path.name,
+        }
+        for field in ("run_input_bindings_hash", "scope_design_hash"):
+            if seal.get(field) != admission[phase].get(field):
+                raise PromotionRefused(
+                    f"{phase}: {field} {str(seal.get(field))[:12]} != the frozen "
+                    f"admission's {str(admission[phase].get(field))[:12]}"
+                )
         rc = _load(attempt / slot["rc_name"])
         ledger_src = attempt / phase / slot["ledger_name"]
         if not ledger_src.is_file():
@@ -173,8 +213,13 @@ def promote(evidence_root: Path, *, dry_run: bool = False) -> dict:
                 "source_tree_hash": provenance["source_tree_hash"],
                 "environment_lock_hash": provenance["environment_lock_hash"],
                 "run_id": entry.get("run_id"),
+                "run_input_bindings_hash": entry.get("run_input_bindings_hash"),
                 "smoke_seal_hash": entry.get("smoke_seal_hash"),
                 "seal_file": entry.get("seal_file"),
+                "verification_source": (
+                    "this phase's own RUN seal + RC; the combined "
+                    "provenance_manifest.json describes only the last dispatched phase"
+                ),
             },
             "budget": {
                 "t_0_32_seconds": (wall[scope.PHASE_SMOKE_NULL]

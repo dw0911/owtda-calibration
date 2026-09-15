@@ -1,23 +1,21 @@
 {
   "budget": {
-    "h1_gate_pass": true,
-    "limits": {
-      "core_wall_hours": 268.8,
-      "h0_wall_hours": 192.0,
-      "h1_wall_hours": 76.8
-    },
-    "t_1_32_seconds": 272.51739369999996,
-    "t_h1_hat_hours": 4.731204751736111
+    "measured_at_replicates": 32,
+    "measured_workers": 4,
+    "t_0_32_seconds": null,
+    "t_1_32_seconds": 367.0494763999959
   },
   "counts_match_contract": true,
   "expected_counts": {
     "data_units": 256,
     "evaluation_rows": 1024,
+    "feature_windows": 98304,
     "ph_windows": 49152
   },
   "expected_counts_scaled": {
     "data_units": 256,
     "evaluation_rows": 1024,
+    "feature_windows": 98304,
     "ph_windows": 49152
   },
   "forbidden_aggregates_emitted": false,
@@ -28,7 +26,8 @@
     "passed": true
   },
   "identity_closure": {
-    "actual": {
+    "cells": 8,
+    "counts_informational": {
       "data_unit_id": 256,
       "evaluation_id": 1024,
       "experiment_id": 1,
@@ -36,49 +35,91 @@
       "logical_cell_id": 8,
       "logical_evaluation_key": 1024
     },
-    "expected": {
-      "data_unit_id": 256,
-      "evaluation_id": 1024,
-      "experiment_id": 1,
-      "feature_sufficient_id": 512,
-      "logical_cell_id": 8,
-      "logical_evaluation_key": 1024
-    },
-    "passed": true
+    "evaluation_rows": 1024,
+    "mode": "spec_derived_set_equality_plus_foreign_keys",
+    "passed": true,
+    "replicate_count": 32
   },
   "kind": "smoke_run_rc_v1",
-  "ledger_file": "artifacts/smoke/SMOKE_ALT/evaluation_rows_w8_r32.jsonl",
+  "ledger_bytes": 1014113,
+  "ledger_content_hash": "ea53b5d2189c0318645a24cad88640022526dc2bec91d29ee8b9c382df3b2f58",
+  "ledger_file": "artifacts/smoke/SMOKE_ALT/evaluation_rows_w4_r32.jsonl",
   "missing_required_fields": 0,
   "phase": "SMOKE_ALT",
   "provenance": {
-    "environment_lock_hash": "61f5f50a604efa379e1e67cd9b2fbe466acd6e52e73cb424a321c96f4d72b74e",
-    "run_component_set_file": "RUN_COMPONENT_SET_89298ac17c7ce4f149cecaeb8ee7bf376239eb7fbb535359bab21c7af8c84c6f.json",
-    "run_component_set_hash": "89298ac17c7ce4f149cecaeb8ee7bf376239eb7fbb535359bab21c7af8c84c6f",
-    "run_input_bindings_hash": "d4914fdc15aa84add98df6ceb40ec52f77ec1e54b6d8aec8c56f41c906edcd29",
-    "scope_design_hash": "94e1903efc905a5100df6691cbc64e726bfd4b5cf1d428f8f25c9de156f4e703",
-    "smoke_config_hash": "fc4c54b9023d0194b3d805500f50f21dc999a46a6633eb331d02211673800be0",
-    "source_tree_hash": "0cd15a9676961622e9c203f8f9fbd9c51d1d61566affe3a3c0282f2176015ee6"
+    "environment_lock_hash": "636bf50745a375e7d286ff9530bbc56885625dc164876b88efc7c12715a668e0",
+    "run_component_set_hash": "129e31aca035fd11b688e8360229c7c1abcc256e3fda102d0a52538f1fe0c7af",
+    "run_id": "S04:SMOKE_ALT:w4:r32",
+    "run_input_bindings_hash": "5ca6b06c31909e17be7e081db9789d80072c25708ec75a961587e68b1dcd60f6",
+    "scope_design_hash": "71075b80ff8b55a54bf747769ff5888cee71b93c068d3ed81fa3129e01ba9fdf",
+    "seal_file": "SMOKE_SEAL_SMOKE_ALT.json",
+    "smoke_seal_hash": "e164a1598b86d98afb3521701984e9cc101f2648e879132a4cdba4057d7937a9",
+    "source_tree_hash": "d21754cbd94b134e711705dadaa67d2af628c3b2ac34b0325630b8ed2613c232",
+    "verification_source": "this phase's own RUN seal + RC; the combined provenance_manifest.json describes only the last dispatched phase"
   },
   "replicates_per_cell": 32,
   "report": {
     "data_units": 256,
     "errors": 0,
     "evaluation_rows": 1024,
+    "feature_windows": 98304,
     "forbidden_aggregates_emitted": false,
     "ph_windows": 49152,
     "phase": "SMOKE_ALT",
-    "wall_seconds": 272.51739369999996
+    "wall_seconds": 367.0494763999959
   },
   "resources": {
-    "disk_free_bytes": 489186701312,
-    "ledger_bytes": 1014170,
-    "peak_rss_bytes": 164470784,
-    "swap_gate": "swap_in_use",
-    "swap_used_bytes": 56680448
+    "capacity_raw_path": "F:\\BPI\\_smoke_20260915_a11c\\smoke\\S04\\resources\\capacity_raw.jsonl",
+    "capacity_sampling": {
+      "breaches": [],
+      "commit_limit_bytes": 38989602816,
+      "commit_total_min_bytes": 14749229056,
+      "commit_total_peak_bytes": 19443277824,
+      "incomplete": false,
+      "incomplete_reasons": [],
+      "interval_milliseconds": 1000,
+      "max_gap_milliseconds": 1081,
+      "missing": 0,
+      "peak_commit_ratio": {
+        "den": 38989602816,
+        "num": 19443499008
+      },
+      "physical_available_min_bytes": 22480879616,
+      "physical_total_bytes": 34157764608,
+      "raw_path": "F:\\BPI\\_smoke_20260915_a11c\\smoke\\S04\\resources\\capacity_raw.jsonl",
+      "raw_samples": 364,
+      "samples": 345,
+      "source": "GetPerformanceInfo",
+      "status": "PASS"
+    },
+    "disk_free_before_bytes": 485176942592,
+    "evidence_bytes_after": 5160921,
+    "evidence_bytes_before": 4003867,
+    "evidence_bytes_written": 1157054,
+    "evidence_root": "F:\\BPI\\_smoke_20260915_a11c\\smoke\\S04",
+    "host_swap_before_bytes": 87007232,
+    "host_swap_growth_bytes": 0,
+    "host_swap_measurement_caveat": "machine-wide page file *usage*: capacity, current usage, cumulative I/O and process commit are distinct quantities, so zero net change over the window does not prove that no paging occurred; the number is also sensitive to unrelated host activity. This is the declared condition and its limits are disclosed rather than overclaimed",
+    "host_swap_peak_bytes": 87007232,
+    "kind": "run_resources_v1",
+    "measured_wall_milliseconds": 367064,
+    "own_commit_charge_after_bytes": 1131778048,
+    "own_commit_charge_before_bytes": 1129824256,
+    "own_commit_charge_growth_bytes": 4667326464,
+    "own_commit_charge_instrument": "psutil.Process.memory_info().pagefile summed over the process tree (Windows: process commit charge, not page-file writes)",
+    "own_commit_charge_peak_bytes": 5797150720,
+    "peak_total_rss_bytes": 818094080,
+    "persistence_included": true,
+    "phase": "SMOKE_ALT",
+    "resource_allocation_failures": 0,
+    "run_id": "S04:SMOKE_ALT:w4:r32",
+    "sample_interval_milliseconds": 250,
+    "samples": 1380,
+    "schema_version": 1
   },
+  "run_id": "S04:SMOKE_ALT:w4:r32",
   "schema_version": 1,
-  "smoke_generation_id": "S02",
-  "status": "g3_smoke",
+  "smoke_generation_id": "S04",
   "unexplained_errors": 0,
-  "workers": 8
+  "workers": 4
 }

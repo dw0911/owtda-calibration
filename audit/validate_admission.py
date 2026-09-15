@@ -197,12 +197,16 @@ def main() -> int:
             ev["smoke_generation_id"],
         )
         closure = _identity_closure(phase, REPO / ev["ledger_file"])
+        # The report shape is flat (see assert_smoke_ledger_matches_expected): the
+        # earlier ``closure["actual"][...]`` lookup predates it and crashed every
+        # admission check with KeyError: 'actual' once the packaged evidence was
+        # replaced by a fresh run.
         record(
             f"g3_identity_closure_{tag}",
             closure["passed"],
-            f"cells={closure['actual']['logical_cell_id']} "
-            f"units={closure['actual']['data_unit_id']} "
-            f"evaluations={closure['actual']['evaluation_id']}",
+            f"cells={closure['cells']} units={closure['data_units']} "
+            f"evaluations={closure['evaluation_rows']} "
+            f"replicates={closure['replicate_count']}",
         )
 
     t_0_32 = evidence[scope.PHASE_SMOKE_NULL]["budget"]["t_0_32_seconds"]
@@ -232,7 +236,9 @@ def main() -> int:
         f"growth={swap_growth} bytes",
     )
 
-    ledger_bytes = sum(ev["resources"]["ledger_bytes"] for ev in evidence.values())
+    # ledgers bytes are a top-level RC field (`ledger_bytes`); the older nested
+    # ``resources["ledger_bytes"]`` lookup no longer exists and crashed the disk gate.
+    ledger_bytes = sum(ev["ledger_bytes"] for ev in evidence.values())
     formal_rows = (
         len(scope.h0_null_cells()) * R0_FORMAL_H0 + len(scope.h1_alt_cells()) * R0_FORMAL_H1
     ) * 4
