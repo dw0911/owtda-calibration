@@ -793,7 +793,14 @@ def verify_internal_contracts(
     evaluation_rows = json.loads(
         d.read(f"{fixture_dir}/expected_evaluation_index.json").decode("utf-8")
     )
-    ledger = b"".join(canonical_json_bytes(r) + b"\n" for r in evaluation_rows)
+    # Re-audit 2026-09-16: the scientific ledger keeps its frozen serialization
+    # (audit P6: floats stay JSON numbers).  ``canonical_json_bytes`` refuses bare
+    # floats by design, so rebuilding the ledger with it could never reproduce the
+    # sealed bytes -- the reconstruction must use the ledger's own frozen rule.
+    ledger = b"".join(
+        json.dumps(r, ensure_ascii=False, sort_keys=True).encode("utf-8") + b"\n"
+        for r in evaluation_rows
+    )
     chain = report["chain"]
     check("fixture.seals_match_chain",
           "fixture 两段 phase seal 与链事件互相印证（含分析封存的父链与账本绑定）",
