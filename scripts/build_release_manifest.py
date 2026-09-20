@@ -86,7 +86,10 @@ def version_from_citation() -> tuple[str, str]:
 
 def build() -> dict:
     version, release_name = version_from_citation()
-    tags = [tag for tag in git("tag", "--points-at", "HEAD").split("\n") if tag]
+    # NOTE: the manifest deliberately does NOT record `git tag --points-at HEAD`. The release
+    # workflow checks out the tag, so recording it would make the regenerated manifest differ from
+    # the committed one and `git diff --exit-code` would fail on every release. The tag/name
+    # agreement is asserted by a dedicated workflow step instead.
     manifest = {
         "schema_version": 1,
         "kind": "RELEASE_MANIFEST",
@@ -96,7 +99,6 @@ def build() -> dict:
             "commit": git("rev-parse", "HEAD"),
             "tree": git("rev-parse", "HEAD^{tree}"),
             "commit_date": git("show", "-s", "--format=%cI", "HEAD"),
-            "tags_at_head": sorted(tags),
             "tracked_files": len(git("ls-files").splitlines()),
             "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         },
@@ -112,8 +114,9 @@ def build() -> dict:
         "tree_digests": {name: tree_digest(path) for name, path in sorted(TREES.items())},
         "verification_commands": VERIFICATION,
         "notes": [
-            "Deterministic for a given commit: no wall-clock fields, so `git diff --exit-code` "
-            "must be empty after regenerating this file.",
+            "Deterministic for a given commit: no wall-clock fields and no tag state, so "
+            "`git diff --exit-code` must be empty after regenerating this file.",
+            "The release workflow asserts that the pushed tag equals release.name.",
             "The formal 3.2 GB ledgers are not distributed; see data/manifests/ and "
             "reproducibility/DATA_AVAILABILITY.md for the external archive DOI.",
             "Tree digests cover results/canonical, results/bootstrap, artifacts/tables and "

@@ -40,6 +40,13 @@ jobs:
           git --no-pager diff --stat
           git diff --exit-code
 
+      - name: the pushed tag must equal the manifest release name
+        run: |
+          NAME=$(uv run python -c "import json,pathlib;print(json.loads(pathlib.Path('reproducibility/RELEASE_MANIFEST.json').read_text(encoding='utf-8'))['release']['name'])")
+          echo "manifest release name: $NAME"
+          git describe --exact-match --tags HEAD
+          git describe --exact-match --tags HEAD | grep -qx "$NAME"
+
       - name: verify the attached files exist
         run: |
           test -f reproducibility/SHA256SUMS
