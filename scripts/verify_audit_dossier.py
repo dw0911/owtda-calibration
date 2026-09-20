@@ -513,6 +513,33 @@ def verify_revision(d: Dossier, staging: Path, anchor: dict[str, Any]) -> None:
           ">0 refs", "evidence/revision/OWTDA-CAL-R1.bundle")
 
 
+    # A valid bundle is not evidence that its claimed revision actually exists.
+    checkout = staging / "bundle_check" / "checkout"
+    cloned = subprocess.run(["git", "clone", "-q", str(bundle), str(checkout)],
+                            capture_output=True, check=False)
+    commit = anchor.get("head", "")
+    present = subprocess.run(["git", "-C", str(checkout), "cat-file", "-e", str(commit) + "^{commit}"],
+                             capture_output=True, check=False) if cloned.returncode == 0 else None
+    check("revision.claimed_commit_present", "交付 bundle 包含被声明的实际 revision",
+          present is not None and present.returncode == 0, commit, "resolvable commit",
+          "source/source_anchor.json + evidence/revision/OWTDA-CAL-R1.bundle")
+    mismatches = []
+    if present is not None and present.returncode == 0:
+        tracked = subprocess.run(["git", "-C", str(checkout), "ls-tree", "-r", "--name-only", str(commit)],
+                                 capture_output=True, text=True, check=True).stdout.splitlines()
+        for rel in tracked:
+            if not d.has("repo/" + rel):
+                continue  # the dossier may deliberately omit unrelated tracked artifacts
+            blob = subprocess.run(["git", "-C", str(checkout), "show", str(commit) + ":" + rel],
+                                  capture_output=True, check=False)
+            if blob.returncode != 0 or blob.stdout != d.read("repo/" + rel):
+                mismatches.append(rel)
+    check("revision.delivered_bytes_match_claimed_commit", "交付 tracked 字节对应声明 revision",
+          present is not None and present.returncode == 0 and not mismatches,
+          {"mismatches": mismatches, "commit_resolved": present is not None and present.returncode == 0},
+          {"mismatches": [], "commit_resolved": True}, "repo/ + source anchor")
+
+
 def verify_verification(d: Dossier) -> None:
     codes = d.json("evidence/verification/validation_exit_codes.json")
     check("verification.exit_codes", "冻结 venv 下 pytest/ruff 退出码为 0",
@@ -779,7 +806,7 @@ def verify_internal_contracts(
     fixture_dir = "evidence/fixture"
     required = (
         "PHASE_SEAL_TEST_PREDICTION.json", "PHASE_SEAL_TEST_ANALYSIS.json",
-        "LIFECYCLE_FIXTURE.json", "expected_evaluation_index.json",
+        "LIFECYCLE_FIXTURE.json", "expected_evaluation_index.json", "evaluation_ledger.jsonl",
     )
     missing = [name for name in required if not d.has(f"{fixture_dir}/{name}")]
     check("fixture.seals_present",
@@ -790,17 +817,15 @@ def verify_internal_contracts(
     prediction = d.json(f"{fixture_dir}/PHASE_SEAL_TEST_PREDICTION.json")
     analysis = d.json(f"{fixture_dir}/PHASE_SEAL_TEST_ANALYSIS.json")
     report = d.json(f"{fixture_dir}/LIFECYCLE_FIXTURE.json")
-    evaluation_rows = json.loads(
-        d.read(f"{fixture_dir}/expected_evaluation_index.json").decode("utf-8")
-    )
-    # Re-audit 2026-09-16: the scientific ledger keeps its frozen serialization
-    # (audit P6: floats stay JSON numbers).  ``canonical_json_bytes`` refuses bare
-    # floats by design, so rebuilding the ledger with it could never reproduce the
-    # sealed bytes -- the reconstruction must use the ledger's own frozen rule.
-    ledger = b"".join(
-        json.dumps(r, ensure_ascii=False, sort_keys=True).encode("utf-8") + b"\n"
-        for r in evaluation_rows
-    )
+    expected_fixture_rows = d.json(f"{fixture_dir}/expected_evaluation_index.json")
+    ledger = d.read(f"{fixture_dir}/evaluation_ledger.jsonl")
+    actual_fixture_rows = [json.loads(line) for line in ledger.splitlines() if line.strip()]
+    expected_ids = [r["evaluation_id"] for r in expected_fixture_rows]
+    actual_ids = [r["evaluation_id"] for r in actual_fixture_rows]
+    check("fixture.expected_matches_actual", "真实账本与预期集合一致且无重复",
+          len(expected_ids) == len(set(expected_ids)) == len(actual_ids) == len(set(actual_ids))
+          and set(expected_ids) == set(actual_ids),
+          {"expected": len(expected_ids), "actual": len(actual_ids)}, None, fixture_dir)
     chain = report["chain"]
     check("fixture.seals_match_chain",
           "fixture 两段 phase seal 与链事件互相印证（含分析封存的父链与账本绑定）",
@@ -1004,8 +1029,8 @@ def _markdown(report: dict[str, Any]) -> str:
         "",
         "## 说明",
         "",
-        "所有检查均为**重算**：哈希取自交付字节、身份取自交付 spec、链重新链接、",
-        "seal 与 ledger 重新绑定、bundle 从包内副本独立 verify。无一项依赖清单里的自述值。",
+        "本报告区分交付字节重算、对象交叉核对与历史执行声明；",
+        "只对各检查列出的实际证据范围作结论，不将摘要或已通过的局部检查扩大为正式准入。",
         "",
     ]
     return "\n".join(lines)
@@ -1018,6 +1043,9 @@ def main() -> int:
     args = parser.parse_args()
     zip_path = Path(args.zip).expanduser()
     out = Path(args.out).expanduser() if args.out else zip_path.parent
+    out.mkdir(parents=True, exist_ok=True)
+    if any((out / name).exists() for name in ("SELF_VERIFICATION.json", "SELF_VERIFICATION.md")):
+        parser.error("verification output already exists; choose a new --out")
 
     d = Dossier(zip_path)
     manifest = d.json("dossier_manifest.json")

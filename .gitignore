@@ -1,29 +1,56 @@
-# Python / 工具噪音
+# ============================================================
+# OW-TDA-CAL-R1 .gitignore
+# 注意：.gitattributes 设置 `* -text`（禁止行尾转换）。
+# 科学对象以 exact bytes 计算 SHA256，任何 EOL 转换都会破坏字节身份。
+# ============================================================
+
+# --- Python / 工具噪音 ---
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
 .coverage
 htmlcov/
 build/
 dist/
 
-# 虚拟环境与锁运行时产物
+# --- 虚拟环境与锁运行时产物 ---
 .venv/
 venv/
 
-# IDE / 系统
+# --- IDE / 系统 ---
 .idea/
 .vscode/
 *.swp
 .DS_Store
 Thumbs.db
 
-# 临时与日志（科学 attempt 日志由 attempt ledger 另行管理，此处只挡本地临时文件）
+# --- 临时与日志 ---
 *.log.tmp
 *_scratch/
 
-# 隔离秘密（不入库）：REAL task root key / task id salt 明文
+# --- 隔离秘密（不入库）：REAL task root key / task id salt 明文 ---
 # 只提交 commitment；丢失该文件需提升 task_index_generation_id 才能重跑 REAL。
 secrets/
+
+# ============================================================
+# 大数据与本地证据（不推送）
+# 出处、SHA256 与再生成方式见 REPRODUCIBILITY.md 与 EXCLUDED_ARTIFACTS.csv
+# ============================================================
+# 原始账本（H0/H1 evaluation+feature，合计约 3.2 GB，超过 GitHub 单文件限制）
+artifacts/ledgers/
+# 大型派生索引（ACTIVE_*_INDEX，7–140 MB；由冻结计划与种子可再生成）
+governance/ACTIVE_*_INDEX_*.jsonl
+
+# --- LaTeX 编译中间件（可再生；manuscript/main.pdf 与 *.tex 仍会入库） ---
+manuscript/*.aux
+manuscript/*.blg
+manuscript/*.log
+manuscript/*.out
+manuscript/*.bbl
+manuscript/*.synctex.gz
+
+# --- 本地数据（如按 DATA_SOURCES.md 放入仓库工作目录时） ---
+data/

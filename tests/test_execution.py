@@ -87,14 +87,31 @@ class TestModeAdmission:
         plan = _plan("FORMAL_H0")
         plan["identity_domain"] = "FORMAL"
         denied = check_mode_admission("FORMAL_H0", plan=plan)
-        assert {r.split("'")[1] for r in denied["reasons"]} == {
+        assert {r.split("'")[1] for r in denied["reasons"] if "'" in r} == {
             "g4_h0_certificate", "expected_indices_bound", "seed_registry_bound"
         }
+        # Importability and boolean claims cannot authorize an arbitrary callback.
+        claimed = check_mode_admission(
+            "FORMAL_H0", plan=plan, g4_h0_certificate=True,
+            expected_indices_bound=True, seed_registry_bound=True,
+        )
+        assert claimed["admitted"] is False
+        assert any("FORMAL_BOUND_DISPATCH_REQUIRED" in r for r in claimed["reasons"])
+
+    def test_formal_still_refuses_without_the_real_adapter(self, monkeypatch):
+        import owtda_cal.execution as execution_module
+
+        plan = _plan("FORMAL_H0")
+        plan["identity_domain"] = "FORMAL"
+        monkeypatch.setattr(
+            execution_module, "_formal_adapter_available", lambda: False
+        )
         allowed = check_mode_admission(
             "FORMAL_H0", plan=plan, g4_h0_certificate=True,
             expected_indices_bound=True, seed_registry_bound=True,
         )
-        assert allowed["admitted"] is True
+        assert allowed["admitted"] is False
+        assert any("FORMAL_RUNNER_NOT_IMPLEMENTED" in r for r in allowed["reasons"])
 
     def test_formal_h1_needs_the_null_dependency_and_authorization(self):
         plan = _plan("FORMAL_H1")

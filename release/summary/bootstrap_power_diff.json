@@ -1,0 +1,12 @@
+{
+  "bootstrap_iterations": 2000,
+  "ci_high": 0.001016,
+  "ci_low": -0.009609,
+  "h0_seed": 20260918,
+  "h1_seed": 20260919,
+  "note": "BPI minus MOMENTS mean size-standardized power (equal-weight across cells)",
+  "point_estimate": -0.004687,
+  "status": "SUPERSEDED_HISTORICAL",
+  "superseded_by": "analysis/H1_REANALYSIS.json",
+  "supersession_reason": "pooled across two opposite-direction alternatives; near-zero difference is an artifact of cancellation and must not be used for inference"
+}

@@ -1,0 +1,15 @@
+{
+  "baseline_commit_bytes": 18728411136,
+  "commit_limit_bytes": 37513207808,
+  "delta_commit_bytes": 4706508800,
+  "physical_available_bytes": 20923797504,
+  "physical_total_bytes": 34157764608,
+  "volumes": [
+    {
+      "free_bytes": 476391366656,
+      "name": "F:",
+      "required_bytes": 4910353920
+    }
+  ],
+  "workers": 4
+}

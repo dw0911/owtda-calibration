@@ -37,7 +37,8 @@ STEPS: dict[int, dict[str, Any]] = {
     1: {"name": "validate_all_metadata_schemas",
         "cmd": [sys.executable, "audit/validate_schemas.py", "--out-dir", "{out}/precheck"]},
     2: {"name": "collect_and_run_full_tests",
-        "cmd": [sys.executable, "audit/collect_verification.py", "--root", "{out}/tests"]},
+        "cmd": [sys.executable, "audit/collect_verification.py", "--root", "{out}/tests",
+                "--python", "{python}"]},
     3: {"name": "run_lifecycle_fixture",
         "cmd": [sys.executable, "audit/run_lifecycle_fixture.py", "--out",
                 "{out}/test-lifecycle"]},
@@ -66,9 +67,15 @@ def _plan_step(out: Path) -> dict[str, Any]:
     from owtda_cal.planbuild import build_expected_plan
 
     target = out / "plan"
-    if target.is_dir():
-        shutil.rmtree(target)
-    return build_expected_plan(out_dir=target)
+    if target.exists():
+        raise FileExistsError("plan evidence already exists; use a new execution root")
+    manifest = json.loads((REPO / "governance" / "FREEZE_MANIFEST.json").read_text(encoding="utf-8"))
+    return build_expected_plan(
+        out_dir=target,
+        project_id=manifest["project_id"], protocol_id=manifest["protocol_id"],
+        freeze_id=manifest["freeze_id"], evidence_generation_id=manifest["evidence_generation_id"],
+        data_generation_id=manifest["component_generations"]["data_generation_id"],
+    )
 
 
 def _budget_step(out: Path) -> dict[str, Any]:
@@ -152,17 +159,20 @@ def _preflight_step(out: Path) -> dict[str, Any]:
     # the job's own increment is the measured exposure at the *registered* parallelism,
     # with the policy's 5/4 margin applied inside preflight_capacity
     delta = _registered_increment_bytes(policy["limits"]["workers"])
-    outcome = preflight_capacity(
-        baseline_commit_bytes=int(info["commit_total_bytes"]),
-        delta_commit_bytes=delta,
-        commit_limit_bytes=int(info["commit_limit_bytes"]),
-        physical_available_bytes=int(info["physical_available_bytes"]),
-        physical_total_bytes=int(info["physical_total_bytes"]),
-        volumes=[{"name": str(out.drive or out),
-                  "free_bytes": shutil.disk_usage(str(out)).free,
-                  "required_bytes": 6 * 1024 ** 3}],
-        workers=policy["limits"]["workers"], policy=policy,
-    )
+    budget = json.loads((out / "budget" / "budget.json").read_text(encoding="utf-8"))
+    if budget.get("status") != "APPROVED_ESTIMATE" or type(budget.get("peak_bytes")) is not int:
+        return {"status": "PREFLIGHT_REFUSED", "passed": False, "reasons": ["approved budget missing"]}
+    inputs = {
+        "baseline_commit_bytes": int(info["commit_total_bytes"]), "delta_commit_bytes": delta,
+        "commit_limit_bytes": int(info["commit_limit_bytes"]),
+        "physical_available_bytes": int(info["physical_available_bytes"]),
+        "physical_total_bytes": int(info["physical_total_bytes"]),
+        "volumes": [{"name": str(out.drive or out), "free_bytes": shutil.disk_usage(str(out)).free,
+                  "required_bytes": budget["peak_bytes"]}], "workers": policy["limits"]["workers"]}
+    outcome = preflight_capacity(**inputs, policy=policy)
+    (out / "preflight").mkdir(parents=True, exist_ok=True)
+    (out / "preflight" / "preflight_inputs.json").write_text(
+        json.dumps(inputs, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (out / "preflight").mkdir(parents=True, exist_ok=True)
     (out / "preflight" / "preflight.json").write_text(
         json.dumps({**outcome, "host": info,
@@ -180,9 +190,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="run the §9 pre-admission sequence")
     parser.add_argument("out", help="evidence root (outside the repo)")
     parser.add_argument("--steps", default="1,2,3,4,6,7")
+    # Re-audit 2026-09-16: step 2's collect_verification.py defaults --python to
+    # <REPO>/.venv/Scripts/python.exe, which does not exist in an extracted
+    # candidate tree.  The frozen venv is machine-specific (recorded in
+    # environment/environment_manifest.json), so the executor must pass it
+    # explicitly; failing that we use the interpreter running this script rather
+    # than a venv that is guaranteed absent.
+    parser.add_argument("--python", default=None,
+                        help="frozen venv python for collect_verification.py (step 2)")
     args = parser.parse_args()
 
     out = Path(args.out).expanduser().resolve()
+    if out.exists() and any(out.iterdir()):
+        parser.error("sequence output is nonempty; evidence must not be overwritten")
     out.mkdir(parents=True, exist_ok=True)
     requested = [int(x) for x in args.steps.split(",") if x.strip()]
     results: dict[str, Any] = {}
@@ -209,7 +229,8 @@ def main() -> int:
                           "passed": preflight.get("passed"),
                           "reasons": preflight.get("reasons", [])})
         else:
-            cmd = [part.format(out=str(out)) for part in spec["cmd"]]
+            cmd = [part.format(out=str(out), python=args.python or sys.executable)
+                   for part in spec["cmd"]]
             entry["command"] = cmd
             # each step's evidence directory is regenerated from scratch: a
             # fixture re-run over its own previous output would be judged against
@@ -217,8 +238,8 @@ def main() -> int:
             target_dirs = sorted({Path(part) for part in cmd
                                   if str(out) in part and Path(part) != out})
             for target in target_dirs:
-                if target.is_dir():
-                    shutil.rmtree(target)
+                if target.exists():
+                    raise FileExistsError(f"step output already exists: {target}")
             outcome = _run(cmd, cwd=REPO)
             entry.update(outcome)
             entry["status"] = "PASS" if outcome["exit_code"] == 0 else "FAIL"
@@ -230,7 +251,9 @@ def main() -> int:
         "requested_steps": requested,
         "results": results,
         "preflight_passed": bool(results.get("preflight_capacity", {}).get("passed")),
-        "may_start_smoke": bool(results.get("preflight_capacity", {}).get("passed")),
+        "may_start_smoke": (all(str(i) in {str(x) for x in requested} for i in range(1, 8))
+                            and all(v["status"] in ("PASS", "APPROVED_ESTIMATE", "PREFLIGHT_PASS") for v in results.values())
+                            and bool(results.get("preflight_capacity", {}).get("passed"))),
         "note": (
             "step 8 (a new-policy smoke) may start only when the preflight passes; "
             "steps 9-10 follow the smoke, not this script"
@@ -240,7 +263,7 @@ def main() -> int:
         json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8")
     print(json.dumps({k: v["status"] for k, v in results.items()}, ensure_ascii=False))
-    return 0 if all(v["status"] in ("PASS", "BLOCKED") for v in results.values()) else 1
+    return 0 if all(v["status"] in ("PASS", "APPROVED_ESTIMATE", "PREFLIGHT_PASS") for v in results.values()) else 1
 
 
 if __name__ == "__main__":

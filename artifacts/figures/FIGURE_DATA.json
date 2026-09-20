@@ -1,0 +1,168 @@
+{
+  "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
+  "cells": [
+    {
+      "T": 12288,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 6.510416666666666e-06,
+      "raw_mae": 0.08,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 1.0,
+      "stride": 64
+    },
+    {
+      "T": 12288,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.21157552083333336,
+      "raw_mae": 2599.84,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 0.07125,
+      "stride": 64
+    },
+    {
+      "T": 12288,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.2091796875,
+      "raw_mae": 2570.4,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 0.053125,
+      "stride": 64
+    },
+    {
+      "T": 12288,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 2.9296875e-05,
+      "raw_mae": 0.36,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 1.0,
+      "stride": 64
+    },
+    {
+      "T": 3120,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.007724358974358976,
+      "raw_mae": 24.1,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 1.0,
+      "stride": 16
+    },
+    {
+      "T": 3120,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.20186217948717947,
+      "raw_mae": 629.81,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 0.045625,
+      "stride": 16
+    },
+    {
+      "T": 12288,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.21402018229166664,
+      "raw_mae": 2629.88,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 0.046875,
+      "stride": 64
+    },
+    {
+      "T": 12288,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.001321614583333333,
+      "raw_mae": 16.24,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 1.0,
+      "stride": 64
+    },
+    {
+      "T": 3120,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.1865929487179487,
+      "raw_mae": 582.17,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 0.054375,
+      "stride": 16
+    },
+    {
+      "T": 3120,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.002842948717948718,
+      "raw_mae": 8.87,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 1.0,
+      "stride": 16
+    },
+    {
+      "T": 3120,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.20040064102564104,
+      "raw_mae": 625.25,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 0.060625,
+      "stride": 16
+    },
+    {
+      "T": 3120,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.009022435897435897,
+      "raw_mae": 28.15,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "mean_shift",
+      "size_standardized_power": 1.0,
+      "stride": 16
+    },
+    {
+      "T": 12288,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.00034505208333333333,
+      "raw_mae": 4.24,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 1.0,
+      "stride": 64
+    },
+    {
+      "T": 12288,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.185947265625,
+      "raw_mae": 2284.92,
+      "rho": "f64:3fe999999999999a",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 0.066875,
+      "stride": 64
+    },
+    {
+      "T": 3120,
+      "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+      "normalized_mae": 0.008278846153846154,
+      "raw_mae": 25.83,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 1.0,
+      "stride": 16
+    },
+    {
+      "T": 3120,
+      "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+      "normalized_mae": 0.20719871794871797,
+      "raw_mae": 646.46,
+      "rho": "f64:0000000000000000",
+      "scenario_id": "shape_change",
+      "size_standardized_power": 0.064375,
+      "stride": 16
+    }
+  ],
+  "figure": "figure7_size_standardized_power",
+  "kind": "FIGURE_DATA_MANIFEST",
+  "schema_version": 1
+}

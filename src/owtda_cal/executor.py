@@ -47,6 +47,9 @@ class ExecutorError(RuntimeError):
 
 def classify_error(exc: BaseException) -> str:
     """Map one exception to a registered error class (§3.4)."""
+    inherited = getattr(exc, "error_class", None)
+    if inherited in ERROR_CLASSES:
+        return inherited
     if isinstance(exc, (_futures.CancelledError, CancelledBeforeStart)):
         return "CANCELLED_BEFORE_START"
     if isinstance(exc, MemoryError):
@@ -113,6 +116,7 @@ def execute_units(
     emitted: list[dict[str, Any]] = []
     records: list[dict[str, Any]] = []
     max_in_flight = 0
+    unsettled_indices: list[int] = []
 
     def _stop_requested() -> bool:
         event = getattr(monitor, "stop_requested", None)
@@ -124,6 +128,7 @@ def execute_units(
         except Exception as exc:  # noqa: BLE001 - every failure is classified
             return _outcome(
                 index=index, status="FAILED", error_class=classify_error(exc),
+                payload=getattr(exc, "partial_result", None),
                 error_detail=f"{type(exc).__name__}: {exc}",
                 # Re-audit 2026-09-15: the first smoke dispatch failed with
                 # error_class=TASK_EXCEPTION and *no* reason anywhere on disk --
@@ -143,8 +148,28 @@ def execute_units(
             and next_submit < next_emit + window_size
         ):
             index = next_submit
-            pending[submit(units[index], index)] = index
+            if _stop_requested():
+                stop_latched, stop_reason = True, "RESOURCE_STOP"
+                break
+            try:
+                future = submit(units[index], index)
+                if not isinstance(future, _futures.Future):
+                    raise ExecutorError("submit must return a Future")
+                if future in pending:
+                    raise ExecutorError("submit reused a Future for two units")
+                pending[future] = index
+            except Exception as exc:  # noqa: BLE001 - 提交失败必须形成规范结局：分类错误类别、锁存状态，而不是让派发崩溃
+                completed[index] = _outcome(
+                    index=index, status="FAILED", error_class=classify_error(exc),
+                    error_detail=f"{type(exc).__name__}: {exc}",
+                    error_traceback=traceback.format_exc(), started=False)
+                stop_latched, stop_reason = True, "TASK_FAILURE"
             next_submit += 1
+        while next_emit in completed:
+            outcome = completed.pop(next_emit)
+            emitted.append(outcome)
+            records.append(outcome)
+            next_emit += 1
         max_in_flight = max(max_in_flight, len(pending))
 
         if not pending:
@@ -162,6 +187,12 @@ def execute_units(
         for future in done:
             index = pending.pop(future)
             completed[index] = _classify(future, index)
+            if completed[index]["status"] != "COMPLETED":
+                stop_latched, stop_reason = True, "TASK_FAILURE"
+        if _stop_requested():
+            stop_latched = True
+            if stop_reason == "NONE":
+                stop_reason = "RESOURCE_STOP"
 
         while next_emit in completed:
             outcome = completed.pop(next_emit)
@@ -192,10 +223,11 @@ def execute_units(
                 for future in still_running:
                     index = pending.pop(future)
                     future.cancel()
+                    unsettled_indices.append(index)
                     completed[index] = _outcome(
-                        index=index, status="FAILED", error_class="WORKER_EXIT",
-                        error_detail="still running after the grace period; "
-                                     "referred to the process supervisor",
+                        index=index, status="UNRESOLVED", error_class="RESOURCE_STOP",
+                        error_detail="still running after grace; no worker exit observed; "
+                                     "scientific seal forbidden until supervision settles this unit",
                     )
             while next_emit in completed:
                 outcome = completed.pop(next_emit)
@@ -204,6 +236,10 @@ def execute_units(
                 next_emit += 1
             break
 
+    if _stop_requested():
+        stop_latched = True
+        if stop_reason == "NONE":
+            stop_reason = "RESOURCE_STOP"
     for index in range(next_submit, number_of_units):
         records.append(_outcome(
             index=index, status="CANCELLED_BEFORE_START",
@@ -213,7 +249,9 @@ def execute_units(
         ))
 
     failed = [r for r in records if r["status"] != "COMPLETED"]
-    if stop_latched:
+    if unsettled_indices:
+        terminal = "INCOMPLETE"
+    elif stop_latched:
         terminal = "FAILED" if any(r["error_class"] not in (
             "RESOURCE_STOP", "CANCELLED_BEFORE_START") for r in failed) else "INCOMPLETE"
     elif failed:
@@ -225,6 +263,8 @@ def execute_units(
 
     return {
         "terminal_state": terminal,
+        "unsettled_indices": sorted(unsettled_indices),
+        "safe_to_seal": terminal == "COMPLETE" and not unsettled_indices,
         "stop_latched": stop_latched,
         "stop_reason": stop_reason,
         "number_of_units": number_of_units,

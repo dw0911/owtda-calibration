@@ -124,8 +124,8 @@
       "phase": "REAL_TASK_BUILD",
       "project_id": "owtda-cal-r1",
       "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
-      "root_entry_hash": "84286ed17a8f65b32e1ec8a0b179069f1b274b0789c57c6d015884b797d4eb27",
-      "root_key_commitment": "99b80078b2cf5da3933bfbc86d83caf4e1bcecf2379495060df3a3af89cf488b",
+      "root_entry_hash": "e4042c6653b8ae1d40f7f975de58d50e13f2f55f1a3b081d37c253182d69377c",
+      "root_key_commitment": "a4ee497db642b6ed6d6215ec22616ba7277c91a1de8ab7114b4d7aae3ae11f80",
       "root_key_hex": null,
       "secret_ref": "local_secret_store://REAL_TASK_SECRETS/real_task_root_key",
       "stream_family": "real_task"
@@ -137,8 +137,8 @@
       "phase": "REAL_TASK_BUILD",
       "project_id": "owtda-cal-r1",
       "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
-      "root_entry_hash": "819d7b6632e330c82d2e721ae9d3106a516a50d9befa13bf3fb2aa1a028e5637",
-      "root_key_commitment": "b029182190ebf7630cbf33d3486eda6d25504a5309942edd5fa2a51fddf35550",
+      "root_entry_hash": "bdac4c9874753e8afad4ed6fbaecaf73684f7422c55fbc1e5f5249dc1815324f",
+      "root_key_commitment": "7df261bff2988ecd838e421274250b2f85b75f61ae20bbd5ef422b2f4744a3f4",
       "root_key_hex": null,
       "secret_ref": "local_secret_store://REAL_TASK_SECRETS/real_task_id_salt",
       "stream_family": "real_task_id_salt"

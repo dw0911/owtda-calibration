@@ -14,6 +14,14 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from capacity_fixture import bind_test_raw
+
+_RESOURCE_DIR = None
+
+@pytest.fixture(autouse=True)
+def _raw_fixture_directory(tmp_path):
+    global _RESOURCE_DIR
+    _RESOURCE_DIR = tmp_path / "raw-fixtures"
 
 REPO = Path(__file__).resolve().parents[1]
 AUDIT = REPO / "audit"
@@ -51,7 +59,7 @@ def _resources(**overrides: Any) -> dict[str, Any]:
         "evidence_bytes_written": 1024,
     }
     record.update(overrides)
-    return record
+    return bind_test_raw(record, _RESOURCE_DIR)
 
 
 def _report(phase: str = "SMOKE_NULL") -> dict[str, Any]:

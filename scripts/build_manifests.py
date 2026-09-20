@@ -34,6 +34,10 @@ from owtda_cal.resource_policy import load_policy, policy_sha256
 #: not be able to hide behind a folder name.
 ENTRIES = (
     "scripts/run_final_sequence.py",
+    "scripts/run_smoke_via_execution.py",
+    "scripts/frozen_env.py",
+    "scripts/verify_release_contracts.py",
+    "scripts/verify_audit_dossier.py",
     "scripts/run_formal.py",
     "scripts/verify_fault_points.py",
     "scripts/run_attack_regression.py",
@@ -52,6 +56,10 @@ def main() -> int:
     parser.add_argument("--junit", default=None)
     parser.add_argument("--collected", default=None)
     parser.add_argument("--plan", default=None)
+    parser.add_argument("--exit-codes", default=None, help="actual validation_exit_codes.json")
+    parser.add_argument("--stdout", default=None, help="actual complete test stdout")
+    parser.add_argument("--stderr", default=None, help="actual complete test stderr")
+    parser.add_argument("--run-command-json", default=None, help="approved execution argv as a JSON list")
     parser.add_argument("--approved-skip", action="append", default=[])
     args = parser.parse_args()
 
@@ -63,14 +71,30 @@ def main() -> int:
     collected = json.loads(Path(args.collected).read_text(encoding="utf-8")) \
         if args.collected and Path(args.collected).is_file() else None
 
+    if isinstance(collected, dict):
+        collected = collected.get("node_ids")
+    if isinstance(collected, list) and collected and isinstance(collected[0], str):
+        normalized = []
+        for node in collected:
+            pieces = node.split("::")
+            module = pieces[0].removesuffix(".py").replace("\\", "/").replace("/", ".")
+            normalized.append({"classname": ".".join([module] + pieces[1:-1]), "name": pieces[-1]})
+        collected = normalized
+    exits = json.loads(Path(args.exit_codes).read_text()) if args.exit_codes else None
+    exit_code = 0 if isinstance(exits, dict) and exits and all(type(v) is int and v == 0 for v in exits.values()) else None
+    command = json.loads(Path(args.run_command_json).read_text()) if args.run_command_json else []
+    if not isinstance(command, list) or any(not isinstance(s, str) for s in command):
+        raise SystemExit("run-command-json must contain an argv string list")
+    stdout = Path(args.stdout).read_bytes() if args.stdout else b""
+    stderr = Path(args.stderr).read_bytes() if args.stderr else b""
     bundle = build_manifest_bundle(
         root=REPO, out_dir=Path(args.out).expanduser() / "manifests",
-        entries=[REPO / e for e in ENTRIES], command=sys.argv,
+        entries=[REPO / e for e in ENTRIES], command=command,
         policy_sha256=policy_sha256(),
         science_files=science, config_files=[REPO / c for c in CONFIGS],
         test_files=tests, roots=[REPO / "src", REPO / "audit", REPO / "scripts"],
         junit_xml=junit, collected_nodeids=collected,
-        approved_skips=args.approved_skip,
+        approved_skips=args.approved_skip, exit_code=exit_code, stdout=stdout, stderr=stderr,
         plan_summary_path=args.plan,
     )
     print(json.dumps({
@@ -81,7 +105,10 @@ def main() -> int:
         "unapproved_skips": bundle["validation_manifest"]["unapproved_skips"],
         "plan_bound": bundle["plan_binding"] is not None,
     }, ensure_ascii=False))
-    return 0
+    complete_inputs = bool(command) and exit_code == 0 and bool(collected) and junit is not None and args.stdout is not None and args.stderr is not None
+    if not complete_inputs:
+        print("INCOMPLETE: manifests were written as a draft; actual command/test evidence is missing", file=sys.stderr)
+    return 0 if complete_inputs else 2
 
 
 if __name__ == "__main__":

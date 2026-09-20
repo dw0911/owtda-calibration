@@ -1,0 +1,5 @@
+﻿scenario,feature,cells,estimand,size_standardized_power,mean_normalized_mae,M0_h0_type1,M0_nominal_power,M0_joint_success,M1_h0_type1,M1_nominal_power,M1_joint_success
+shape_change,BPI,4,equal-weight mean over the same four registered conditions,1.0,0.004088691907051282,0.2714,1.0,0.98390625,0.0373,1.0,0.98390625
+shape_change,MOMENTS,4,equal-weight mean over the same four registered conditions,0.062031249999999996,0.2016459209735577,0.4805,0.50765625,0.014375,0.0518,0.054375,0.0009375
+mean_shift,BPI,4,equal-weight mean over the same four registered conditions,0.05375,0.20254836488381409,0.2714,0.2803125,0.008749999999999999,0.0373,0.03328125,0.0010937499999999999
+mean_shift,MOMENTS,4,equal-weight mean over the same four registered conditions,1.0,0.003304074018429487,0.4805,1.0,0.90515625,0.0518,1.0,0.90515625

@@ -1,0 +1,153 @@
+\section{重叠窗口的交换性与方差机制}\label{sec:theory}
+
+本节利用可解析的窗口均值构造说明重叠如何改变派生统计量的联合分布。对随机向量 $(Y_1,\ldots,Y_M)$，若对任意排列 $\pi\in\mathfrak S_M$ 都有
+\[
+ (Y_1,\ldots,Y_M)\overset d=(Y_{\pi(1)},\ldots,Y_{\pi(M)}),
+\]
+则称其具有交换性。以下结果依次讨论局部映射的依赖范围、交换性反例、有限样本方差以及排列参考与原始顺序之间的协方差差异。相关结论用于解释失校准机制，不直接给出一般拓扑最大扫描的误报率公式。
+
+\subsection{窗口局部映射的依赖范围}\label{sec:t1}
+
+\begin{proposition}[局部映射的有限依赖范围]\label{prop:dependency}
+设原始观测 $\{X_t\}$ 独立同分布，且
+\[
+ Y_i=\Psi\bigl((X_t)_{t\in I_i}\bigr),
+\]
+其中 $\Psi$ 为固定可测映射，并且不使用由整条序列共同估计的参数。则 $\{Y_i\}$ 至多为
+\[
+ m=\left\lceil\frac Ws\right\rceil-1
+\]
+阶依赖序列。
+\end{proposition}
+
+\begin{proof}
+取任意两个窗口指标集合 $A,B\subset\{1,\ldots,M\}$，并假设 $\min_{i\in A,j\in B}|i-j|>m$。对任意 $i\in A$ 与 $j\in B$，不妨设 $i<j$，则
+$$(j-i)s\ge\left\lceil W/s\right\rceil s\ge W,$$
+从而 $I_i\cap I_j=\varnothing$。因此，$\{X_t:t\in\cup_{i\in A}I_i\}$ 与 $\{X_t:t\in\cup_{j\in B}I_j\}$ 生成的两个 $\sigma$-代数相互独立，其固定可测函数 $\{Y_i:i\in A\}$ 与 $\{Y_j:j\in B\}$ 也相互独立。由 $m$-依赖的定义即得结论。
+\end{proof}
+
+命题~\ref{prop:dependency}给出依赖范围的上界。窗口发生重叠时，具体协方差是否为零仍取决于原始分布和映射 $\Psi$；局部依赖也不自动等同于不可交换性，后者需要考察完整联合分布。
+
+\subsection{交换性失效的精确反例}\label{sec:t2}
+
+\begin{proposition}[高斯窗口均值的非交换性]\label{prop:counterexample}
+设 $X_t\overset{\mathrm{iid}}{\sim}N(0,\sigma^2)$，其中 $\sigma^2>0$；设 $1\le s<W$ 且窗口数 $M\ge3$。令
+\[
+ Z_i=\frac1W\sum_{t\in I_i}X_t.
+\]
+则对 $h=0,\ldots,M-1$ 及 $i=1,\ldots,M-h$，
+\begin{equation}\label{eq:window-cov}
+ \Gamma_h=\operatorname{Cov}(Z_i,Z_{i+h})
+ =\frac{\sigma^2}{W^2}(W-hs)_+,
+\end{equation}
+且随机向量 $(Z_1,\ldots,Z_M)$ 不具交换性。
+\end{proposition}
+
+\begin{proof}
+由于原始观测相互独立，只有两个窗口共享的观测指标对协方差有贡献。交集 $I_i\cap I_{i+h}$ 含有 $(W-hs)_+$ 个指标，故得到式\eqref{eq:window-cov}。又因 $1\le s<W$，有
+\[
+ \Gamma_1=\frac{\sigma^2}{W^2}(W-s)
+ >\frac{\sigma^2}{W^2}(W-2s)_+=\Gamma_2.
+\]
+考虑交换第 2、3 个坐标的排列。交换前，第一坐标与第二、第三坐标的协方差分别为 $\Gamma_1$ 和 $\Gamma_2$；交换后两者互换。协方差矩阵由此发生改变。高斯向量的分布由均值和协方差矩阵唯一确定，因此交换后的联合分布与原分布不同。
+\end{proof}
+
+\begin{remark}
+该反例说明，原始观测的独立同分布性质不足以保证重叠窗口统计量具有交换性。结论并未覆盖所有固定局部映射，例如常数映射始终产生可交换序列。条件 $M\ge3$ 也具有实质作用：当 $M=2$ 时，两个等方差的联合高斯窗口均值具有对称协方差矩阵，交换两个坐标不会改变其分布。
+\end{remark}
+
+\subsection{窗口均值的有限样本方差比}\label{sec:t3}
+
+\begin{proposition}[窗口均值的精确方差比]\label{prop:variance}
+在命题~\ref{prop:counterexample}的构造下，令
+\[
+ \bar Z_M=\frac1M\sum_{i=1}^M Z_i,
+ \qquad \Gamma_0=\frac{\sigma^2}{W}.
+\]
+则
+\begin{align}
+ \operatorname{Var}(\bar Z_M)
+ &=\frac{\Gamma_0}{M}A_{\mathrm{mean},M},\label{eq:mean-var}\\
+ A_{\mathrm{mean},M}
+ &=1+2\sum_{h=1}^{M-1}
+ \left(1-\frac hM\right)
+ \left(1-\frac{hs}{W}\right)_+.
+ \label{eq:finite-vif-general}
+\end{align}
+若 $W=qs$、$q$ 为正整数且 $M\ge q$，则
+\begin{equation}\label{eq:finite-vif}
+ A_{\mathrm{mean},M}=q-\frac{q^2-1}{3M}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+按滞后展开协方差和，
+\[
+ M^2\operatorname{Var}(\bar Z_M)
+ =M\Gamma_0+2\sum_{h=1}^{M-1}(M-h)\Gamma_h.
+\]
+将式\eqref{eq:window-cov}代入并除以 $M^2$，即可得到式\eqref{eq:mean-var}--\eqref{eq:finite-vif-general}。当 $W=qs$ 且 $M\ge q$ 时，非零求和项仅为 $h=1,\ldots,q-1$。利用
+\[
+ \sum_{h=1}^{q-1}\left(1-\frac hq\right)=\frac{q-1}{2},
+ \qquad
+ \sum_{h=1}^{q-1}h\left(1-\frac hq\right)=\frac{q^2-1}{6},
+\]
+整理后得到式\eqref{eq:finite-vif}。
+\end{proof}
+
+在本文的一个主要几何配置 $W=64$、$s=16$、$M=192$ 下，$q=4$，故
+\[
+ A_{\mathrm{mean},M}=4-\frac{15}{576}\approx3.974.
+\]
+该数值描述标量窗口均值相对于独立窗口基准的方差比。BPI 最大扫描还受到高维方向、特征谱和极值操作影响，因此不能将 $3.974$ 解释为其 I 类错误率的膨胀倍数。
+
+\subsection{长期协方差与排列参考的错配}\label{sec:t4}
+
+当 $W=qs$ 时，标量窗口均值为 $(q-1)$-依赖序列，其长期方差为
+\begin{equation}\label{eq:long-run-var}
+ \Omega
+ =\sum_{h=-\infty}^{\infty}\Gamma_h
+ =\Gamma_0+2\sum_{h=1}^{q-1}\Gamma_h
+ =q\Gamma_0.
+\end{equation}
+只要 $q>1$，就有 $\Omega>\Gamma_0$。原始顺序下的部分和变异包含滞后协方差，随机排列参考则主要由窗口值的经验边际变异决定。
+
+这一差别可由有限总体恒等式进一步说明。给定 $z_1,\ldots,z_M$，令
+\[
+ \bar z=\frac1M\sum_{i=1}^M z_i,
+ \qquad
+ s_M^2=\frac1M\sum_{i=1}^M(z_i-\bar z)^2,
+\]
+并令 $\pi$ 为 $\{1,\ldots,M\}$ 上的均匀随机排列。对 $1\le k<M$，
+\begin{equation}\label{eq:permutation-fpc}
+ \operatorname{Var}_{\pi}\left[
+ \frac1{\sqrt M}\sum_{i=1}^k(z_{\pi(i)}-\bar z)
+ \,\middle|\,z_1,\ldots,z_M\right]
+ =\frac{k(M-k)}{M(M-1)}s_M^2.
+\end{equation}
+式\eqref{eq:permutation-fpc}源于不放回抽样中不同抽取位置的条件协方差 $-s_M^2/(M-1)$。因此，排列桥接过程的条件变异由经验边际量 $s_M^2$ 决定，而原始窗口顺序还携带式\eqref{eq:long-run-var}所概括的滞后依赖。该机制与依赖时间序列中置换有效性需要附加条件的结论一致\cite{RomanoTirlea2022}。
+
+协方差结构的差异为失校准提供了机制解释。对于一般多维非线性特征，协方差矩阵不相等本身仍不足以推出最大扫描统计量的极限分布必然不同；同样，重叠率增加也不保证每一种表示或校准器的 I 类错误率单调变化。
+
+\subsection{向量特征的有限样本依赖诊断量}\label{sec:t5}
+
+设平稳向量特征满足 $\mu=\mathbb E(Y_i)$，并定义
+\[
+ \Gamma_h=\operatorname{Cov}(Y_0,Y_h).
+\]
+归一化样本和的有限样本协方差矩阵可写为
+\begin{align}
+ \Omega_{\Phi,M}
+ &:=\operatorname{Var}\left\{
+ \frac1{\sqrt M}\sum_{i=1}^M(Y_i-\mu)\right\}\notag\\
+ &=\Gamma_0+\sum_{h=1}^{M-1}
+ \left(1-\frac hM\right)(\Gamma_h+\Gamma_h^\top).
+ \label{eq:vector-long-run}
+\end{align}
+当 $\operatorname{tr}(\Gamma_0)>0$ 时，定义迹比
+\begin{equation}\label{eq:trace-amplification}
+ A^{\mathrm{tr}}_{\Phi,M}
+ =\frac{\operatorname{tr}(\Omega_{\Phi,M})}
+        {\operatorname{tr}(\Gamma_0)}.
+\end{equation}
+该比值概括给定特征坐标系下，原始顺序的总部分和方差相对于边际协方差的放大或收缩；分母为零时不予定义。最大扫描还取决于协方差的方向结构、特征谱和候选位置上的联合极值，因此式\eqref{eq:trace-amplification}仅作为机制诊断量。本文的主要经验结论不依赖该比值与 I 类错误率之间的单调关系或因果解释。

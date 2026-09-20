@@ -1,19 +1,19 @@
-"""The shared execution entry: one API for TEST, smoke and formal (task pack §4.1).
+"""Plan-ordered callback dispatcher for TEST, smoke and formal.
 
-``mode`` controls the allowed identity domain and the admission conditions -- it
-does **not** switch scientific implementations.  TEST, smoke and formal work all
-go through the same plan -> dispatch -> shard -> seal path, so a claim that was
-only ever exercised on a metadata fixture cannot masquerade as a verified
-production path.
-
-The execution root is the second half of §2.1: one directory per execution,
-created exclusively, ``--resume`` only, never ``exist_ok=True`` over live files.
+This module records execution identity and outcomes. Scientific payload creation,
+monitor lifetime, shard persistence and analysis are owned by the calling adapter.
+FORMAL_* remains refused here: importable numerical workers and boolean flags
+do not bind an authorized scientific plan to an arbitrary callback. A future
+production adapter must validate actual certificate and evidence contents. Automatic resume/replay
+is refused until a reconciled recovery plan is provided; existing evidence is
+immutable.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -94,6 +94,8 @@ def create_execution_root(
     directory -- that is how an old attempt's debris ended up inside a "new"
     run's evidence.
     """
+    if not isinstance(execution_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,119}", execution_id) or execution_id.endswith("."):
+        raise ExecutionError("execution_id must be a safe single directory component")
     if not execution_id or not str(execution_id).strip():
         raise ExecutionError("execution_id must be a non-empty string")
     path = Path(root) / "executions" / execution_id
@@ -111,9 +113,29 @@ def create_execution_root(
         return ExecutionRoot(path, execution_id=execution_id, resumed=True)
     if resume:
         raise ExecutionError(f"cannot resume {path}: it does not exist")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.mkdir(exist_ok=False)
     for name in EXECUTION_SUBDIRS:
-        (path / name).mkdir(parents=True, exist_ok=False)
+        (path / name).mkdir(exist_ok=False)
     return ExecutionRoot(path, execution_id=execution_id, resumed=False)
+
+
+def _formal_adapter_available() -> bool:
+    """True only when the real formal scientific adapter is importable.
+
+    Re-audit 2026-09-16 (Block A): the formal work units now exist
+    (``formal.process_formal_master_feature`` / ``process_formal_alt_feature``).
+    The protective refusal is kept behind this probe instead of deleted, so a
+    broken build still refuses rather than silently dispatching a generic
+    callback as a formal computation.
+    """
+    try:
+        from . import formal
+    except Exception:  # noqa: BLE001 - any import failure means "not available"
+        return False
+    return callable(getattr(formal, "process_formal_master_feature", None)) and (
+        callable(getattr(formal, "process_formal_alt_feature", None))
+    )
 
 
 def check_mode_admission(mode: str, *, plan: dict[str, Any], **evidence: bool) -> dict[str, Any]:
@@ -125,9 +147,16 @@ def check_mode_admission(mode: str, *, plan: dict[str, Any], **evidence: bool) -
     reasons: list[str] = []
 
     for requirement in contract["requires"]:
-        if not evidence.get(requirement):
+        if evidence.get(requirement) is not True:
             reasons.append(f"missing {requirement!r} required by mode {mode}")
 
+    if mode.startswith("FORMAL_"):
+        if not _formal_adapter_available():
+            reasons.append("FORMAL_RUNNER_NOT_IMPLEMENTED: scientific workers unavailable")
+        reasons.append(
+            "FORMAL_BOUND_DISPATCH_REQUIRED: generic callbacks and boolean flags "
+            "do not bind a verified certificate to an executable scientific plan"
+        )
     limit = contract["max_units"]
     if limit is not None and len(units) > limit:
         reasons.append(f"plan has {len(units)} units, mode {mode} allows at most {limit}")
@@ -204,6 +233,10 @@ def execute_plan(
     are appended as a schema-2 chain under ``events/``.  Nothing here decides a
     scientific question -- it decides *how work is run and recorded*.
     """
+    if resume:
+        raise ExecutionError(
+            "RESUME_REQUIRES_RECOVERY_PLAN: reconcile committed units into a new "
+            "execution; automatic replay must not overwrite plan/manifests/results")
     admission = check_mode_admission(mode, plan=plan, **mode_evidence)
     if not admission["admitted"]:
         return {

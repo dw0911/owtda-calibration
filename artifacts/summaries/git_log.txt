@@ -1,0 +1,20 @@
+493d036 chore(build_alt_admission): fix ruff (unused Any import + stale noqa)
+1bd3d22 fix(formal-h1): schema key must include scenario_id (shape vs mean)
+7019af5 fix(formal-h1): observation_noise_seed for CIRCLE_BASED_H1 (was N_CIRCLE only)
+c6af33b fix(formal-h1): derive ALT source-null/localization fields (was hardcoded None)
+12899c1 feat(run_formal): parameterize phase (NULL/ALT) for H1 dispatch
+4a3c170 feat(alt): build ALT run component set bound to H0 phase seal (R5 H1 release)
+38e72ff fix(run_formal): create evidence root before dispatch (disk_free_bytes needs it)
+9422186 fix(formal-identity): rebind certified plan == runtime predeclaration (R5 minimal patch)
+1937e27 docs(audit): mark R5-05 production pipeline closed (adapter + shard + seal + monitor + gate)
+4894c82 chore(tests): fix ruff errors in test_code_audit_20260917 (imports + BLE001)
+bd7bc27 fix(formal): per-component registry entry hashes (feature/method/data)
+f076b36 feat(formal): end-to-end production authorization + run/phase seal (R5-05)
+7ad54bd feat(formal-pipeline): strict phase seal from run seal (R5-05)
+ebc55c1 feat(formal-phase): real full-lifecycle monitor + durable shard commit (R5-05)
+f1fec3a feat(formal-pipeline): strict run seal from produced rows (R5-05)
+9bf49f2 feat(formal-pipeline): expected indexes + shard plan + durable shard commit (R5-05)
+d367aa9 feat(formal): wire the full scientific/feature-sufficient rows into the worker
+ce15954 feat(formal-rows): feature-sufficient ledger row + vector a_r wire encoding (R5-03)
+78101a1 feat(formal-rows): build the full frozen scientific_row schema (R5-03)
+db36540 r5 baseline: audit local safety fix (OWTDA_R4_LOCAL_SAFETY_FIX_20260917) applied

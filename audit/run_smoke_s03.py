@@ -143,24 +143,51 @@ def main() -> int:
         )
         # Audit A08: the resources are sampled around *this* run and stored with it,
         # so wall/RSS/swap/disk can never be quoted from a different execution.
+        def _persist_ledger_inside_window(
+            monitor: Any, result: Any, *, phase: str = phase, target_root: Path = root
+        ) -> None:
+            """Write the ledger while the monitor is still sampling (R4 block B).
+
+            The ledger used to be written *after* ``sample_run`` stopped the sampler,
+            so the persistence of the scientific rows was outside the window: a
+            resource breach during that write could not be observed and the seal could
+            not show that the stage had been covered at all.
+            """
+            monitor.set_stage("persist")
+            target = target_root / phase
+            target.mkdir(parents=True, exist_ok=True)
+            with (target / "evaluation_rows.jsonl").open(
+                "w", encoding="utf-8", newline="\n"
+            ) as handle:
+                for row in result.rows:
+                    handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+        # R4 plan A: the monitor stays open while the phase persists, commits and
+        # seals, so those stages are *observed*; the record it produces on the way is
+        # provisional (status OPEN) and is closed with the final verdict after the
+        # monitor is stopped -- which is why the verdict is recorded as a chained
+        # event instead of being smuggled into a seal that was already hashed.
+        _holder: dict[str, Any] = {}
         result, resources = resource_sampler.sample_run(
-            runner, evidence_root=root,
+            runner, evidence_root=root, run_id=run_id,
             manifest=manifest, seed_registry=seed_registry, workers=args.workers,
             replicate_limit=args.replicates,
+            on_compute_done=_persist_ledger_inside_window,
+            keep_open=True, monitor_holder=_holder,
         )
+        monitor = _holder["monitor"]
         # A08: name the run inside the record itself, so "these resources belong to
         # this run" is a checkable fact rather than an assumption about file layout.
         resources = {**resources, "run_id": run_id, "phase": phase}
         resources_by_phase[phase] = resources
         ledger_dir = root / phase
-        ledger_dir.mkdir(parents=True, exist_ok=True)
         ledger = ledger_dir / "evaluation_rows.jsonl"
-        with ledger.open("w", encoding="utf-8", newline="\n") as fh:
-            for row in result.rows:
-                fh.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+        if not ledger.is_file():
+            # the window hook is the only writer now: a missing ledger means the
+            # stage did not happen, and sealing would bind a non-existent artifact
+            raise RuntimeError(f"{phase}: ledger was not persisted inside the sampling window")
         # The disk evidence must cover the persisted ledger, not just the compute
-        # step (re-audit 2026-09-12): re-measure now that the bytes are on disk,
-        # before the record is sealed.
+        # step (re-audit 2026-09-12): re-measure now that the bytes are on disk.
         resource_sampler.finalize_persistence(resources, evidence_root=root)
         # AM_RESOURCE_CAPACITY_V2 hard condition: allocation failures must be *shown* to
         # be zero.  The sampler cannot observe them, but the runner knows the error count:
@@ -181,6 +208,8 @@ def main() -> int:
             "unexplained_errors": result.errors,
             "resource_allocation_failures": resources["resource_allocation_failures"],
             "capacity_status": (resources.get("capacity_sampling") or {}).get("status"),
+            "note": "capacity_status is provisional here; the final verdict follows as "
+                    "RESOURCE_VERDICT_FINAL (the monitor is still sampling)",
         })
 
         expected = smoke.expected_smoke_counts(phase)
@@ -219,12 +248,63 @@ def main() -> int:
             "ledger_bytes": ledger.stat().st_size,
             "forbidden_aggregates_emitted": False,
         }
-        (root / f"smoke_{'null' if phase == scope.PHASE_SMOKE_NULL else 'alt'}_RC.json").write_text(
-            json.dumps(rc, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
 
+        # R4 block B / plan A: the seal must quote the stages the raw stream *actually*
+        # covers at seal time.  A required stage with no sample means the stage was
+        # intended but not observed -- the seal refuses instead of implying coverage.
+        def _read_stages(
+            target_resources: dict[str, Any] = resources,
+        ) -> tuple[list[dict[str, Any]], list[str]]:
+            rows: list[dict[str, Any]] = []
+            path = (target_resources.get("capacity_sampling") or {}).get("raw_path")
+            if path and Path(path).is_file():
+                rows = [
+                    json.loads(line)
+                    for line in Path(path).read_text(encoding="utf-8").splitlines()
+                    if line.strip()
+                ]
+            return rows, sorted({str(r.get("stage") or "") for r in rows})
+
+        monitor.set_stage("commit")
+        monitor.set_stage("seal")
+        _seal_rows, _seal_stages = _read_stages()
+        coverage = resource_sampler.assert_stage_coverage(
+            _seal_rows, phase=phase,
+            required=("start", "compute", "persist", "commit", "seal"),
+        )
+        execution.append_execution_event(execution_root, {
+            "event_type": "RESOURCE_STAGE_COVERAGE", "phase": phase, "run_id": run_id,
+            "at": "seal", "stages": _seal_stages, "rows": coverage["rows"],
+            "required": list(coverage["required"]),
+            "complete": coverage["complete"],
+        })
+        # Stages the seal cannot speak for are named here rather than implied away;
+        # teardown lands when the monitor stops, cleanup after the seal.
+        not_observed = [
+            stage for stage in resource_sampler.FULL_LIFECYCLE_STAGES
+            if stage not in coverage["stages"]
+        ]
         seal = {
+            "stage_coverage": coverage,
+            "resource_stage_gaps": not_observed,
+            "stage_coverage_open": True,
+            # R4 plan A: the record embedded below is the *seal-time* one, and at seal
+            # time it is provisional by construction (the monitor's verdict only exists
+            # once it stops).  Saying that explicitly -- and pointing at the chained
+            # event that carries the final verdict -- is what stops a reader from
+            # treating this snapshot as the acceptance result.
+            "resources_provisional_at_seal": True,
+            "resources_summary_at_seal": {
+                "status": (resources.get("capacity_sampling") or {}).get("status"),
+                "stages_observed": _seal_stages,
+                "stages_not_observed": not_observed,
+                "raw_path": (resources.get("capacity_sampling") or {}).get("raw_path"),
+            },
+            "capacity_final_ref": {
+                "event_type": "RESOURCE_VERDICT_FINAL",
+                "phase": phase,
+                "run_id": run_id,
+            },
             "ledger_file": rc["ledger_file"],
             "ledger_content_hash": rc["ledger_content_hash"],
             "ledger_bytes": rc["ledger_bytes"],
@@ -251,8 +331,43 @@ def main() -> int:
             "workers": args.workers,
             "replicates_per_cell": replicates,
             "terminal_state": "RUN_SEALED",
+            "verdict_recorded_post_seal": True,
         }
         sealed = record_seal(root, run_id=run_id, phase=phase, seal=seal)
+
+        # Close the record: cleanup is observed, the monitor stops, and the verdict is
+        # chained *after* the seal -- a provisional record never becomes a source of a
+        # final number, and the seal never claims a verdict it was hashed before.
+        monitor.set_stage("cleanup")
+        verdict = monitor.stop()
+        _final_rows, _final_stages = _read_stages()
+        resource_sampler.merge_final_verdict(
+            resources, verdict, observed_stages=_final_stages,
+        )
+        resources_by_phase[phase] = resources
+        (execution_root.resources_dir / f"capacity_{phase}.json").write_text(
+            json.dumps(resources, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        execution.append_execution_event(execution_root, {
+            "event_type": "RESOURCE_VERDICT_FINAL", "phase": phase, "run_id": run_id,
+            "status": (resources.get("capacity_sampling") or {}).get("status"),
+            "raw_samples": (resources.get("capacity_sampling") or {}).get("raw_samples"),
+            "stages_observed": _final_stages,
+            # Explicit full-lifecycle requirement: the *default* is narrower, so
+            # relying on it here would under-report commit/seal/cleanup as gaps.
+            "stages_not_observed": resource_sampler.stage_coverage(
+                _final_rows, required=resource_sampler.FULL_LIFECYCLE_STAGES,
+            )["missing"],
+            "seal_hash": sealed["smoke_seal_hash"],
+            "note": "recorded after the seal; the seal itself quotes coverage at seal time",
+        })
+        # The RC carries the closed record: written only now, so no reader can pick up
+        # the provisional (OPEN) capacity block.
+        (root / f"smoke_{'null' if phase == scope.PHASE_SMOKE_NULL else 'alt'}_RC.json").write_text(
+            json.dumps(rc, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
         reports[phase] = {**rc, **sealed}
         provenance["phases"][phase] = {
             "run_id": run_id,

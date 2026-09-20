@@ -1,0 +1,3138 @@
+[
+  {
+    "logical_cell_id": "17e80c637df715443a30ed7946444afe47bf380b5b1af0ced16a49d8d1a258f6",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 131,
+    "rejection_rate": 0.0524,
+    "wilson90": [
+      0.04554134822294746,
+      0.06022640545724117
+    ],
+    "wilson95": [
+      0.04433158321425581,
+      0.06184185595625185
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "17e80c637df715443a30ed7946444afe47bf380b5b1af0ced16a49d8d1a258f6",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 69,
+    "rejection_rate": 0.0276,
+    "wilson90": [
+      0.022700121963994957,
+      0.033521251669877045
+    ],
+    "wilson95": [
+      0.02186712048528031,
+      0.03478241629789176
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "17e80c637df715443a30ed7946444afe47bf380b5b1af0ced16a49d8d1a258f6",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 108,
+    "rejection_rate": 0.0432,
+    "wilson90": [
+      0.03699101585394919,
+      0.050396629099380044
+    ],
+    "wilson95": [
+      0.03590668030270934,
+      0.05189498862733512
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "17e80c637df715443a30ed7946444afe47bf380b5b1af0ced16a49d8d1a258f6",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 54,
+    "rejection_rate": 0.0216,
+    "wilson90": [
+      0.017309500118973364,
+      0.02692484608433817
+    ],
+    "wilson95": [
+      0.01659270281846685,
+      0.028075244677446612
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "251e8365b608f15676d0f47d9d54f3496790c69761379a8663aaa96e7c17449c",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 761,
+    "rejection_rate": 0.3044,
+    "wilson90": [
+      0.28948047829487694,
+      0.31974242746885156
+    ],
+    "wilson95": [
+      0.28667377871548044,
+      0.3227264105198889
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "251e8365b608f15676d0f47d9d54f3496790c69761379a8663aaa96e7c17449c",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 123,
+    "rejection_rate": 0.0492,
+    "wilson90": [
+      0.04255934877902844,
+      0.056815323604861266
+    ],
+    "wilson95": [
+      0.041391719456811804,
+      0.05839153876049126
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "251e8365b608f15676d0f47d9d54f3496790c69761379a8663aaa96e7c17449c",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1094,
+    "rejection_rate": 0.4376,
+    "wilson90": [
+      0.42135620129396156,
+      0.4539787134282094
+    ],
+    "wilson95": [
+      0.4182640149203664,
+      0.457127456492144
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "251e8365b608f15676d0f47d9d54f3496790c69761379a8663aaa96e7c17449c",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 101,
+    "rejection_rate": 0.0404,
+    "wilson90": [
+      0.034404027678001624,
+      0.04738967114106605
+    ],
+    "wilson95": [
+      0.033360723333988006,
+      0.048849537262002425
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "29efd14538e4d7ea56e52668f7ba9df7daf74f3e21599ed8a474dfb680703f88",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2204,
+    "rejection_rate": 0.8816,
+    "wilson90": [
+      0.8705567870367157,
+      0.8918181575469304
+    ],
+    "wilson95": [
+      0.8683461736231446,
+      0.8936829050465032
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "29efd14538e4d7ea56e52668f7ba9df7daf74f3e21599ed8a474dfb680703f88",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 109,
+    "rejection_rate": 0.0436,
+    "wilson90": [
+      0.03736122289206579,
+      0.05082555722330081
+    ],
+    "wilson95": [
+      0.03627114467254895,
+      0.05232929687664607
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "29efd14538e4d7ea56e52668f7ba9df7daf74f3e21599ed8a474dfb680703f88",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2497,
+    "rejection_rate": 0.9988,
+    "wilson90": [
+      0.9970012238404283,
+      0.9995203232201656
+    ],
+    "wilson95": [
+      0.9964776464237726,
+      0.9995918096569933
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "29efd14538e4d7ea56e52668f7ba9df7daf74f3e21599ed8a474dfb680703f88",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 175,
+    "rejection_rate": 0.07,
+    "wilson90": [
+      0.0620629294871512,
+      0.0788667713226815
+    ],
+    "wilson95": [
+      0.060644062289653744,
+      0.0806753721234792
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "3781e1921cb7cc38a781e772571f16ef6cc5a9911bd839eb04bc4c38da99477e",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2428,
+    "rejection_rate": 0.9712,
+    "wilson90": [
+      0.9651682033218182,
+      0.9762130175581974
+    ],
+    "wilson95": [
+      0.963886489547286,
+      0.9770676558120902
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "3781e1921cb7cc38a781e772571f16ef6cc5a9911bd839eb04bc4c38da99477e",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 202,
+    "rejection_rate": 0.0808,
+    "wilson90": [
+      0.07228120584118833,
+      0.0902251443436532
+    ],
+    "wilson95": [
+      0.07074909805396823,
+      0.09213719707623017
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "3781e1921cb7cc38a781e772571f16ef6cc5a9911bd839eb04bc4c38da99477e",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2494,
+    "rejection_rate": 0.9976,
+    "wilson90": [
+      0.9953657055870221,
+      0.9987584359874598
+    ],
+    "wilson95": [
+      0.994773529575575,
+      0.9988996086477392
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "3781e1921cb7cc38a781e772571f16ef6cc5a9911bd839eb04bc4c38da99477e",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "976c593dd5cb90dbaed05c1a42f99153751d5d9d8c5874d2297bcfdf6df405be",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 178,
+    "rejection_rate": 0.0712,
+    "wilson90": [
+      0.063195663505689,
+      0.08013144279025577
+    ],
+    "wilson95": [
+      0.0617637179414826,
+      0.08195203432910204
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "3e267e839e3d2fe8070f3bd085eb910234e3c4ee55f4cb38cbc8d921fd3f6dd2",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2346,
+    "rejection_rate": 0.9384,
+    "wilson90": [
+      0.9300067863489178,
+      0.9458453512440342
+    ],
+    "wilson95": [
+      0.928286049540299,
+      0.9471687410487301
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "3e267e839e3d2fe8070f3bd085eb910234e3c4ee55f4cb38cbc8d921fd3f6dd2",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 124,
+    "rejection_rate": 0.0496,
+    "wilson90": [
+      0.0429316623888588,
+      0.05724214515706827
+    ],
+    "wilson95": [
+      0.04175868435429812,
+      0.05882334648215551
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "3e267e839e3d2fe8070f3bd085eb910234e3c4ee55f4cb38cbc8d921fd3f6dd2",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2492,
+    "rejection_rate": 0.9968,
+    "wilson90": [
+      0.9943298758570397,
+      0.9981959953933676
+    ],
+    "wilson95": [
+      0.9936979744672946,
+      0.9983776185177183
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "3e267e839e3d2fe8070f3bd085eb910234e3c4ee55f4cb38cbc8d921fd3f6dd2",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 198,
+    "rejection_rate": 0.0792,
+    "wilson90": [
+      0.07076418628491025,
+      0.08854562325178182
+    ],
+    "wilson95": [
+      0.06924825083251616,
+      0.09044295382107996
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "46972f4982b4d87062e2d6b8c25b721d23746166968bb14e169381aeeebe2139",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 152,
+    "rejection_rate": 0.0608,
+    "wilson90": [
+      0.05340352719945537,
+      0.06914606488351792
+    ],
+    "wilson95": [
+      0.05208961593324458,
+      0.07085804823942513
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "46972f4982b4d87062e2d6b8c25b721d23746166968bb14e169381aeeebe2139",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 22,
+    "rejection_rate": 0.0088,
+    "wilson90": [
+      0.0062146868039636375,
+      0.012447334214152226
+    ],
+    "wilson95": [
+      0.005818600504860343,
+      0.013288623178234744
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "46972f4982b4d87062e2d6b8c25b721d23746166968bb14e169381aeeebe2139",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 146,
+    "rejection_rate": 0.0584,
+    "wilson90": [
+      0.051152489532551346,
+      0.06660229157819775
+    ],
+    "wilson95": [
+      0.04986745138972932,
+      0.06828757706803695
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "46972f4982b4d87062e2d6b8c25b721d23746166968bb14e169381aeeebe2139",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 5,
+    "rejection_rate": 0.002,
+    "wilson90": [
+      0.0009738796205607176,
+      0.004102843642919941
+    ],
+    "wilson95": [
+      0.0008545736212346501,
+      0.0046735155363006806
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 132,
+    "rejection_rate": 0.0528,
+    "wilson90": [
+      0.04591464284215668,
+      0.06065224600006931
+    ],
+    "wilson95": [
+      0.04469971297298948,
+      0.06227249881666874
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 61,
+    "rejection_rate": 0.0244,
+    "wilson90": [
+      0.019815294167457774,
+      0.030012998170115317
+    ],
+    "wilson95": [
+      0.01904246763941709,
+      0.031216888190550393
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 133,
+    "rejection_rate": 0.0532,
+    "wilson90": [
+      0.04628805416822721,
+      0.06107796983603613
+    ],
+    "wilson95": [
+      0.04506798132660976,
+      0.06270300308219905
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 57,
+    "rejection_rate": 0.0228,
+    "wilson90": [
+      0.018381097418669133,
+      0.028250654270754495
+    ],
+    "wilson95": [
+      0.0176398648289902,
+      0.029424400524374984
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "506874478653bf5b72d012cdf53e680816978c21c288a4187e2a712a67b146bd",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 137,
+    "rejection_rate": 0.0548,
+    "wilson90": [
+      0.047782842196827414,
+      0.0627797224555854
+    ],
+    "wilson95": [
+      0.04654241184371968,
+      0.06442366304169142
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "506874478653bf5b72d012cdf53e680816978c21c288a4187e2a712a67b146bd",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 27,
+    "rejection_rate": 0.0108,
+    "wilson90": [
+      0.00788953165558263,
+      0.014768165172720059
+    ],
+    "wilson95": [
+      0.007433019288849424,
+      0.015668067489998536
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "506874478653bf5b72d012cdf53e680816978c21c288a4187e2a712a67b146bd",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 123,
+    "rejection_rate": 0.0492,
+    "wilson90": [
+      0.04255934877902844,
+      0.056815323604861266
+    ],
+    "wilson95": [
+      0.041391719456811804,
+      0.05839153876049126
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "506874478653bf5b72d012cdf53e680816978c21c288a4187e2a712a67b146bd",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 14,
+    "rejection_rate": 0.0056,
+    "wilson90": [
+      0.0036233700774411354,
+      0.008645569644375807
+    ],
+    "wilson95": [
+      0.0033387685145015757,
+      0.009378274215388921
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5b0e4156be05e38d6f4bf942824eeef023e6f8bf54331648c8703a66a621e3da",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 138,
+    "rejection_rate": 0.0552,
+    "wilson90": [
+      0.04815681899135203,
+      0.06320488082309815
+    ],
+    "wilson95": [
+      0.04691135176456525,
+      0.06485349573999642
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "5b0e4156be05e38d6f4bf942824eeef023e6f8bf54331648c8703a66a621e3da",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 14,
+    "rejection_rate": 0.0056,
+    "wilson90": [
+      0.0036233700774411354,
+      0.008645569644375807
+    ],
+    "wilson95": [
+      0.0033387685145015757,
+      0.009378274215388921
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5b0e4156be05e38d6f4bf942824eeef023e6f8bf54331648c8703a66a621e3da",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 154,
+    "rejection_rate": 0.0616,
+    "wilson90": [
+      0.05415464875596582,
+      0.0699932136510822
+    ],
+    "wilson95": [
+      0.0528312589512699,
+      0.07171395045970096
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "5b0e4156be05e38d6f4bf942824eeef023e6f8bf54331648c8703a66a621e3da",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d38a806071a8062d3d132dde2ba6528db6d3230705676905c81601d440c52a3",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 8,
+    "rejection_rate": 0.0032,
+    "wilson90": [
+      0.0018040046066324527,
+      0.005670124142960302
+    ],
+    "wilson95": [
+      0.00162238148228164,
+      0.006302025532705415
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5b3e2e59e9d50ec1afdc42b48a3f8e5ab79f3af36172f23cfd5efb4a714d15f8",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2370,
+    "rejection_rate": 0.948,
+    "wilson90": [
+      0.9401995530497651,
+      0.9548318284320834
+    ],
+    "wilson95": [
+      0.9385889269887788,
+      0.9560364064598639
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5b3e2e59e9d50ec1afdc42b48a3f8e5ab79f3af36172f23cfd5efb4a714d15f8",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 295,
+    "rejection_rate": 0.118,
+    "wilson90": [
+      0.10779779970370576,
+      0.1290281205506107
+    ],
+    "wilson95": [
+      0.10593618918788636,
+      0.13123595952331543
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5b3e2e59e9d50ec1afdc42b48a3f8e5ab79f3af36172f23cfd5efb4a714d15f8",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2478,
+    "rejection_rate": 0.9912,
+    "wilson90": [
+      0.9875526657858477,
+      0.9937853131960362
+    ],
+    "wilson95": [
+      0.9867113768217652,
+      0.9941813994951396
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5b3e2e59e9d50ec1afdc42b48a3f8e5ab79f3af36172f23cfd5efb4a714d15f8",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 266,
+    "rejection_rate": 0.1064,
+    "wilson90": [
+      0.09667828368685252,
+      0.11697271686838034
+    ],
+    "wilson95": [
+      0.09491100564070189,
+      0.11909673711513326
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5dbc47ae0485ba2a39e7585eb1af58e31b098e048eb42a7173f4a3f500a03b1e",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 118,
+    "rejection_rate": 0.0472,
+    "wilson90": [
+      0.04069974524329165,
+      0.05467925133041123
+    ],
+    "wilson95": [
+      0.03955922729044256,
+      0.05623016783110764
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "5dbc47ae0485ba2a39e7585eb1af58e31b098e048eb42a7173f4a3f500a03b1e",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 15,
+    "rejection_rate": 0.006,
+    "wilson90": [
+      0.003939319152627807,
+      0.009128755731226502
+    ],
+    "wilson95": [
+      0.003639486876172801,
+      0.009876328472868269
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "5dbc47ae0485ba2a39e7585eb1af58e31b098e048eb42a7173f4a3f500a03b1e",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 130,
+    "rejection_rate": 0.052,
+    "wilson90": [
+      0.0451681715679165,
+      0.05980044695023476
+    ],
+    "wilson95": [
+      0.043963593540136035,
+      0.06141107301122104
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "5dbc47ae0485ba2a39e7585eb1af58e31b098e048eb42a7173f4a3f500a03b1e",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 3120,
+    "M_expected": 48,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "b8c89f4c909cea7222fd2b9ebaf1af50692229f38a4756fc767c9bfa8b637281",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 6,
+    "rejection_rate": 0.0024,
+    "wilson90": [
+      0.0012415640125400965,
+      0.004634294412977928
+    ],
+    "wilson95": [
+      0.0011003913522607787,
+      0.005226470424425126
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1096,
+    "rejection_rate": 0.4384,
+    "wilson90": [
+      0.4221520530425484,
+      0.45478113200369735
+    ],
+    "wilson95": [
+      0.4190588777870315,
+      0.45793013886378015
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 120,
+    "rejection_rate": 0.048,
+    "wilson90": [
+      0.041443187609689694,
+      0.055534079288087915
+    ],
+    "wilson95": [
+      0.04029175041492176,
+      0.05709518994492959
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2344,
+    "rejection_rate": 0.9376,
+    "wilson90": [
+      0.9291600136812808,
+      0.9450938535875963
+    ],
+    "wilson95": [
+      0.9274305941590383,
+      0.9464266511916896
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 190,
+    "rejection_rate": 0.076,
+    "wilson90": [
+      0.06773336704129794,
+      0.08518336119909521
+    ],
+    "wilson95": [
+      0.06625038412839078,
+      0.08705063957200075
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "6aae8e9f35dbc4c76d28eabdd9d4156cd5024f202c5690bdb90460b1ca9b5e03",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 667,
+    "rejection_rate": 0.2668,
+    "wilson90": [
+      0.2525078355610356,
+      0.28159636497118057
+    ],
+    "wilson95": [
+      0.2498300617266528,
+      0.2844855013085625
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "6aae8e9f35dbc4c76d28eabdd9d4156cd5024f202c5690bdb90460b1ca9b5e03",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 88,
+    "rejection_rate": 0.0352,
+    "wilson90": [
+      0.029622513103079555,
+      0.04178242860950238
+    ],
+    "wilson95": [
+      0.028659673685343147,
+      0.043166542861689826
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "6aae8e9f35dbc4c76d28eabdd9d4156cd5024f202c5690bdb90460b1ca9b5e03",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 834,
+    "rejection_rate": 0.3336,
+    "wilson90": [
+      0.31827630146204616,
+      0.34928347113041
+    ],
+    "wilson95": [
+      0.3153853042302826,
+      0.3523252862030786
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "6aae8e9f35dbc4c76d28eabdd9d4156cd5024f202c5690bdb90460b1ca9b5e03",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 57,
+    "rejection_rate": 0.0228,
+    "wilson90": [
+      0.018381097418669133,
+      0.028250654270754495
+    ],
+    "wilson95": [
+      0.0176398648289902,
+      0.029424400524374984
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "76b54c77a496c8e7c334eef1de482ddf64884d5b0ae613e1aaa5b690e8b0dbbe",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1839,
+    "rejection_rate": 0.7356,
+    "wilson90": [
+      0.7208428694732975,
+      0.7498477409667105
+    ],
+    "wilson95": [
+      0.7179606217350519,
+      0.7525164509446362
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "76b54c77a496c8e7c334eef1de482ddf64884d5b0ae613e1aaa5b690e8b0dbbe",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 168,
+    "rejection_rate": 0.0672,
+    "wilson90": [
+      0.05942266898789673,
+      0.0759130856876744
+    ],
+    "wilson95": [
+      0.05803484291945198,
+      0.0776931831596269
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "76b54c77a496c8e7c334eef1de482ddf64884d5b0ae613e1aaa5b690e8b0dbbe",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2284,
+    "rejection_rate": 0.9136,
+    "wilson90": [
+      0.9039045037074481,
+      0.9224012538391871
+    ],
+    "wilson95": [
+      0.9019424292344415,
+      0.9239884589672519
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "76b54c77a496c8e7c334eef1de482ddf64884d5b0ae613e1aaa5b690e8b0dbbe",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "699fb9a8a87586016db2fa2ba2c7477845318b52d191119d4887fde5213bf769",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 170,
+    "rejection_rate": 0.068,
+    "wilson90": [
+      0.0601766226371602,
+      0.07675740236248565
+    ],
+    "wilson95": [
+      0.05877985108838701,
+      0.07854572022899303
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "7c2c85c351ea30926527360e6798a004692dca2aac02f540fea6a855eccce500",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 389,
+    "rejection_rate": 0.1556,
+    "wilson90": [
+      0.14404855614349166,
+      0.16789606934233708
+    ],
+    "wilson95": [
+      0.14192067585199336,
+      0.17033609905936237
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7c2c85c351ea30926527360e6798a004692dca2aac02f540fea6a855eccce500",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 70,
+    "rejection_rate": 0.028,
+    "wilson90": [
+      0.023062121962020597,
+      0.03395838683388877
+    ],
+    "wilson95": [
+      0.022221855374870238,
+      0.035226454027452406
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "7c2c85c351ea30926527360e6798a004692dca2aac02f540fea6a855eccce500",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1140,
+    "rejection_rate": 0.456,
+    "wilson90": [
+      0.43967163197759246,
+      0.4724235001982973
+    ],
+    "wilson95": [
+      0.4365587691643728,
+      0.4755762427290641
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7c2c85c351ea30926527360e6798a004692dca2aac02f540fea6a855eccce500",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 118,
+    "rejection_rate": 0.0472,
+    "wilson90": [
+      0.04069974524329165,
+      0.05467925133041123
+    ],
+    "wilson95": [
+      0.03955922729044256,
+      0.05623016783110764
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "7c890a30c7a752bb58cb86fcf6505233092ca509d469eecc7b13822224792d7b",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 272,
+    "rejection_rate": 0.1088,
+    "wilson90": [
+      0.09897595607917141,
+      0.11946985544828566
+    ],
+    "wilson95": [
+      0.097188608105663,
+      0.12161177036507557
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7c890a30c7a752bb58cb86fcf6505233092ca509d469eecc7b13822224792d7b",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 71,
+    "rejection_rate": 0.0284,
+    "wilson90": [
+      0.02342441073733792,
+      0.03439523322060882
+    ],
+    "wilson95": [
+      0.02257693224157617,
+      0.03567014977989705
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "7c890a30c7a752bb58cb86fcf6505233092ca509d469eecc7b13822224792d7b",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1246,
+    "rejection_rate": 0.4984,
+    "wilson90": [
+      0.48196217071487774,
+      0.5148412886369728
+    ],
+    "wilson95": [
+      0.47881795594623894,
+      0.5179869535771588
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7c890a30c7a752bb58cb86fcf6505233092ca509d469eecc7b13822224792d7b",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "58d46b1c42c9eea6a657cafbc2dfec385ab2a8cadbabbbd1d4bb984b66309898",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 83,
+    "rejection_rate": 0.0332,
+    "wilson90": [
+      0.027792454324001733,
+      0.03961681157839338
+    ],
+    "wilson95": [
+      0.02686223250845297,
+      0.04097012094282714
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "7fe9733d5670eba6801c47b018723b293784bdc394665a10b7226fe98a9f971c",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 396,
+    "rejection_rate": 0.1584,
+    "wilson90": [
+      0.14675886522533924,
+      0.17077970639475112
+    ],
+    "wilson95": [
+      0.14461320453774,
+      0.17323497870766977
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7fe9733d5670eba6801c47b018723b293784bdc394665a10b7226fe98a9f971c",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 46,
+    "rejection_rate": 0.0184,
+    "wilson90": [
+      0.01447132555619484,
+      0.023369939350817777
+    ],
+    "wilson95": [
+      0.013823219582781987,
+      0.02445454695992688
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7fe9733d5670eba6801c47b018723b293784bdc394665a10b7226fe98a9f971c",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1036,
+    "rejection_rate": 0.4144,
+    "wilson90": [
+      0.3982953402910065,
+      0.4306897350329973
+    ],
+    "wilson95": [
+      0.39523542510060017,
+      0.433827234401177
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "7fe9733d5670eba6801c47b018723b293784bdc394665a10b7226fe98a9f971c",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "487fd5c391d915e2b2eb7fb3e480103728c8e4314acf21e23f2c8ee2b6a8ae2a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 69,
+    "rejection_rate": 0.0276,
+    "wilson90": [
+      0.022700121963994957,
+      0.033521251669877045
+    ],
+    "wilson95": [
+      0.02186712048528031,
+      0.03478241629789176
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "81a23381743c6251d5fa05be5fbde511df99028f00b8fabe5be8b2ee9cf9daa0",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 694,
+    "rejection_rate": 0.2776,
+    "wilson90": [
+      0.2631146258989484,
+      0.2925662240082767
+    ],
+    "wilson95": [
+      0.26039734058909536,
+      0.29548508316318556
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "81a23381743c6251d5fa05be5fbde511df99028f00b8fabe5be8b2ee9cf9daa0",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 72,
+    "rejection_rate": 0.0288,
+    "wilson90": [
+      0.02378698244180244,
+      0.03483179667818166
+    ],
+    "wilson95": [
+      0.022932344187909775,
+      0.03611351045271402
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "81a23381743c6251d5fa05be5fbde511df99028f00b8fabe5be8b2ee9cf9daa0",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1065,
+    "rejection_rate": 0.426,
+    "wilson90": [
+      0.4098212015207246,
+      0.44233879350236277
+    ],
+    "wilson95": [
+      0.40674427917527894,
+      0.44548278628186483
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "81a23381743c6251d5fa05be5fbde511df99028f00b8fabe5be8b2ee9cf9daa0",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 53,
+    "rejection_rate": 0.0212,
+    "wilson90": [
+      0.01695312700589752,
+      0.026482084035376646
+    ],
+    "wilson95": [
+      0.01624462534244368,
+      0.02762454953431921
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a548883d6b022dc8b791a6a1b12ff05de045b07acaa3be6f58edd0e240fca2c0",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1672,
+    "rejection_rate": 0.6688,
+    "wilson90": [
+      0.6531419771372791,
+      0.6840930612424887
+    ],
+    "wilson95": [
+      0.6501044229954901,
+      0.6869776222860521
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a548883d6b022dc8b791a6a1b12ff05de045b07acaa3be6f58edd0e240fca2c0",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 197,
+    "rejection_rate": 0.0788,
+    "wilson90": [
+      0.07038509638026148,
+      0.0881255779943932
+    ],
+    "wilson95": [
+      0.06887323516354206,
+      0.09001919687090347
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a548883d6b022dc8b791a6a1b12ff05de045b07acaa3be6f58edd0e240fca2c0",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1982,
+    "rejection_rate": 0.7928,
+    "wilson90": [
+      0.7791537330852654,
+      0.8058132055260856
+    ],
+    "wilson95": [
+      0.7764691448124541,
+      0.808232412405766
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a548883d6b022dc8b791a6a1b12ff05de045b07acaa3be6f58edd0e240fca2c0",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 157,
+    "rejection_rate": 0.0628,
+    "wilson90": [
+      0.055282034173965086,
+      0.071263233719195
+    ],
+    "wilson95": [
+      0.0539445588063998,
+      0.07299696846202276
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "a681b9aaf36ec51ff484521c55e38e70fd8ed519d847e4dcf6d11793d2de710a",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2225,
+    "rejection_rate": 0.89,
+    "wilson90": [
+      0.8792821640573795,
+      0.8998746189290513
+    ],
+    "wilson95": [
+      0.8771314133714747,
+      0.9016718903003349
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a681b9aaf36ec51ff484521c55e38e70fd8ed519d847e4dcf6d11793d2de710a",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 202,
+    "rejection_rate": 0.0808,
+    "wilson90": [
+      0.07228120584118833,
+      0.0902251443436532
+    ],
+    "wilson95": [
+      0.07074909805396823,
+      0.09213719707623017
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a681b9aaf36ec51ff484521c55e38e70fd8ed519d847e4dcf6d11793d2de710a",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2499,
+    "rejection_rate": 0.9996,
+    "wilson90": [
+      0.9982090593317888,
+      0.99991075805288
+    ],
+    "wilson95": [
+      0.9977376146310255,
+      0.9999293866880412
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "a681b9aaf36ec51ff484521c55e38e70fd8ed519d847e4dcf6d11793d2de710a",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 330,
+    "rejection_rate": 0.132,
+    "wilson90": [
+      0.1212613826686585,
+      0.14353426825696575
+    ],
+    "wilson95": [
+      0.1192941674288215,
+      0.14583502295265038
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "b4ac061919c0c494ac1f0f464889cd7714a8231ca14f5bd8f0a53dc804963e21",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2331,
+    "rejection_rate": 0.9324,
+    "wilson90": [
+      0.9236647146627662,
+      0.9402003954996251
+    ],
+    "wilson95": [
+      0.9218804992114311,
+      0.9415927020903394
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "b4ac061919c0c494ac1f0f464889cd7714a8231ca14f5bd8f0a53dc804963e21",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 223,
+    "rejection_rate": 0.0892,
+    "wilson90": [
+      0.08026192252141244,
+      0.09902626606621374
+    ],
+    "wilson95": [
+      0.07864800143879211,
+      0.10101251869356836
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "b4ac061919c0c494ac1f0f464889cd7714a8231ca14f5bd8f0a53dc804963e21",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2454,
+    "rejection_rate": 0.9816,
+    "wilson90": [
+      0.9766300606491822,
+      0.9855286744438052
+    ],
+    "wilson95": [
+      0.9755454530400732,
+      0.986176780417218
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "b4ac061919c0c494ac1f0f464889cd7714a8231ca14f5bd8f0a53dc804963e21",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 1592,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "65befe6636b81ff621988d0b0afc7d01c0174dec7841a727e12bebaf065248a2",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 169,
+    "rejection_rate": 0.0676,
+    "wilson90": [
+      0.05979960450037482,
+      0.07633528533723365
+    ],
+    "wilson95": [
+      0.05840729790966063,
+      0.07811950078856883
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1354,
+    "rejection_rate": 0.5416,
+    "wilson90": [
+      0.5251723220474119,
+      0.557937734804474
+    ],
+    "wilson95": [
+      0.5220193752625284,
+      0.5610529771291313
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 131,
+    "rejection_rate": 0.0524,
+    "wilson90": [
+      0.04554134822294746,
+      0.06022640545724117
+    ],
+    "wilson95": [
+      0.04433158321425581,
+      0.06184185595625185
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2199,
+    "rejection_rate": 0.8796,
+    "wilson90": [
+      0.8684819046337618,
+      0.8898973641396976
+    ],
+    "wilson95": [
+      0.8662575289446884,
+      0.8917776866292063
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 16,
+    "T": 3120,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "7f15203111a764c1c0fb7cce5f272798740235155b6418b484e70007681e5be0",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 212,
+    "rejection_rate": 0.0848,
+    "wilson90": [
+      0.07607822193325359,
+      0.09441947987196159
+    ],
+    "wilson95": [
+      0.07450652706487738,
+      0.09636749425682677
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c2d0a3ecc215d663063b0bef945387372ea8b3282a73c63426cdb202a366da26",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2358,
+    "rejection_rate": 0.9432,
+    "wilson90": [
+      0.9350955710531519,
+      0.9503461884842483
+    ],
+    "wilson95": [
+      0.9334284625722433,
+      0.9516115994465928
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c2d0a3ecc215d663063b0bef945387372ea8b3282a73c63426cdb202a366da26",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 206,
+    "rejection_rate": 0.0824,
+    "wilson90": [
+      0.07379926002516538,
+      0.09190363080782563
+    ],
+    "wilson95": [
+      0.07225117529732272,
+      0.093830210309478
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c2d0a3ecc215d663063b0bef945387372ea8b3282a73c63426cdb202a366da26",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2491,
+    "rejection_rate": 0.9964,
+    "wilson90": [
+      0.9938223549837502,
+      0.9979043811046195
+    ],
+    "wilson95": [
+      0.9931719655145634,
+      0.9981048548512987
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c2d0a3ecc215d663063b0bef945387372ea8b3282a73c63426cdb202a366da26",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "3a82b4507558fb69cb9403b2ace84afe2b5adec582f892e1cf2e596c2ff60e96",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 353,
+    "rejection_rate": 0.1412,
+    "wilson90": [
+      0.13013183197248804,
+      0.15304392767999556
+    ],
+    "wilson95": [
+      0.12809957526979085,
+      0.15540138535214418
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 132,
+    "rejection_rate": 0.0528,
+    "wilson90": [
+      0.04591464284215668,
+      0.06065224600006931
+    ],
+    "wilson95": [
+      0.04469971297298948,
+      0.06227249881666874
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 61,
+    "rejection_rate": 0.0244,
+    "wilson90": [
+      0.019815294167457774,
+      0.030012998170115317
+    ],
+    "wilson95": [
+      0.01904246763941709,
+      0.031216888190550393
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 129,
+    "rejection_rate": 0.0516,
+    "wilson90": [
+      0.04479511415827479,
+      0.0593743691978391
+    ],
+    "wilson95": [
+      0.04359574546860642,
+      0.06098014846360009
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4773dba8a11e758a5fabd5863f159e9a0637d497015e3c69f6f419e2bd40904b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 59,
+    "rejection_rate": 0.0236,
+    "wilson90": [
+      0.0190974562192834,
+      0.02913256579421496
+    ],
+    "wilson95": [
+      0.01834029138220355,
+      0.030321519209462775
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c4c57320232f958844edb402ae3f9270807c80a1423c33e82a1de07644b5061a",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 126,
+    "rejection_rate": 0.0504,
+    "wilson90": [
+      0.043676670585874385,
+      0.058095407284127425
+    ],
+    "wilson95": [
+      0.04249306648917964,
+      0.059686509585575157
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "c4c57320232f958844edb402ae3f9270807c80a1423c33e82a1de07644b5061a",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 56,
+    "rejection_rate": 0.0224,
+    "wilson90": [
+      0.018023496106377563,
+      0.027809120421008696
+    ],
+    "wilson95": [
+      0.017290335242094265,
+      0.02897515749212034
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "c4c57320232f958844edb402ae3f9270807c80a1423c33e82a1de07644b5061a",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 123,
+    "rejection_rate": 0.0492,
+    "wilson90": [
+      0.04255934877902844,
+      0.056815323604861266
+    ],
+    "wilson95": [
+      0.041391719456811804,
+      0.05839153876049126
+    ],
+    "classification": "POINTWISE_PRACTICALLY_CALIBRATED"
+  },
+  {
+    "logical_cell_id": "c4c57320232f958844edb402ae3f9270807c80a1423c33e82a1de07644b5061a",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 64,
+    "T": 12288,
+    "M_expected": 192,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "340b9201a78ef06faea2faf0c280cb1c0c6f6e63d71c1b067381767a62f9578b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 48,
+    "rejection_rate": 0.0192,
+    "wilson90": [
+      0.015177989093397602,
+      0.02426154613768974
+    ],
+    "wilson95": [
+      0.014512188214478864,
+      0.025363123566531146
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "e9188e5af47a5a280f3e59669344ec83359cb49431607d9f3d8caca60475b479",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2439,
+    "rejection_rate": 0.9756,
+    "wilson90": [
+      0.9699870018298846,
+      0.9801847058325421
+    ],
+    "wilson95": [
+      0.9687831118094495,
+      0.9809575323605829
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "e9188e5af47a5a280f3e59669344ec83359cb49431607d9f3d8caca60475b479",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 284,
+    "rejection_rate": 0.1136,
+    "wilson90": [
+      0.10357594467260947,
+      0.124459488799296
+    ],
+    "wilson95": [
+      0.10174933685079304,
+      0.12663631304975245
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "e9188e5af47a5a280f3e59669344ec83359cb49431607d9f3d8caca60475b479",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 2496,
+    "rejection_rate": 0.9984,
+    "wilson90": [
+      0.9964409216562993,
+      0.9992814902422573
+    ],
+    "wilson95": [
+      0.9958930626633852,
+      0.99937762079823
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "e9188e5af47a5a280f3e59669344ec83359cb49431607d9f3d8caca60475b479",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 8,
+    "T": 3120,
+    "M_expected": 383,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "381ca93f4f8660a26b5c52de5070fd016e876a59d54b475fe7fe7e7154100397",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 296,
+    "rejection_rate": 0.1184,
+    "wilson90": [
+      0.10818184245306957,
+      0.1294432129632843
+    ],
+    "wilson95": [
+      0.10631709495349694,
+      0.13165382637685547
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "ef22ffd6f01c036d32e6eeb854a954c43a85e40a02af49a6c164b65b4fe4002d",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 660,
+    "rejection_rate": 0.264,
+    "wilson90": [
+      0.2497597163992634,
+      0.27875053799869126
+    ],
+    "wilson95": [
+      0.24709252724884434,
+      0.28163162745231707
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "ef22ffd6f01c036d32e6eeb854a954c43a85e40a02af49a6c164b65b4fe4002d",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 102,
+    "rejection_rate": 0.0408,
+    "wilson90": [
+      0.03477310409829857,
+      0.04781972988280648
+    ],
+    "wilson95": [
+      0.033723846141628544,
+      0.04928518707351247
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "ef22ffd6f01c036d32e6eeb854a954c43a85e40a02af49a6c164b65b4fe4002d",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 860,
+    "rejection_rate": 0.344,
+    "wilson90": [
+      0.3285487223690664,
+      0.3597885644363611
+    ],
+    "wilson95": [
+      0.32563082311603186,
+      0.3628478554152442
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "ef22ffd6f01c036d32e6eeb854a954c43a85e40a02af49a6c164b65b4fe4002d",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_AR",
+    "W": 64,
+    "stride": 32,
+    "T": 6176,
+    "M_expected": 192,
+    "rho": "f64:3fe999999999999a",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "4d0941f4628d53acecab64057b2f7fd2b77202b672ee40a04ab9a59755ab531a",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 78,
+    "rejection_rate": 0.0312,
+    "wilson90": [
+      0.02596805067746487,
+      0.03744553941474342
+    ],
+    "wilson95": [
+      0.025071494471453733,
+      0.038766995884073494
+    ],
+    "classification": "BOUNDARY_OR_INDETERMINATE"
+  },
+  {
+    "logical_cell_id": "f52652224277c0b819ee6c9783ec1130f630576147744ba3afe4db811189b844",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 300,
+    "rejection_rate": 0.12,
+    "wilson90": [
+      0.10971840044840118,
+      0.13110319561610206
+    ],
+    "wilson95": [
+      0.10784117840473456,
+      0.1333248334022201
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "f52652224277c0b819ee6c9783ec1130f630576147744ba3afe4db811189b844",
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "ba537d4711280b3cb6cda88d20833fc471efef3fedf6fd34b112fe5dd0636def",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 47,
+    "rejection_rate": 0.0188,
+    "wilson90": [
+      0.014824400351937727,
+      0.023815999717112252
+    ],
+    "wilson95": [
+      0.014167400463518647,
+      0.024909138698340796
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "f52652224277c0b819ee6c9783ec1130f630576147744ba3afe4db811189b844",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M0_NAIVE_PERM_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 1205,
+    "rejection_rate": 0.482,
+    "wilson90": [
+      0.4655904606316382,
+      0.4984484570766802
+    ],
+    "wilson95": [
+      0.4624556925854871,
+      0.5015995395527371
+    ],
+    "classification": "MATERIAL_ANTI_CONSERVATISM"
+  },
+  {
+    "logical_cell_id": "f52652224277c0b819ee6c9783ec1130f630576147744ba3afe4db811189b844",
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "method_id": "M1_DMB_R1_TRI_EXTIID_B999_V1",
+    "scenario_id": "h0",
+    "DGP_family": "N_CIRCLE",
+    "W": 64,
+    "stride": 32,
+    "T": 3120,
+    "M_expected": 96,
+    "rho": "f64:0000000000000000",
+    "feature_config_hash": "fb898fc0f7c9d42feec31a8a1ade7659109b66775b701c9f40718fa7510d4e46",
+    "feature_generation_id": "F01",
+    "null_model_config_hash": "129e49eb495075fff93b10556556a258a241d0641601a0bb55dc6ec5d30b2c4b",
+    "source_null_logical_cell_id": null,
+    "n": 2500,
+    "rejects": 41,
+    "rejection_rate": 0.0164,
+    "wilson90": [
+      0.012714263468471675,
+      0.021131325628354118
+    ],
+    "wilson95": [
+      0.012112125252154427,
+      0.02217177819480157
+    ],
+    "classification": "MATERIAL_CONSERVATISM"
+  }
+]

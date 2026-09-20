@@ -24,6 +24,7 @@ This module derives the budget from the frozen plan instead:
 from __future__ import annotations
 
 import hashlib
+import math
 
 from .canonical import canonical_json_bytes
 
@@ -117,6 +118,31 @@ def build_budget(
     for key in REQUIRED_STORAGE_KEYS:
         if key not in storage_policy:
             missing.append(f"storage_policy.{key}")
+    for flag, size_key in (("store_full_feature_matrices", "feature_matrix_bytes"),
+                           ("store_summaries", "summary_bytes"),
+                           ("store_ph_diagrams", "ph_diagram_bytes"),
+                           ("store_resampling_stats", "resampling_stats_row_bytes")):
+        if flag in serialization_schema and type(serialization_schema[flag]) is not bool:
+            missing.append(f"serialization_schema.{flag}: strict bool required")
+        if serialization_schema.get(flag) is True:
+            value = serialization_schema.get(size_key)
+            if type(value) is not int or value <= 0:
+                missing.append(f"serialization_schema.{size_key}: positive bound required")
+    for key in REQUIRED_SCHEMA_KEYS:
+        if key.endswith("bytes") and (type(serialization_schema.get(key)) is not int or serialization_schema[key] <= 0):
+            missing.append(f"serialization_schema.{key}: positive int required")
+    for key in REQUIRED_PROFILE_KEYS:
+        value = profile.get(key)
+        if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
+            missing.append(f"profile.{key}: finite nonnegative measurement required")
+    if not isinstance(volumes, list) or not volumes:
+        missing.append("volumes: real destination capacity is required")
+    if not storage_policy.get("coexisting_stages"):
+        missing.append("coexisting_stages: nonempty")
+    for stage in storage_policy.get("coexisting_stages", []):
+        count = storage_policy.get("copies", {}).get(stage)
+        if type(count) is not int or count <= 0:
+            missing.append(f"copies.{stage}: positive integer required")
     if missing:
         return {
             "status": "INCOMPLETE",
@@ -181,7 +207,7 @@ def build_budget(
         + 2 * float(profile["seal_seconds_per_phase"])
         + float(profile["recovery_seconds"])
     )
-    components["resource_log_bytes"] = int(seconds) * int(schema["resource_row_bytes"])
+    components["resource_log_bytes"] = (math.ceil(seconds) + 2) * int(schema["resource_row_bytes"])
 
     content_total = sum(components.values())
     copies = storage_policy["copies"]

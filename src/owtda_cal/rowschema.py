@@ -109,10 +109,12 @@ class RowSchema:
                         f"field must have a value in {self.schema_name}: {field!r}"
                     )
                 if field in self.floats:
-                    if isinstance(value, bool) or not isinstance(value, (int, float)):
-                        raise RowSchemaError(f"non-numeric float field {field!r}")
-                    if isinstance(value, float) and not math.isfinite(value):
-                        raise RowSchemaError(f"non-finite float field {field!r}")
+                    values = value if isinstance(value, (list, tuple)) else [value]
+                    for v in values:
+                        if isinstance(v, bool) or not isinstance(v, (int, float)):
+                            raise RowSchemaError(f"non-numeric float field {field!r}")
+                        if isinstance(v, float) and not math.isfinite(v):
+                            raise RowSchemaError(f"non-finite float field {field!r}")
                 out[field] = value
         return out
 
@@ -131,7 +133,7 @@ class RowSchema:
             if field == _HASH_FIELD:
                 continue
             if field in self.floats:
-                view[field] = f64_view(value)
+                view[field] = _f64_encode(value)
             else:
                 view[field] = value
         return view
@@ -161,7 +163,7 @@ class RowSchema:
         wire: dict[str, Any] = {}
         for field, value in logical.items():
             if field in self.floats:
-                wire[field] = f64_view(value)
+                wire[field] = _f64_encode(value)
             else:
                 wire[field] = value
         return self.validate_wire(wire)
@@ -189,10 +191,12 @@ class RowSchema:
                     )
                 out[field] = None
             elif field in self.floats:
-                if not isinstance(value, str) or not _F64_HEX_RE.fullmatch(value):
-                    raise RowSchemaError(
-                        f"wire float must match ^f64:[0-9a-f]{{16}}$ in {field!r}: {value!r}"
-                    )
+                values = value if isinstance(value, list) else [value]
+                for v in values:
+                    if not isinstance(v, str) or not _F64_HEX_RE.fullmatch(v):
+                        raise RowSchemaError(
+                            f"wire float must match ^f64:[0-9a-f]{{16}}$ in {field!r}: {v!r}"
+                        )
                 out[field] = value
             else:
                 if value is None:
@@ -207,7 +211,7 @@ class RowSchema:
         logical: dict[str, Any] = {}
         for field, value in wire.items():
             if field in self.floats:
-                logical[field] = _f64_hex_to_float(value)
+                logical[field] = _f64_decode(value)
             else:
                 logical[field] = value
         return self.validate_logical(logical)
@@ -234,6 +238,20 @@ def _f64_hex_to_float(hex_text: str) -> float:
 
     raw = bytes.fromhex(hex_text[len("f64:") :])
     return struct.unpack(">d", raw)[0]
+
+
+def _f64_encode(value: Any) -> Any:
+    """f64-encode a scalar float or a list/tuple of floats (a_r is a vector)."""
+    if isinstance(value, (list, tuple)):
+        return [f64_view(v) for v in value]
+    return f64_view(value)
+
+
+def _f64_decode(value: Any) -> Any:
+    """Decode an f64 hex string or a list of them back to float(s)."""
+    if isinstance(value, list):
+        return [_f64_hex_to_float(v) for v in value]
+    return _f64_hex_to_float(value)
 
 
 __all__ = [

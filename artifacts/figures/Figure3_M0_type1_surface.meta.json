@@ -1,0 +1,12 @@
+{
+  "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
+  "generated_at": "2026-09-19T18:03:54Z",
+  "input_sha256": {
+    "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611",
+    "H1_ALL_16_GEOMETRY_COMPLETE.csv": "8c44d0d47fab6c8e3fb7e20661ca086f4b11ad7e8bd5aada3da03457c620f079",
+    "H1_SCENARIO_DIFFERENCES.csv": "1acc1779d18dae8db4f5708657f32d4a4e6cea32dec47ebc1423165430e683ae"
+  },
+  "kind": "FIGURE",
+  "schema_version": 1,
+  "script_sha256": "835a0c842039692cf2be20bdd7f925aa285b0e7e5c4b64a59fbf0cf490840f80"
+}

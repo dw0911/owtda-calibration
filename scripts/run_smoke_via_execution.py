@@ -1,25 +1,9 @@
-"""Dispatch the smoke phases through the shared execution entry (§4.1, step 8).
+"""Dispatch smoke phase subprocesses in order.
 
-Why this is a wrapper and not a rewrite of ``audit/run_smoke_s03.py``: the phase
-body is ~200 lines of production code whose payloads must stay bitwise identical,
-and changing it can only be validated by a real 20-25 minute smoke run.  So the
-*dispatch* is moved here instead:
-
-* ``execute_plan`` is the single entry; ``mode="SMOKE"`` applies the mode gate
-  (frozen engineering plan + 32 replicates, no size/power/ranking output);
-* one unit per phase, bounded in-flight window (1), so the phases run in order
-  and a latched stop cancels only what has not started;
-* the monitored stop request cancels a phase **before** it starts, which is what
-  "越界后停止派发" means for a two-unit plan;
-* ``audit/run_smoke_s03.py`` runs unchanged, as a subprocess, so the scientific
-  bytes are exactly what the frozen script produces.
-
-``--stub`` replaces the subprocess with a marker-writing command, which is how
-the wiring itself is validated without spending a smoke window.
-
-Usage::
-
-    python scripts/run_smoke_via_execution.py --out <EVIDENCE> --workers 8 [--stub]
+This wrapper now stops launching subsequent phases after a failed phase. It is
+not a per-scientific-unit supervisor: the legacy phase body still owns inner
+parallelism and compute-only monitoring. FULL_SCIENTIFIC_LIFECYCLE admission needs
+the missing production integration; --stub tests dispatch only and never science.
 """
 
 from __future__ import annotations

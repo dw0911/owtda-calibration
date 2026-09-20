@@ -1,0 +1,42 @@
+{
+  "rows": [
+    {
+      "component": "DGP null families",
+      "value": "N_AR (AR(1)), N_CIRCLE (circle random walk)"
+    },
+    {
+      "component": "rho",
+      "value": "0 (IID), 0.8 (dependent)"
+    },
+    {
+      "component": "stride s",
+      "value": "8, 16, 32, 64"
+    },
+    {
+      "component": "budget regimes",
+      "value": "FIXED_M (M=192), FIXED_T (T=3120)"
+    },
+    {
+      "component": "unique H0 cells",
+      "value": "28 (7 geometry x 2 DGP x 2 rho)"
+    },
+    {
+      "component": "H0 replicates R0 / H1 R1",
+      "value": "2500 / 1600"
+    },
+    {
+      "component": "resamples B",
+      "value": "999"
+    },
+    {
+      "component": "feature",
+      "value": "BPI (800-d persistence image), MOMENTS (moments)"
+    },
+    {
+      "component": "method",
+      "value": "M0 naive permutation, M1 DMB"
+    }
+  ],
+  "schema_version": 1,
+  "title": "Experimental design"
+}

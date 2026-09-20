@@ -1,0 +1,18 @@
+{
+  "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
+  "kind": "TABLE_DATA_MANIFEST",
+  "schema_version": 1,
+  "tables": {
+    "H0_pointwise": {
+      "file": "H0_POINTWISE.json",
+      "rows": 112
+    },
+    "H1_percell": {
+      "file": "H1_REANALYSIS.json",
+      "rows": 16
+    },
+    "P1_P3": {
+      "file": "P1_P3_BOOTSTRAP.json"
+    }
+  }
+}

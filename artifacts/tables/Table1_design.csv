@@ -1,0 +1,10 @@
+component,value
+DGP null families,"N_AR (AR(1)), N_CIRCLE (circle random walk)"
+rho,"0 (IID), 0.8 (dependent)"
+stride s,"8, 16, 32, 64"
+budget regimes,"FIXED_M (M=192), FIXED_T (T=3120)"
+unique H0 cells,28 (7 geometry x 2 DGP x 2 rho)
+H0 replicates R0 / H1 R1,2500 / 1600
+resamples B,999
+feature,"BPI (800-d persistence image), MOMENTS (moments)"
+method,"M0 naive permutation, M1 DMB"

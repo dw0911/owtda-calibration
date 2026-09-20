@@ -9,9 +9,18 @@ components.
 
 from __future__ import annotations
 
-from owtda_cal.budget import build_budget, derive_counts
+from owtda_cal.budget import build_budget as _build_budget
+from owtda_cal.budget import derive_counts
 
 GIB = 1024 ** 3
+
+
+def build_budget(**kwargs):
+    # Arithmetic fixtures have an explicit test volume; absent-volume refusal is
+    # separately exercised by the external R4 regressions.
+    kwargs.setdefault("volumes", [{"name": "TEST", "free_bytes": 1000 * GIB}])
+    return _build_budget(**kwargs)
+
 
 
 def _schema(**overrides) -> dict:

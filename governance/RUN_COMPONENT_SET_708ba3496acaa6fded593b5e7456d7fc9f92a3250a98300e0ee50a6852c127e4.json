@@ -1,0 +1,136 @@
+{
+  "binding_authority_phase_seal_hash": null,
+  "code_manifest_refs": [
+    {
+      "generation_id": "F01",
+      "hash": "a5aa2afdb0fd05655664fab0cbde5a7afb43739e877c83d121e2277f397f3bb6",
+      "role": "code",
+      "stable_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"
+    },
+    {
+      "generation_id": "M01",
+      "hash": "7bbe5ca22839a5bc6aee9219fe5dc8096a0fffd58746c87e53ddbde81ecbf750",
+      "role": "code",
+      "stable_id": "M0_NAIVE_PERM_B999_V1"
+    },
+    {
+      "generation_id": "M01",
+      "hash": "7bbe5ca22839a5bc6aee9219fe5dc8096a0fffd58746c87e53ddbde81ecbf750",
+      "role": "code",
+      "stable_id": "M1_DMB_R1_TRI_EXTIID_B999_V1"
+    },
+    {
+      "generation_id": "F01",
+      "hash": "81eb2458a7fdad124288fed7dc1ea05d3fc1267639ea8c63b262e1a204625492",
+      "role": "code",
+      "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
+    },
+    {
+      "generation_id": "D01",
+      "hash": "4ca970353ad1c3d0eb1a040c783e444fc0b9f770479933bfc6ce293e642ddc5d",
+      "role": "code",
+      "stable_id": "SYNTHETIC_CIRCLE_BASED_H1_V1"
+    },
+    {
+      "generation_id": "D01",
+      "hash": "4ca970353ad1c3d0eb1a040c783e444fc0b9f770479933bfc6ce293e642ddc5d",
+      "role": "code",
+      "stable_id": "SYNTHETIC_N_AR_V1"
+    },
+    {
+      "generation_id": "D01",
+      "hash": "4ca970353ad1c3d0eb1a040c783e444fc0b9f770479933bfc6ce293e642ddc5d",
+      "role": "code",
+      "stable_id": "SYNTHETIC_N_CIRCLE_V1"
+    }
+  ],
+  "component_refs": [
+    {
+      "generation_id": "D01",
+      "hash": "95ca841305c3dc04f651812b929b1e305004ae436f6c3ebb6fe4cffaf06a5c75",
+      "role": "data",
+      "stable_id": "SYNTHETIC_CIRCLE_BASED_H1_V1"
+    },
+    {
+      "generation_id": "D01",
+      "hash": "cb780b26ef55a8b154366bd8e0fd3da9daf7cb453a38d6a358d5ad3b972ceb90",
+      "role": "data",
+      "stable_id": "SYNTHETIC_N_AR_V1"
+    },
+    {
+      "generation_id": "D01",
+      "hash": "fb6004a0700ee77b575e6ec04cfa236913262ff34ea97a2b835ac1a02582681c",
+      "role": "data",
+      "stable_id": "SYNTHETIC_N_CIRCLE_V1"
+    },
+    {
+      "generation_id": "F01",
+      "hash": "cda643b042ee6a9d1cfe64a51ce3aa76137f52ad10fd1c496c7cff5f407ef25c",
+      "role": "feature",
+      "stable_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1"
+    },
+    {
+      "generation_id": "F01",
+      "hash": "31983cef0e1cac54d8d0379bb03b64071c27087ab221d1d1f2fe2f12da27ac07",
+      "role": "feature",
+      "stable_id": "MOMENTS_MEAN_COV_FROB_V1"
+    },
+    {
+      "generation_id": "M01",
+      "hash": "92a35611ea2ca661b6bc049f9590ecbeaeb856634a0df073135aff7bcd54d058",
+      "role": "method",
+      "stable_id": "M0_NAIVE_PERM_B999_V1"
+    },
+    {
+      "generation_id": "M01",
+      "hash": "81e067e92daa7f79cfa67b795722092d70d70ed5e9ba454868ac3e1fe1aef899",
+      "role": "method",
+      "stable_id": "M1_DMB_R1_TRI_EXTIID_B999_V1"
+    }
+  ],
+  "compute_git_commit": "352067dc9fac52dd6da81edd549a0417865577e6",
+  "config_refs": [
+    {
+      "generation_id": "C01",
+      "hash": "57367cb7d3436f1f2f83c4339ef0b4e30ed39465cd7fc94209b0c07c17f1db60",
+      "role": "config",
+      "stable_id": "compute_spec"
+    },
+    {
+      "generation_id": "S01",
+      "hash": "8b9590b8db80e0ef412ba9aa0413cfa56fb73bdc997f2414189dc84ff48362e4",
+      "role": "config",
+      "stable_id": "scope_spec"
+    },
+    {
+      "generation_id": "S04",
+      "hash": "62405a54e577e6277e0959f681c12f615cbd5190aec60d86e5ce01640ad98cc6",
+      "role": "config",
+      "stable_id": "smoke_config"
+    }
+  ],
+  "environment_lock_hash": "636bf50745a375e7d286ff9530bbc56885625dc164876b88efc7c12715a668e0",
+  "evidence_generation_id": "G01",
+  "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
+  "ordered_upstream_artifact_refs": [],
+  "parent_phase_seal_hash": null,
+  "phase": "SMOKE_ALT",
+  "project_id": "owtda-cal-r1",
+  "protocol_id": "OWTDA-CAL-R1-PROTOCOL-v1.0",
+  "registry_snapshot_hash": "87a4b696fe099fbf8b8f66b50cd16b54e0578e92282426276da03a2ee9531df3",
+  "root_refs": [
+    {
+      "generation_id": "S04",
+      "hash": "eac6bae17f416207c4f40752e1655bcea0510903e59717ef9983fd4a286dbd37",
+      "role": "root",
+      "stable_id": "smoke"
+    }
+  ],
+  "run_config_manifest_hash": "47e9ca2641c34a19e7fc69b6002e99d5e2066c3daacae7e788100b35aaeb7852",
+  "run_input_bindings_empty_by_contract": false,
+  "run_input_bindings_hash": "e57d068ef35661faa2e7c6054a45edea36d9f86a9299a4f5554d5c3785188545",
+  "run_input_bindings_row_count": 10,
+  "schema_version": 1,
+  "scope_design_hash": "71075b80ff8b55a54bf747769ff5888cee71b93c068d3ed81fa3129e01ba9fdf",
+  "source_tree_hash": "50af05df9e28ed5ca5b932048d3f17822d63f58045f93b11090e804d9433e89e"
+}

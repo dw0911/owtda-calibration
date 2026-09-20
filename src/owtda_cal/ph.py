@@ -25,7 +25,13 @@ from __future__ import annotations
 import warnings
 
 import numpy as np
-from ripser import ripser
+
+
+def ripser(*args, **kwargs):
+    """Load the genuine backend on computation; never return a placeholder."""
+    from ripser import ripser as implementation
+    return implementation(*args, **kwargs)
+
 
 
 class PersistentHomologyError(ValueError):

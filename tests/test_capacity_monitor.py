@@ -256,4 +256,5 @@ class TestPolicyBinding:
         monitor.start()
         time.sleep(0.05)
         monitor.stop()
-        assert {row["policy_sha256"] for row in monitor.rows()} == {policy_sha256()}
+        assert {row["policy_sha256"] for row in monitor.rows()} == {monitor.policy_sha256}
+        assert monitor.policy_sha256 != policy_sha256()  # shortened TEST interval is a different policy

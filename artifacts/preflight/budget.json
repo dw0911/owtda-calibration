@@ -1,0 +1,86 @@
+{
+  "archive_bytes": 982070784,
+  "bound_plan": {
+    "evaluation_index_hashes": {
+      "ALT": "580d8249d9e044fa675dc9e004d3a7a8f7abd49561bda8264ee37c5b789ae1fa",
+      "NULL": "dc7c136d5b2abbe07a6fb833f90516e2cf7f0c45c189bed4af4a418a7673d410"
+    },
+    "formal_scale": true,
+    "totals": {
+      "data_units": 82800,
+      "evaluation_rows": 331200,
+      "feature_rows": 165600
+    }
+  },
+  "budget_hash": "52cb524888eb0913eb1916eabf2964cc1ebb19e53b7683500ee350da844cfe5f",
+  "components": {
+    "data_unit_bytes": 339148800,
+    "evaluation_ledger_bytes": 339148800,
+    "event_attempt_bytes": 84787200,
+    "feature_ledger_bytes": 84787200,
+    "index_bytes": 74188800,
+    "manifest_bytes": 65536,
+    "resampling_stat_bytes": 21196800,
+    "resource_log_bytes": 38600192,
+    "summary_bytes": 147456
+  },
+  "content_total_bytes": 982070784,
+  "counts": {
+    "phases": {
+      "h0": {
+        "data_units": 70000,
+        "evaluation_rows": 280000,
+        "feature_rows": 140000
+      },
+      "h1": {
+        "data_units": 12800,
+        "evaluation_rows": 51200,
+        "feature_rows": 25600
+      }
+    },
+    "totals": {
+      "data_units": 82800,
+      "evaluation_rows": 331200,
+      "feature_rows": 165600
+    }
+  },
+  "disk_fraction": {
+    "den": 5,
+    "num": 4
+  },
+  "formal_measurement": "NOT_YET_OBSERVED",
+  "formal_measurement_note": "the estimate does not require a completed formal run; the formal measurement is reported separately and never fabricated",
+  "kind": "full_scale_budget",
+  "missing": [],
+  "peak_bytes": 4910353920,
+  "recovery_original_bytes": 982070784,
+  "schema_version": 1,
+  "stage_bytes": {
+    "final": 982070784,
+    "merge": 982070784,
+    "staging": 982070784
+  },
+  "status": "APPROVED_ESTIMATE",
+  "stored_objects": {
+    "full_feature_matrices": false,
+    "ph_diagrams": false,
+    "resampling_stats": true,
+    "summaries": true
+  },
+  "time_milliseconds": {
+    "compute": 132480000,
+    "merge": 1200000,
+    "recovery": 300000,
+    "seal": 240000,
+    "serialize": 16560000,
+    "total": 150780000
+  },
+  "volumes": [
+    {
+      "free_bytes": 476391370752,
+      "name": "F:",
+      "projected_bytes": 4910353920,
+      "within_limit": true
+    }
+  ]
+}

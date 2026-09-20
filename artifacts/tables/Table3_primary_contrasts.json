@@ -1,0 +1,45 @@
+{
+  "rows": [
+    {
+      "bootstrap_iterations": 10000,
+      "ci95_basic": [
+        0.521,
+        0.5494
+      ],
+      "claim_state": "SUPPORTED",
+      "contrast": "P1",
+      "p_boot_one_sided": 0.0,
+      "p_holm": 0.0,
+      "point_estimate": 0.5354,
+      "threshold": 0.1
+    },
+    {
+      "bootstrap_iterations": 10000,
+      "ci95_basic": [
+        0.5194,
+        0.5462
+      ],
+      "claim_state": "SUPPORTED",
+      "contrast": "P2",
+      "p_boot_one_sided": 0.0,
+      "p_holm": 0.0,
+      "point_estimate": 0.533,
+      "threshold": 0.1
+    },
+    {
+      "bootstrap_iterations": 10000,
+      "ci95_basic": [
+        0.0224,
+        0.0308
+      ],
+      "claim_state": "SUPPORTED",
+      "contrast": "P3",
+      "p_boot_one_sided": 0.0,
+      "p_holm": 0.0,
+      "point_estimate": 0.0266,
+      "threshold": 0.01
+    }
+  ],
+  "schema_version": 1,
+  "title": "Primary contrasts P1-P3"
+}

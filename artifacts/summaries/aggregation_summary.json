@@ -1,0 +1,40 @@
+{
+  "h0_type1_by_feature_method": {
+    "BPI_FIXE/M0_NAI": {
+      "n": 70000,
+      "rate": 0.426671,
+      "rejects": 29867
+    },
+    "BPI_FIXE/M1_DMB": {
+      "n": 70000,
+      "rate": 0.045786,
+      "rejects": 3205
+    },
+    "MOMENTS_/M0_NAI": {
+      "n": 70000,
+      "rate": 0.546229,
+      "rejects": 38236
+    },
+    "MOMENTS_/M1_DMB": {
+      "n": 70000,
+      "rate": 0.050643,
+      "rejects": 3545
+    }
+  },
+  "h1_power_by_scenario": {
+    "mean_shift": {
+      "localization_mean": 807.826,
+      "localization_median": 64.5,
+      "n": 25600,
+      "rate": 0.578398,
+      "rejects": 14807
+    },
+    "shape_change": {
+      "localization_mean": 776.933,
+      "localization_median": 32.5,
+      "n": 25600,
+      "rate": 0.640508,
+      "rejects": 16397
+    }
+  }
+}

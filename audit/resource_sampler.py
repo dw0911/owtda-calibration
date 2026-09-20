@@ -23,11 +23,12 @@ The thresholds are the frozen ones, quoted rather than restated::
 from __future__ import annotations
 
 import ctypes
+import hashlib
 import json
 import os
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -197,7 +198,10 @@ class CapacityMonitor:
         self.policy = policy or load_policy()
         self.interval_ns = int(self.policy["sampling"]["interval_ns"])
         self.max_gap_ns = int(self.policy["sampling"]["max_interval_ns"])
-        self.policy_sha256 = policy_sha256()
+        # A test policy with a shortened sampling interval has a distinct digest.
+        # Never attribute altered policy contents to the registered file's hash.
+        self.policy_sha256 = (policy_sha256() if self.policy == load_policy() else
+            hashlib.sha256((json.dumps(self.policy, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest())
         self.run_id = run_id
         self.raw_path = Path(raw_path)
         self.stage = stage
@@ -205,6 +209,7 @@ class CapacityMonitor:
         self._stop = threading.Event()
         self._rows: list[dict[str, Any]] = []
         self._lock = threading.Lock()
+        self._sample_lock = threading.RLock()
         self._seq = 0
         self._thread: threading.Thread | None = None
         self._handle = None
@@ -212,6 +217,8 @@ class CapacityMonitor:
         self._incomplete: list[str] = []
         self._breaches: list[dict[str, Any]] = []
         self._boundary = {"start": False, "end": False}
+        self._started = False
+        self._closed = False
 
     # -- lifecycle --------------------------------------------------------- #
     def __enter__(self) -> CapacityMonitor:  # noqa: PYI034 - explicit return type
@@ -223,10 +230,15 @@ class CapacityMonitor:
         return False
 
     def start(self) -> None:
+        if self._started or self._closed:
+            raise RuntimeError("capacity monitor cannot be started twice")
+        if not isinstance(self.run_id, str) or not self.run_id.strip():
+            raise ValueError("run identity is required")
         self.raw_path.parent.mkdir(parents=True, exist_ok=True)
         # The handle stays open for the whole stage -- sampling must not reopen
         # the file per sample, and the rows must keep their append order.
-        self._handle = open(self.raw_path, "a", encoding="utf-8")  # noqa: SIM115
+        self._handle = open(self.raw_path, "x", encoding="utf-8")  # noqa: SIM115
+        self._started = True
         self._write_sample(stage="start")
         if self._rows and self._rows[-1].get("ok") is True:
             self._boundary["start"] = True
@@ -236,10 +248,25 @@ class CapacityMonitor:
         self._thread.start()
 
     def set_stage(self, stage: str) -> None:
-        with self._lock:
-            self.stage = stage
+        """Enter a new stage **and record the boundary in the raw stream**.
+
+        R4 block B: stage labels only ride on emitted samples, so a caller that moves
+        to "persist"/"seal" and finishes quickly leaves no evidence that the stage was
+        covered at all -- a relabelled summary, not coverage.  Writing one boundary
+        row per transition puts each stage's start into the raw file, which is what a
+        seal can quote.
+        """
+        with self._sample_lock:
+            with self._lock:
+                previous, self.stage = self.stage, stage
+            if stage != previous:
+                self._write_sample(stage=stage)
 
     def stop(self) -> dict[str, Any]:
+        if self._closed:
+            return self.summary()
+        if not self._started:
+            raise RuntimeError("capacity monitor was not started")
         self._stop.set()
         if self._thread is not None:
             self._thread.join(timeout=2.0)
@@ -255,19 +282,24 @@ class CapacityMonitor:
             os.fsync(self._handle.fileno())
             self._handle.close()
             self._handle = None
+        self._closed = True
         return self.summary()
 
     # -- sampling ---------------------------------------------------------- #
     def _loop(self) -> None:
         try:
             while not self._stop.is_set():
-                self._write_sample(stage=self.stage)
+                self._write_sample()
                 self._stop.wait(self.interval_ns / 1e9)
         except Exception as exc:  # noqa: BLE001 - the thread must not die silently
             self._latch_incomplete(f"sampler_exception:{type(exc).__name__}")
             self.stop_requested.set()
 
-    def _write_sample(self, *, stage: str) -> None:
+    def _write_sample(self, *, stage: str | None = None) -> None:
+        with self._sample_lock:
+            self._write_sample_serial(stage=self.stage if stage is None else stage)
+
+    def _write_sample_serial(self, *, stage: str) -> None:
         from owtda_cal.resource_policy import inspect_row
 
         now_ns = time.monotonic_ns()
@@ -340,7 +372,9 @@ class CapacityMonitor:
     def verdict(self) -> dict[str, Any]:
         from owtda_cal.resource_policy import evaluate_capacity
 
-        decision = evaluate_capacity(self.rows(), policy=self.policy)
+        decision = evaluate_capacity(self.rows(), policy=self.policy,
+            expected_run_id=self.run_id, expected_policy_sha256=self.policy_sha256,
+            require_boundaries=True)
         with self._lock:
             incomplete = list(self._incomplete)
             breaches = list(self._breaches)
@@ -366,8 +400,161 @@ class CapacityMonitor:
         return self.verdict()
 
 
+def stage_coverage(
+    rows: Sequence[dict[str, Any]],
+    *,
+    required: Sequence[str] = ("start", "compute", "persist", "teardown"),
+) -> dict[str, Any]:
+    """Report which stages the raw sample stream **actually** covers.
+
+    R4 block B: a stage label only counts as coverage when a sample carrying it is
+    present in the raw file.  A caller that intends to cover "persist" but emits no
+    sample during it has relabelled a summary, not extended coverage -- which is
+    exactly the difference the audit insists on.  Returns per stage the sample count
+    and the row range, plus the stages that never appear, so a seal can refuse
+    instead of quoting an intended-but-absent stage.
+    """
+    seen: dict[str, dict[str, int]] = {}
+    for index, row in enumerate(rows):
+        stage = str(row.get("stage") or "")
+        entry = seen.get(stage)
+        if entry is None:
+            seen[stage] = {"samples": 1, "first_row": index, "last_row": index}
+        else:
+            entry["samples"] += 1
+            entry["last_row"] = index
+    missing = [stage for stage in required if stage not in seen]
+    return {
+        "required": list(required),
+        "stages": seen,
+        "missing": missing,
+        "complete": not missing,
+        "rows": len(rows),
+    }
+
+
+class ResourceStageCoverageError(RuntimeError):
+    """Raised when a phase's raw stream does not cover the required stages."""
+
+
+def assert_stage_coverage(
+    rows: Sequence[dict[str, Any]],
+    *,
+    phase: str,
+    required: Sequence[str] = ("start", "compute", "persist", "teardown"),
+) -> dict[str, Any]:
+    """Return the coverage report, or refuse with an **attributable** error.
+
+    R4 block B: sealing a phase whose stages were not observed would imply coverage
+    the raw stream does not support.  The refusal names the missing stages, so the
+    shortfall can be attributed instead of surfacing as a generic failure -- and the
+    gate is callable on its own, which is what makes the refusal testable without
+    running a smoke.
+    """
+    coverage = stage_coverage(rows, required=required)
+    if not coverage["complete"]:
+        raise ResourceStageCoverageError(
+            f"{phase}: the raw stream does not cover {coverage['missing']}; refusing to "
+            "seal a phase whose resource stages were not observed"
+        )
+    return coverage
+
+
+FULL_LIFECYCLE_STAGES: tuple[str, ...] = (
+    "start", "compute", "persist", "commit", "seal", "cleanup", "teardown",
+)
+
+
+def merge_final_verdict(
+    resources: dict[str, Any],
+    verdict: dict[str, Any],
+    *,
+    observed_stages: Sequence[str],
+    required_stages: Sequence[str] = FULL_LIFECYCLE_STAGES,
+) -> dict[str, Any]:
+    """Close a provisional capacity record with the **final** verdict (R4 plan A).
+
+    With ``keep_open`` the phase keeps sampling through persistence, shard commit,
+    sealing and cleanup.  The record handed to the seal is therefore provisional by
+    construction -- the monitor's verdict only exists once it is stopped -- so the seal
+    states its coverage as-of-seal-time and the *verdict* is recorded afterwards as a
+    chained event.  This helper performs that closing step: it writes the final verdict
+    into the record and states which lifecycle stages were actually observed, so
+    nothing has to pretend the provisional record was final.
+    """
+    capacity = dict(resources.get("capacity_sampling") or {})
+    status = verdict.get("status")
+    capacity.update({
+        "status": status,
+        "provisional": False,
+        "incomplete": status != "PASS",
+        "raw_samples": verdict.get("samples"),
+        "peak_commit_ratio": verdict.get("peak_commit_ratio"),
+        "incomplete_reasons": list(verdict.get("incomplete_reasons") or []),
+        "breaches": list(verdict.get("breaches") or []),
+    })
+    resources["capacity_sampling"] = capacity
+    # Re-bind the raw stream to its final bytes.  The stream legitimately grows until
+    # the monitor stops (cleanup and teardown rows are written *after* the seal), so the
+    # hash bound at assembly time is stale by construction.  A stale binding makes the
+    # raw rebuild refuse -- which used to degrade into four breach-looking False flags
+    # instead of an attributable INCOMPLETE.  Rebinding here is what keeps the verdict
+    # and the record on the same bytes.
+    raw_path = resources.get("capacity_raw_path")
+    if raw_path:
+        path = Path(raw_path)
+        if path.is_file():
+            from owtda_cal.resource_policy import policy_sha256
+
+            blob = path.read_bytes()
+            resources["capacity_raw_sha256"] = hashlib.sha256(blob).hexdigest()
+            resources["capacity_policy_sha256"] = policy_sha256()
+            root = resources.get("evidence_root")
+            try:
+                resources["capacity_raw_relative_path"] = (
+                    path.relative_to(Path(root)).as_posix() if root else path.name
+                )
+            except ValueError:
+                resources["capacity_raw_relative_path"] = path.name
+            # Backfill the fields the boundary-aware rebuild needs, from the *final*
+            # rows.  They were written at assembly time, before cleanup/teardown landed,
+            # and a missing protected boundary makes evaluate_capacity(require_boundaries)
+            # latch INCOMPLETE -- which then overwrites an otherwise-correct verdict.
+            rows = [json.loads(line) for line in blob.decode("utf-8").splitlines() if line.strip()]
+            good = [r for r in rows if r.get("ok") is True]
+            cap = resources.setdefault("capacity_sampling", {})
+            cap["samples"] = len(rows)
+            cap["missing"] = len(rows) - len(good)
+            cap["raw_samples"] = len(rows)
+            if good:
+                resources["peak_total_rss_bytes"] = max(r["rss_tree_bytes"] for r in good)
+                resources["protected_start_ns"] = good[0]["monotonic_ns"]
+                resources["protected_end_ns"] = good[-1]["monotonic_ns"]
+                cap["commit_total_peak_bytes"] = max(r["commit_total_bytes"] for r in good)
+                cap["commit_limit_bytes"] = good[-1]["commit_limit_bytes"]
+                cap["physical_total_bytes"] = good[-1]["physical_total_bytes"]
+                cap["physical_available_min_bytes"] = min(r["physical_available_bytes"] for r in good)
+    missing = [s for s in required_stages if s not in observed_stages]
+    # The scope label is *derived* from what was observed, never asserted: the assembly
+    # writes it before the later stages run, so closing the record has to restate it.
+    # (Audit: "COMPUTE_ONLY 不能改个标签就成为完整监控.")
+    resources["capacity_coverage_scope"] = (
+        "FULL_SCIENTIFIC_LIFECYCLE" if not missing else "PARTIAL:" + ",".join(missing)
+    )
+    resources["stage_coverage"] = {
+        "required": list(required_stages),
+        "observed": list(observed_stages),
+        "not_observed": missing,
+        "verdict_recorded_post_seal": True,
+    }
+    return resources
+
+
 def sample_run(
-    runner: Callable[..., Any], *, evidence_root: Path, run_id: str = "run", **kwargs: Any
+    runner: Callable[..., Any], *, evidence_root: Path, run_id: str,
+    on_compute_done: Callable[[Any], None] | None = None,
+    keep_open: bool = False, monitor_holder: dict[str, Any] | None = None,
+    **kwargs: Any,
 ) -> tuple[Any, dict[str, Any]]:
     """Run ``runner(**kwargs)`` while sampling the resources that run consumes.
 
@@ -385,6 +572,8 @@ def sample_run(
     """
     import psutil
 
+    if keep_open and monitor_holder is None:
+        raise ValueError("keep_open requires a monitor_holder owner")
     proc = psutil.Process()
     samples: list[int] = []
     swap_before = int(psutil.swap_memory().used)
@@ -452,16 +641,53 @@ def sample_run(
 
     thread = threading.Thread(target=sampler, daemon=True)
     thread.start()
-    raw_path = Path(evidence_root) / "resources" / "capacity_raw.jsonl"
+    raw_path = Path(evidence_root) / "resources" / ("capacity_" + hashlib.sha256(run_id.encode()).hexdigest()[:20] + ".jsonl")
     monitor = CapacityMonitor(run_id=run_id, raw_path=raw_path, stage="compute")
-    monitor.start()
     started = time.time()
+    compute_succeeded = False
     try:
-        result = runner(**kwargs)
+        monitor.start()
+        # R4 block B: hand the live monitor to the phase runner so a latched
+        # capacity/timer stop prevents *new scientific units* from being dispatched
+        # inside the phase, rather than only stopping between phases.  Runners that
+        # do not accept the parameter keep their historical call shape.
+        import inspect
+
+        if "monitor" in inspect.signature(runner).parameters:
+            result = runner(monitor=monitor, **kwargs)
+        else:
+            result = runner(**kwargs)
+        # R4 block B: the monitor stays open across whatever the caller still has to
+        # do (ledger write, shard commit, seal, worker cleanup).  A breach latched in
+        # that window is recorded and cannot be dropped by stopping the sampler early.
+        # The hook receives the finished result, because writing the ledger and
+        # sealing the phase need it and must happen inside the sampling window.
+        if on_compute_done is not None:
+            on_compute_done(monitor, result)
+        compute_succeeded = True
     finally:
         stop.set()
         thread.join(timeout=2.0)
-        monitor_verdict = monitor.stop()
+        # R4 block B: with ``keep_open`` the caller owns the monitor's lifecycle, so a
+        # phase keeps sampling while it writes the ledger, commits shards and seals --
+        # and then stops the monitor itself and quotes the final verdict.  Without it
+        # the historical behaviour is unchanged.  When keep_open is used, the returned
+        # ``resources`` are *provisional*: the holder says so explicitly, so no caller
+        # can quote a verdict that was taken before the stages it runs afterwards.
+        # R4 block B: with ``keep_open`` the caller owns the monitor's lifecycle, so a
+        # phase keeps sampling while it writes the ledger, commits shards and seals --
+        # and then stops the monitor itself and quotes the final verdict.  The record
+        # assembled below is then explicitly provisional (status OPEN), so nothing can
+        # be quoted as final before the stages that run afterwards have been observed.
+        keep_live = keep_open and compute_succeeded
+        monitor_verdict = None
+        if not keep_live and monitor._started and not monitor._closed:
+            monitor_verdict = monitor.stop()
+        if keep_open and monitor_holder is not None:
+            monitor_holder["monitor"] = monitor
+            monitor_holder["resources_provisional"] = keep_live
+            if not compute_succeeded:
+                monitor_holder["failure_resource_verdict"] = monitor_verdict
 
     own_after = own_pagefile_bytes(proc)
     peak = max(samples) if samples else None
@@ -469,6 +695,15 @@ def sample_run(
     # NOTE: this record is embedded in the seal, and the seal hash is taken over a
     # *canonical* payload in which bare floats are forbidden.  Everything here is
     # therefore int/str/None only; the GiB figure is derived by the checks.
+    raw_rows = monitor.rows()
+    good_rows = [r for r in raw_rows if r.get("ok") is True]
+    if good_rows:
+        peak = max(r["rss_tree_bytes"] for r in good_rows)
+        capacity.update(samples=len(raw_rows), missing=len(raw_rows)-len(good_rows),
+            commit_total_peak_bytes=max(r["commit_total_bytes"] for r in good_rows),
+            commit_limit_bytes=good_rows[-1]["commit_limit_bytes"],
+            physical_total_bytes=good_rows[-1]["physical_total_bytes"],
+            physical_available_min_bytes=min(r["physical_available_bytes"] for r in good_rows))
     resources: dict[str, Any] = {
         "schema_version": 1,
         "kind": "run_resources_v1",
@@ -521,8 +756,15 @@ def sample_run(
         # diagnostic only).  Missing samples or a gap -> incomplete, never a zero.
         "capacity_sampling": {
             **capacity,
+            # ``keep_open``: the monitor is still sampling, so there is no final verdict
+            # yet.  The record says OPEN -- never PASS/FAIL -- and carries a pending
+            # reason, so a provisional record cannot be quoted as an acceptance result.
+            # The caller replaces this block after it stops the monitor itself.
+            "status": (monitor_verdict or {}).get("status", "OPEN"),
+            "provisional": monitor_verdict is None,
             "incomplete": bool(
-                capacity["missing"]
+                monitor_verdict is None
+                or capacity["missing"]
                 or capacity["samples"] == 0
                 or capacity["max_gap_milliseconds"]
                 > CAPACITY_INTERVAL_S * CAPACITY_MAX_GAP_FACTOR * 1000
@@ -530,14 +772,20 @@ def sample_run(
             ),
             # The authoritative record: every sample, both counters of a ratio on
             # the same row.  ``resource_verdict`` rebuilds the decision from it.
-            "status": monitor_verdict["status"],
             "raw_path": str(raw_path),
-            "raw_samples": monitor_verdict["samples"],
-            "peak_commit_ratio": monitor_verdict["peak_commit_ratio"],
-            "incomplete_reasons": monitor_verdict["incomplete_reasons"],
-            "breaches": monitor_verdict["breaches"],
+            "raw_samples": (monitor_verdict or {}).get("samples"),
+            "peak_commit_ratio": (monitor_verdict or {}).get("peak_commit_ratio"),
+            "incomplete_reasons": list(
+                (monitor_verdict or {}).get("incomplete_reasons") or []
+            ) + ([] if monitor_verdict is not None else ["keep_open: verdict pending"]),
+            "breaches": list((monitor_verdict or {}).get("breaches") or []),
         },
+        "run_id": run_id,
         "capacity_raw_path": str(raw_path),
+        "capacity_raw_relative_path": raw_path.relative_to(evidence_root).as_posix(),
+        "capacity_raw_sha256": hashlib.sha256(raw_path.read_bytes()).hexdigest(),
+        "capacity_policy_sha256": monitor.policy_sha256,
+        "capacity_coverage_scope": "COMPUTE_ONLY",
         "resource_allocation_failures": None,  # set by the runner once errors are known
     }
     return result, resources
@@ -560,26 +808,52 @@ def finalize_persistence(resources: dict[str, Any], *, evidence_root: Path) -> d
     return resources
 
 
-def _checks_from_raw_rows(resources: dict[str, Any]) -> dict[str, bool] | None:
-    """Rebuild the four capacity checks from the raw JSONL rows, if they exist."""
-    from owtda_cal.resource_policy import evaluate_capacity, load_policy
-
-    raw_path = resources.get("capacity_raw_path")
-    if not raw_path or not Path(raw_path).is_file():
+def _load_raw_capacity(resources: dict[str, Any], *, evidence_root: Path | None = None) -> dict[str, Any] | None:
+    """Load and bind raw samples, returning no invented observations on failure."""
+    from owtda_cal.resource_policy import evaluate_capacity, load_policy, policy_sha256
+    try:
+        rel = resources.get("capacity_raw_relative_path")
+        if evidence_root is not None:
+            if not rel:
+                return None
+            root = Path(evidence_root).resolve()
+            path = (root / rel).resolve()
+            if not path.is_relative_to(root):
+                return None
+        else:
+            path = Path(resources["capacity_raw_path"])
+        blob = path.read_bytes()
+        if hashlib.sha256(blob).hexdigest() != resources.get("capacity_raw_sha256"):
+            return None
+        if resources.get("capacity_policy_sha256") != policy_sha256():
+            return None
+        run_id = resources.get("run_id")
+        if not isinstance(run_id, str) or not run_id:
+            return None
+        rows = [json.loads(line) for line in blob.splitlines() if line.strip()]
+        decision = evaluate_capacity(rows, policy=load_policy(), expected_run_id=run_id,
+            expected_policy_sha256=resources["capacity_policy_sha256"], require_boundaries=True,
+            expected_start_ns=resources.get("protected_start_ns"),
+            expected_end_ns=resources.get("protected_end_ns"))
+        if resources.get("capacity_coverage_scope") == "FULL_SCIENTIFIC_LIFECYCLE":
+            start, end = resources.get("protected_start_ns"), resources.get("protected_end_ns")
+            if type(start) is not int or type(end) is not int or not 0 <= start <= end:
+                decision["issues"].append("protected lifecycle boundaries missing/invalid")
+                decision["verdict"] = "INCOMPLETE"
+        decision["raw_rows"] = rows
+        return decision
+    except (OSError, ValueError, KeyError, TypeError):
         return None
-    rows = [
-        json.loads(line)
-        for line in Path(raw_path).read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    decision = evaluate_capacity(rows, policy=load_policy())
-    codes = {b["code"] for b in decision["breaches"]}
-    return {
-        "capacity_sampling_complete": decision["verdict"] != "INCOMPLETE",
-        "host_commit_fraction_within_limit": "COMMIT_RATIO_BREACH" not in codes,
-        "host_available_phys_within_minimum": "PHYSICAL_FLOOR_BREACH" not in codes,
-        "peak_total_rss_within_limit": "RSS_BREACH" not in codes,
-    }
+
+
+def _checks_from_raw_rows(resources: dict[str, Any], *, evidence_root: Path | None = None) -> dict[str, bool]:
+    decision = _load_raw_capacity(resources, evidence_root=evidence_root)
+    valid = decision is not None and decision["verdict"] != "INCOMPLETE"
+    codes = {b["code"] for b in decision["breaches"]} if decision else set()
+    return {"capacity_sampling_complete": valid,
+            "host_commit_fraction_within_limit": valid and "COMMIT_RATIO_BREACH" not in codes,
+            "host_available_phys_within_minimum": valid and "PHYSICAL_FLOOR_BREACH" not in codes,
+            "peak_total_rss_within_limit": valid and "RSS_BREACH" not in codes}
 
 
 def resource_verdict(
@@ -588,6 +862,7 @@ def resource_verdict(
     unexplained_errors: int,
     limits: dict[str, Any] | None = None,
     policy: dict[str, Any] | None = None,
+    evidence_root: Path | None = None,
 ) -> dict[str, Any]:
     """Evaluate one run against AM_RESOURCE_CAPACITY_V2 (ruling 2026-09-13).
 
@@ -629,12 +904,34 @@ def resource_verdict(
     # Re-audit 2026-09-13: when the raw per-sample rows exist, the hard capacity
     # checks are rebuilt from them (same-sample paired counters, integer compare)
     # instead of trusting the summary's own "incomplete" flag.
-    raw_checks = _checks_from_raw_rows(resources)
+    raw_checks = _checks_from_raw_rows(resources, evidence_root=evidence_root)
+    raw_decision = _load_raw_capacity(resources, evidence_root=evidence_root)
+    summary_consistent = True
+    if raw_decision is not None and raw_decision["verdict"] != "INCOMPLETE":
+        rows = raw_decision["raw_rows"]
+        paired = raw_decision["peak_commit_ratio"]
+        fraction = paired["num"] / paired["den"] if paired else None
+        observed_rss = max(row["rss_tree_bytes"] for row in rows)
+        if peak_bytes is not None and peak_bytes != observed_rss:
+            summary_consistent = False
+        peak_bytes, peak_gib = observed_rss, observed_rss / GIB
+        expected_fields = {"samples": len(rows), "missing": 0,
+            "commit_total_peak_bytes": max(row["commit_total_bytes"] for row in rows),
+            "commit_limit_bytes": rows[-1]["commit_limit_bytes"],
+            "physical_total_bytes": rows[-1]["physical_total_bytes"],
+            "physical_available_min_bytes": min(row["physical_available_bytes"] for row in rows)}
+        for key, expected in expected_fields.items():
+            if key in capacity and capacity[key] != expected:
+                summary_consistent = False
+        if capacity.get("incomplete") is not False:
+            summary_consistent = False
     written = resources.get("evidence_bytes_written")
     free = resources.get("disk_free_before_bytes")
     allocation_failures = resources.get("resource_allocation_failures")
     checks = {
         "resources_recorded": True,
+        "raw_summary_consistent": summary_consistent,
+        "complete_lifecycle_observed": resources.get("capacity_coverage_scope") == "FULL_SCIENTIFIC_LIFECYCLE",
         "capacity_sampling_complete": capacity.get("incomplete") is False,
         "peak_total_rss_within_limit": bool(
             peak_gib is not None
@@ -649,11 +946,11 @@ def resource_verdict(
             and physical_min_required is not None
             and available >= physical_min_required
         ),
-        "resource_allocation_failures_within_limit": allocation_failures == 0,
+        "resource_allocation_failures_within_limit": type(allocation_failures) is int and allocation_failures == 0,
         "unexplained_errors_within_limit": bool(
-            unexplained_errors <= int(hard["unexplained_errors_max"])
+            type(unexplained_errors) is int and 0 <= unexplained_errors <= int(hard["unexplained_errors_max"])
         ),
-        "disk_rule": bool(written is not None and free and written <= 0.8 * free),
+        "disk_rule": bool(type(written) is int and written >= 0 and type(free) is int and free > 0 and 5 * written <= 4 * free),
     }
     if raw_checks is not None:
         checks.update(raw_checks)
@@ -691,6 +988,6 @@ def resource_verdict(
                 "faults and system paging rates neither pass nor fail a run"
             ),
         },
-        "status": "PASS" if passed else "FAIL",
+        "status": "PASS" if passed else "INCOMPLETE" if not raw_checks["capacity_sampling_complete"] or not checks["complete_lifecycle_observed"] else "FAIL",
         "passed": passed,
     }

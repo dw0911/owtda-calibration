@@ -1,0 +1,38 @@
+{
+  "rows": [
+    {
+      "BOUNDARY_OR_INDETERMINATE": 1,
+      "MATERIAL_ANTI_CONSERVATISM": 20,
+      "MATERIAL_CONSERVATISM": 0,
+      "POINTWISE_PRACTICALLY_CALIBRATED": 7,
+      "feature": "BPI_FIX",
+      "method": "M0_NAI"
+    },
+    {
+      "BOUNDARY_OR_INDETERMINATE": 6,
+      "MATERIAL_ANTI_CONSERVATISM": 7,
+      "MATERIAL_CONSERVATISM": 10,
+      "POINTWISE_PRACTICALLY_CALIBRATED": 5,
+      "feature": "BPI_FIX",
+      "method": "M1_DMB"
+    },
+    {
+      "BOUNDARY_OR_INDETERMINATE": 2,
+      "MATERIAL_ANTI_CONSERVATISM": 20,
+      "MATERIAL_CONSERVATISM": 0,
+      "POINTWISE_PRACTICALLY_CALIBRATED": 6,
+      "feature": "MOMENTS",
+      "method": "M0_NAI"
+    },
+    {
+      "BOUNDARY_OR_INDETERMINATE": 8,
+      "MATERIAL_ANTI_CONSERVATISM": 7,
+      "MATERIAL_CONSERVATISM": 12,
+      "POINTWISE_PRACTICALLY_CALIBRATED": 1,
+      "feature": "MOMENTS",
+      "method": "M1_DMB"
+    }
+  ],
+  "schema_version": 1,
+  "title": "Calibration-boundary summary (counts per cell)"
+}

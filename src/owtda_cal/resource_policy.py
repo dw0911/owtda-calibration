@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 POLICY_FILENAME = "RESOURCE_POLICY_EXECUTABLE.json"
@@ -137,9 +138,13 @@ def inspect_row(row: dict, *, policy: dict) -> dict:
                     "detail": f"commit ratio {commit_total}/{commit_limit} > "
                               f"{ratio['num']}/{ratio['den']}",
                 })
+    if phys_total is not None and phys_total == 0:
+        issues.append(f"seq={seq}: physical_total_bytes must be positive")
+    if phys_avail is not None and phys_total is not None and phys_avail > phys_total:
+        issues.append(f"seq={seq}: available physical exceeds total physical")
     if phys_avail is not None and phys_total is not None:
         required = max(int(floor["absolute_bytes"]),
-                       (floor_frac["num"] * phys_total) // floor_frac["den"])
+                       (floor_frac["num"] * phys_total + floor_frac["den"] - 1) // floor_frac["den"])
         if phys_avail < required:
             breaches.append({
                 "code": "PHYSICAL_FLOOR_BREACH", "seq": seq,
@@ -153,7 +158,14 @@ def inspect_row(row: dict, *, policy: dict) -> dict:
     return {"issues": issues, "breaches": breaches, "ratio": ratio_seen, "ok": True}
 
 
-def evaluate_capacity(rows: list[dict], *, policy: dict) -> dict:
+def evaluate_capacity(
+    rows: list[dict], *, policy: dict,
+    expected_run_id: str | None = None,
+    expected_policy_sha256: str | None = None,
+    require_boundaries: bool = False,
+    expected_start_ns: int | None = None,
+    expected_end_ns: int | None = None,
+) -> dict:
     """Rebuild the capacity verdict from raw samples; pure, no I/O.
 
     ``rows`` are the raw JSONL samples of one stage.  The verdict is
@@ -169,12 +181,43 @@ def evaluate_capacity(rows: list[dict], *, policy: dict) -> dict:
     previous_ns: int | None = None
     gap_too_large = False
 
-    for row in rows:
+    stream_run = expected_run_id
+    stream_policy = expected_policy_sha256
+    if not isinstance(rows, list):
+        rows = []
+        issues.append("samples must be a list")
+    for position, row in enumerate(rows):
+        if not isinstance(row, dict):
+            issues.append(f"sample {position}: expected an object")
+            continue
         seq = row.get("seq")
+        if type(seq) is not int or seq != position:
+            issues.append(f"sample {position}: non-contiguous or duplicate seq {seq!r}")
+        run_id = row.get("run_id")
+        digest = row.get("policy_sha256")
+        if not isinstance(run_id, str) or not run_id:
+            issues.append(f"seq={seq}: missing run identity")
+        elif stream_run is None:
+            stream_run = run_id
+        elif run_id != stream_run:
+            issues.append(f"seq={seq}: run identity mismatch")
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest) or digest == "0" * 64:
+            issues.append(f"seq={seq}: invalid policy digest")
+        elif stream_policy is None:
+            stream_policy = digest
+        elif digest != stream_policy:
+            issues.append(f"seq={seq}: policy identity mismatch")
+        if row.get("ok") is True and row.get("error") is not None:
+            issues.append(f"seq={seq}: successful sample carries an error")
         now_ns = row.get("monotonic_ns")
-        if isinstance(now_ns, bool) or not isinstance(now_ns, int):
+        if type(now_ns) is not int or now_ns < 0:
             issues.append(f"seq={seq}: monotonic_ns missing or not an int ({now_ns!r})")
         else:
+            # A monotonic clock may return the same value within one hardware
+            # tick (notably GetTickCount64 on CPython 3.12 / Windows). Sequence
+            # numbers supply strict sample ordering; timestamps must not regress.
+            if previous_ns is not None and now_ns < previous_ns:
+                issues.append(f"seq={seq}: timestamps must not go backwards")
             if previous_ns is not None and now_ns - previous_ns > max_gap_ns:
                 gap_too_large = True
                 issues.append(
@@ -194,6 +237,21 @@ def evaluate_capacity(rows: list[dict], *, policy: dict) -> dict:
 
     if not rows:
         issues.append("zero samples: the stage was never observed")
+    if require_boundaries and rows:
+        if not isinstance(rows[0], dict) or rows[0].get("stage") != "start":
+            issues.append("start boundary sample missing")
+        if not isinstance(rows[-1], dict) or rows[-1].get("stage") != "teardown":
+            issues.append("end boundary sample missing")
+        if len(rows) < 2:
+            issues.append("a complete stream needs both boundary samples")
+    if rows and expected_start_ns is not None and (
+        rows[0].get("monotonic_ns", expected_start_ns + 1) > expected_start_ns
+    ):
+        issues.append("sampling starts after the protected work")
+    if rows and expected_end_ns is not None and (
+        rows[-1].get("monotonic_ns", expected_end_ns - 1) < expected_end_ns
+    ):
+        issues.append("sampling ends before the protected work")
     if gap_too_large:
         issues.append("sampling gap exceeded the policy maximum")
 
@@ -206,7 +264,7 @@ def evaluate_capacity(rows: list[dict], *, policy: dict) -> dict:
     return {
         "verdict": verdict,
         "samples": len(rows),
-        "ok_samples": sum(1 for row in rows if row.get("ok") is True),
+        "ok_samples": sum(1 for row in rows if isinstance(row, dict) and row.get("ok") is True),
         "peak_commit_ratio": (
             {"num": peak["commit"], "den": peak["limit"]} if peak else None
         ),
@@ -223,7 +281,7 @@ def preflight_capacity(
     physical_available_bytes: int | None = None,
     physical_total_bytes: int | None = None,
     volumes: list[dict] | None = None,
-    workers: int = 8,
+    workers: int | None = None,
     policy: dict,
 ) -> dict:
     """The pre-flight inequality (§3.5): ``C_baseline + ΔC_hat <= 4/5 L``.
@@ -247,14 +305,20 @@ def preflight_capacity(
         if isinstance(value, bool) or not isinstance(value, int) or value < 0:
             raise ResourcePolicyError(f"{name} must be a non-negative int, got {value!r}")
 
-    delta_with_margin = (delta_commit_bytes * margin["num"]) // margin["den"]
+    workers = policy["limits"]["workers"] if workers is None else workers
+    delta_with_margin = (delta_commit_bytes * margin["num"] + margin["den"] - 1) // margin["den"]
     projected = baseline_commit_bytes + delta_with_margin
     lhs = projected * ratio["den"]
     rhs = ratio["num"] * commit_limit_bytes
     commit_ok = lhs <= rhs
 
     checks = {
-        "commit_projection_within_limit": commit_ok,
+        "commit_projection_within_limit": commit_ok and commit_limit_bytes > 0,
+        "workers_match_policy": type(workers) is int and workers == policy["limits"]["workers"],
+        "physical_measurements_complete": (
+            type(physical_available_bytes) is int and type(physical_total_bytes) is int
+            and physical_total_bytes > 0 and 0 <= physical_available_bytes <= physical_total_bytes),
+        "volume_measurements_complete": isinstance(volumes, list) and bool(volumes),
     }
     reasons: list[str] = []
     if not commit_ok:
@@ -263,9 +327,9 @@ def preflight_capacity(
             f"of L = {commit_limit_bytes}"
         )
 
-    if physical_available_bytes is not None and physical_total_bytes:
+    if checks["physical_measurements_complete"]:
         required = max(int(floor["absolute_bytes"]),
-                       (floor_frac["num"] * physical_total_bytes) // floor_frac["den"])
+                       (floor_frac["num"] * physical_total_bytes + floor_frac["den"] - 1) // floor_frac["den"])
         checks["physical_memory_headroom"] = physical_available_bytes >= required
         if physical_available_bytes < required:
             reasons.append(
@@ -276,7 +340,7 @@ def preflight_capacity(
     for volume in volumes or []:
         free = volume.get("free_bytes")
         needed = volume.get("required_bytes")
-        ok = (isinstance(free, int) and isinstance(needed, int)
+        ok = (type(free) is int and type(needed) is int and free > 0 and needed >= 0
               and needed * disk["den"] <= disk["num"] * free)
         volume_reports.append({**volume, "within_limit": bool(ok)})
         if not ok:
@@ -287,6 +351,7 @@ def preflight_capacity(
     if volume_reports:
         checks["volumes_within_limit"] = all(v["within_limit"] for v in volume_reports)
 
+    reasons.extend(name for name, ok in checks.items() if not ok and name not in reasons)
     passed = all(checks.values())
     return {
         "status": "PASS" if passed else "PREFLIGHT_REFUSED",

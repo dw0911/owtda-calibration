@@ -99,7 +99,9 @@ class TestFailures:
         assert len(failed) == 1
         assert failed[0]["error_class"] == "TASK_EXCEPTION"
         assert "ValueError" in failed[0]["error_detail"]
-        assert result["completed"] == 5
+        assert len(result["records"]) == 6
+        assert result["stop_latched"] is True
+        assert result["completed"] + result["failed"] + result["cancelled"] == 6
 
     def test_failures_do_not_drop_the_successful_payloads(self):
         def work(unit):
@@ -111,10 +113,11 @@ class TestFailures:
             result = execute_units(list(range(10)),
                                    submit=lambda unit, index: pool.submit(work, unit),
                                    window_size=4, poll_interval=0.01)
-        assert [o["payload"] for o in result["emitted"] if o["status"] == "COMPLETED"] == [
-            0, 2, 4, 6, 8
-        ]
-        assert result["errors_by_class"]["IO_ERROR"] == 5
+        successes = [o for o in result["emitted"] if o["status"] == "COMPLETED"]
+        assert successes and all(o["payload"] == o["index"] and o["index"] % 2 == 0 for o in successes)
+        assert result["errors_by_class"]["IO_ERROR"] >= 1
+        assert result["stop_latched"] is True
+        assert sorted(r["index"] for r in result["records"]) == list(range(10))
 
 
 class TestStopLatching:

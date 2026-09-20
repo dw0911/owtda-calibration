@@ -12,6 +12,14 @@ import sys
 from pathlib import Path
 
 import pytest
+from capacity_fixture import bind_test_raw
+
+_RESOURCE_DIR = None
+
+@pytest.fixture(autouse=True)
+def _raw_fixture_directory(tmp_path):
+    global _RESOURCE_DIR
+    _RESOURCE_DIR = tmp_path / "raw-fixtures"
 
 REPO = Path(__file__).resolve().parents[1]
 AUDIT = REPO / "audit"
@@ -61,7 +69,7 @@ def _resources(**overrides) -> dict:
 
 def _verdict(resources=None, *, unexplained_errors: int = 0) -> dict:
     return resource_sampler.resource_verdict(
-        resources if resources is not None else _resources(),
+        bind_test_raw(resources if resources is not None else _resources(), _RESOURCE_DIR),
         unexplained_errors=unexplained_errors,
     )
 
@@ -163,7 +171,7 @@ class TestSampling:
             (tmp_path / "ledger.jsonl").write_text("x" * 2048, encoding="utf-8")
             return _FakeResult()
 
-        _result, resources = resource_sampler.sample_run(runner, evidence_root=tmp_path)
+        _result, resources = resource_sampler.sample_run(runner, evidence_root=tmp_path, run_id="TEST")
         assert resources["samples"] >= 1
         assert resources["peak_total_rss_bytes"] > 0
         capacity = resources["capacity_sampling"]
@@ -183,7 +191,7 @@ class TestSampling:
 
         with tempfile.TemporaryDirectory() as tmp:
             _result, resources = resource_sampler.sample_run(
-                runner, evidence_root=Path(tmp)
+                runner, evidence_root=Path(tmp), run_id="TEST"
             )
         capacity = resources["capacity_sampling"]
         for key, value in capacity.items():
@@ -194,7 +202,7 @@ class TestSampling:
             (tmp_path / "ledger.jsonl").write_text("y" * 4096, encoding="utf-8")
             return _FakeResult()
 
-        _result, resources = resource_sampler.sample_run(runner, evidence_root=tmp_path)
+        _result, resources = resource_sampler.sample_run(runner, evidence_root=tmp_path, run_id="TEST")
         before = resources["evidence_bytes_written"]
         resource_sampler.finalize_persistence(resources, evidence_root=tmp_path)
         assert resources["evidence_bytes_written"] >= before

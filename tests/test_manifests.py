@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from owtda_cal.manifests import (
     build_manifest_bundle,
     environment_subset,
@@ -54,11 +56,6 @@ class TestImportClosure:
 class TestScientificManifest:
     def test_it_hashes_the_science_files_and_its_configs(self, tmp_path):
         src, _script = _fake_repo(tmp_path)
-        manifest = scientific_manifest(
-            files=[src / "core.py", src / "helpers.py"],
-            config_files=[tmp_path / "config.json"],
-            root=tmp_path,
-        )
         (tmp_path / "config.json").write_text("{}", encoding="utf-8")
         manifest = scientific_manifest(
             files=[src / "core.py", src / "helpers.py"],
@@ -173,6 +170,8 @@ class TestBundle:
         plan.write_text(json.dumps({"formal_scale": True, "totals": {"evaluation_rows": 8},
                                     "phases": {"NULL": {"index_hashes": {
                                         "evaluation": "a" * 64}}}}), encoding="utf-8")
+        (tmp_path / "tests").mkdir()
+        (tmp_path / "tests" / "test_x.py").write_text("def test_x(): assert True\n")
         bundle = build_manifest_bundle(
             root=tmp_path, out_dir=tmp_path / "manifests",
             entries=[script / "entry.py"], command=["python", "x"],
@@ -205,11 +204,11 @@ class TestBundle:
 
 
 class TestHelpers:
-    def test_hash_files_skips_missing_paths(self, tmp_path):
+    def test_hash_files_refuses_missing_paths(self, tmp_path):
         present = tmp_path / "a.txt"
         present.write_text("x", encoding="utf-8")
-        hashes = hash_files([present, tmp_path / "gone.txt"], root=tmp_path)
-        assert list(hashes) == ["a.txt"]
+        with pytest.raises(FileNotFoundError):
+            hash_files([present, tmp_path / "gone.txt"], root=tmp_path)
 
     def test_environment_subset_is_explicit(self, monkeypatch):
         monkeypatch.setenv("OWTDA_TEST_VAR", "1")

@@ -139,6 +139,15 @@ class TestPairedCapacity:
         assert evaluate_capacity(rows, policy=policy)["verdict"] == "FAIL"
 
 
+def _complete_preflight(**kwargs):
+    # These tests isolate the arithmetic; provide explicit valid observations for
+    # every other required guard. Missing-observation rejection is tested in R4.
+    kwargs.setdefault("physical_available_bytes", 16 * GIB)
+    kwargs.setdefault("physical_total_bytes", 32 * GIB)
+    kwargs.setdefault("volumes", [{"name": "TEST", "free_bytes": 100 * GIB, "required_bytes": GIB}])
+    return preflight_capacity(**kwargs)
+
+
 class TestPreflight:
     def test_a_comfortable_baseline_still_has_to_satisfy_the_inequality(self, policy):
         """baseline <= 0.70 is not enough: the job's own increment is added."""
@@ -146,16 +155,16 @@ class TestPreflight:
         # baseline 23.52 GiB passes the "<= 0.70 L" rule of thumb...
         baseline = int(0.70 * limit)
         # ...but the measured own increment (~9.167 GiB) pushes it over 0.8 L
-        outcome = preflight_capacity(
+        outcome = _complete_preflight(
             baseline_commit_bytes=baseline, delta_commit_bytes=int(9.167 * GIB),
             commit_limit_bytes=limit, policy=policy,
         )
         assert outcome["status"] == "PREFLIGHT_REFUSED"
         assert outcome["checks"]["commit_projection_within_limit"] is False
-        assert outcome["recommended_fixed_workers"] == 4
+        assert outcome["recommended_fixed_workers"] is None  # registered policy already uses four
 
     def test_the_inequality_passes_with_headroom(self, policy):
-        outcome = preflight_capacity(
+        outcome = _complete_preflight(
             baseline_commit_bytes=int(0.30 * 100 * GIB),
             delta_commit_bytes=int(9.167 * GIB),
             commit_limit_bytes=100 * GIB, policy=policy,
@@ -165,7 +174,7 @@ class TestPreflight:
 
     def test_the_margin_is_applied_to_the_estimate(self, policy):
         limit = 100 * GIB
-        outcome = preflight_capacity(
+        outcome = _complete_preflight(
             baseline_commit_bytes=int(0.70 * limit),
             delta_commit_bytes=4 * GIB,  # 5 GiB with the 5/4 margin
             commit_limit_bytes=limit, policy=policy,
@@ -173,7 +182,7 @@ class TestPreflight:
         assert outcome["projected_commit_bytes"] == int(0.70 * limit) + 5 * GIB
 
     def test_physical_headroom_and_volumes_are_checked(self, policy):
-        outcome = preflight_capacity(
+        outcome = _complete_preflight(
             baseline_commit_bytes=10 * GIB, delta_commit_bytes=1 * GIB,
             commit_limit_bytes=100 * GIB, physical_available_bytes=1 * GIB,
             physical_total_bytes=32 * GIB,
@@ -184,10 +193,11 @@ class TestPreflight:
         assert outcome["status"] == "PREFLIGHT_REFUSED"
         assert outcome["checks"]["physical_memory_headroom"] is False
         assert outcome["checks"]["volumes_within_limit"] is False
-        assert len(outcome["reasons"]) == 2
+        assert any("available physical" in r for r in outcome["reasons"])
+        assert any("volume F:" in r for r in outcome["reasons"])
 
     def test_a_refusal_does_not_silently_lower_parallelism(self, policy):
-        outcome = preflight_capacity(
+        outcome = _complete_preflight(
             baseline_commit_bytes=95 * GIB, delta_commit_bytes=1 * GIB,
             commit_limit_bytes=100 * GIB, workers=8, policy=policy,
         )

@@ -977,11 +977,16 @@ def run_smoke_null(
     seed_registry: dict[str, Any],
     workers: int = 1,
     replicate_limit: int | None = None,
+    monitor: Any | None = None,
 ) -> SmokeResult:
-    """Run the H0 blind smoke; returns counts only (never aggregates)."""
+    """Run the H0 blind smoke; returns counts only (never aggregates).
+
+    Dispatch goes through the shared work-unit channel, so a latched stop cannot
+    dispatch new units and a short result can never be sealed.
+    """
     import time
 
-    from .parallel import ordered_map
+    from .workunit import run_units
 
     ctx = smoke_context(manifest, scope.PHASE_SMOKE_NULL)
     root_key_hex = smoke_root_key(seed_registry, scope.PHASE_SMOKE_NULL)
@@ -1004,7 +1009,13 @@ def run_smoke_null(
         for feature_id in scope.FEATURE_IDS
     ]
     start = time.perf_counter()
-    parts = ordered_map(process_master_feature, payloads, workers=workers)
+    dispatch = run_units(payloads, func=process_master_feature, workers=workers,
+                         monitor=monitor)
+    if not dispatch.is_complete():
+        raise RuntimeError(
+            f"{scope.PHASE_SMOKE_NULL} did not complete: {dispatch.summary()}"
+        )
+    parts = dispatch.parts
     wall = time.perf_counter() - start
     rows: list[dict[str, Any]] = []
     for part in parts:
@@ -1029,11 +1040,15 @@ def run_smoke_alt(
     seed_registry: dict[str, Any],
     workers: int = 1,
     replicate_limit: int | None = None,
+    monitor: Any | None = None,
 ) -> SmokeResult:
-    """Run the H1 blind smoke; returns counts only (never aggregates)."""
+    """Run the H1 blind smoke; returns counts only (never aggregates).
+
+    Same dispatch channel as the H0 smoke (see :func:`run_smoke_null`).
+    """
     import time
 
-    from .parallel import ordered_map
+    from .workunit import run_units
 
     ctx = smoke_context(manifest, scope.PHASE_SMOKE_ALT)
     root_key_hex = smoke_root_key(seed_registry, scope.PHASE_SMOKE_ALT)
@@ -1054,7 +1069,13 @@ def run_smoke_alt(
         for feature_id in scope.FEATURE_IDS
     ]
     start = time.perf_counter()
-    parts = ordered_map(process_alt_feature, payloads, workers=workers)
+    dispatch = run_units(payloads, func=process_alt_feature, workers=workers,
+                         monitor=monitor)
+    if not dispatch.is_complete():
+        raise RuntimeError(
+            f"{scope.PHASE_SMOKE_ALT} did not complete: {dispatch.summary()}"
+        )
+    parts = dispatch.parts
     wall = time.perf_counter() - start
     rows: list[dict[str, Any]] = []
     for part in parts:

@@ -107,13 +107,21 @@ def build_phase_plan(
     evidence_generation_id: str,
     phase: str,
     replicate_override: int | None = None,
+    data_generation_id: str | None = None,
 ) -> dict[str, Any]:
     """Expand one phase into the three expected index files; return counts/hashes."""
+    if replicate_override is not None and (type(replicate_override) is not int or replicate_override < 1):
+        raise ValueError("replicate_override must be a positive TEST integer")
+    if not isinstance(data_generation_id, str) or not data_generation_id:
+        if replicate_override is None:
+            raise ValueError("FORMAL_DATA_GENERATION_REQUIRED: pass frozen data_generation_id")
+        data_generation_id = "TEST-DATA"
+    if replicate_override is None and (not isinstance(freeze_id, str) or len(freeze_id) != 64 or set(freeze_id) == {"0"}):
+        raise ValueError("FORMAL_FREEZE_ID_REQUIRED: placeholder identity is forbidden")
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     directory = out / phase
-    directory.mkdir(parents=True, exist_ok=True)
-    data_generation_id = evidence_generation_id
+    directory.mkdir(parents=True, exist_ok=False)
 
     cell_map = plan_cells(project_id=project_id, protocol_id=protocol_id,
                           freeze_id=freeze_id,
@@ -197,13 +205,17 @@ def build_phase_plan(
                             method_config_hash=_method_hash(method_id)),
                     })
 
+    # Canonical index ordering must be identical to the runtime predeclaration
+    # contract.  Sorting every row type by logical_data_key is set-equivalent
+    # but byte/hash-incompatible for feature/evaluation indexes.
+    data_rows = indexes.expected_data_index_rows(data_rows)
+    feature_rows = indexes.expected_feature_index_rows(feature_rows)
+    evaluation_rows = indexes.expected_evaluation_index_rows(evaluation_rows)
     indexes.validate_index_consistency(data_rows, feature_rows, evaluation_rows)
     written = {}
     for name, rows in (("expected_data_index.jsonl", data_rows),
                        ("expected_feature_index.jsonl", feature_rows),
                        ("expected_evaluation_index.jsonl", evaluation_rows)):
-        rows.sort(key=lambda r: r["logical_data_key"] if "logical_data_key" in r
-                  else r["logical_evaluation_key"])
         blob = b"".join(canonical_json_bytes(r) + b"\n" for r in rows)
         (directory / name).write_bytes(blob)
         written[name] = {"rows": len(rows), "bytes": len(blob),
@@ -236,6 +248,7 @@ def build_expected_plan(
     evidence_generation_id: str = "G01",
     phases: tuple[str, ...] = DEFAULT_PHASES,
     replicate_override: int | None = None,
+    data_generation_id: str | None = None,
 ) -> dict[str, Any]:
     """Build every requested phase and write the plan summary."""
     out = Path(out_dir)
@@ -243,7 +256,8 @@ def build_expected_plan(
         phase: build_phase_plan(
             out_dir=out, project_id=project_id, protocol_id=protocol_id,
             freeze_id=freeze_id, evidence_generation_id=evidence_generation_id,
-            phase=phase, replicate_override=replicate_override)
+            phase=phase, replicate_override=replicate_override,
+            data_generation_id=data_generation_id)
         for phase in phases
     }
     totals = {
@@ -255,6 +269,7 @@ def build_expected_plan(
         "kind": "formal_expected_plan",
         "project_id": project_id, "protocol_id": protocol_id,
         "freeze_id": freeze_id, "evidence_generation_id": evidence_generation_id,
+        "data_generation_id": data_generation_id if data_generation_id is not None else "TEST-DATA",
         "replicate_override": replicate_override,
         "formal_scale": replicate_override is None,
         "phases": phases_report,

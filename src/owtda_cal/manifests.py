@@ -45,7 +45,7 @@ def hash_files(paths: Iterable[str | Path], *, root: str | Path | None = None) -
     for path in paths:
         target = Path(path)
         if not target.is_file():
-            continue
+            raise FileNotFoundError(f"manifest input missing: {target}")
         key = str(target.relative_to(base)) if base else str(target)
         out[key.replace("\\", "/")] = sha256_file(target)
     return dict(sorted(out.items()))
@@ -175,8 +175,8 @@ def execution_manifest(
                         "platform": sys.platform},
         "policy_sha256": policy_sha256,
     }
-    body["manifest_hash"] = _manifest_hash(
-        "EXECUTION_MANIFEST", files, {"policy": policy_sha256})
+    body["schema_version"] = 2
+    body["manifest_hash"] = bound_manifest_hash(body)
     return body
 
 
@@ -220,8 +220,16 @@ def validation_manifest(
         "unapproved_skips": [issue["where"] for issue in junit.get("issues", [])
                              if issue["code"] == "JUNIT_UNAPPROVED_SKIP"],
     }
-    body["manifest_hash"] = _manifest_hash("VALIDATION_MANIFEST", files, configs)
+    body["schema_version"] = 2
+    body["manifest_hash"] = bound_manifest_hash(body)
     return body
+
+
+def bound_manifest_hash(body: dict[str, Any]) -> str:
+    """Bind ALL execution/validation fields, including commands and evidence."""
+    payload = {k: v for k, v in body.items() if k != "manifest_hash"}
+    return hashlib.sha256((json.dumps(payload, sort_keys=True, ensure_ascii=False,
+                                     separators=(",", ":"), allow_nan=False) + "\n").encode("utf-8")).hexdigest()
 
 
 def _manifest_hash(kind: str, *parts: Any) -> str:
@@ -266,7 +274,7 @@ def build_manifest_bundle(
     science = scientific_manifest(files=science_files, root=base, config_files=config_files)
     execution = execution_manifest(
         entries=entries, command=command, environment=environment_subset(
-            ("PYTHONHASHSEED", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "PYTHONUTF8")),
+            ("PYTHONHASHSEED", "OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "PYTHONUTF8")),
         policy_sha256=policy_sha256, roots=roots or [base], root=base)
     validation = validation_manifest(
         test_files=test_files, config_files=config_files,
@@ -295,6 +303,9 @@ def build_manifest_bundle(
         "execution_manifest": execution,
         "validation_manifest": validation,
         "plan_binding": plan_binding,
+        "manifest_hashes": {"SCIENTIFIC_MANIFEST": science["manifest_hash"],
+                            "EXECUTION_MANIFEST": execution["manifest_hash"],
+                            "VALIDATION_MANIFEST": validation["manifest_hash"]},
         "bundle_hash": _manifest_hash(
             "MANIFEST_BUNDLE", science["manifest_hash"],
             execution["manifest_hash"], validation["manifest_hash"],

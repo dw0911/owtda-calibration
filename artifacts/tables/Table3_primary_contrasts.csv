@@ -1,0 +1,4 @@
+contrast,bootstrap_iterations,ci95_basic,claim_state,p_boot_one_sided,p_holm,point_estimate,threshold
+P1,10000,"[0.521, 0.5494]",SUPPORTED,0.0,0.0,0.5354,0.1
+P2,10000,"[0.5194, 0.5462]",SUPPORTED,0.0,0.0,0.533,0.1
+P3,10000,"[0.0224, 0.0308]",SUPPORTED,0.0,0.0,0.0266,0.01

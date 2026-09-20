@@ -1,0 +1,246 @@
+{
+  "rows": [
+    {
+      "DGP": "N_AR",
+      "M": 48,
+      "T": 3120,
+      "classification": "BOUNDARY_OR_INDETERMINATE",
+      "feature": "BPI_FIX",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0608,
+      "stride": 64
+    },
+    {
+      "DGP": "N_AR",
+      "M": 48,
+      "T": 3120,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "BPI_FIX",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0088,
+      "stride": 64
+    },
+    {
+      "DGP": "N_AR",
+      "M": 48,
+      "T": 3120,
+      "classification": "BOUNDARY_OR_INDETERMINATE",
+      "feature": "MOMENTS",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0584,
+      "stride": 64
+    },
+    {
+      "DGP": "N_AR",
+      "M": 48,
+      "T": 3120,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M1_DMB",
+      "rejection_rate": 0.002,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 12288,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "BPI_FIX",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0528,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 12288,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "BPI_FIX",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0244,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 12288,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "MOMENTS",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0532,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 12288,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0228,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 48,
+      "T": 3120,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "BPI_FIX",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0472,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 48,
+      "T": 3120,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "BPI_FIX",
+      "method": "M1_DMB",
+      "rejection_rate": 0.006,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 48,
+      "T": 3120,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "MOMENTS",
+      "method": "M0_NAI",
+      "rejection_rate": 0.052,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 48,
+      "T": 3120,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0024,
+      "stride": 64
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 3120,
+      "classification": "MATERIAL_ANTI_CONSERVATISM",
+      "feature": "BPI_FIX",
+      "method": "M0_NAI",
+      "rejection_rate": 0.4384,
+      "stride": 16
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 3120,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "BPI_FIX",
+      "method": "M1_DMB",
+      "rejection_rate": 0.048,
+      "stride": 16
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 3120,
+      "classification": "MATERIAL_ANTI_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M0_NAI",
+      "rejection_rate": 0.9376,
+      "stride": 16
+    },
+    {
+      "DGP": "N_CIRCLE",
+      "M": 192,
+      "T": 3120,
+      "classification": "MATERIAL_ANTI_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M1_DMB",
+      "rejection_rate": 0.076,
+      "stride": 16
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 3120,
+      "classification": "MATERIAL_ANTI_CONSERVATISM",
+      "feature": "BPI_FIX",
+      "method": "M0_NAI",
+      "rejection_rate": 0.7356,
+      "stride": 16
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 3120,
+      "classification": "BOUNDARY_OR_INDETERMINATE",
+      "feature": "BPI_FIX",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0672,
+      "stride": 16
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 3120,
+      "classification": "MATERIAL_ANTI_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M0_NAI",
+      "rejection_rate": 0.9136,
+      "stride": 16
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 3120,
+      "classification": "BOUNDARY_OR_INDETERMINATE",
+      "feature": "MOMENTS",
+      "method": "M1_DMB",
+      "rejection_rate": 0.068,
+      "stride": 16
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 12288,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "BPI_FIX",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0504,
+      "stride": 64
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 12288,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "BPI_FIX",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0224,
+      "stride": 64
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 12288,
+      "classification": "POINTWISE_PRACTICALLY_CALIBRATED",
+      "feature": "MOMENTS",
+      "method": "M0_NAI",
+      "rejection_rate": 0.0492,
+      "stride": 64
+    },
+    {
+      "DGP": "N_AR",
+      "M": 192,
+      "T": 12288,
+      "classification": "MATERIAL_CONSERVATISM",
+      "feature": "MOMENTS",
+      "method": "M1_DMB",
+      "rejection_rate": 0.0192,
+      "stride": 64
+    }
+  ],
+  "schema_version": 1,
+  "title": "Representative H0 calibration (full 112 rows in H0_POINTWISE.json)"
+}

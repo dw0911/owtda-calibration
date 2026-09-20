@@ -441,6 +441,11 @@ def run_seal_and_analysis(*, out_dir: Path, ledger: dict[str, Any]) -> dict[str,
 
     root = out_dir / "run"
     root.mkdir(parents=True, exist_ok=True)
+    raw = (out_dir / ledger["ledger"]).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != ledger["ledger_sha256"]:
+        raise FixtureError("ledger hash mismatch before RUN seal")
+    with (root / "evaluation_ledger.jsonl").open("xb") as handle:
+        handle.write(raw)
     run_id = RUN_INSTANCE_ID
     record_start(
         root, run_id=run_id, phase=PHASE_PREDICTION,
@@ -451,7 +456,7 @@ def run_seal_and_analysis(*, out_dir: Path, ledger: dict[str, Any]) -> dict[str,
     sealed = record_seal(
         root, run_id=run_id, phase=PHASE_PREDICTION,
         seal={
-            "ledger_file": ledger["ledger"],
+            "ledger_file": "evaluation_ledger.jsonl",
             "ledger_content_hash": ledger["ledger_sha256"],
             "ledger_bytes": ledger["ledger_bytes"],
             "row_count": ledger["rows"],
@@ -462,7 +467,7 @@ def run_seal_and_analysis(*, out_dir: Path, ledger: dict[str, Any]) -> dict[str,
     )
     return {
         "run_seal_hash": sealed["smoke_seal_hash"],
-        "run_seal_file": sealed["seal_file"],
+        "run_seal_file": "run/" + sealed["seal_file"],
         "sealed_ledger": ledger["ledger"],
         "sealed_ledger_sha256": ledger["ledger_sha256"],
         "sealed_row_count": ledger["rows"],
@@ -485,6 +490,9 @@ def finalize_analysis(
     first, and every reported figure is then recomputed by reading the actual
     committed rows -- including the row count, the id sets and the ledger hash.
     """
+    for name in ("analysis_input.json", "analysis_output.json", "ANALYSIS_RESULT_SEAL.json"):
+        if (out_dir / name).exists():
+            raise FixtureError(f"analysis evidence already exists: {name}")
     ledger_path = out_dir / ledger_file
     raw = ledger_path.read_bytes()
     rows = [
@@ -525,13 +533,28 @@ def finalize_analysis(
         json.dumps(output, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    result_seal = {
+        "schema_version": 1, "kind": "TEST_ANALYSIS_RESULT_SEAL",
+        "input_file": "analysis_input.json", "output_file": "analysis_output.json",
+        "input_sha256": hashlib.sha256((out_dir / "analysis_input.json").read_bytes()).hexdigest(),
+        "output_sha256": hashlib.sha256((out_dir / "analysis_output.json").read_bytes()).hexdigest(),
+        "ledger_sha256": hashlib.sha256(raw).hexdigest(),
+        "source_run_seal_hashes": sorted(set(source_run_seal_hashes)),
+        "phase_seal_hashes": sorted(set(phase_seal_hashes)),
+    }
+    result_seal["seal_hash"] = hashlib.sha256(canonical_json_bytes(result_seal)).hexdigest()
+    with (out_dir / "ANALYSIS_RESULT_SEAL.json").open("x", encoding="utf-8") as handle:
+        handle.write(json.dumps(result_seal, sort_keys=True, indent=2) + "\n")
     return {"analysis_input": "analysis_input.json",
-            "analysis_output": "analysis_output.json", "rows": len(rows)}
+            "analysis_output": "analysis_output.json", "rows": len(rows),
+            "analysis_result_seal": "ANALYSIS_RESULT_SEAL.json", "analysis_result_seal_hash": result_seal["seal_hash"]}
 
 
 def run_fixture(*, out_dir: Path, fault: str | None = None) -> dict[str, Any]:
     if fault is not None and fault not in FAULTS:
         raise FixtureError(f"unknown fault {fault!r}; expected one of {FAULTS}")
+    if out_dir.exists() and any(out_dir.iterdir()):
+        raise FixtureError("fixture output directory is not empty; use a new execution")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     scope = build_scope()

@@ -37,20 +37,27 @@ def check_g4_h0_certificate(
     plan_summary: dict[str, Any],
     seed_registry_path: str | Path | None = None,
 ) -> dict[str, Any]:
-    """Decide whether FORMAL_H0 may start; always explains itself."""
+    """Check certificate-to-plan bindings only; this is not production admission.
+
+    The CLI and execute_plan independently refuse dispatch while the scientific
+    FORMAL adapter is unimplemented. All six release contracts are also required.
+    """
     reasons: list[dict[str, str]] = []
 
     def refuse(code: str, where: str, detail: str) -> None:
         reasons.append({"code": code, "where": where, "detail": detail})
 
-    if not plan_summary.get("formal_scale"):
+    if not isinstance(plan_summary, dict):
+        plan_summary = {}
+    if plan_summary.get("formal_scale") is not True:
         refuse("PLAN_NOT_FORMAL_SCALE", "plan", (
             "the plan was built with a replicate override; a reduced plan can never "
             "enter formal admission"))
 
     plan_hashes = {
-        phase: report["index_hashes"]["evaluation"]
+        phase: report.get("index_hashes", {}).get("evaluation")
         for phase, report in (plan_summary.get("phases") or {}).items()
+        if isinstance(report, dict) and isinstance(report.get("index_hashes"), dict)
     }
     if not plan_hashes:
         refuse("PLAN_UNBOUND_EVALUATION_INDEX", "plan",
@@ -63,7 +70,10 @@ def check_g4_h0_certificate(
     else:
         try:
             certificate = json.loads(certificate_file.read_text(encoding="utf-8"))
+            if not isinstance(certificate, dict):
+                raise ValueError("certificate must be a JSON object")
         except Exception as exc:  # noqa: BLE001 - a broken certificate is a finding
+            certificate = {}
             refuse("CERTIFICATE_UNPARSEABLE", str(certificate_file), str(exc))
         else:
             if certificate.get("kind") != CERTIFICATE_KIND:
@@ -76,11 +86,16 @@ def check_g4_h0_certificate(
                 refuse("CERTIFICATE_NOT_FROZEN", str(certificate_file),
                        f"status={certificate.get('status')!r}")
             declared = certificate.get("evaluation_index_hashes") or {}
+            if not declared:
+                refuse("CERTIFICATE_PLAN_BINDING_MISSING", str(certificate_file),
+                       "evaluation_index_hashes is required")
             if declared and plan_hashes and declared != plan_hashes:
                 refuse("CERTIFICATE_PLAN_BINDING_MISMATCH", str(certificate_file),
                        f"certificate {sorted(declared)} != plan {sorted(plan_hashes)}")
 
     registry_path = Path(seed_registry_path) if seed_registry_path else None
+    if registry_path is None:
+        refuse("SEED_REGISTRY_MISSING", "seed_registry", "a registry file is required")
     if registry_path is not None:
         if not registry_path.is_file():
             refuse("SEED_REGISTRY_MISSING", str(registry_path), "absent")

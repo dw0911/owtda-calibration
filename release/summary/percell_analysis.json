@@ -1,0 +1,450 @@
+[
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 6.683326,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "0d2a26570763838a8ac7cd0b06f874a703d91637535c4f137ce67c67e3ee68a9",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0528,
+        "joint_success": 0.99875,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 0.08
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0244,
+        "joint_success": 0.99875,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 0.08
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 0.101578,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "0d2a26570763838a8ac7cd0b06f874a703d91637535c4f137ce67c67e3ee68a9",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0532,
+        "joint_success": 0.000625,
+        "n": 1600,
+        "nominal_power": 0.053125,
+        "raw_mae": 2599.84
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0228,
+        "joint_success": 0.000625,
+        "n": 1600,
+        "nominal_power": 0.020625,
+        "raw_mae": 2599.84
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 0.0725,
+    "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 6.683326,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "0d85319ffa423b939c17908d02ba4a7965451e293e3b2b9c9cbf0f3044a73c5e",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0528,
+        "joint_success": 0.0,
+        "n": 1600,
+        "nominal_power": 0.05375,
+        "raw_mae": 2570.4
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0244,
+        "joint_success": 0.0,
+        "n": 1600,
+        "nominal_power": 0.0225,
+        "raw_mae": 2570.4
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 0.053125,
+    "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 0.101578,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "0d85319ffa423b939c17908d02ba4a7965451e293e3b2b9c9cbf0f3044a73c5e",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0532,
+        "joint_success": 0.994375,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 0.36
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0228,
+        "joint_success": 0.994375,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 0.36
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "474854b0a4410b8b5e3e58229179f1d688f659308827a7cb761626e5135e293b",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 19.271932,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "127d167cb71997b49bba34d9c64969f2c1d9cd3fb7dedb70142fd0914508810b",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.5416,
+        "joint_success": 0.99125,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 24.1
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0524,
+        "joint_success": 0.99125,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 24.1
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 1.602133,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "127d167cb71997b49bba34d9c64969f2c1d9cd3fb7dedb70142fd0914508810b",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.8796,
+        "joint_success": 0.035,
+        "n": 1600,
+        "nominal_power": 0.929375,
+        "raw_mae": 629.81
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0848,
+        "joint_success": 0.001875,
+        "n": 1600,
+        "nominal_power": 0.0825,
+        "raw_mae": 629.81
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 0.04625,
+    "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 8.65499,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "46b879b3ffa8235c906cca3ed1986c15816d9d6564ad8bcd2b8155f9abb8956e",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0528,
+        "joint_success": 0.000625,
+        "n": 1600,
+        "nominal_power": 0.041875,
+        "raw_mae": 2629.88
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0244,
+        "joint_success": 0.000625,
+        "n": 1600,
+        "nominal_power": 0.01875,
+        "raw_mae": 2629.88
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 0.046875,
+    "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 0.415052,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "46b879b3ffa8235c906cca3ed1986c15816d9d6564ad8bcd2b8155f9abb8956e",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0516,
+        "joint_success": 0.811875,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 16.24
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0236,
+        "joint_success": 0.811875,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 16.24
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 12.953375,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "5fef8a30209716f90915255cfe7ce5d91ced53427b87649de2a2fa22ccd10a4f",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.4384,
+        "joint_success": 0.021875,
+        "n": 1600,
+        "nominal_power": 0.44375,
+        "raw_mae": 582.17
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.048,
+        "joint_success": 0.00375,
+        "n": 1600,
+        "nominal_power": 0.040625,
+        "raw_mae": 582.17
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 0.055,
+    "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 0.373245,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "5fef8a30209716f90915255cfe7ce5d91ced53427b87649de2a2fa22ccd10a4f",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.9376,
+        "joint_success": 0.99875,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 8.87
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.076,
+        "joint_success": 0.99875,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 8.87
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 19.271932,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "760a794c0094e857981c253bde3e7c13a4559727f8d0798574c4ae11d939b51c",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.5416,
+        "joint_success": 0.0125,
+        "n": 1600,
+        "nominal_power": 0.581875,
+        "raw_mae": 625.25
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0524,
+        "joint_success": 0.0,
+        "n": 1600,
+        "nominal_power": 0.05125,
+        "raw_mae": 625.25
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 0.060625,
+    "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 1.602133,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "760a794c0094e857981c253bde3e7c13a4559727f8d0798574c4ae11d939b51c",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.8796,
+        "joint_success": 0.815625,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 28.15
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0848,
+        "joint_success": 0.815625,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 28.15
+      }
+    },
+    "scenario_id": "mean_shift",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "ba261c24c2d9e3c54438a1383e5ea2c48b9f8da8b3201df7c9d40354b265b182",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 8.65499,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "a98c59c215688351d72c5dc761af943be75f819e8444098c352e0a702c4cce7d",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0528,
+        "joint_success": 0.945625,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 4.24
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0244,
+        "joint_success": 0.945625,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 4.24
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 12288,
+    "W": 64,
+    "c095": 0.415052,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "a98c59c215688351d72c5dc761af943be75f819e8444098c352e0a702c4cce7d",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.0516,
+        "joint_success": 0.0,
+        "n": 1600,
+        "nominal_power": 0.098125,
+        "raw_mae": 2284.92
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.0236,
+        "joint_success": 0.0,
+        "n": 1600,
+        "nominal_power": 0.04125,
+        "raw_mae": 2284.92
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 0.0675,
+    "source_null_logical_cell_id": "c4730928ad0cc359611145d7411b69fcdbaed5aecf0290e92fecc6cfca1b4c44",
+    "stride": 64,
+    "tau_true": 6144.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 12.953375,
+    "feature_id": "BPI_FIXED20_H01_SIGMA005_GAMMA1_V1",
+    "logical_cell_id": "ac38b3e69799e943045ff0f6c68ddd784cd7bccc2ffbcdab42ec9b649a936966",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.4384,
+        "joint_success": 1.0,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 25.83
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.048,
+        "joint_success": 1.0,
+        "n": 1600,
+        "nominal_power": 1.0,
+        "raw_mae": 25.83
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 1.0,
+    "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "stride": 16,
+    "tau_true": 1560.5
+  },
+  {
+    "T": 3120,
+    "W": 64,
+    "c095": 0.373245,
+    "feature_id": "MOMENTS_MEAN_COV_FROB_V1",
+    "logical_cell_id": "ac38b3e69799e943045ff0f6c68ddd784cd7bccc2ffbcdab42ec9b649a936966",
+    "methods": {
+      "M0_NAIVE_PERM_B999_V1": {
+        "h0_type1": 0.9376,
+        "joint_success": 0.021875,
+        "n": 1600,
+        "nominal_power": 0.95,
+        "raw_mae": 646.46
+      },
+      "M1_DMB_R1_TRI_EXTIID_B999_V1": {
+        "h0_type1": 0.076,
+        "joint_success": 0.00125,
+        "n": 1600,
+        "nominal_power": 0.073125,
+        "raw_mae": 646.46
+      }
+    },
+    "scenario_id": "shape_change",
+    "size_standardized_power": 0.066875,
+    "source_null_logical_cell_id": "69c10bdd88ee2a8f650e32a3fa2718137532db2ba3cf0e09ea8ec60164393037",
+    "stride": 16,
+    "tau_true": 1560.5
+  }
+]
