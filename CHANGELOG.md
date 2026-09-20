@@ -6,6 +6,26 @@
 
 ## 公开发布快照
 
+### 2026-09-20 — 许可/作者定稿与账本归档（发布门闭合，未推送）
+
+- **三项许可定稿**（作者确认）：代码 **MIT**（根 `LICENSE`）、本项目结果数据 **CC BY 4.0**
+  （`LICENSES/DATA_LICENSE.txt`）、论文源文件与 PDF **CC BY 4.0**（`LICENSES/PAPER_LICENSE.txt`，
+  published version 依目标期刊政策）；`CITATION.cff` 的 `license` 同步为 `MIT`，并注明三对象划分。
+- **作者定稿**：**王平（Wang Ping），河北金融学院与数据科学学院，13088010056@163.com**；
+  已同步 `AUTHORS.md`、`CITATION.cff`（含 `affiliation`/`email`）与 `paper/main.tex` 的 `\author{}`（三处一致）；
+  作者选择**公开署名**（不采用匿名/双盲隐藏）。
+- **账本归档（本地完成，DOI 待登记）**：四份正式账本 + 两组大型索引（合计 **3.67 GB**）逐项校验；
+  两组索引打包为**确定性 tar**（`mtime=0`、成员排序、无 uid/gid），真实 SHA-256/大小与三份成员的逐文件哈希
+  已登记进 `data/manifests/external_artifacts.json`；`scripts/fetch_archived_data.py --verify-only`
+  在本机返回 **0（6/6 verified）**。上传材料（Zenodo 元数据 + 步骤 + 逐文件清单）见工作区
+  `OUTPUTS/data_archive_20260920/`；上传后把 DOI 回填清单与 `RELEASE_MANIFEST.json` 的 `doi.data` 槽位。
+- **修正一处登记错字**：`EXCLUDED_ARTIFACTS.csv` 中 `ACTIVE_EVALUATION_INDEX_c89c90…` 的 SHA-256
+  转录有误（`…dfdeccf86d…` → 实际 `…dfdecff86d…`），已按文件实际值修正（文件本身完整，首尾行均为合法 JSON）。
+- **修正 H1 账本寻址**：两份 H1 账本的 `local_source` 由运行目录改为实际文件路径，此前导致
+  `--verify-only` 把目录当文件并误报 `SIZE MISMATCH`。
+- **本轮不推送**：仓库保持在本地就绪状态（tag `v1.0.0-paper` 可重建），全部校验在本地完成；
+  是否公开与何时推送由作者决定。
+
 ### 2026-09-20 — 外部审计修复轮（发布阻断项闭环）
 - 依据独立的 GitHub 发布包审计（裁决 `HOLD_PUBLIC_PUSH`，8 项 P0）完成修复，**科学结果未变**：
   H0/H1 canonical、P1–P3（0.5354 / 0.5330 / 0.0266，tail=0，Holm = 3/10001）与 Wilson 区间全部保留，未重跑任何 Monte Carlo；

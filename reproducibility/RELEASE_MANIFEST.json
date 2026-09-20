@@ -1,9 +1,9 @@
 {
   "artifacts": {
-    "data/manifests/external_artifacts.json": "74b49144a45c3664b6768bea52d327867d895ce18b26beb4e0ab1827eb562290",
-    "paper/main.pdf": "6b53564cbf5de5f2ab5ad79d700f534676891dfdafcdaffa62114581560868fa",
+    "data/manifests/external_artifacts.json": "60061860c0fdbb65467f5f2d77876b2b531cf8e52a1942266688b9af7160bb86",
+    "paper/main.pdf": "7b38698ee089a14eae1d3ddf84c1709e5f0177e181afbd5a4128c232b98cbec7",
     "reproducibility/ARTIFACT_INDEX.csv": "5c1aa29cd663cc3b6d635d500d9a35cbd299993fe690e2501f5d27784c1c68c8",
-    "reproducibility/FORMAL_MANIFEST.json": "a12fad0953912b6f987f2f4d5b2f1c5f40f9027f85814a2bcd589a7d17f08826"
+    "reproducibility/FORMAL_MANIFEST.json": "076a2de13c73456d322fa2004e6b42785a8f8f1211349e5c7a2be997af5c3b9b"
   },
   "doi": {
     "code": null,

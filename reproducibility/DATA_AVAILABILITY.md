@@ -19,8 +19,15 @@
 
 > **退出码语义（P0-6）**：`scripts/fetch_archived_data.py --verify-only` 在任一请求对象不可用时返回 **2**，
 > 并明确提示"Level 2 无法完成、Level 1 仍可验证"；`--report-only` 只列状态并返回 0。
-> 归档就绪后该命令必须返回 0，否则视为发布门未闭合。已登记的 `local_source` 既可以是文件本身，
-> 也可以是包含该文件的目录（按 `filename` 解析）。
+> 已登记的 `local_source` 既可以是文件本身，也可以是包含该文件的目录（按 `filename` 解析）。
+>
+> **本地归档状态（2026-09-20）**：六个对象已在作者机器上逐项校验通过 —— `--verify-only` 返回 **0（6/6 verified）**；
+> 两组大型索引打包为确定性 tar 存放于 `data/external/`（`.gitignore` 排除），其 SHA-256 与三份成员哈希已登记进
+> `data/manifests/external_artifacts.json`。上传材料与步骤见工作区 `OUTPUTS/data_archive_20260920/`。
+> **DOI 上传（Zenodo dataset）完成后**，把 DOI 回填本文件 §2 表格、`data/manifests/external_artifacts.json`
+> 与 `reproducibility/RELEASE_MANIFEST.json` 的 `doi.data` 槽位；在此之前公共复现的 Level 2 仍标记为 PENDING。
+> 另：核对时发现 `EXCLUDED_ARTIFACTS.csv` 中 `ACTIVE_EVALUATION_INDEX_c89c90…` 的登记哈希存在转录错字
+> （`…dfdeccf86d…` 应为 `…dfdecff86d…`），已按实际文件修正。
 
 ## 3. DOI 登记流程（发布顺序）
 

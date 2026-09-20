@@ -5,7 +5,10 @@
     "repository": "Zenodo",
     "record": "PENDING_DEPOSIT",
     "doi": null,
-    "note": "Create the deposit from the v1.0.0-paper GitHub release, then fill doi/release fields here and in CITATION.cff."
+    "note": "账本与索引已本地归档并逐项校验；Zenodo 上传后把 DOI 填入本文件的 doi 字段与 reproducibility/RELEASE_MANIFEST.json 的 doi 槽位，再让 fetch_archived_data.py --verify-only 返回 0。",
+    "status": "PREPARED_LOCAL",
+    "archive_dir": "OUTPUTS/data_archive_20260920/（工作区，未推送到仓库）",
+    "created": "2026-09-20"
   },
   "artifacts": [
     {
@@ -38,53 +41,89 @@
       "name": "H1_EVALUATION_LEDGER",
       "artifact": "formal H1/ALT evaluation ledger",
       "filename": "H1_ALT_evaluation.scientific.jsonl",
-      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H1_ALT\\run\\",
+      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H1_ALT\\run\\bd53df84fb59302a76cb2fa00f79ffe1d2bb72d295a505bdb91e6e95a2fc76ee\\a41d1442568cecb275b32eebc605a1b59ad921547de2c52ee1513ea4b808aa5b.final\\evaluation.scientific.jsonl",
       "size_bytes": 266379930,
       "sha256": "82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7",
       "rows": 51200,
       "schema": "configs/schema/scientific_row.schema.json",
       "doi": null,
       "url": null,
-      "bound_by": "EXPERIMENTS/20260918_H1_ALT/RUN_SEAL.json + PHASE_SEAL.json (parent = H0 phase seal)"
+      "bound_by": "EXPERIMENTS/20260918_H1_ALT/RUN_SEAL.json + PHASE_SEAL.json (parent = H0 phase seal)",
+      "note": " | local_source 指向 H1 运行目录内的实际账本文件（2026-09-20 修正）。"
     },
     {
       "name": "H1_FEATURE_LEDGER",
       "artifact": "formal H1/ALT feature-sufficient ledger",
       "filename": "H1_ALT_feature.scientific.jsonl",
-      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H1_ALT\\run\\",
+      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H1_ALT\\run\\bd53df84fb59302a76cb2fa00f79ffe1d2bb72d295a505bdb91e6e95a2fc76ee\\a41d1442568cecb275b32eebc605a1b59ad921547de2c52ee1513ea4b808aa5b.final\\feature.scientific.jsonl",
       "size_bytes": 262233600,
       "sha256": "4ba3d1f7407719bec9e72d4b9d8b26f4cb5a1cf1528b4940315cd9e2c1c191cd",
       "rows": 25600,
       "schema": "configs/schema/feature_sufficient_row.schema.json",
       "doi": null,
       "url": null,
-      "bound_by": "EXPERIMENTS/20260918_H1_ALT/RUN_SEAL.json + PHASE_SEAL.json"
+      "bound_by": "EXPERIMENTS/20260918_H1_ALT/RUN_SEAL.json + PHASE_SEAL.json",
+      "note": " | local_source 指向 H1 运行目录内的实际账本文件（2026-09-20 修正）。"
     },
     {
       "name": "ACTIVE_INDEX_SET_E6ECAC",
       "artifact": "analysis-layer ACTIVE data/feature/evaluation indices (e6ecac revision)",
-      "filename": "ACTIVE_INDEX_SET_e6ecac.jsonl.bundle",
+      "filename": "ACTIVE_INDEX_SET_e6ecac.tar",
       "local_source": "F:\\BPI\\SRC\\owtda-calibration\\governance\\",
-      "size_bytes": 250700000,
-      "sha256": "SET_OF_THREE_NOT_A_SINGLE_FILE",
+      "size_bytes": 250746880,
+      "sha256": "d9ab4a82d01bd5839a4cb98be746cd4ae6638831ebfe1ba36f3f403145a202d9",
       "rows": null,
       "schema": "governance/ACTIVE_*_INDEX_<revision>.jsonl",
       "doi": null,
       "url": null,
-      "note": "Three files, hashes in EXCLUDED_ARTIFACTS.csv; regenerate from the frozen plan/ledgers rather than transporting bytes."
+      "note": "三份索引已打包为确定性 tar（mtime=0、排序、无 uid/gid）；sha256/size_bytes 为**打包文件**的，成员的逐文件哈希见 members 与 EXCLUDED_ARTIFACTS.csv。",
+      "members": [
+        {
+          "name": "ACTIVE_DATA_INDEX_e6ecac6b234025374bf9f06d5eec63b3d6681e1ebe9c55480610ed67dfe8d955.jsonl",
+          "size_bytes": 40040000,
+          "sha256": "26d73abd3355a63de825be9b24ea0f7bab029fc9fb699edc3b2056edcdd6fa5f"
+        },
+        {
+          "name": "ACTIVE_EVALUATION_INDEX_e6ecac6b234025374bf9f06d5eec63b3d6681e1ebe9c55480610ed67dfe8d955.jsonl",
+          "size_bytes": 140000000,
+          "sha256": "a3cec907b3aac02c24505e96802297f1dd2034f06061a1436b5470ec67209bc6"
+        },
+        {
+          "name": "ACTIVE_FEATURE_INDEX_e6ecac6b234025374bf9f06d5eec63b3d6681e1ebe9c55480610ed67dfe8d955.jsonl",
+          "size_bytes": 70700000,
+          "sha256": "7f22ac52d6d6f943951ac1c112bb1f816a761169057e8cb17c11d36ba08e9f40"
+        }
+      ]
     },
     {
       "name": "ACTIVE_INDEX_SET_C89C90",
       "artifact": "analysis-layer ACTIVE data/feature/evaluation indices (c89c90 revision)",
-      "filename": "ACTIVE_INDEX_SET_c89c90.jsonl.bundle",
+      "filename": "ACTIVE_INDEX_SET_c89c90.tar",
       "local_source": "F:\\BPI\\SRC\\owtda-calibration\\governance\\",
-      "size_bytes": 45849600,
-      "sha256": "SET_OF_THREE_NOT_A_SINGLE_FILE",
+      "size_bytes": 45854720,
+      "sha256": "e4ca086e5a86ef8383693da897cc1fd75bac78cb5525ad0717c83c0b74660b85",
       "rows": null,
       "schema": "governance/ACTIVE_*_INDEX_<revision>.jsonl",
       "doi": null,
       "url": null,
-      "note": "Three files, hashes in EXCLUDED_ARTIFACTS.csv."
+      "note": "三份索引已打包为确定性 tar（mtime=0、排序、无 uid/gid）；sha256/size_bytes 为**打包文件**的，成员的逐文件哈希见 members 与 EXCLUDED_ARTIFACTS.csv。",
+      "members": [
+        {
+          "name": "ACTIVE_DATA_INDEX_c89c900336ad0cf4c76e04c68ddd3f19614442b6dfa37c36cbfa4677bc860574.jsonl",
+          "size_bytes": 7321600,
+          "sha256": "cb11cc50f16a806b5be2d6337f882bc51a479240d91aaefc8d5e06ddc9cf431e"
+        },
+        {
+          "name": "ACTIVE_EVALUATION_INDEX_c89c900336ad0cf4c76e04c68ddd3f19614442b6dfa37c36cbfa4677bc860574.jsonl",
+          "size_bytes": 25600000,
+          "sha256": "1a6fbbc8fb5a061d40272b4e489ad727dfdecff86dc6e5a95b662aa8db71ba9e"
+        },
+        {
+          "name": "ACTIVE_FEATURE_INDEX_c89c900336ad0cf4c76e04c68ddd3f19614442b6dfa37c36cbfa4677bc860574.jsonl",
+          "size_bytes": 12928000,
+          "sha256": "e6ebdf4a79e059a1060b270311bb5da7fe7602ed4792d9cfb7d8da41da5fb43f"
+        }
+      ]
     }
   ]
 }

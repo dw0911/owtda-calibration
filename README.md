@@ -8,9 +8,14 @@ Topological Scans with Overlapping Windows* · 目标期刊：《山东大学学
 >
 > **可验证范围（如实声明）**
 > - **Level 1（默认、可任意克隆验证）**：代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
-> - **Level 2（账本级重做）**：依赖**尚未发布的外部归档**（四份正式 ledger 与两组大型索引，DOI/URL 为 PENDING）。
->   `scripts/fetch_archived_data.py --verify-only` 因此会以**退出码 2** 明确报告依赖缺失，而不是静默通过。
-> - **发布状态**：仓库在许可、作者名单与双盲策略闭合前保持 **private**（见 `LICENSE`、`AUTHORS.md`）。
+> - **Level 2（账本级重做）**：依赖外部账本归档（四份正式 ledger 与两组大型索引，**3.67 GB**）。归档已
+>   在本地准备并逐项校验：`scripts/fetch_archived_data.py --verify-only` 在账本就位的机器上返回 **0（6/6 verified）**，
+>   在缺少账本的克隆上返回 **2** 并明确提示 Level 1 仍可验证（不是静默通过）。
+>   两组大型索引已打包为确定性 tar（`data/external/ACTIVE_INDEX_SET_*.tar`，被 `.gitignore` 排除）；
+>   公共复现所需的 **Zenodo 数据 DOI 待登记**（上传材料见 `OUTPUTS/data_archive_20260920/README_DEPOSIT.md`）。
+> - **发布状态**：三项许可（MIT / CC BY 4.0 / CC BY 4.0）与作者名单已于 **2026-09-20 定稿**（见 `LICENSE`、`LICENSES/`、`AUTHORS.md`）；
+>   仓库已完成全部本地校验与发布闸门（`git diff --exit-code` 干净），**尚未推送**——是否公开由作者决定。
+>   数据 DOI（Zenodo 账本归档）仍待登记，是 Level 2 公共复现的唯一剩余依赖。
 
 ## Overview
 
@@ -137,9 +142,11 @@ Level 3（全量重跑）。每层的命令、输入、预期产物与失败策�
 
 - **合成数据**：由代码 + 冻结种子生成，无需外部数据；
 - **真实数据（PAMAP2）**：不随仓库分发，出处/许可/逐文件 SHA-256 见 [`DATA_SOURCES.md`](DATA_SOURCES.md)（本代 REAL 线为 `REAL_OMITTED_BY_DATA_GATE`）；
-- **正式账本（约 3.2 GB）与大型派生索引**：登记在 [`data/manifests/`](data/manifests/)（大小 + SHA-256 + seal 绑定），
-  DOI 待 Zenodo 归档（见 [`reproducibility/DATA_AVAILABILITY.md`](reproducibility/DATA_AVAILABILITY.md)），
-  获取与校验用 `python scripts/fetch_archived_data.py`。
+- **正式账本（约 3.4 GB）与大型派生索引**：登记在 [`data/manifests/external_artifacts.json`](data/manifests/external_artifacts.json)
+  （大小 + SHA-256 + seal 绑定；索引以确定性 tar 登记，含三份成员的逐文件哈希），
+  获取与校验用 `python scripts/fetch_archived_data.py`（`--verify-only` 在依赖缺失时返回 2）。
+  归档准备包（Zenodo 元数据 + 上传步骤 + 逐文件清单）见工作区 `OUTPUTS/data_archive_20260920/`；
+  数据 DOI 登记后写入本清单的 `doi` 字段与 `reproducibility/RELEASE_MANIFEST.json`。
 
 ## Computational requirements
 
@@ -158,18 +165,22 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 引用方式见 [`CITATION.cff`](CITATION.cff)（GitHub 会显示 "Cite this repository"）。
 **软件 release 与论文请同时引用**；若使用了归档账本，请再引用数据 DOI。
-作者名单与 DOI 当前为 PENDING（见 [`AUTHORS.md`](AUTHORS.md)），定稿后同步更新。
+
+作者：**王平（Wang Ping），河北金融学院与数据科学学院**（`AUTHORS.md`）。
+数据 DOI 与 `preferred-citation` 将在 Zenodo 账本归档与论文见刊后补入 `CITATION.cff`。
 
 ## License
 
-- 代码：根 [`LICENSE`](LICENSE)（当前为占位"保留所有权利"，发布前替换为最终选择，如 MIT/BSD-3-Clause/Apache-2.0）；
-- 结果数据：[`LICENSES/DATA_LICENSE.txt`](LICENSES/DATA_LICENSE.txt)（PENDING）；
-- 论文：[`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt)（依期刊政策，PENDING）；
-- 第三方：见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)（PAMAP2 为 CC BY 4.0，不重新分发）。
+本仓库**不是单一许可对象**（2026-09-20 作者确认）：
 
-> ⚠️ **三项许可均待作者确认**——这是公开推送（P0-1）的前置条件。在闭合之前仓库必须保持
-> **private**：`LICENSE` 当前为"保留所有权利、禁止对外分发"，与 public 直接冲突。
-> 决策清单与操作步骤见 [`LICENSE`](LICENSE)、[`AUTHORS.md`](AUTHORS.md)。
+| 对象 | 许可 | 文件 |
+|---|---|---|
+| 代码（`src/`、`scripts/`、`audit/`、`tests/`、`paper/scripts/`、`configs/`） | **MIT** | [`LICENSE`](LICENSE) |
+| 本项目自行产生的结果数据（`results/`、`artifacts/`、清单与归档账本） | **CC BY 4.0** | [`LICENSES/DATA_LICENSE.txt`](LICENSES/DATA_LICENSE.txt) |
+| 论文源文件与 PDF（`paper/`） | **CC BY 4.0**（published version 依目标期刊政策） | [`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt) |
+| 第三方组件与数据 | 见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)（PAMAP2 为 CC BY 4.0，**不重新分发**） | — |
+
+转载/再分发时请按 CC BY 4.0 保留署名（`AUTHORS.md` 与 `CITATION.cff` 给出了署名信息）。
 
 ## Contact and issue reporting
 
