@@ -21,8 +21,6 @@ Outputs (``artifacts/tables/``), four files per table
 
 Table map (artifact name -> manuscript placement)
   Table1_design               -> ``paper/sections/04_protocol.tex``   (tab:design)
-  Table2_h0_representative    -> artifact only (representative cells; the manuscript reports the
-                                 full 112-row distribution in the supplement, not a sample table)
   Table3_primary_contrasts    -> ``paper/sections/05_h0.tex``         (tab:primary)
   Table4_calibration          -> ``paper/sections/05_h0.tex``         (tab:calibration)
   Table5_h1_power             -> ``paper/sections/06_h1.tex``         (tab:h1-power)
@@ -71,13 +69,13 @@ SCENARIO_ORDER = ("shape_change", "mean_shift")
 # Registered estimand wording for the three primary contrasts. This is *text* that describes the
 # frozen estimand; the numbers next to it are always read from the canonical sources below.
 PRIMARY_DIRECTION = {
-    "P1": r"$s{=}16$ 减 $s{=}64$ 的 M0 拒绝率差",
-    "P2": r"$s{=}16$ 减 $s{=}64$ 的 M0 拒绝率差",
+    "P1": r"固定窗口数下 $s{=}16$ 减 $s{=}64$ 的 M0 拒绝率差",
+    "P2": r"固定观测长度下 $s{=}16$ 减 $s{=}64$ 的 M0 拒绝率差",
     "P3": r"$0.05$ 减 M1 拒绝率",
 }
 
 # Table artifacts that are intentionally not produced by this generator (kept for the audit trail).
-LEGACY_ALLOWLIST = {"Table_H1_COMMON_ESTIMAND.tex", "TABLE_DATA.json"}
+LEGACY_ALLOWLIST = {"TABLE_DATA.json"}
 
 
 def sha256_of(path: Path) -> str:
@@ -158,7 +156,7 @@ def build_design(h0_rows: list[dict]) -> dict:
         })
 
     def overlap_text(value: float) -> str:
-        return "0" if value == 0 else f"{value:.1f}"
+        return f"{value:.1f}"
 
     body = "\n".join(
         "{} & {}\\% & {} & {} & {} & {} & {} & {} \\\\".format(
@@ -196,54 +194,6 @@ $s$ & 重叠率 & \multicolumn{{3}}{{c}}{{固定窗口数（fixed-$M$）}} & \mu
             "fixed_M_T": r["fixed_M"]["T"], "fixed_M_M": r["fixed_M"]["M"], "fixed_M_b": r["fixed_M"]["b"],
             "fixed_T_T": r["fixed_T"]["T"], "fixed_T_M": r["fixed_T"]["M"], "fixed_T_b": r["fixed_T"]["b"],
         } for r in rows],
-        "json_rows": rows,
-        "inputs": ["H0_POINTWISE"],
-    }
-
-
-# --------------------------------------------------------------------------------------------
-# Table 2: representative H0 cells (stride 16 and 64 at rho = 0)
-# --------------------------------------------------------------------------------------------
-def build_h0_representative(h0_rows: list[dict]) -> dict:
-    rows = []
-    for row in h0_rows:
-        stride, T, M, rho = int(row["stride"]), int(row["T"]), int(row["M_expected"]), decode_rho(row["rho"])
-        if abs(rho) > 1e-12:
-            continue
-        representative = (M == 192 and stride in (16, 64)) or (T == 3120 and stride == 64)
-        if not representative:
-            continue
-        rows.append({
-            "DGP": row["DGP_family"],
-            "feature": feature_label(row["feature_id"]),
-            "method": method_label(row["method_id"]),
-            "stride": stride,
-            "T": T,
-            "M": M,
-            "rejection_rate": float(row["rejection_rate"]),
-            "classification": row["classification"],
-        })
-    rows.sort(key=lambda r: (r["DGP"], r["feature"], r["method"], r["T"], r["stride"]))
-
-    tex_lines = [
-        r"\begin{table}[ht]", r"\centering",
-        r"\caption{代表性零假设单元的拒绝率（$\rho=0$；完整 112 行见补充材料）。}\label{tab:h0-representative}",
-        r"\begin{tabular}{lllccrr}", r"\toprule",
-        r"DGP & 表示 & 方法 & $s$ & $T$ & $M$ & 拒绝率\\", r"\midrule",
-    ]
-    for r in rows:
-        tex_lines.append(
-            f"{r['DGP'].replace('_', r'\_')} & {display_feature(r['feature'])} & "
-            f"{display_method(r['method'])} & {r['stride']} & {r['T']} & {r['M']} & "
-            f"{r['rejection_rate']:.4f}\\\\"
-        )
-    tex_lines += [r"\bottomrule", r"\end{tabular}", r"\end{table}", ""]
-    return {
-        "name": "Table2_h0_representative",
-        "title": "Representative H0 calibration (full 112 rows in H0_POINTWISE.json)",
-        "tex": "\n".join(tex_lines),
-        "csv_fields": ["DGP", "feature", "method", "stride", "T", "M", "rejection_rate", "classification"],
-        "csv_rows": rows,
         "json_rows": rows,
         "inputs": ["H0_POINTWISE"],
     }
@@ -406,7 +356,7 @@ def build_h1_power(h1: dict) -> dict:
         r"分别计算。}\label{tab:h1-power}",
         r"\begingroup", r"\footnotesize", r"\setlength{\tabcolsep}{3.5pt}",
         r"\begin{tabular}{llccrr}", r"\toprule",
-        r"场景 & 表示 & 检出能力 & 定位误差 & \multicolumn{2}{c}{检出--定位联合成功}\\",
+        r"场景 & 表示 & 尺寸标准化功效 & 归一化定位误差 & \multicolumn{2}{c}{联合成功率}\\",
         r"\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-6}",
         r" & & $\widehat\beta_{\mathrm{std}}$ & nMAE & M0 & M1\\", r"\midrule",
     ]
@@ -445,7 +395,6 @@ def build_all() -> list[dict]:
 
     return [
         build_design(h0_rows),
-        build_h0_representative(h0_rows),
         build_primary(contrasts, bootstrap),
         build_calibration(h0_rows),
         build_h1_power(h1),

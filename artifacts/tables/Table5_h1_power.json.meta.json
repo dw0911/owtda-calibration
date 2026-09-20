@@ -1,9 +1,9 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "content_sha256": "34799e098a7bbf80bbdadb2a5f7f6983584d3393c8a41c359e9657efedcdc9c1",
-  "generated_at": "2026-09-20T12:03:35Z",
+  "content_sha256": "34964cf8255f404f64eee38722c55b8fcc599749ac24914091d95d337dee504b",
+  "generated_at": "2026-09-20T15:01:42Z",
   "input_sha256": {
-    "H1_REANALYSIS": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2"
+    "H1_REANALYSIS": "945ba22ecb59d8492007c15cee9525186e19797ee2cd7772b9a0289ef4d9255e"
   },
   "inputs": [
     "H1_REANALYSIS"
@@ -12,10 +12,10 @@
   "outputs": {
     "Table5_h1_power.csv": "30853a08413942c26ae0b77b590b041d3b6c038e2a1b72f6f755c98f8ea74133",
     "Table5_h1_power.json": "03aad93d1f6b032047a750fe9b88bbbd596a83a89f661b540e6c9664fad8ad1b",
-    "Table5_h1_power.tex": "135cee54574476d6669e030fa607fdce1e46e798ca3e6f2169b082bd5f5d86aa"
+    "Table5_h1_power.tex": "ca9b78e6a06ba6ea2ce8ecbaa62089cd7c7399229edcbea743955e1f340613c5"
   },
   "schema_version": 1,
   "script": "paper/scripts/make_tables.py",
-  "script_sha256": "5cec124eee5ca742e082442b4cc2737adfc3a3832998b02d2a6721d10c9b9c74",
+  "script_sha256": "31f65b64e3ebfdd8e1c8a6967940604d2e1b51e037b343ca48f6c6252edf5aab",
   "title": "H1 power/localization"
 }

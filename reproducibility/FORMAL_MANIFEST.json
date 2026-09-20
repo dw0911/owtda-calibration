@@ -6,7 +6,7 @@
     "results/canonical/H0_POINTWISE.json": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
     "results/canonical/H0_PRIMARY_CONTRASTS.json": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
     "results/canonical/H1_ALL_16_GEOMETRY_COMPLETE.json": "588b72f8ee141ea4053a1dabaab295485e426e78845907979a5dacdbcc37d96e",
-    "results/canonical/H1_REANALYSIS.json": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2",
+    "results/canonical/H1_REANALYSIS.json": "945ba22ecb59d8492007c15cee9525186e19797ee2cd7772b9a0289ef4d9255e",
     "results/canonical/H1_SCENARIO_DIFFERENCES.json": "16a04495549309c291e428bb1433ccc5a7662cf3a874d11bf506b5a3fdd407dc",
     "results/canonical/MANUSCRIPT_VALUES.json": "7d223e304dddc91bcd24335b88dd93a295bdfd08b127fc6c39dab8c687e2bb36",
     "results/canonical/P1_P3_BOOTSTRAP.json": "00194c4f9d38955b0d5d2cd1b32db5983a34721dcb09b324f9468e94986fede8",
@@ -28,7 +28,7 @@
       "configs/"
     ]
   },
-  "paper_pdf_sha256": "7b38698ee089a14eae1d3ddf84c1709e5f0177e181afbd5a4128c232b98cbec7",
+  "paper_pdf_sha256": "21f25022e43903cd2c220e9d4d277b43177009804271de6ab7373f8c998839c0",
   "paper_version": "2026-09 (R5-paper snapshot)",
   "phases": {
     "ALT": {

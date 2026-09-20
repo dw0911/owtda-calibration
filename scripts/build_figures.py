@@ -13,9 +13,6 @@ Usage:
     (the 2026-09-20 audit flagged stale generator hashes as a provenance gap);
   * every recorded output hash matches the committed PDF/SVG/PNG bytes;
   * the manuscript figure is actually referenced by a ``.tex`` file.
-
-The three legacy metas written by the pre-2026-09-20 audit generator (supplement heatmaps) are
-allow-listed and reported as legacy instead of failing.
 """
 
 from __future__ import annotations
@@ -32,11 +29,6 @@ GENERATOR = REPO / "paper" / "scripts" / "make_figures.py"
 FIGURES = REPO / "artifacts" / "figures"
 LOOKUP_DIRS = (REPO / "artifacts" / "tables", REPO / "results" / "canonical", REPO / "results" / "bootstrap")
 
-LEGACY_METAS = {
-    "Figure3_fixedM_type1.png.meta.json",
-    "Figure4_fixedT_type1.png.meta.json",
-    "Figure7_h1_power.png.meta.json",
-}
 MANUSCRIPT_FIGURES = {
     "Figure1_method_schematic",
     "Figure2_alternative_geometry",
@@ -65,14 +57,10 @@ def check_provenance() -> int:
     generator_sha = sha256_of(GENERATOR)
     checked = unresolved = mismatch = 0
     problems: list[str] = []
-    legacy_seen: list[str] = []
 
     for meta_path in sorted(FIGURES.glob("*.meta.json")):
         meta = load(meta_path)
         stem = meta_path.name[: -len(".meta.json")]
-        is_legacy = meta_path.name in LEGACY_METAS
-        if is_legacy:
-            legacy_seen.append(meta_path.name)
 
         for name, digest in (meta.get("input_sha256") or {}).items():
             checked += 1
@@ -83,9 +71,6 @@ def check_provenance() -> int:
             elif sha256_of(target) != digest:
                 mismatch += 1
                 print(f"  HASH MISMATCH {name} ({meta_path.name})")
-
-        if is_legacy:
-            continue
 
         if meta.get("script_sha256") != generator_sha:
             problems.append(f"{meta_path.name}: script_sha256 does not match paper/scripts/make_figures.py")
@@ -105,7 +90,7 @@ def check_provenance() -> int:
 
     print(
         f"figure provenance: metas={len(list(FIGURES.glob('*.meta.json')))} inputs_checked={checked} "
-        f"unresolved={unresolved} mismatched={mismatch} legacy={','.join(legacy_seen) or 'none'}"
+        f"unresolved={unresolved} mismatched={mismatch}"
     )
     for problem in problems:
         print(f"  PROBLEM {problem}")

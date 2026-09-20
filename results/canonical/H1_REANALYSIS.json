@@ -5,7 +5,6 @@
   "script_sha256": "c3c0bfff559768d17d0c04ef9c852bea07043b5fe479551f210aaf21b9e3397f",
   "sources": {
     "H0": {
-      "path": "F:\\BPI\\r5_h0_run\\run\\ac6f9e201a19cfc6d1edb0d02bcc7ee0e7556b7083e3571106d2bd8058883f81\\f94341f89cde8bafa930548f1c67446c57587f7b9c164e6690a906b268533ed1.final\\evaluation.scientific.jsonl",
       "sha256": "744141035fdb5f651b19f3e7998cc4f7223356dcdc7eea1f92a2390e689391d8",
       "rows": 280000,
       "evaluation_id_set_hash": "35b8584d0ed09104283915ab711e2abd5912165f25e7b563fedb145cb1aaa59c",
@@ -13,7 +12,6 @@
       "replicates": "EXACT_1_TO_REGISTERED_N"
     },
     "H1": {
-      "path": "F:\\BPI\\r5_h1_run\\run\\bd53df84fb59302a76cb2fa00f79ffe1d2bb72d295a505bdb91e6e95a2fc76ee\\a41d1442568cecb275b32eebc605a1b59ad921547de2c52ee1513ea4b808aa5b.final\\evaluation.scientific.jsonl",
       "sha256": "82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7",
       "rows": 51200,
       "evaluation_id_set_hash": "2d907bddf38c4ee41dbab3902e135268da4995fad85aa1182757748f51121c9a",
