@@ -23,7 +23,6 @@ import argparse
 import hashlib
 import json
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -59,10 +58,6 @@ VERIFICATION = [
 ]
 
 
-def git(*args: str) -> str:
-    return subprocess.run(["git", "-C", str(REPO), *args], check=True, capture_output=True, text=True).stdout.strip()
-
-
 def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -86,21 +81,19 @@ def version_from_citation() -> tuple[str, str]:
 
 def build() -> dict:
     version, release_name = version_from_citation()
-    # NOTE: the manifest deliberately does NOT record `git tag --points-at HEAD`. The release
-    # workflow checks out the tag, so recording it would make the regenerated manifest differ from
-    # the committed one and `git diff --exit-code` would fail on every release. The tag/name
-    # agreement is asserted by a dedicated workflow step instead.
+    # Only *content-derived* fields live in this file.
+    #
+    # A file cannot record the hash/date of the commit that adds it, so commit/tree/branch/tag are
+    # deliberately absent: the release workflow regenerates this manifest and then requires
+    # ``git diff --exit-code`` to be empty, which is only possible if regeneration is byte-stable
+    # at the tagged commit. Commit and tag identity are asserted by the workflow
+    # (``git describe --exact-match``) and recorded in the delivered verification report.
     manifest = {
         "schema_version": 1,
         "kind": "RELEASE_MANIFEST",
         "release": {
             "name": release_name,
             "version": version,
-            "commit": git("rev-parse", "HEAD"),
-            "tree": git("rev-parse", "HEAD^{tree}"),
-            "commit_date": git("show", "-s", "--format=%cI", "HEAD"),
-            "tracked_files": len(git("ls-files").splitlines()),
-            "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         },
         # DOI 槽位（P0-6）：Zenodo 归档闭合前保持 null，禁止填写占位/虚构 DOI。
         # 代码 DOI 由 GitHub release 触发 Zenodo 自动归档得到；数据 DOI 由账本 dataset record 得到。
@@ -114,9 +107,11 @@ def build() -> dict:
         "tree_digests": {name: tree_digest(path) for name, path in sorted(TREES.items())},
         "verification_commands": VERIFICATION,
         "notes": [
-            "Deterministic for a given commit: no wall-clock fields and no tag state, so "
-            "`git diff --exit-code` must be empty after regenerating this file.",
-            "The release workflow asserts that the pushed tag equals release.name.",
+            "Content-derived only: no wall-clock, branch, commit or tag fields, so regenerating "
+            "this file at the tagged commit leaves the tree clean (`git diff --exit-code`).",
+            "Commit/tag identity: asserted by the release workflow (`git describe --exact-match` "
+            "must equal release.name) and recorded in the delivered verification report, which is "
+            "generated after the commit exists.",
             "The formal 3.2 GB ledgers are not distributed; see data/manifests/ and "
             "reproducibility/DATA_AVAILABILITY.md for the external archive DOI.",
             "Tree digests cover results/canonical, results/bootstrap, artifacts/tables and "
