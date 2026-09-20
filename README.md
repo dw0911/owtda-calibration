@@ -108,7 +108,7 @@ Level 3（全量重跑）。每层的命令、输入、预期产物与失败策�
 | Level 1 | `verify_release --level quick` 全部 PASS（H0 112/28、H1 16、P1–P3 合法性、图表血缘、SHA256SUMS） |
 | Level 2 | 与 `results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json`、`results/canonical/*` 一致（表 CSV 逐字节；图 PNG 逐字节）；**需先取得外部归档**，未闭合时 `fetch_archived_data.py --verify-only` 返回 2 |
 | Level 3 | H0 280,000 / H1 51,200 evaluation 行，逐格与 canonical 汇总在容差内一致 |
-| 论文 | `paper/main.pdf`（XeLaTeX；22→23 页） |
+| 论文 | `paper/main.pdf`（XeLaTeX；24 页，严格模式编译，0 未定义引用、0 缺图占位） |
 
 机器可读清单：[`reproducibility/EXPECTED_OUTPUTS.json`](reproducibility/EXPECTED_OUTPUTS.json)、
 图形/表格血缘：[`reproducibility/ARTIFACT_INDEX.csv`](reproducibility/ARTIFACT_INDEX.csv)。

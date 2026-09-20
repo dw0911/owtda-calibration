@@ -36,7 +36,7 @@
 | `analyse_h0.py` | ✅ 新建 | `--check`（canonical 自洽）+ `--from-ledger`（账本流式聚合与规则核验） |
 | `analyse_h1.py` | ✅ 新建 | `--check`（canonical 自洽）+ `--from-ledgers`（转发 `release/analysis/scripts/reanalyse_h1.py`） |
 | `bootstrap_primary_contrasts.py` | ✅ 新建 | 真实 draws → p/CI/Holm；`--check` 自洽 |
-| `build_tables.py` / `build_figures.py` | ✅ 新建 | 包装 `audit/build_corrected_assets.py` / `paper/scripts/make_figures.py`；均带 `--check` |
+| `build_tables.py` / `build_figures.py` | ✅ 新建 | 包装 `paper/scripts/make_tables.py`（正文表 1–5，canonical 源）/ `paper/scripts/make_figures.py`；均带 fail-closed 的 `--check`。`build_tables.py --legacy` 保留旧的 `audit/build_corrected_assets.py` 补充材料路径，但不参与 CI |
 | `verify_release.py --level quick\|analysis` | ✅ 新建 | 规范 Level 1/2 的全部检查 |
 | `fetch_archived_data.py` | ✅ 新建 | 按 `data/manifests/external_artifacts.json` 校验/下载大对象 |
 | —（额外） | `build_sha256sums.py`、`build_reproducibility_index.py`、`check_canonical.py`、`frozen_env.py`、审计工具若干 | 证据与清单工具 |
