@@ -45,6 +45,8 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 
    产出 `H0_ALL_112`、`H1_ALL_16_GEOMETRY_COMPLETE`、`H1_SCENARIO_SAME_FOUR_CONDITIONS`、`H1_SCENARIO_DIFFERENCES`、
    `Table_H1_COMMON_ESTIMAND.tex` 与两张修正热图；与仓库 `artifacts/tables/`、`manuscript/supplement/` 可直接对照。
+   **重生成实测（2026-09-20）**：全部 CSV 与入库版本**逐字节一致**；`Table_H1_COMMON_ESTIMAND.tex` 内容一致、
+   仅行尾不同（Windows 重生成为 CRLF，入库版本为 LF）。
 
 3. **生成正文图**（读 `artifacts/tables/` 的 canonical CSV）：
 
@@ -54,8 +56,29 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 
    > 注：该脚本在 2026-09-20 生成本仓库图件后仅做过**可移植性修订**（绝对路径 → 仓库相对；绘图逻辑未变）。
    > 各图 `meta.json` 的 `script_sha256` 对应**生成时刻**的脚本字节；重新生成会刷新 `generated_at` 与 `script_sha256`（可预期的元数据差异），图件内容由 §2/§3.2 的 canonical 表决定。
+   > **重生成实测（2026-09-20）**：5 张主图 PNG **逐字节一致**；PDF/SVG/meta **体积相同、差异仅为内嵌元数据**
+   > （创建日期 / 脚本哈希 / 生成时间）。`FIGURE_DATA.json` 与补充图不受该脚本影响、逐字节一致。
 
 4. **一致性/契约校验**：`python scripts/check_canonical.py`（canonical 序列化递归检查）、`python -m pytest tests -q`。
+
+5. **表 1–5（`artifacts/tables/Table1–5*`、`TABLE_DATA.json`）——如实的生成缺口**：
+   这些呈现用表由其**原始生成器脚本**生成，而该脚本**未随项目保留**（表 meta 记录 `script_sha256=d2fe7f6a…`；
+   已在仓库、审计包与归档中逐一搜索未获）。可核验性由以下保证：表数据已入库；meta 记录输入哈希与 `analysis_id`；
+   输入文件齐备（`artifacts/summaries/` 的 `H0_POINTWISE.json`、`H0_PRIMARY_CONTRASTS.json`、`H1_REANALYSIS.json`）。
+   投稿前按图表重构规格重建这些表时将一并补入生成器。**补充数据表（`H0_ALL_112`、`H1_ALL_16_GEOMETRY_COMPLETE`、
+   `H1_SCENARIO_*`）不受此缺口影响，可由 §3.2 的生成器逐字节复现。**
+
+6. **编译论文**（需 TeX 环境；本仓库以 XeLaTeX 验证）：
+
+   ```powershell
+   cd manuscript
+   xelatex -interaction=nonstopmode main.tex
+   bibtex main
+   xelatex -interaction=nonstopmode main.tex
+   xelatex -interaction=nonstopmode main.tex
+   ```
+
+   实测（2026-09-20）：22 → 23 页；产物 `main.pdf` 与入库版本**同尺寸**（546,178 B；二进制差异为内嵌 CreationDate）。
 
 ### 路径 B — 分析链（由封存账本重算）
 
@@ -95,8 +118,8 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 | `python -m pytest tests -q` | 契约 / 攻击式回归（"故意破坏必须失败"） |
 | `python -m ruff check src tests audit scripts configs` | 静态检查（代码与工具域，全清） |
 | `python scripts/check_canonical.py` | canonical 序列化契约（governance / artifacts 递归） |
-| `python audit/validate_freeze.py` | 冻结对象、seed/component registry、REAL 链、快照重算 |
-| `python audit/validate_schemas.py` | 逐行 schema（24 variants、拒绝未知字段） |
+| `python audit/validate_freeze.py` | 冻结对象、seed/component registry、REAL 链（**在发布快照上会报 1 项 `source_tree_hash` 不匹配**：入库 `src/` 为 R4/R5 修复后的较新版本，而 `FREEZE_MANIFEST` 记录的是更早一次冻结的源树哈希；其余全 PASS，不影响已封存 seal） |
+| `python audit/validate_schemas.py --out-dir <新目录>` | 逐行 schema（24 variants、拒绝未知字段；须指定输出目录） |
 | `python audit/validate_runs.py` / `validate_identity.py` | RUN 身份与 expected index 闭合 |
 | `python scripts/verify_release_contracts.py` / `verify_audit_dossier.py` | 发布/审计包合同 |
 

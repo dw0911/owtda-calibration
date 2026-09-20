@@ -115,3 +115,6 @@ sealed trial JSON → validated canonical ledger → canonical summaries
 3. **T4（Ω=qΓ0 的过程极限）**：未闭合，正文按 proposition 处理（理论降级为精确反例 + 解析方差放大 + 系统校准图谱）。
 4. **REAL/PAMAP2**：因数据闸门（23<24 合格任务）omission，正文为条件章节。
 5. 历史过程稿、旧代项目与大型本地证据不随仓库分发；如需，见 `external_prior_evidence/` 与各章说明。
+6. **表 1–5 的原始生成器脚本未随项目保留**（表数据、输入哈希与 canonical 输入均已入库；补充数据表可逐字节复现）——
+   投稿前随图表重构一并重建，详见 `REPRODUCIBILITY.md` §3.5。
+7. 在发布快照上运行 `audit/validate_freeze.py` 会报 1 项 `source_tree_hash` 不匹配（原因与影响见 `REPRODUCIBILITY.md` §4）。
