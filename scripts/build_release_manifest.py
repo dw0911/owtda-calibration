@@ -65,7 +65,8 @@ def sha256_of(path: Path) -> str:
 def tree_digest(root: Path) -> str:
     """Deterministic digest of a directory: sha256 over sorted ``<relpath>\\0<sha256>\\n`` lines."""
     digest = hashlib.sha256()
-    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+    for path in sorted((p for p in root.rglob("*") if p.is_file()),
+                       key=lambda p: p.relative_to(REPO).as_posix()):
         rel = path.relative_to(REPO).as_posix()
         digest.update(f"{rel}\0{sha256_of(path)}\n".encode())
     return digest.hexdigest()

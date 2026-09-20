@@ -39,12 +39,13 @@ def main() -> int:
         base = REPO / rel
         if not base.exists():
             continue
-        for path in sorted(base.rglob("*")):
+        for path in sorted(base.rglob("*"), key=lambda p: p.relative_to(REPO).as_posix()):
             if path.is_file() and path.name not in EXCLUDE_NAMES:
                 lines.append(f"{sha256_of(path)}  {path.relative_to(REPO).as_posix()}")
     target = REPO / "reproducibility" / "SHA256SUMS"
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # 显式 LF：Windows 的 CRLF 会让同名文件在不同 OS 上字节不同（2026-09-21 审计）。
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote reproducibility/SHA256SUMS ({len(lines)} entries)")
     return 0
 

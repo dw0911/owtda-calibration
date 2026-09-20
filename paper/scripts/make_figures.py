@@ -227,7 +227,7 @@ def fig2():
     ax.scatter(pts_c1[:, 0], pts_c1[:, 1], s=16, c="#1f77b4", label="变点前：圆 $C(u)$")
     ax.scatter(pts_c2[:, 0], pts_c2[:, 1], s=16, c="#d62728", label="变点后：$C(u)+0.5v$")
     ax.annotate("", xy=(0.5, 0), xytext=(0, 0),
-                arrowprops=dict(arrowstyle="->", lw=1.6, color="k"))
+                arrowprops={"arrowstyle": "->", "lw": 1.6, "color": "k"})
     ax.text(0.25, 0.10, "$0.5$", ha="center", fontsize=9)
     ax.set_title("(b) 均值平移（$v=(1,0)$ 示例）", fontsize=9)
 
@@ -277,7 +277,7 @@ def fig3():
             ax.set_xticklabels(feats, fontsize=8)
             ax.set_yticks(range(8))
             ax.set_yticklabels(
-                [r"$\rho{=}%g,\ s{=}%d$" % (rho, s) for rho in rho_levels for s in strides],
+                [fr"$\rho{{=}}{rho:g},\ s{{=}}{s:d}$" for rho in rho_levels for s in strides],
                 fontsize=7.5,
             )
             ax.axhline(3.5, color="white", lw=1.2)  # ρ=0 与 ρ=0.8 组间分隔
@@ -345,7 +345,7 @@ def fig4():
             ax.set_xticklabels(feats, fontsize=8)
             ax.set_yticks(range(8))
             ax.set_yticklabels(
-                [r"$\rho{=}%g,\ s{=}%d$" % (rho, s) for rho in rho_levels for s in strides],
+                [fr"$\rho{{=}}{rho:g},\ s{{=}}{s:d}$" for rho in rho_levels for s in strides],
                 fontsize=7.5,
             )
             ax.axhline(3.5, color="0.6", lw=1.0)  # ρ 组间分隔
@@ -469,7 +469,6 @@ def fig_supplement_h0():
     cmap = plt.get_cmap("cividis")
     fig, axs = plt.subplots(1, 2, figsize=(9.0, 6.2), constrained_layout=True)
 
-    dgps = ["N_AR", "N_CIRCLE"]
     dgp_labels = ["N-AR", "N-CIRCLE"]
     rho_levels = (0.0, 0.8)
     strides = (8, 16, 32, 64)

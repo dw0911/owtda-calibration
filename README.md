@@ -4,7 +4,7 @@
 Topological Scans with Overlapping Windows*
 
 > 论文配套的**可复现仓库**：代码、冻结配置、论文源文件、规范化汇总结果与图表生成脚本。
-> 发布快照：**v1.0.0-paper**。
+> 发布快照：**v1.1.1-paper**。
 >
 > **复现方式**
 > - **Level 1（秒级）**：`verify_release.py --level quick` 核验代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
@@ -30,7 +30,7 @@ Topological Scans with Overlapping Windows*
 
 | 量 | 结果 |
 |---|---|
-| H0 逐格（28 唯一格 × 2,500 replicate） | M0 朴素置换**严重反保守**（BPI 0.4267、MOMENTS 0.5462 的合并拒绝率）；M1 DMB 接近名义（0.0458 / 0.0506） |
+| H0 逐格（28 唯一格 × 2,500 replicate） | M0 朴素置换**严重反保守**（BPI 0.4267、MOMENTS 0.5462 的合并拒绝率）；M1 明显降低极端反保守性，但逐格拒绝率仍为 0.0020–0.1412，**未达到统一的逐格名义校准**（合并拒绝率 0.0458 / 0.0506 仅作描述性汇总） |
 | P1 / P2 / P3（10,000 次 cluster bootstrap + Holm） | **0.5354 / 0.5330 / 0.0266**（阈值 0.10 / 0.10 / 0.01，全部 SUPPORTED；tail = 0 → p = 1/10001，Holm = 3/10001） |
 | H1 表示差 Δ(BPI − MOMENTS)（8 格 × 1,600 replicate） | shape change **+0.9380** [0.9297, 0.9461]；mean shift **−0.9463** [−0.9534, −0.9384]（镜像） |
 | 交换性失效 | 精确反例 + 解析方差放大（理论节 T1–T5；T4 按 proposition 降级披露） |
@@ -52,8 +52,8 @@ results/bootstrap/    P1–P3 真实 draws（npz）+ 推断摘要 + 元数据
 artifacts/figures|tables/  图与表（脚本生成；每项附 meta.json：输入/输出哈希、脚本哈希、稿件引用）
 governance/           冻结对象（FREEZE_MANIFEST、SEED_REGISTRY 与冻结设计登记；复现输入）
 paper/                论文 LaTeX 工程（main.tex + sections + bib + main.pdf）+ 补充材料；
-                      paper/scripts/make_tables.py 由 canonical 源生成正文表 1–5，
-                      正文以 \input{../artifacts/tables/TableX.tex} 引用（不再手工硬编码）
+                      paper/scripts/make_tables.py 由 canonical 源生成正文表 1、3、4、5
+                      （表 2 效应修饰表在正文手写），正文以 \input{../artifacts/tables/TableX.tex} 引用
 release/analysis/scripts/  Level-2 的 H1 账本级重分析脚本（reanalyse_h1 / review_delivery）
 reproducibility/      RUNBOOK / ENVIRONMENT / COMPUTE_REQUIREMENTS / DATA_AVAILABILITY /
                       FAILURE_POLICY / VALIDATION_SUMMARY / FORMAL_MANIFEST / RELEASE_MANIFEST /
@@ -115,12 +115,12 @@ Level 3（全量重跑）。每层的命令、输入、预期产物与失败策�
 
 ## Table and figure generation
 
-正文表 1–5 与全部图件均由 canonical 源生成，正文只引用生成物（不再手工硬编码）：
+正文表 1、3、4、5 与全部图件均由 canonical 源生成，正文引用生成物；表 2（效应修饰）在正文手写、数值已核对：
 
 | 产物 | 生成器 | 校验命令 | 说明 |
 |---|---|---|---|
-| `artifacts/tables/Table{1..5}_*.{tex,csv,json,json.meta.json}` | `paper/scripts/make_tables.py`（别名入口 `scripts/build_tables.py`） | `python scripts/build_tables.py --check` | 缺表、数值差异、多余未提交产物都会使校验返回非零 |
-| `artifacts/figures/Figure*.{pdf,svg,png,meta.json}` | `paper/scripts/make_figures.py`（别名入口 `scripts/build_figures.py`） | `python scripts/build_figures.py --check` | 校验输入哈希、**当前生成脚本哈希**、输出哈希与稿件引用 |
+| `artifacts/tables/Table{1,3,4,5}_*.{tex,csv,json,json.meta.json}` | `paper/scripts/make_tables.py`（别名入口 `scripts/build_tables.py`） | `python scripts/build_tables.py --check` | 缺表、数值差异、多余未提交产物都会使校验返回非零 |
+| `artifacts/figures/Figure*.{pdf,svg,png,meta.json}` | `paper/scripts/make_figures.py`（别名入口 `scripts/build_figures.py`） | `python scripts/build_figures.py --check` | 校验输入哈希、**当前生成脚本哈希**、输出哈希与稿件引用（**只核对哈希，不重绘图件**） |
 
 - 图内标签为中文，需要**可确定获得**的 CJK 字体：Windows/macOS 使用系统字体，Debian/Ubuntu 使用
   `fonts-noto-cjk`（本机解析到 `Noto Sans SC`）。缺字体时 `make_figures.py` 默认**报错退出**，
@@ -152,7 +152,7 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 ## Paper and supplementary material
 
 - 论文源文件与编译产物：[`paper/`](paper/)（`main.tex` + `sections/` + `bibliography.bib` + `main.pdf`）；
-- 补充材料：`paper/supplement/`（补充数据表）与 `artifacts/tables/`（正文表）；
+- 补充材料：`paper/supplement/supplement.pdf`（S1–S5：完整 112 行 H0、16 行 H1、分析规格、16×4 热图、代码与数据可用性）；
 - 论文方法/理论/协议的权威定义：`paper/sections/02_method.tex`、`03_theory.tex`、`04_protocol.tex`
   与 `governance/{METHOD_SPEC,PROTOCOL,SAP,DATA_SPEC}_v1.0.md`。
 
@@ -187,6 +187,6 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 **说明**：
 
-- 正文表 1–5 由 `paper/scripts/make_tables.py` 从 canonical 源生成，正文 `\input` 生成结果；
+- 正文表 1、3、4、5 由 `paper/scripts/make_tables.py` 从 canonical 源生成，正文 `\input` 生成结果；表 2（效应修饰）在正文手写，其 8 个数值已与 canonical 逐格拒绝率核对一致；
 - 图件生成依赖 `matplotlib`（锁定环境提供）；
 - `H0_PRIMARY_CONTRASTS.json` 中历史 `p = 0` 值仅作字节保留，现行有效值见 `results/bootstrap/`。

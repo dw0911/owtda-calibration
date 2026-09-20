@@ -111,12 +111,14 @@ def _release_name() -> str:
 
 def write_artifact_index() -> int:
     rows = []
-    for meta_path in sorted(list((REPO / "artifacts" / "figures").rglob("*.meta.json"))
-                            + list((REPO / "artifacts" / "tables").glob("*.meta.json"))):
+    meta_paths = list((REPO / "artifacts" / "figures").rglob("*.meta.json")) \
+        + list((REPO / "artifacts" / "tables").glob("*.meta.json"))
+    for meta_path in sorted(meta_paths, key=lambda p: p.relative_to(REPO).as_posix()):
         meta = load(meta_path)
         base = meta_path.name.replace(".meta.json", "")
         kind = str(meta.get("kind", "")).lower()
-        outputs = sorted(p for p in meta_path.parent.glob(base + ".*") if p.name != meta_path.name)
+        outputs = sorted((p for p in meta_path.parent.glob(base + ".*") if p.name != meta_path.name),
+                         key=lambda p: p.relative_to(REPO).as_posix())
         primary = next((p for p in outputs if p.suffix in (".pdf", ".csv", ".json")), None)
         generator = "paper/scripts/make_figures.py" if kind == "figure" else "paper/scripts/make_tables.py"
         rows.append(
@@ -158,12 +160,14 @@ def write_formal_manifest() -> None:
         "paper_pdf_sha256": sha256_of(REPO / "paper" / "main.pdf"),
         "canonical_results_sha256": {
             path.relative_to(REPO).as_posix(): sha256_of(path)
-            for path in sorted((REPO / "results" / "canonical").rglob("*.json"))
+            for path in sorted((REPO / "results" / "canonical").rglob("*.json"),
+                               key=lambda p: p.relative_to(REPO).as_posix())
         },
         "paper_version": "2026-09 (R5-paper snapshot)",
     }
     (OUT / "FORMAL_MANIFEST.json").write_text(
-        json.dumps(manifest, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8"
+        json.dumps(manifest, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8", newline="\n",
     )
     print("wrote reproducibility/FORMAL_MANIFEST.json")
 
@@ -192,7 +196,7 @@ def write_expected_outputs() -> None:
         ],
     }
     (OUT / "EXPECTED_OUTPUTS.json").write_text(
-        json.dumps(expected, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        json.dumps(expected, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
     )
     print("wrote reproducibility/EXPECTED_OUTPUTS.json")
 

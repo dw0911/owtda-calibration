@@ -178,7 +178,7 @@ BPI/M0、BPI/M1、MOMENTS/M0、MOMENTS/M1。}\label{fig:s1}
 
 \begin{itemize}
 \item 代码仓库：\url{https://github.com/dw0911/owtda-calibration}
-\item 本稿对应 git 标签 \texttt{v1.1.0-paper}
+\item 本稿对应 git 标签 \texttt{v1.1.1-paper}
 \item 全部合成数据由该版本代码与固定随机种子生成；独立数据 DOI 尚在建立中，未作为已提供材料列出
 \end{itemize}
 

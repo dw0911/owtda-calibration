@@ -28,7 +28,7 @@
       "configs/"
     ]
   },
-  "paper_pdf_sha256": "8c42266827052616e346a71d8887431c0b345f0a402423cc0a014fe8bc36c954",
+  "paper_pdf_sha256": "860e16c7ab56d0df74d4a8d402a33c60c2476d82a98069bfbf2c04c5e558b81d",
   "paper_version": "2026-09 (R5-paper snapshot)",
   "phases": {
     "ALT": {
@@ -69,7 +69,7 @@
     }
   },
   "provenance": "freeze:6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
-  "release": "v1.0.0-paper",
+  "release": "v1.1.1-paper",
   "totals": {
     "data_units": 82800,
     "evaluation_rows": 331200,
