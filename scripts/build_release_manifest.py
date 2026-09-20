@@ -95,13 +95,14 @@ def build() -> dict:
             "name": release_name,
             "version": version,
         },
-        # DOI 槽位（P0-6）：Zenodo 归档闭合前保持 null，禁止填写占位/虚构 DOI。
-        # 代码 DOI 由 GitHub release 触发 Zenodo 自动归档得到；数据 DOI 由账本 dataset record 得到。
+        # The formal ledgers are not distributed; the synthetic experiment is fully
+        # reproducible from code + the frozen seed registry (see scripts/reproduce.py).
         "doi": {
             "code": None,
             "data": None,
-            "note": "Filled in after both Zenodo deposits are closed (see "
-                    "reproducibility/DATA_AVAILABILITY.md §3); null means 'not yet deposited'.",
+            "note": "Code DOI is assigned by the GitHub release -> Zenodo deposit when the "
+                    "repository is published. The formal ledgers are not distributed; the "
+                    "synthetic experiment is reproducible without them (scripts/reproduce.py).",
         },
         "artifacts": {name: sha256_of(path) for name, path in sorted(FILES.items())},
         "tree_digests": {name: tree_digest(path) for name, path in sorted(TREES.items())},
@@ -112,8 +113,8 @@ def build() -> dict:
             "Commit/tag identity: asserted by the release workflow (`git describe --exact-match` "
             "must equal release.name) and recorded in the delivered verification report, which is "
             "generated after the commit exists.",
-            "The formal 3.2 GB ledgers are not distributed; see data/manifests/ and "
-            "reproducibility/DATA_AVAILABILITY.md for the external archive DOI.",
+            "The formal ledgers are not distributed; the synthetic experiment is fully "
+            "reproducible from code + the frozen seed registry (scripts/reproduce.py).",
             "Tree digests cover results/canonical, results/bootstrap, artifacts/tables and "
             "artifacts/figures; every paper number derives from those files.",
         ],

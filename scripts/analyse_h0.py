@@ -102,7 +102,9 @@ def from_ledger(ledger: Path, limit: int | None, tolerance: float) -> int:
             bucket = aggregate.setdefault(key, {"n": 0, "rejects": 0})
             bucket["n"] += 1
             bucket["rejects"] += int(bool(row["reject"]))
-            b = int(row["B"])
+            # B is a frozen constant (999). The wire schema marks the B field
+            # "forbidden" for M1 rows, so M1 rows omit it; fall back to 999.
+            b = int(row.get("B", 999))
             exceed = int(row["exceed_count"])
             if abs(float(row["p_value"]) - (exceed + 1) / (b + 1)) > 1e-15:
                 rule_p += 1

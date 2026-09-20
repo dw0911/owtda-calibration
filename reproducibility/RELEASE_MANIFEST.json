@@ -1,20 +1,20 @@
 {
   "artifacts": {
-    "data/manifests/external_artifacts.json": "60061860c0fdbb65467f5f2d77876b2b531cf8e52a1942266688b9af7160bb86",
+    "data/manifests/external_artifacts.json": "1f411735f9f243a4eb8bdcf7b2dd9258a5706c129e4df09c29821a6189608745",
     "paper/main.pdf": "7b38698ee089a14eae1d3ddf84c1709e5f0177e181afbd5a4128c232b98cbec7",
-    "reproducibility/ARTIFACT_INDEX.csv": "5c1aa29cd663cc3b6d635d500d9a35cbd299993fe690e2501f5d27784c1c68c8",
-    "reproducibility/FORMAL_MANIFEST.json": "076a2de13c73456d322fa2004e6b42785a8f8f1211349e5c7a2be997af5c3b9b"
+    "reproducibility/ARTIFACT_INDEX.csv": "d8b4d33509551f927c3929eb6265eb127302b0259688343f40055c81bdebf55c",
+    "reproducibility/FORMAL_MANIFEST.json": "988de9fd09f2fa08855859477dab75a2d9e798017a34805e015b8edcc8b8b6e9"
   },
   "doi": {
     "code": null,
     "data": null,
-    "note": "Filled in after both Zenodo deposits are closed (see reproducibility/DATA_AVAILABILITY.md §3); null means 'not yet deposited'."
+    "note": "Code DOI is assigned by the GitHub release -> Zenodo deposit when the repository is published. The formal ledgers are not distributed; the synthetic experiment is reproducible without them (scripts/reproduce.py)."
   },
   "kind": "RELEASE_MANIFEST",
   "notes": [
     "Content-derived only: no wall-clock, branch, commit or tag fields, so regenerating this file at the tagged commit leaves the tree clean (`git diff --exit-code`).",
     "Commit/tag identity: asserted by the release workflow (`git describe --exact-match` must equal release.name) and recorded in the delivered verification report, which is generated after the commit exists.",
-    "The formal 3.2 GB ledgers are not distributed; see data/manifests/ and reproducibility/DATA_AVAILABILITY.md for the external archive DOI.",
+    "The formal ledgers are not distributed; the synthetic experiment is fully reproducible from code + the frozen seed registry (scripts/reproduce.py).",
     "Tree digests cover results/canonical, results/bootstrap, artifacts/tables and artifacts/figures; every paper number derives from those files."
   ],
   "release": {

@@ -20,12 +20,9 @@
     "results/canonical/shard_hashes.json": "dd073e6982a7b5d45f1d266674518fa231245658a6e02103bb842b685242897b",
     "results/canonical/validation_summary.json": "24621ae653d15c7472d59a0a4946a4e1ebaadf0e9220c88eef0775479ffcf975"
   },
-  "code_doi": null,
-  "data_doi": null,
   "freeze": {
     "evidence_generation_id": "G01",
     "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
-    "note": "source_tree_hash recorded by FREEZE_MANIFEST refers to an earlier revision; the published src/ is the later R4/R5 repair revision (see FAILURE_POLICY.md disclosures).",
     "source_tree_scope": [
       "src/",
       "configs/"
@@ -50,13 +47,7 @@
           "size_bytes": 262233600
         }
       },
-      "role": "H1",
-      "seals": {
-        "formal_admission": "artifacts/seals/H1_ALT/FORMAL_ADMISSION.json",
-        "parent_phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
-        "phase_seal": "artifacts/seals/H1_ALT/PHASE_SEAL.json",
-        "run_seal": "artifacts/seals/H1_ALT/RUN_SEAL.json"
-      }
+      "role": "H1"
     },
     "NULL": {
       "data_units": 70000,
@@ -74,50 +65,11 @@
           "size_bytes": 1437310000
         }
       },
-      "role": "H0",
-      "seals": {
-        "formal_admission": "artifacts/seals/H0_NULL/FORMAL_ADMISSION.json",
-        "phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
-        "run_seal": "artifacts/seals/H0_NULL/RUN_SEAL.json"
-      }
+      "role": "H0"
     }
   },
   "provenance": "freeze:6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
   "release": "v1.0.0-paper",
-  "seals": {
-    "H0_NULL": {
-      "PHASE_SEAL.json": {
-        "file_sha256": "e74f49b2c7d2d949f268a94bfb60268ba337fdf0eb286219eae9ca9f96ce13b8",
-        "path": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
-        "recorded": {
-          "phase_seal_hash": "3913d4366afc7631cd072371cf02f45587fe2efb36ffa89500b143dabec3997a"
-        }
-      },
-      "RUN_SEAL.json": {
-        "file_sha256": "7282842a59301b2c75e8ec060863652af69a5b5ddbfc9c484a4f66829f6193ec",
-        "path": "artifacts/seals/H0_NULL/RUN_SEAL.json",
-        "recorded": {
-          "run_seal_hash": "241c2e951cf906e708f321c9038d28204f26efeffdbf4f6442af04d8016309dc"
-        }
-      }
-    },
-    "H1_ALT": {
-      "PHASE_SEAL.json": {
-        "file_sha256": "8bbddcb414529bb6369acc4c64d595b99ffca70302816fba62b003671f5fe537",
-        "path": "artifacts/seals/H1_ALT/PHASE_SEAL.json",
-        "recorded": {
-          "phase_seal_hash": "d1e4a8f78ed826c845c98003515ac37f14024e8f49d11a3770dc50509c26c149"
-        }
-      },
-      "RUN_SEAL.json": {
-        "file_sha256": "408fb36f039b15c73eec993d3c74f64504431667446a87bc59286df407b6b24a",
-        "path": "artifacts/seals/H1_ALT/RUN_SEAL.json",
-        "recorded": {
-          "run_seal_hash": "c5ecaead286c693f785a4bde051bd508bf846599cc6ac2ba81d6d442687a2715"
-        }
-      }
-    }
-  },
   "totals": {
     "data_units": 82800,
     "evaluation_rows": 331200,

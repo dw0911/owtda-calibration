@@ -8,14 +8,13 @@ Topological Scans with Overlapping Windows* · 目标期刊：《山东大学学
 >
 > **可验证范围（如实声明）**
 > - **Level 1（默认、可任意克隆验证）**：代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
-> - **Level 2（账本级重做）**：依赖外部账本归档（四份正式 ledger 与两组大型索引，**3.67 GB**）。归档已
->   在本地准备并逐项校验：`scripts/fetch_archived_data.py --verify-only` 在账本就位的机器上返回 **0（6/6 verified）**，
->   在缺少账本的克隆上返回 **2** 并明确提示 Level 1 仍可验证（不是静默通过）。
->   两组大型索引已打包为确定性 tar（`data/external/ACTIVE_INDEX_SET_*.tar`，被 `.gitignore` 排除）；
->   公共复现所需的 **Zenodo 数据 DOI 待登记**（上传材料见 `OUTPUTS/data_archive_20260920/README_DEPOSIT.md`）。
+> - **Level 2（账本级重做，可选）**：由正式账本（四份 ledger，约 3.2 GB，**不随仓库分发**）重做分析。
+>   账本哈希登记在 `data/manifests/`；若账本就位，`scripts/fetch_archived_data.py --verify-only` 返回 0，
+>   否则返回 2 并明确提示 Level 1 仍可验证（不是静默通过）。**复现论文的合成实验不需要账本。**
+> - **Level 3（从头重跑）**：`scripts/reproduce.py` 用代码 + 冻结种子从零重跑 H0/H1 Monte Carlo，
+>   产出科学账本后可用 `analyse_h0.py --from-ledger` 与 canonical 对账。**这是复现论文实验的主路径，零外部数据依赖。**
 > - **发布状态**：三项许可（MIT / CC BY 4.0 / CC BY 4.0）与作者名单已于 **2026-09-20 定稿**（见 `LICENSE`、`LICENSES/`、`AUTHORS.md`）；
->   仓库已完成全部本地校验与发布闸门（`git diff --exit-code` 干净），**尚未推送**——是否公开由作者决定。
->   数据 DOI（Zenodo 账本归档）仍待登记，是 Level 2 公共复现的唯一剩余依赖。
+>   仓库已完成全部本地校验与发布闸门，**尚未推送**——是否公开由作者决定。
 
 ## Overview
 
@@ -45,18 +44,14 @@ H0 共 **280,000** evaluation、H1 共 **51,200**，合计 **331,200**（数据�
 ```text
 src/owtda_cal/        核心实现（DGP、窗口/点云/PH、BPI/MOMENTS、扫描、M0/M1、身份与账本、正式流水线）
 configs/              schema + 各 phase 配置；configs/formal/ 为冻结设计的可读快照
-scripts/              规范入口（verify_release / run_h0 / run_h1 / analyse_h0 / analyse_h1 /
-                      bootstrap_primary_contrasts / build_tables / build_figures / run_smoke /
+scripts/              规范入口（reproduce / verify_release / analyse_h0 / analyse_h1 /
+                      bootstrap_primary_contrasts / build_tables / build_figures /
                       fetch_archived_data / build_release_manifest）
-audit/                独立验证器（freeze/schema/admission 校验、攻击套件、repo 守卫、资源采样）
-tests/                契约与攻击式回归（1069 项通过）
+tests/                契约与攻击式回归
 results/canonical/    **正文数值的单一真源**（canonical 汇总 + 主张—证据映射）
 results/bootstrap/    P1–P3 真实 draws（npz）+ 推断摘要 + 元数据
 artifacts/figures|tables/  图与表（脚本生成；每项附 meta.json：输入/输出哈希、脚本哈希、稿件引用）
-artifacts/seals/           运行封条（RUN/PHASE/RUN_SEAL、FORMAL_ADMISSION、registry）
-artifacts/summaries/       两组大型索引集的 PHASE SEAL（被 audit/check_active_indexes.py 引用）
-artifacts/preflight/       预算与预检证据
-governance/           冻结对象、registry、append-only 变更链（身份真源）
+governance/           冻结对象（FREEZE_MANIFEST、SEED_REGISTRY 与冻结设计登记；复现输入）
 paper/                论文 LaTeX 工程（main.tex + sections + bib + main.pdf）+ 补充材料；
                       paper/scripts/make_tables.py 由 canonical 源生成正文表 1–5，
                       正文以 \input{../artifacts/tables/TableX.tex} 引用（不再手工硬编码）
@@ -65,16 +60,14 @@ reproducibility/      RUNBOOK / ENVIRONMENT / COMPUTE_REQUIREMENTS / DATA_AVAILA
                       FAILURE_POLICY / VALIDATION_SUMMARY / FORMAL_MANIFEST / RELEASE_MANIFEST /
                       SEED_MANIFEST / EXPECTED_OUTPUTS / ARTIFACT_INDEX / SHA256SUMS
 data/                 manifests（正式账本 + 外部归档 + 校验和）、sample、external（占位）
-docs/                 method_overview / artifact_map / result_definitions / faq
+docs/                 method_overview / result_definitions / faq
 examples/             最小可用示例（复现单格 H0 / 单格 H1 / 窗口几何演示）
 ```
 
-> **本仓库只包含复现所必需的当前树**（2026-09-20 精简）：交付包副本、冻结/身份/准入检查快照、
-> 旧审计 ZIP、smoke 工程证据、旧代外部证据归档、一次性提交包构建器与过程登记项**均已剔除**，
-> 逐项登记在 [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv) 的 `PRUNED_FROM_PUBLIC_TREE` 段
+> **本仓库只包含复现所必需的当前树**（2026-09-20 精简）：交付包副本、审计/治理过程登记项、
+> 封存证据（seal/preflight）、一次性构建器与审计工具**均已剔除**，逐项登记在
+> [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv) 的 `PRUNED_FROM_PUBLIC_TREE` 段
 > （含剔除原因与保留位置），并保留在开发历史与工作区归档中。
-
-> 规范命名与上述实际路径的逐一映射（含"为何未改名"）见 [`docs/artifact_map.md`](docs/artifact_map.md)。
 
 ## Quick start
 
@@ -87,23 +80,22 @@ python scripts/verify_release.py --level quick     # 最快：秒级验证全部
 **完整复现（三层）**
 
 ```powershell
-# Level 1 快速完整性验证（秒级）
+# Level 1 快速完整性验证（秒级，零外部数据）
 python scripts/verify_release.py --level quick
 
-# Level 2 由正式记录重做分析（分钟级；账本见 §Data and large-file archive）
-# 账本归档 DOI 未闭合前，第一条命令会以退出码 2 明确报告依赖缺失（不是静默通过）；
-# --report-only 只列状态。Level 1 不受影响。
+# Level 2 由正式记录重做分析（分钟级，可选；需账本，见 §Data and large-file archive）
 python scripts/fetch_archived_data.py --verify-only --report-only   # 查看归档状态
-python scripts/fetch_archived_data.py --verify-only                 # 归档就绪后必须返回 0
+python scripts/fetch_archived_data.py --verify-only                 # 账本就位后必须返回 0
 python scripts/analyse_h0.py --from-ledger data/external/H0_NULL_evaluation.scientific.jsonl
 python scripts/bootstrap_primary_contrasts.py
 python scripts/build_tables.py && python scripts/build_figures.py
 python scripts/verify_release.py --level analysis
 
-# Level 3 完整 Monte Carlo 重跑（小时级）
-python scripts/run_smoke.py
-python scripts/run_h0.py --plan <冻结计划> --certificate <G4 证书> --seed-registry governance/SEED_REGISTRY_v1.0.json --out <新证据目录>
-python scripts/run_h1.py --plan <同上> --certificate <同上> --out <新证据目录>
+# Level 3 从头重跑（小时级；代码 + 冻结种子，零外部数据）
+python scripts/reproduce.py --phase NULL --workers 8 --out ./repro   # H0：280,000 行
+python scripts/reproduce.py --phase ALT  --workers 8 --out ./repro   # H1：51,200 行
+python scripts/analyse_h0.py --from-ledger ./repro/H0_NULL_evaluation.scientific.jsonl
+# 冒烟规模（几分钟）：--replicate-limit 32
 ```
 
 ## Reproduction levels
@@ -148,11 +140,11 @@ Level 3（全量重跑）。每层的命令、输入、预期产物与失败策�
 
 - **合成数据**：由代码 + 冻结种子生成，无需外部数据；
 - **真实数据（PAMAP2）**：不随仓库分发，出处/许可/逐文件 SHA-256 见 [`DATA_SOURCES.md`](DATA_SOURCES.md)（本代 REAL 线为 `REAL_OMITTED_BY_DATA_GATE`）；
-- **正式账本（约 3.4 GB）与大型派生索引**：登记在 [`data/manifests/external_artifacts.json`](data/manifests/external_artifacts.json)
-  （大小 + SHA-256 + seal 绑定；索引以确定性 tar 登记，含三份成员的逐文件哈希），
-  获取与校验用 `python scripts/fetch_archived_data.py`（`--verify-only` 在依赖缺失时返回 2）。
-  归档准备包（Zenodo 元数据 + 上传步骤 + 逐文件清单）见工作区 `OUTPUTS/data_archive_20260920/`；
-  数据 DOI 登记后写入本清单的 `doi` 字段与 `reproducibility/RELEASE_MANIFEST.json`。
+- **正式账本（约 3.2 GB）与大型派生索引**：**不随仓库分发**，哈希登记在
+  [`data/manifests/external_artifacts.json`](data/manifests/external_artifacts.json)
+  （大小 + SHA-256；索引含成员逐文件哈希），供核对一份副本的完整性
+  （`scripts/fetch_archived_data.py --verify-only`，依赖缺失时返回 2）。**复现论文的合成实验不需要账本**——
+  从头重跑用 `scripts/reproduce.py`。
 
 ## Computational requirements
 
@@ -170,10 +162,10 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 ## Citation
 
 引用方式见 [`CITATION.cff`](CITATION.cff)（GitHub 会显示 "Cite this repository"）。
-**软件 release 与论文请同时引用**；若使用了归档账本，请再引用数据 DOI。
+**软件 release 与论文请同时引用**。
 
 作者：**王平（Wang Ping），河北金融学院与数据科学学院**（`AUTHORS.md`）。
-数据 DOI 与 `preferred-citation` 将在 Zenodo 账本归档与论文见刊后补入 `CITATION.cff`。
+`preferred-citation` 将在论文见刊后补入 `CITATION.cff`。
 
 ## License
 
@@ -181,7 +173,7 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 | 对象 | 许可 | 文件 |
 |---|---|---|
-| 代码（`src/`、`scripts/`、`audit/`、`tests/`、`paper/scripts/`、`configs/`） | **MIT** | [`LICENSE`](LICENSE) |
+| 代码（`src/`、`scripts/`、`tests/`、`paper/scripts/`、`configs/`） | **MIT** | [`LICENSE`](LICENSE) |
 | 本项目自行产生的结果数据（`results/`、`artifacts/`、清单与归档账本） | **CC BY 4.0** | [`LICENSES/DATA_LICENSE.txt`](LICENSES/DATA_LICENSE.txt) |
 | 论文源文件与 PDF（`paper/`） | **CC BY 4.0**（published version 依目标期刊政策） | [`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt) |
 | 第三方组件与数据 | 见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)（PAMAP2 为 CC BY 4.0，**不重新分发**） | — |
@@ -203,12 +195,9 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 - 表 1–5 的原始生成器未保留——现由 `paper/scripts/make_tables.py` 由 canonical 源重新生成，正文 `\input`
   生成结果，生成链已在 CI 中 fail-closed 校验；
 - `matplotlib` 仅为锁定环境中的依赖（`pyproject.toml`/`uv.lock` 属 R1 冻结对象，本代未修改）；
-- 3 个 legacy 图件 meta（`Figure3_fixedM_type1`、`Figure4_fixedT_type1`、`Figure7_h1_power`）由历史审计
-  生成器产出，其 `script_sha256` 无对应现役脚本，`build_figures.py --check` 将其列入 legacy 白名单；
-- 部分**封存证据**对象内含本机绝对路径（Windows 盘符/用户目录）。这些对象以 exact bytes 计算 SHA-256，
-  改写会破坏封存身份，因此本代不改写；如需匿名化须走治理变更流程；
-- `validate_freeze` 的 `source_tree_hash` 单项不匹配；旧 `p = 0` 值仅作历史字节保留（现行值见
-  `results/bootstrap/`）；M0 范围口径待核对。
+- 3 个 legacy 图件 meta（`Figure3_fixedM_type1`、`Figure4_fixedT_type1`、`Figure7_h1_power`）由历史生成器
+  产出，其 `script_sha256` 无对应现役脚本，`build_figures.py --check` 将其列入 legacy 白名单；
+- 旧 `p = 0` 值仅作历史字节保留（现行值见 `results/bootstrap/`）。
 
 全部见 [`reproducibility/VALIDATION_SUMMARY.md`](reproducibility/VALIDATION_SUMMARY.md) §3 与
 [`reproducibility/FAILURE_POLICY.md`](reproducibility/FAILURE_POLICY.md) §5。

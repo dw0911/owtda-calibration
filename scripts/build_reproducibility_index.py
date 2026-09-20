@@ -118,7 +118,7 @@ def write_artifact_index() -> int:
         kind = str(meta.get("kind", "")).lower()
         outputs = sorted(p for p in meta_path.parent.glob(base + ".*") if p.name != meta_path.name)
         primary = next((p for p in outputs if p.suffix in (".pdf", ".csv", ".json")), None)
-        generator = "paper/scripts/make_figures.py" if kind == "figure" else "audit/build_corrected_assets.py"
+        generator = "paper/scripts/make_figures.py" if kind == "figure" else "paper/scripts/make_tables.py"
         rows.append(
             {
                 "artifact_id": base,
@@ -145,18 +145,6 @@ def write_artifact_index() -> int:
 def write_formal_manifest() -> None:
     ledgers = load(REPO / "data" / "manifests" / "formal_ledgers.json")
     freeze = load(FREEZE_MANIFEST) if FREEZE_MANIFEST.exists() else {}
-    seals = {}
-    for phase in ("H0_NULL", "H1_ALT"):
-        entry = {}
-        for name in ("RUN_SEAL.json", "PHASE_SEAL.json"):
-            path = REPO / "artifacts" / "seals" / phase / name
-            if path.exists():
-                entry[name] = {
-                    "path": str(path.relative_to(REPO).as_posix()),
-                    "file_sha256": sha256_of(path),
-                    "recorded": {k: v for k, v in load(path).items() if "hash" in k.lower()},
-                }
-        seals[phase] = entry
     manifest = {
         "release": _release_name(),
         "provenance": _frozen_provenance(),
@@ -164,18 +152,14 @@ def write_formal_manifest() -> None:
             "freeze_id": freeze.get("freeze_id"),
             "evidence_generation_id": freeze.get("evidence_generation_id", "G01"),
             "source_tree_scope": freeze.get("source_tree_scope"),
-            "note": "source_tree_hash recorded by FREEZE_MANIFEST refers to an earlier revision; the published src/ is the later R4/R5 repair revision (see FAILURE_POLICY.md disclosures).",
         },
         "phases": ledgers["phases"],
         "totals": ledgers["totals"],
-        "seals": seals,
         "paper_pdf_sha256": sha256_of(REPO / "paper" / "main.pdf"),
         "canonical_results_sha256": {
             path.relative_to(REPO).as_posix(): sha256_of(path)
             for path in sorted((REPO / "results" / "canonical").rglob("*.json"))
         },
-        "code_doi": None,
-        "data_doi": None,
         "paper_version": "2026-09 (R5-paper snapshot)",
     }
     (OUT / "FORMAL_MANIFEST.json").write_text(

@@ -17,12 +17,12 @@ jobs:
         run: uv sync --frozen
       - name: unit + contract tests
         run: uv run python -m pytest tests -q
-      - name: static checks (code and tooling scope)
-        run: uv run ruff check src tests audit scripts configs paper/scripts
+      - name: static checks (code scope)
+        run: uv run ruff check src tests scripts configs paper/scripts
       - name: validate formal configs
         run: uv run python -c "import json,pathlib;[json.loads(p.read_text(encoding='utf-8-sig')) for p in pathlib.Path('configs').rglob('*.json')]"
-      - name: smoke (pipeline-level, no paper numbers)
-        run: uv run python scripts/run_smoke.py
+      - name: smoke (from-scratch reproduction, minimal scale)
+        run: uv run python scripts/reproduce.py --phase NULL --replicate-limit 1 --out data/_ci_smoke
       - name: release verification (level 1 quick)
         run: uv run python scripts/verify_release.py --level quick
       - name: release verification (level 2 analysis)

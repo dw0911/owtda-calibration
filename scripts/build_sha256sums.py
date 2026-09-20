@@ -19,8 +19,6 @@ TARGETS = (
     "results",
     "artifacts/figures",
     "artifacts/tables",
-    "artifacts/seals",
-    "artifacts/preflight",
     "data/manifests",
     "reproducibility",
 )

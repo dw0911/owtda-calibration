@@ -32,6 +32,5 @@
 
 ## 4. 上游代码片段
 
-- `paper/scripts/make_figures.py`、`audit/{analysis_repairs,build_corrected_assets,check_active_indexes}.py`
-  为本项目自有代码（后者自 R1 审计包原样迁入，仅加文件级 `# ruff: noqa`）；
+- `paper/scripts/make_figures.py` 为本项目自有代码；
 - 未包含任何来源不明的复制代码。若你在本仓库中发现疑似第三方片段，请提交 issue。

@@ -18,8 +18,9 @@ Exit codes (2026-09-20 audit finding P0-6)
   2  at least one requested artifact is still unavailable (no DOI/URL registered, no local copy)
 
 Level 2 (ledger-level) reproduction needs those artifacts, so an unavailable archive must not be
-reported as success. Until the Zenodo deposit is closed, README documents the reachable scope
-(Level 1 + the canonical generation chain) explicitly.
+reported as success. The formal ledgers are not distributed; the synthetic experiment is fully
+reproducible without them (Level 1 verification + Level 3 from-scratch reproduction via
+``scripts/reproduce.py``).
 """
 
 from __future__ import annotations

@@ -30,10 +30,10 @@
 | 层级 | 命令 | 实测 |
 |---|---|---|
 | Level 1 | `verify_release.py --level quick` | 秒级 |
-| 冒烟子集 | `run_smoke.py` | 约 5 s（35 项） |
-| 回归测试 | `pytest tests -q` | 约 77 s（1069 项） |
+| 冒烟子集 | `reproduce.py --replicate-limit 1` | 约 4 分钟（实测，单机） |
+| 回归测试 | `pytest tests -q` | 约 40 s（745 项） |
 | Level 2（分析链） | 见 RUNBOOK | 分钟级（依赖账本大小；H0 账本 1.4 GB 流式聚合约 1–2 分钟/次） |
-| Level 3（完整重跑） | `run_h0.py` / `run_h1.py` | **~28 h**（单机 8 workers，按冻结预算外推） |
+| Level 3（完整重跑） | `reproduce.py --phase NULL\|ALT` | **~28 h**（单机 8 workers，按冻结预算外推） |
 | 论文编译 | XeLaTeX ×3 + bibtex | 约 30–60 s |
 
 ## 4. 最低硬件建议

@@ -28,7 +28,7 @@
 # ⚠️ 凡是被上面三类清单登记过 SHA-256 的路径，一律不得加入 ② 区——
 #    包括 src/owtda_cal/**（由 governance/FREEZE_MANIFEST.json 钉住 40 个文件）、
 #    configs/**、environment/**、pyproject.toml、uv.lock、results/**、artifacts/**、
-#    release/**、governance/**、reproducibility/**、data/**、external_prior_evidence/**。
+#    release/**、governance/**、reproducibility/**、data/**。
 #    改动这些路径的字节需要走治理变更流程，不能靠行尾转换完成。
 # =============================================================================
 
@@ -38,7 +38,6 @@
 # ---- ② 文本区：统一 LF（未参与任何 SHA-256 绑定的源码 / 文档 / CI）----
 /tests/**                     text eol=lf
 /scripts/**                   text eol=lf
-/audit/**                     text eol=lf
 /docs/**                      text eol=lf
 /examples/**                  text eol=lf
 /.github/**                   text eol=lf

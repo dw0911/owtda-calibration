@@ -12,7 +12,7 @@
 | 单次 trial/工作单元失败 | 终止该 run；保留 shard/attempt 证据（不删除）；用**同一** code/config/seed manifest 重跑该 run |
 | 分片内容不一致（`commit_shard` 内容冲突） | 阻断并保留两侧字节；不得覆盖已提交分片 |
 | 资源验收失败（RSS/swap/未解释 error） | 停止新任务派发；未结清 worker 标记 `UNRESOLVED`；不得伪报退出 |
-| 冻结源域被修改（`src/ configs/ audit/` 有未提交改动） | `repo_guard` 在写出任何字节前拒绝构建/运行 |
+| 冻结源域被修改（`src/ configs/` 有未提交改动） | 运行/构建前拒绝（冻结对象字节绑定） |
 | 结论与规格冲突 | 先停 run、再按失效范围表处置；**禁止现场调参续跑** |
 
 ## 3. 禁止事项
@@ -26,13 +26,12 @@
 
 - 失败证据（日志、stdout/stderr、退出码、环境快照）与成功证据同等保留；
 - 再生成只允许发生在**新目录**（"输出目录必须不存在"），不得就地覆盖；
-- 一切状态变更 append-only（`governance/CHANGELOG.md`、`*_REGISTRY.jsonl`、`reasons/`）。
+- 一切状态变更 append-only（`governance/CHANGELOG.md`）。
 
 ## 5. 已知的披露项（本快照）
 
 | 项 | 状态 |
 |---|---|
-| `validate_freeze.py` 的 `source_tree_hash` 单项不匹配 | 已解释（入库 `src/` 为 R4/R5 修复后较新版本）并登记，其余检查全 PASS |
-| 表 1–5 原始生成器未保留 | 已披露；数据/输入/输入哈希齐备；随图表重构轮补入 |
+| 表 1–5 原始生成器未保留 | 已披露；数据/输入/输入哈希齐备；由 `paper/scripts/make_tables.py` 从 canonical 源重新生成 |
 | `H0_PRIMARY_CONTRASTS.json` 的旧 `p = 0` | 非法值，已由 `results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json` 取代（原字节保留以维持哈希链） |
 | M0 逐格范围口径 | 纸面 [4.72, 97.56] vs canonical 全行 [4.32, 99.96]，已登记待核对 |

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "note": "Formal (paper) ledgers. Bytes are NOT distributed with the repository; hashes are bound by the RUN/PHASE seals listed below and verified by scripts/fetch_archived_data.py.",
+  "note": "Formal (paper) ledgers. Bytes are NOT distributed with the repository; hashes are recorded here for integrity reference only. The synthetic experiment is fully reproducible without them (scripts/reproduce.py).",
   "phases": {
     "NULL": {
       "role": "H0",
@@ -18,11 +18,6 @@
           "size_bytes": 1437310000,
           "sha256": "16b854523097d258095a70e2ea2d0ad07669100e5ccb70caff336c4dfaf43a5f"
         }
-      },
-      "seals": {
-        "run_seal": "artifacts/seals/H0_NULL/RUN_SEAL.json",
-        "phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
-        "formal_admission": "artifacts/seals/H0_NULL/FORMAL_ADMISSION.json"
       }
     },
     "ALT": {
@@ -41,12 +36,6 @@
           "size_bytes": 262233600,
           "sha256": "4ba3d1f7407719bec9e72d4b9d8b26f4cb5a1cf1528b4940315cd9e2c1c191cd"
         }
-      },
-      "seals": {
-        "run_seal": "artifacts/seals/H1_ALT/RUN_SEAL.json",
-        "phase_seal": "artifacts/seals/H1_ALT/PHASE_SEAL.json",
-        "formal_admission": "artifacts/seals/H1_ALT/FORMAL_ADMISSION.json",
-        "parent_phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json"
       }
     }
   },

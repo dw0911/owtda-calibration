@@ -248,7 +248,7 @@ def check_artifact_provenance(res: Result, info: Result) -> None:
             candidates.setdefault(path.stem, path)
     repo_scripts = {sha256_of(p) for p in (REPO / "scripts").glob("*.py")} | {
         sha256_of(p) for p in (PAPER / "scripts").glob("*.py")
-    } | {sha256_of(p) for p in (REPO / "audit").glob("*.py")}
+    }
     checked = missing = mismatch = 0
     script_gaps = []
     for meta_path in sorted(list(TABLES.glob("*.meta.json")) + list(FIGURES.glob("*.meta.json"))):

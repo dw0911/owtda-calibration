@@ -34,9 +34,8 @@ python scripts/build_figures.py                             # 表 → 图
 python scripts/verify_release.py --level analysis           # Level 1 + 上述再生成的一致性比对
 ```
 
-> **账本 DOI 未闭合时，Level 2 无法完成**：`fetch_archived_data.py --verify-only` 会以退出码 **2**
-> 明确报告依赖缺失（不是静默通过）。此时可完整执行的是 Level 1 与两条生成链校验；
-> README §Overview 与 `DATA_AVAILABILITY.md` 对可验证范围作了同样的声明。
+> 账本**不随仓库分发**：`fetch_archived_data.py --verify-only` 在账本未就位时以退出码 **2**
+> 明确报告依赖缺失（不是静默通过）。复现论文实验走 Level 1 或 Level 3，**不需要账本**。
 
 `analyse_h0 --from-ledger` 会流式聚合 `n`/`rejects` 并与 canonical 逐格比对，同时核验
 `p = (exceed_count+1)/(B+1)` 与 `reject == (exceed_count <= 49)`（B = 999）。
@@ -44,13 +43,13 @@ python scripts/verify_release.py --level analysis           # Level 1 + 上述�
 ## Level 3 · 完整重跑（小时级）
 
 ```powershell
-python scripts/run_smoke.py                       # 端到端冒烟（不含论文结论）
-python scripts/run_h0.py --plan <冻结计划目录> --certificate <G4 证书> --seed-registry governance/SEED_REGISTRY_v1.0.json --out <新证据目录>
-python scripts/run_h1.py --plan <同上> --certificate <同上> --out <新证据目录>
+python scripts/reproduce.py --phase NULL --workers 8 --out ./repro   # H0：280,000 evaluation 行
+python scripts/reproduce.py --phase ALT  --workers 8 --out ./repro   # H1：51,200 evaluation 行
+python scripts/analyse_h0.py --from-ledger ./repro/H0_NULL_evaluation.scientific.jsonl
 ```
 
-`run_h0/run_h1` 会**先校验前提**（plan/证书/种子登记/输出目录不存在），缺失即 fail-closed；
-实际执行由唯一授权入口 `scripts/run_formal.py` 完成（全生命周期资源监控 + RUN/PHASE seal）。
+`reproduce.py` 用代码 + 冻结种子（`governance/SEED_REGISTRY_v1.0.json`）从零重跑，
+产出科学账本后与 canonical 对账；冒烟规模用 `--replicate-limit 32`。
 算力需求见 [`COMPUTE_REQUIREMENTS.md`](COMPUTE_REQUIREMENTS.md)。
 
 ## 失败策略
