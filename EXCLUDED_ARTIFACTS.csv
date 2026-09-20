@@ -1,7 +1,7 @@
 path,size_bytes,sha256,reason,notes
-artifacts/ledgers/H0_NULL/evaluation.scientific.jsonl,1404096576,744141035fdb5f651b19f3e7998cc4f7223356dcdc7eea1f92a2390e689391d8,超大原始账本（1.31 GiB），超过 GitHub 单文件 100 MB 限制,H0/NULL 评估账本；SHA256 与 release/h0_run/RUN_SEAL.json 及审计记录一致；本地位于仓库工作目录 artifacts/ledgers/
+artifacts/ledgers/H0_NULL/evaluation.scientific.jsonl,1404096576,744141035fdb5f651b19f3e7998cc4f7223356dcdc7eea1f92a2390e689391d8,超大原始账本（1.31 GiB），超过 GitHub 单文件 100 MB 限制,H0/NULL 评估账本；SHA256 与 artifacts/seals/H0_NULL/RUN_SEAL.json 及审计记录一致；本地位于仓库工作目录 artifacts/ledgers/
 artifacts/ledgers/H0_NULL/feature.scientific.jsonl,1437310000,16b854523097d258095a70e2ea2d0ad07669100e5ccb70caff336c4dfaf43a5f,超大原始账本（1.34 GiB）,H0/NULL 特征账本；同上，哈希与 seal 一致
-artifacts/ledgers/H1_ALT/evaluation.scientific.jsonl,266379930,82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7,超大原始账本（254 MiB）,H1/ALT 评估账本；哈希与 release/h1_run/RUN_SEAL.json 一致
+artifacts/ledgers/H1_ALT/evaluation.scientific.jsonl,266379930,82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7,超大原始账本（254 MiB）,H1/ALT 评估账本；哈希与 artifacts/seals/H1_ALT/RUN_SEAL.json 一致
 artifacts/ledgers/H1_ALT/feature.scientific.jsonl,262233600,4ba3d1f7407719bec9e72d4b9d8b26f4cb5a1cf1528b4940315cd9e2c1c191cd,超大原始账本（250 MiB）,H1/ALT 特征账本；哈希与 seal 一致
 governance/ACTIVE_DATA_INDEX_e6ecac6b234025374bf9f06d5eec63b3d6681e1ebe9c55480610ed67dfe8d955.jsonl,40040000,26d73abd3355a63de825be9b24ea0f7bab029fc9fb699edc3b2056edcdd6fa5f,大型派生索引（38 MiB）,由冻结计划/种子/组件清单可再生成；汇总与说明见 governance/active_index_summary.json
 governance/ACTIVE_FEATURE_INDEX_e6ecac6b234025374bf9f06d5eec63b3d6681e1ebe9c55480610ed67dfe8d955.jsonl,70700000,7f22ac52d6d6f943951ac1c112bb1f816a761169057e8cb17c11d36ba08e9f40,大型派生索引（67 MiB）,同上
@@ -9,3 +9,13 @@ governance/ACTIVE_EVALUATION_INDEX_e6ecac6b234025374bf9f06d5eec63b3d6681e1ebe9c5
 governance/ACTIVE_DATA_INDEX_c89c900336ad0cf4c76e04c68ddd3f19614442b6dfa37c36cbfa4677bc860574.jsonl,7321600,cb11cc50f16a806b5be2d6337f882bc51a479240d91aaefc8d5e06ddc9cf431e,大型派生索引（7 MiB）,同上
 governance/ACTIVE_FEATURE_INDEX_c89c900336ad0cf4c76e04c68ddd3f19614442b6dfa37c36cbfa4677bc860574.jsonl,12928000,e6ebdf4a79e059a1060b270311bb5da7fe7602ed4792d9cfb7d8da41da5fb43f,大型派生索引（12 MiB）,同上
 governance/ACTIVE_EVALUATION_INDEX_c89c900336ad0cf4c76e04c68ddd3f19614442b6dfa37c36cbfa4677bc860574.jsonl,25600000,1a6fbbc8fb5a061d40272b4e489ad727dfdecff86dc6e5a95b662aa8db71ba9e,大型派生索引（24 MiB）,同上
+
+release/（交付包原始副本）,,,已从公共树剔除（2026-09-20 精简）,35 文件；仅保留 release/analysis/scripts/（Level-2 的 H1 重分析脚本）；canonical 唯一真源为 results/canonical/
+artifacts/audit/（冻结/身份/准入检查快照）,,,已从公共树剔除（2026-09-20 精简）,62 文件；含 freeze_check_*/identity_check_*/run_admission_check_*、audit_result.json、CORRECTION_NOTE_20260918.md
+artifacts/archive/（2026-09-10 审计提交 ZIP）,,,已从公共树剔除（2026-09-20 精简）,3 文件
+artifacts/smoke/（smoke 工程证据）,,,已从公共树剔除（2026-09-20 精简）,4 文件；smoke 为独立身份域，不进论文
+external_prior_evidence/（旧代 DMB-R1 归档）,,,已从公共树剔除（2026-09-20 精简）,27 文件；不参与本代任何估计；THIRD_PARTY_NOTICES.md 与 DATA_SOURCES.md 已同步
+AUDIT_SUBMISSION_SUMMARY.md,,,已从公共树剔除（2026-09-20 精简）,历史审计提交说明
+governance/ 过程登记项（129 文件）,,,已从公共树剔除（2026-09-20 精简）,RUN_COMPONENT_SET_*/RUN_INPUT_BINDINGS_*/SCOPE_DESIGN_*（冻结未引用的实例）、RUN_PREREGISTRATION_*、RUN_OUTCOME_*、analysis_code_manifest.json、reasons/（15）、AUDIT_DISPOSITION/AUDIT_SUBMISSION/ADMISSION_DECISIONS 等
+audit/ 一次性构建器（8 文件）,,,已从公共树剔除（2026-09-20 精简）,build_alt_admission/build_environment_evidence/collect_git_identity/compute_budget/run_worker_sweep/validate_admission/validate_identity/validate_runs
+scripts/ 一次性提交包构建器（5 文件）,,,已从公共树剔除（2026-09-20 精简）,build_audit_submission/export_audit_submission/verify_audit_dossier/run_supplement_sequence/verify_fault_points

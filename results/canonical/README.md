@@ -19,7 +19,7 @@
 | 其他 provenance | `ANALYSIS_INPUT_MANIFEST_*.json`、`bootstrap_context.json`、`validation_summary.json`、`aggregation_summary.json`、`percell_analysis.json`、`shard_hashes.json`、`activation_summary.json`、`active_index_summary.json`、`bootstrap_power_diff.json` | 分析链 / 交付 |
 
 **未移动文件**：`artifacts/summaries/PHASE_SEAL_*.json` 留在原地——`audit/check_active_indexes.py` 依赖该路径。
-**交付包副本**：`release/analysis/*` 是 2026-09-18 封存交付包的原始副本（审计留存，逐字节与本目录一致者已在交付审计中登记），**不是**第二个真源。
+**交付包副本**：`release/analysis/scripts/`（H1 重分析脚本）保留为本目录的上游生成器；交付包中的分析对象副本已剔除（2026-09-20 精简），**本目录是唯一真源**，剔除登记见 `EXCLUDED_ARTIFACTS.csv`。
 
 ## 2. 与审计规范命名的映射
 
@@ -37,7 +37,7 @@
 |---|---|---|
 | `H0_PRIMARY_CONTRASTS.json` → `primary.*.p_boot_one_sided` / `p_holm` | `0.0` | **非法**（加一规则下 p≥1/10001）。R1 审计裁定以真实 draws 重算；**原字节保留**（其 SHA-256 被表格 meta 与分析身份引用），**现行有效值见 `results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json`**（tail=0 → p=1/10001，Holm=3/10001） |
 | `P1_P3_BOOTSTRAP.json` | 旧 bootstrap 对象（p=0 语境） | 同上，作为历史对象保留 |
-| `CORRECTION_NOTE_20260918.md`（现 `artifacts/audit/`） | 定位误差半采样点约定偏差 | 已由 `H1_REANALYSIS.json` 取代（文档自身已声明 SUPERSEDED） |
+| `CORRECTION_NOTE_20260918.md`（原 `artifacts/audit/`，已剔除） | 定位误差半采样点约定偏差 | 已由 `H1_REANALYSIS.json` 取代（文档自身已声明 SUPERSEDED）；剔除登记见 `EXCLUDED_ARTIFACTS.csv` |
 
 ### 待核对（复现校验中发现，需作者在图表重构轮核定）
 

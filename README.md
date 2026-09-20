@@ -53,20 +53,26 @@ tests/                契约与攻击式回归（1069 项通过）
 results/canonical/    **正文数值的单一真源**（canonical 汇总 + 主张—证据映射）
 results/bootstrap/    P1–P3 真实 draws（npz）+ 推断摘要 + 元数据
 artifacts/figures|tables/  图与表（脚本生成；每项附 meta.json：输入/输出哈希、脚本哈希、稿件引用）
-artifacts/seals|preflight|audit|archive|smoke/  封存证据与历史工程证据
+artifacts/seals/           运行封条（RUN/PHASE/RUN_SEAL、FORMAL_ADMISSION、registry）
+artifacts/summaries/       两组大型索引集的 PHASE SEAL（被 audit/check_active_indexes.py 引用）
+artifacts/preflight/       预算与预检证据
 governance/           冻结对象、registry、append-only 变更链（身份真源）
 paper/                论文 LaTeX 工程（main.tex + sections + bib + main.pdf）+ 补充材料；
                       paper/scripts/make_tables.py 由 canonical 源生成正文表 1–5，
                       正文以 \input{../artifacts/tables/TableX.tex} 引用（不再手工硬编码）
-release/              2026-09-18 交付包原始副本（审计留存）
+release/analysis/scripts/  Level-2 的 H1 账本级重分析脚本（reanalyse_h1 / review_delivery）
 reproducibility/      RUNBOOK / ENVIRONMENT / COMPUTE_REQUIREMENTS / DATA_AVAILABILITY /
                       FAILURE_POLICY / VALIDATION_SUMMARY / FORMAL_MANIFEST / RELEASE_MANIFEST /
                       SEED_MANIFEST / EXPECTED_OUTPUTS / ARTIFACT_INDEX / SHA256SUMS
 data/                 manifests（正式账本 + 外部归档 + 校验和）、sample、external（占位）
 docs/                 method_overview / artifact_map / result_definitions / faq
 examples/             最小可用示例（复现单格 H0 / 单格 H1 / 窗口几何演示）
-external_prior_evidence/  旧代 DMB-R1 终止归档（L1 历史证据，隔离存放）
 ```
+
+> **本仓库只包含复现所必需的当前树**（2026-09-20 精简）：交付包副本、冻结/身份/准入检查快照、
+> 旧审计 ZIP、smoke 工程证据、旧代外部证据归档、一次性提交包构建器与过程登记项**均已剔除**，
+> 逐项登记在 [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv) 的 `PRUNED_FROM_PUBLIC_TREE` 段
+> （含剔除原因与保留位置），并保留在开发历史与工作区归档中。
 
 > 规范命名与上述实际路径的逐一映射（含"为何未改名"）见 [`docs/artifact_map.md`](docs/artifact_map.md)。
 

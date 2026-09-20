@@ -1,147 +1,145 @@
 # REPRODUCIBILITY — 复现指南
 
-> 目标：使论文的**全部数值、图、表**可由本仓库 + 指定外部数据（可选）复现；
-> 同时如实说明**不随仓库分发**的大对象及其校验方式（SHA256 / seal 绑定）。
+> 目标：使论文的**全部数值、图、表**可由本仓库（+ 可选外部账本）复现；
+> 同时如实说明**不随仓库分发**的大对象、**已从公共树剔除**的历史过程件及其处置方式。
+
+## 0. 当前树（2026-09-20 精简后）
+
+| 目录 | 作用 |
+|---|---|
+| `src/owtda_cal/` | 核心实现（48 个模块，冻结字节） |
+| `tests/` | 契约 + 攻击式回归（71 个文件，1069 passed / 1 skipped） |
+| `scripts/` | 规范入口：`verify_release` / `analyse_h0` / `analyse_h1` / `bootstrap_primary_contrasts` / `build_tables` / `build_figures` / `build_reproducibility_index` / `build_release_manifest` / `build_sha256sums` / `fetch_archived_data` / `run_smoke` / `run_h0` / `run_h1` / `run_formal` / `frozen_env` |
+| `audit/` | 独立验证器与构建器：`validate_freeze` / `validate_schemas` / `repo_guard` / `build_freeze` / `build_run_admission` / `run_formal_phase` / `analysis_repairs` / `check_active_indexes` / `resource_sampler` 等（Tests 直接引用者全部保留） |
+| `results/{canonical,bootstrap}/` | **正文数值的单一真源** |
+| `artifacts/{tables,figures}/` | 表 1–5 与图 1–5（含 `meta.json` 血缘：输入/输出/脚本哈希 + 稿件引用） |
+| `artifacts/seals/`、`artifacts/summaries/`、`artifacts/preflight/` | 运行封条、索引集 PHASE SEAL、预算证据 |
+| `paper/` | LaTeX 工程 + `paper/scripts/{make_tables.py,make_figures.py}`；正文以 `\input` 引用生成表 |
+| `configs/`、`environment/`、`governance/` | 冻结设计、环境锁、治理对象（**字节绑定，不得修改**） |
+| `reproducibility/` | RUNBOOK / ENVIRONMENT / DATA_AVAILABILITY / FAILURE_POLICY / VALIDATION_SUMMARY / `FORMAL_MANIFEST` / `RELEASE_MANIFEST` / `ARTIFACT_INDEX` / `SHA256SUMS` |
+
+已剔除的历史过程件（交付包副本、冻结/身份/准入检查快照、旧审计 ZIP、smoke 工程证据、
+旧代外部证据归档、一次性提交包构建器、过程登记项）全部登记在
+[`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv) 的 `PRUNED_FROM_PUBLIC_TREE` 段，
+并保留在开发历史与工作区归档中。
 
 ## 1. 环境
 
 ```powershell
-# 依赖锁定：pyproject.toml + uv.lock
-uv sync --frozen
-
-# 冻结运行约定（与正式结果一致）
-$env:PYTHONDONTWRITEBYTECODE = "1"
+uv sync --frozen                      # 依 pyproject.toml + uv.lock
+$env:PYTHONDONTWRITEBYTECODE = "1"    # 冻结运行约定（与正式结果一致）
 $env:OMP_NUM_THREADS = "1"; $env:OPENBLAS_NUM_THREADS = "1"
 $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 ```
 
 - 冻结环境记录（版本 / BLAS / 线程 / pip freeze / 仓库外重建测试）：`environment/`。
 - 生成器：`scripts/frozen_env.py`（解释器启动前设定线程变量并留证）。
+- 图件生成另需 `matplotlib`（锁定环境内提供）与可确定获得的 CJK 字体（见 `reproducibility/ENVIRONMENT.md` §5）。
 
 ## 2. 数据（可选，仅 REAL 条件线需要）
 
 - 来源与逐文件 SHA256：见 [`DATA_SOURCES.md`](DATA_SOURCES.md)（PAMAP2 Protocol，9 个 `subject10X.dat`）。
 - 放置约定：`<base_dir>/Protocol/subject101.dat … subject109.dat`；数据身份按
-  `dataset_hash = H("pamap2_protocol_dataset", 9×{path,size,file_sha256})` 计算
-  （见 `src/owtda_cal/realdata.py`）。
+  `dataset_hash = H("pamap2_protocol_dataset", 9×{path,size,file_sha256})` 计算（`src/owtda_cal/realdata.py`）。
 - 本代 REAL 线为 `REAL_OMITTED_BY_DATA_GATE`（23 < 24 合格任务，数据事实；未下调准入线）。
   **合成主线的复现不需要该数据。**
 
 ## 3. 复现路径（三级）
 
-### 路径 A — 仅图表/表（轻量，推荐评审使用）
+### Level 1 — 快速完整性验证（秒级，无需外部数据）
 
-1. 输入（已入库，canonical）：
-   - `artifacts/summaries/`：`CANONICAL_SUMMARY.json`、`H0_POINTWISE.json`、`MANUSCRIPT_VALUES.json`、`FIGURE_DATA.json`、`TABLE_DATA.json`、`H1_REANALYSIS.json`、`P1_P3_BOOTSTRAP.json` 等；
-   - `release/analysis/`：交付版分析对象与分析脚本（`scripts/` 子目录）。
-2. **生成表与补充材料**（仅读 canonical 汇总，不调用 MC/PH）：
+```powershell
+python scripts/verify_release.py --level quick      # 28/28
+python scripts/build_tables.py --check              # 表 1–5：缺表/数值差异/多余产物 → 非零
+python scripts/build_figures.py --check             # 图件：输入/输出/脚本哈希 + 稿件引用
+python scripts/check_canonical.py                   # canonical 序列化契约
+python -m pytest tests -q                           # 1069 passed / 1 skipped
+```
 
-   ```powershell
-   python audit/build_corrected_assets.py `
-     --h0 artifacts/summaries/H0_POINTWISE.json `
-     --h1 release/analysis/H1_REANALYSIS.json `
-     --out <新目录（须不存在）>
-   ```
+覆盖 H0 112 单元 / 28 唯一格、`rate = rejects/n`、Wilson 90/95 重算、分类计数与
+`artifacts/tables/Table4_calibration.csv` 一致；H1 16 cell-feature、几何、临界秩 2376；
+P1–P3 的 `p=(tail+1)/(B+1)`、Holm、CI 与 canonical 一致；`MANUSCRIPT_VALUES` 对齐；
+LaTeX `\input`/图件路径解析；`reproducibility/SHA256SUMS` 全部核验。
 
-   产出 `H0_ALL_112`、`H1_ALL_16_GEOMETRY_COMPLETE`、`H1_SCENARIO_SAME_FOUR_CONDITIONS`、`H1_SCENARIO_DIFFERENCES`、
-   `Table_H1_COMMON_ESTIMAND.tex` 与两张修正热图；与仓库 `artifacts/tables/`、`manuscript/supplement/` 可直接对照。
-   **重生成实测（2026-09-20）**：全部 CSV 与入库版本**逐字节一致**；`Table_H1_COMMON_ESTIMAND.tex` 内容一致、
-   仅行尾不同（Windows 重生成为 CRLF，入库版本为 LF）。
+**由 canonical 重生成表与图**（同一 matplotlib 版本下逐字节稳定）：
 
-3. **生成正文图**（读 `artifacts/tables/` 的 canonical CSV）：
+```powershell
+python paper/scripts/make_tables.py                 # → artifacts/tables/Table1..5.{tex,csv,json,meta}
+python scripts/build_figures.py                     # → artifacts/figures/Figure1..5.{pdf,svg,png,meta}
+```
 
-   ```powershell
-   python manuscript/scripts/make_figures.py     # 输出 artifacts/figures/（Fig1–5 + supplement，每图附 meta.json）
-   ```
+编译论文（工作目录必须是 `paper/`；正式构建加 `touch paper/STRICT.tex` 启用严格模式）：
 
-   > 注：该脚本在 2026-09-20 生成本仓库图件后仅做过**可移植性修订**（绝对路径 → 仓库相对；绘图逻辑未变）。
-   > 各图 `meta.json` 的 `script_sha256` 对应**生成时刻**的脚本字节；重新生成会刷新 `generated_at` 与 `script_sha256`（可预期的元数据差异），图件内容由 §2/§3.2 的 canonical 表决定。
-   > **重生成实测（2026-09-20）**：5 张主图 PNG **逐字节一致**；PDF/SVG/meta **体积相同、差异仅为内嵌元数据**
-   > （创建日期 / 脚本哈希 / 生成时间）。`FIGURE_DATA.json` 与补充图不受该脚本影响、逐字节一致。
+```powershell
+cd paper
+xelatex -interaction=nonstopmode main.tex; bibtex main
+xelatex -interaction=nonstopmode main.tex; xelatex -interaction=nonstopmode main.tex
+```
 
-4. **一致性/契约校验**：`python scripts/check_canonical.py`（canonical 序列化递归检查）、`python -m pytest tests -q`。
+### Level 2 — 由封存账本重做分析（分钟级，需外部账本）
 
-5. **表 1–5（`artifacts/tables/Table1–5*`、`TABLE_DATA.json`）——如实的生成缺口**：
-   这些呈现用表由其**原始生成器脚本**生成，而该脚本**未随项目保留**（表 meta 记录 `script_sha256=d2fe7f6a…`；
-   已在仓库、审计包与归档中逐一搜索未获）。可核验性由以下保证：表数据已入库；meta 记录输入哈希与 `analysis_id`；
-   输入文件齐备（`artifacts/summaries/` 的 `H0_POINTWISE.json`、`H0_PRIMARY_CONTRASTS.json`、`H1_REANALYSIS.json`）。
-   投稿前按图表重构规格重建这些表时将一并补入生成器。**补充数据表（`H0_ALL_112`、`H1_ALL_16_GEOMETRY_COMPLETE`、
-   `H1_SCENARIO_*`）不受此缺口影响，可由 §3.2 的生成器逐字节复现。**
+```powershell
+python scripts/fetch_archived_data.py --verify-only --report-only   # 查看归档状态（始终 0）
+python scripts/fetch_archived_data.py --verify-only                 # 就绪必须 0；缺失返回 2
+python scripts/analyse_h0.py --from-ledger data/external/H0_NULL_evaluation.scientific.jsonl
+python scripts/bootstrap_primary_contrasts.py                       # 真实 draws → p / CI / Holm
+python scripts/analyse_h1.py --from-ledgers --delivery <交付目录> --h0-eval <H0 账本> --h1-eval <H1 账本> --out-dir <新目录>
+python scripts/build_tables.py && python scripts/build_figures.py
+python scripts/verify_release.py --level analysis                   # 31/31
+```
 
-6. **编译论文**（需 TeX 环境；本仓库以 XeLaTeX 验证）：
+- 四个账本与两组大型索引**不随仓库分发**（见 §5）；`data/manifests/external_artifacts.json`
+  登记了大小、SHA-256 与 seal 绑定，两组索引另含三份成员的逐文件哈希。
+- P1–P3 的精确值可由库内真实 draws 复算：`governance/actual_primary_draws.json`
+  （10,000 draws/项）→ `scripts/bootstrap_primary_contrasts.py`（回归测试 `tests/test_analysis_repairs.py`）。
+- H1 的账本级重分析脚本：`release/analysis/scripts/reanalyse_h1.py`（`--delivery --h0-eval --h1-eval --out-dir`）。
 
-   ```powershell
-   cd manuscript
-   xelatex -interaction=nonstopmode main.tex
-   bibtex main
-   xelatex -interaction=nonstopmode main.tex
-   xelatex -interaction=nonstopmode main.tex
-   ```
+### Level 3 — 全链重跑（小时级，需要算力）
 
-   实测（2026-09-20）：22 → 23 页；产物 `main.pdf` 与入库版本**同尺寸**（546,178 B；二进制差异为内嵌 CreationDate）。
+```powershell
+python scripts/run_smoke.py                         # 端到端冒烟（独立身份域，不含论文结论）
+python scripts/run_h0.py --plan <冻结计划> --certificate <G4 证书> --seed-registry governance/SEED_REGISTRY_v1.0.json --out <新证据目录>
+python scripts/run_h1.py --plan <同上> --certificate <同上> --out <新证据目录>
+```
 
-### 路径 B — 分析链（由封存账本重算）
-
-1. 输入：四个账本文件（本地，不随仓库分发；SHA256 见 §5）：
-   `artifacts/ledgers/H0_NULL/{evaluation,feature}.scientific.jsonl`、
-   `artifacts/ledgers/H1_ALT/{evaluation,feature}.scientific.jsonl`；
-2. 重算：canonical 汇总与 bootstrap（见 `release/analysis/` 内脚本与 `governance/ANALYSIS_INPUT_MANIFEST_*.json`、
-   `RESOLVED_BOOTSTRAP_PLAN_INDEX_*.jsonl`；分析身份：`analysis_id=18797cfe…`）；
-3. P1–P3 精确值：真实 draws 已在库（`governance/actual_primary_draws.json`，各 10,000）。用**仓库内工具**重算：
-
-   ```powershell
-   python audit/analysis_repairs.py --draws governance/actual_primary_draws.json --out <新文件>.json
-   ```
-
-   得到 bootstrap 单侧 p / basic CI / Holm（回归测试：`tests/test_analysis_repairs.py`），用于替换正文 `<0.05` 占位。
-   H1 的账本级重分析（由封存账本出发）见 `release/analysis/scripts/reanalyse_h1.py`；账本不在仓库内（见 §5）。
-
-### 路径 C — 全链重跑（需要算力）
-
-按治理顺序（每步均为 append-only 证据）：
-
-1. 预检与冻结：`audit/build_freeze.py` → `audit/validate_freeze.py`（33 项）；
-2. 运行身份与准入：`audit/build_run_admission.py` → `audit/validate_runs.py` → `audit/build_alt_admission.py`；
-3. smoke（可选，独立身份域，永不进入论文）：`audit/run_smoke.py`、`audit/run_smoke_s03.py`；
-4. 正式运行：`scripts/run_formal.py --plan … --certificate …`（唯一授权入口；
-   由 `audit/run_formal_phase.py` 以全生命周期资源监控包围计算与封存）；
-5. 封存与校验：RUN/PHASE seal 生成（`src/owtda_cal/formal_pipeline.py`）、`audit/validate_identity.py`；
-6. 分析与成稿：路径 B + 路径 A。
+按治理顺序（每步均为 append-only 证据）：`audit/build_freeze.py` → `audit/validate_freeze.py` →
+`audit/build_run_admission.py` → `audit/run_smoke.py` → `scripts/run_formal.py`（唯一授权入口，
+由 `audit/run_formal_phase.py` 以全生命周期资源监控包围计算与封存）→ 分析与成稿（Level 2 + Level 1）。
 
 > 纪律：formal 阶段 `src/ configs/ audit/` 只读（`audit/repo_guard.py` fail-closed）；
 > 失败先停 run、保留 shard/attempt，再按失效范围表处置；不得现场调参续跑。
+> 说明：审计提交包的打包/校验工具（`build_audit_submission`、`verify_audit_dossier` 等）与
+> 历史审计轨迹的身份校验器（`validate_identity`、`validate_runs`、`build_alt_admission`）属过程工具，
+> 已从公共树剔除（见 §0 与 `EXCLUDED_ARTIFACTS.csv`）；它们产出的**封存证据仍在库内**
+> （`artifacts/seals/`、`artifacts/summaries/`、`environment/`、`results/canonical/`）。
 
 ## 4. 校验矩阵（提交前自检）
 
 | 命令 | 覆盖 |
 |---|---|
 | `python -m pytest tests -q` | 契约 / 攻击式回归（"故意破坏必须失败"） |
-| `python -m ruff check src tests audit scripts configs` | 静态检查（代码与工具域，全清） |
-| `python scripts/check_canonical.py` | canonical 序列化契约（governance / artifacts 递归） |
-| `python audit/validate_freeze.py` | 冻结对象、seed/component registry、REAL 链（**在发布快照上会报 1 项 `source_tree_hash` 不匹配**：入库 `src/` 为 R4/R5 修复后的较新版本，而 `FREEZE_MANIFEST` 记录的是更早一次冻结的源树哈希；其余全 PASS，不影响已封存 seal） |
-| `python audit/validate_schemas.py --out-dir <新目录>` | 逐行 schema（24 variants、拒绝未知字段；须指定输出目录） |
-| `python audit/validate_runs.py` / `validate_identity.py` | RUN 身份与 expected index 闭合 |
-| `python scripts/verify_release_contracts.py` / `verify_audit_dossier.py` | 发布/审计包合同 |
+| `python -m ruff check src tests audit scripts configs paper/scripts` | 静态检查（全清） |
+| `python scripts/verify_release.py --level quick` / `--analysis` | 28/28 / 31/31（含再生成比对） |
+| `python scripts/build_tables.py --check` / `build_figures.py --check` | 表 1–5 / 图件血缘 |
+| `python scripts/build_release_manifest.py --check` | 发布清单与 tag 一致 |
+| `python scripts/fetch_archived_data.py --verify-only` | 账本 6/6（本机）或缺失返回 2 |
+| `python audit/validate_freeze.py` | 冻结对象、seed/component registry、REAL 链（**会报 1 项 `source_tree_hash` 不匹配**：入库 `src/` 为 R4/R5 修复后的较新版本，而 `FREEZE_MANIFEST` 记录的是更早一次冻结的源树哈希；其余 PASS，不影响已封存 seal） |
+| `python audit/validate_schemas.py --out-dir <新目录>` | 逐行 schema（24 variants、拒绝未知字段） |
 
-> `ruff check .`（全仓库）另报 **14 项**风格提示，全部位于 3 个交付/构建脚本
-> （`release/analysis/scripts/reanalyse_h1.py`、`release/analysis/scripts/review_delivery.py`、`manuscript/scripts/make_figures.py`）——
-> 它们保留了交付时的紧凑风格，逻辑无问题，如实披露；代码与工具域（上方命令）为全清。
+> `ruff check .`（全仓库，含保留原样的交付脚本）可能另报少量风格提示；上表的代码与工具域为全清。
 
 ## 5. 不随仓库分发的大对象（如实披露）
 
-完整清单（path / 字节数 / SHA256）：[`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv)。摘要：
+完整清单（path / 字节数 / SHA256 / 原因）：[`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv)。摘要：
 
 | 对象 | 大小 | 说明 |
 |---|---|---|
-| `artifacts/ledgers/H0_NULL/evaluation.scientific.jsonl` | 1,404,096,576 B | SHA256 `74414103…91d8`，与 `release/h0_run/RUN_SEAL.json` 一致 |
-| `artifacts/ledgers/H0_NULL/feature.scientific.jsonl` | 1,437,310,000 B | SHA256 `16b85452…a5f` |
-| `artifacts/ledgers/H1_ALT/evaluation.scientific.jsonl` | 266,379,930 B | SHA256 `82ddef2b…52c7` |
-| `artifacts/ledgers/H1_ALT/feature.scientific.jsonl` | 262,233,600 B | SHA256 `4ba3d1f7…1cd` |
-| `governance/ACTIVE_*_INDEX_*.jsonl`（6 个） | 7–140 MB | 大型派生索引；汇总见 `governance/active_index_summary.json`；可由冻结计划与种子再生成 |
+| H0/H1 四个正式账本 | 1.40 GB / 1.44 GB / 266 MB / 262 MB | 哈希与 `artifacts/seals/<phase>/RUN_SEAL.json` 一致；归档与获取见 `reproducibility/DATA_AVAILABILITY.md` |
+| `governance/ACTIVE_*_INDEX_*.jsonl`（6 个） | 7–140 MB | 大型派生索引；汇总见 `governance/active_index_summary.json`；已打包为确定性 tar 并登记哈希（`data/manifests/external_artifacts.json`） |
+| PAMAP2 原始数据 | 2.49 GB | 第三方（UCI ML Repository，CC BY 4.0），本仓库不重新分发 |
 
-- 账本为**签名绑定的原始证据**：其哈希已在 RUN/PHASE seal 与审计记录中固定；获取到账本后按上表校验即可确认字节一致。
-- 大索引的校验工具已入库：`python audit/check_active_indexes.py`（指向本地索引文件即可复核与 `ACTIVE_*` 契约的一致性）。
-- 大索引不入库的原因：单文件超过 GitHub 100 MB 限制或属可再生的派生对象（不影响 seal 与论文数值的可验证性）。
+- 账本为签名绑定的原始证据：哈希已固定在 RUN/PHASE seal 中；获取后按上表校验即可确认字节一致。
+- 索引校验工具：`python audit/check_active_indexes.py`（指向本地索引文件即可复核与 `ACTIVE_*` 契约的一致性）。
 
 ## 6. 封存证据摘要（论文数字的血缘）
 
@@ -156,4 +154,4 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 ## 7. 版本与变更
 
 - 权威变更记录：`governance/CHANGELOG.md`（append-only；含批次、冻结标签 v1.0→v1.5、缺陷与修正、审计裁决）。
-- 本快照：2026-09-20（R5-paper 阶段）。若复现结果与论文不一致，请携带命令、环境与产物哈希提 issue。
+- 本快照：`v1.0.0-paper`（2026-09-20）。若复现结果与论文不一致，请携带命令、环境与产物哈希提 issue。

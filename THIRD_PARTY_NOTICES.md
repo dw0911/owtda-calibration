@@ -21,7 +21,7 @@
 | 数据 | 来源 | 许可 | 本仓库处理 |
 |---|---|---|---|
 | PAMAP2 Physical Activity Monitoring | UCI ML Repository（Reiss & Stricker, 2012） | CC BY 4.0（以 UCI 页面为准） | **不重新分发**；出处与逐文件 SHA-256 见 `DATA_SOURCES.md` |
-| 旧代 DMB-R1 证据 | 本项目旧代终止归档 | 本项目所有 | `external_prior_evidence/DMB_R1/`（自包含归档 + 校验清单） |
+| 旧代 DMB-R1 证据 | 本项目旧代终止归档 | 本项目所有 | **不重新分发**（2026-09-20 已从公共树剔除）；不参与本代任何估计，保留在开发历史与工作区归档中 |
 | 合成数据（N-AR / N-CIRCLE） | 本项目生成 | 适用本仓库数据许可 | 由代码 + 冻结种子生成，不含第三方内容 |
 
 ## 3. 字体与图形

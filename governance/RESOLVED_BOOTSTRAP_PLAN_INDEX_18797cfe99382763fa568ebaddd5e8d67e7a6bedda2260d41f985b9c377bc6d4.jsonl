@@ -1,7 +1,0 @@
-{"bootstrap_plan_id": "102e8adda47ecf5b3e41e04b1beefe32b8b98ff93288b953d932af73387e7b5d", "plan_name": "H0_DIAGNOSTICS_ALL_V1", "plan_spec_hash": "fcb0ee6aaf819c9c26339e7029aeb528a3e3fd040ebd7af7f09d3c62cdfd610e"}
-{"bootstrap_plan_id": "93858309b9c686885436b4e4ea63b5c9db4bd1357e03a8a82db66d9d919b4c4d", "plan_name": "H1_ALT_POWER_ALL_V1", "plan_spec_hash": "fc8fb40a9fc591ab82a45946c82b9b91785a550c06652fdf04f99619d2fb2a7a"}
-{"bootstrap_plan_id": "0b717c993b29a331c705f76356d4fe53e0f28379f483dfac87f2aca9713c672a", "plan_name": "H1_NULL_QUANTILE_ALL_V1", "plan_spec_hash": "c8df7497e8ca395d8c28c2cfa7be4cf9c7e585335a6248275a4b399359cfdd87"}
-{"bootstrap_plan_id": "09ccc3294450f05847131102169425f3a07d5fc24fad975b8a8b81ac14b7db68", "plan_name": "P1_H0_PRIMARY_V1", "plan_spec_hash": "8ca96f3a7d24e05cf1a95af4cb626166e7811c6bff56f63d1a92ca2a5870fc4c"}
-{"bootstrap_plan_id": "845473cb3f8c539cb1b684aa26c10159eceb8ffc80364a47c7abc52ffa44c800", "plan_name": "P2_H0_PRIMARY_V1", "plan_spec_hash": "595413531f203a3587117876dbfb9a5d5d6bee8cca3cf49e218678b727825ed5"}
-{"bootstrap_plan_id": "6cb0f8f9cf8437c1cc7b21c86f15e1d5585138e01fcfe067cd5213ff5decf6bb", "plan_name": "P3_H0_PRIMARY_V1", "plan_spec_hash": "fafde3a94c77c25aa6433435c5c320db0cb134c242657c6b9aa1c8178accbebe"}
-{"bootstrap_plan_id": "c36def61218291304bb162e384be24f7e4b0844bcec7b04be70e0de9fb3bc885", "plan_name": "REAL_ALL_ENDPOINTS_V1", "plan_spec_hash": "9db2ae945e0017e5e2e35facf9464660f961af14a546a4de6e68598f785b75b8"}

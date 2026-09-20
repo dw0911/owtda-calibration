@@ -6,6 +6,25 @@
 
 ## 公开发布快照
 
+### 2026-09-20 — 公共树精简（作者要求：推送包只含复现所需，不多不少）
+
+- **剔除 156 个历史过程文件**（676 → 401 个跟踪文件），科学内容与复现链**不受影响**：
+  - `release/` 交付包原始副本（仅保留 `release/analysis/scripts/` 的 H1 重分析脚本）；
+  - `artifacts/audit|archive|smoke/`（冻结/身份/准入检查快照、旧审计 ZIP、smoke 工程证据）；
+  - `external_prior_evidence/`（旧代 DMB-R1 归档，不参与本代估计）；
+  - `governance/` 过程登记项 129 个（冻结未引用的 RUN_COMPONENT_SET/RUN_INPUT_BINDINGS/SCOPE_DESIGN 实例、
+    预注册/结果记录、reasons/ 等）；
+  - 一次性构建器 13 个（审计提交包打包/校验、环境/身份/准入收集器等）；
+  - `AUDIT_SUBMISSION_SUMMARY.md`。
+- **保留判据**：被测试或入口脚本**实际导入/引用**、被 `FREEZE_MANIFEST` **点名**、或为论文数值/血缘所必需；
+  剔除名单与原因逐项登记在 [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv) → `PRUNED_FROM_PUBLIC_TREE`。
+- **恢复判据（闭包）**：凡被留存文件引用（含运行时拼接路径，如 `REAL_DISPOSITION.jsonl` → reason 对象、
+  `audit/check_active_indexes.py` → `artifacts/summaries/PHASE_SEAL_*.json`）的文件一律保留。
+- 修正 `scripts/frozen_env.py` 文档示例与 `.gitattributes` 中对已删文件的残留引用；
+  `EXCLUDED_ARTIFACTS.csv` 中指向 `release/*/RUN_SEAL.json` 的备注改为 `artifacts/seals/<phase>/RUN_SEAL.json`。
+- 全量校验在精简树上通过：`pytest` 1069 passed / 1 skipped、`ruff` 全清、`verify_release` 28/28 与 31/31、
+  表生成链 5/5、图件血缘 24/0、账本 6/6、发布 dry run 0 差异。
+
 ### 2026-09-20 — 许可/作者定稿与账本归档（发布门闭合，未推送）
 
 - **三项许可定稿**（作者确认）：代码 **MIT**（根 `LICENSE`）、本项目结果数据 **CC BY 4.0**

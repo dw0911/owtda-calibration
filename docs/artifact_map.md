@@ -23,7 +23,7 @@
 | `docs/` | ✅ 已创建 | 本文件 + method_overview + result_definitions + faq |
 | `examples/` | ✅ 已创建 | 4 个脚本/说明 |
 | `.github/` | ✅ 已创建 | ci / paper / release + issue 模板 + PR 模板 |
-| `LICENSES/` | ✅ 已创建 | `DATA_LICENSE.txt`、`PAPER_LICENSE.txt`（均待作者确认；根 `LICENSE` 为代码许可占位） |
+| `LICENSES/` | ✅ 已创建 | `DATA_LICENSE.txt`、`PAPER_LICENSE.txt`（均 **CC BY 4.0**，2026-09-20 作者确认）；根 `LICENSE` 为代码许可 **MIT** |
 | `Dockerfile` / `Makefile` | ✅ 已创建 | 快捷入口；正式入口仍是 Python CLI |
 | `notebooks/exploratory/` | 无 | 本仓库不使用 notebook 产生任何正式结果 |
 
@@ -47,9 +47,10 @@
 |---|---|
 | `reproducibility/` | 规范要求的复现文档与清单（RUNBOOK / ENVIRONMENT / COMPUTE_REQUIREMENTS / DATA_AVAILABILITY / FAILURE_POLICY / VALIDATION_SUMMARY / FORMAL_MANIFEST / RELEASE_MANIFEST / SEED_MANIFEST / EXPECTED_OUTPUTS / ARTIFACT_INDEX / SHA256SUMS） |
 | `governance/` | **保留**：冻结对象、registry、append-only 变更链（`CHANGELOG.md`）、`FREEZE_MANIFEST`、seal 绑定的分析身份对象。规范树中未列，但它们是可复现性的**身份真源** |
-| `artifacts/seals/`、`artifacts/preflight/`、`artifacts/audit/`、`artifacts/archive/`、`artifacts/smoke/` | **保留**：封存证据与历史工程证据（smoke 仅工程诊断，不进论文） |
-| `release/` | **保留**：2026-09-18 交付包的原始副本（审计留存）；其中的 canonical 内容与 `results/canonical/` 一致（已校验），**不是**第二个真源 |
-| `external_prior_evidence/` | **保留**：旧代 DMB-R1 终止归档（L1 证据，按治理要求披露与隔离） |
+| `artifacts/seals/`、`artifacts/summaries/`、`artifacts/preflight/` | **保留**：运行封条、两组索引集的 PHASE SEAL、预算/预检证据（论文数字的身份锚点） |
+| `artifacts/audit/`、`artifacts/archive/`、`artifacts/smoke/` | **已剔除**（2026-09-20 精简）：冻结/身份/准入检查快照、旧审计 ZIP、smoke 工程证据；登记见 `EXCLUDED_ARTIFACTS.csv` → `PRUNED_FROM_PUBLIC_TREE` |
+| `release/` | **仅保留** `analysis/scripts/`（Level-2 的 H1 重分析脚本）；交付包原始副本的其余部分已剔除（`results/canonical/` 为唯一真源） |
+| `external_prior_evidence/` | **已剔除**：旧代 DMB-R1 终止归档（不参与本代任何估计）；登记同上 |
 | `audit/` | **保留**：独立验证器与审计工具（`repo_guard`、schemas、freeze/runs 校验、攻击套件等） |
 
 ## 4. 单一真源对照

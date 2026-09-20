@@ -55,7 +55,6 @@
 /DATA_SOURCES.md              text eol=lf
 /REPRODUCIBILITY.md           text eol=lf
 /THIRD_PARTY_NOTICES.md       text eol=lf
-/AUDIT_SUBMISSION_SUMMARY.md  text eol=lf
 /EXCLUDED_ARTIFACTS.csv       text eol=lf
 /CITATION.cff                 text eol=lf
 /LICENSE                      text eol=lf

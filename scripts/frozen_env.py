@@ -16,7 +16,7 @@ Python is too late for OpenBLAS.  This launcher therefore
 Usage::
 
     python scripts/frozen_env.py --out-dir <dir> --label wstar_h0_w8 \
-        --cmd .venv/Scripts/python.exe -- -u audit/run_worker_sweep.py ...
+        --cmd .venv/Scripts/python.exe -- -u audit/build_freeze.py ...
 """
 
 from __future__ import annotations
