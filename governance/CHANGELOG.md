@@ -9,8 +9,7 @@
 - 提交 B01（commit `b1038b4`）：
   - `PROJECT_CHARTER.md`：project_id=owtda-cal-r1、四生存点、证据分级、状态机、批次纪律；
   - `CLAIM_MATRIX_v1.0.csv`：C1–C8，状态全 `UNTESTED`；
-  - `manuscript/`：OUTLINE、WRITING_CONSTRAINTS、COLUMN_RECORD（投稿栏目待编辑部咨询）。
-- 期刊官网核查：存在「专题征稿 | 拓扑数据分析」（2026-03-06）；详情待填（用户指示暂缓）。
+  - `manuscript/`：OUTLINE、WRITING_CONSTRAINTS、COLUMN_RECORD。
 
 ## 2026-09-10 — B02 `OWTDA_CAL_R1_B02_20260910_PRIOR_EVIDENCE_AND_SPEC_SKELETON`
 
@@ -26,13 +25,6 @@
 - `OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md`（2686 行，SHA256
   `dca49727def3d31d2f367d58dba157e782946b862c28d29dd8508a6a3cc19ab3`）复制入仓库根，
   作为本代唯一权威计划基线；README 与 `PROTOCOL_v1.0.md` 引用同步。
-
-## 2026-09-10 — 治理修订：取消编辑部咨询环节（用户指令）
-
-- 本轮不再开展编辑部咨询（原 Plan §23 排程 9/11 项取消）；
-- `manuscript/COLUMN_RECORD_20260910.md` 改为"投稿准备期现场核验"基线；
-- 风险登记：专题截止日仅用户口径 2026-10-31（未编辑部核验），投稿日 10-28 早于该口径，
-  冲突处置见 COLUMN_RECORD §3.4/§4。
 
 ## 2026-09-10 — REAL 线：Data Gate FAIL → omission RC（计划 §24 分流 1）
 

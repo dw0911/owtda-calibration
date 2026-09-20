@@ -1,26 +1,25 @@
 # Finite-Sample Calibration Boundaries of Topological Windowed Scanning
 
-**OW-TDA-CAL-R1** · 注册项目名（CHARTER v1.0 英文全称）：*Exchangeability Failure and Calibration Boundaries of
-Topological Scans with Overlapping Windows* · 目标期刊：《山东大学学报（理学版）》"拓扑数据分析"专题
+**OW-TDA-CAL-R1** · *Exchangeability Failure and Calibration Boundaries of
+Topological Scans with Overlapping Windows*
 
-> 论文配套的**可复现仓库**：代码、冻结配置、治理与身份链、论文源文件、规范化汇总结果与图表生成脚本。
-> 快照：**v1.0.0-paper**（annotated tag，2026-09-20）——正式 H0/H1 已封存保留。
+> 论文配套的**可复现仓库**：代码、冻结配置、论文源文件、规范化汇总结果与图表生成脚本。
+> 发布快照：**v1.0.0-paper**。
 >
-> **可验证范围（如实声明）**
-> - **Level 1（默认、可任意克隆验证）**：代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
+> **复现方式**
+> - **Level 1（秒级）**：`verify_release.py --level quick` 核验代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
 > - **Level 2（账本级重做，可选）**：由正式账本（四份 ledger，约 3.2 GB，**不随仓库分发**）重做分析。
->   账本哈希登记在 `data/manifests/`；若账本就位，`scripts/fetch_archived_data.py --verify-only` 返回 0，
->   否则返回 2 并明确提示 Level 1 仍可验证（不是静默通过）。**复现论文的合成实验不需要账本。**
-> - **Level 3（从头重跑）**：`scripts/reproduce.py` 用代码 + 冻结种子从零重跑 H0/H1 Monte Carlo，
->   产出科学账本后可用 `analyse_h0.py --from-ledger` 与 canonical 对账。**这是复现论文实验的主路径，零外部数据依赖。**
-> - **发布状态**：三项许可（MIT / CC BY 4.0 / CC BY 4.0）与作者名单已于 **2026-09-20 定稿**（见 `LICENSE`、`LICENSES/`、`AUTHORS.md`）；
->   仓库已完成全部本地校验与发布闸门，**尚未推送**——是否公开由作者决定。
+>   账本哈希登记在 `data/manifests/`；账本就位时 `fetch_archived_data.py --verify-only` 返回 0，否则返回 2。
+>   **复现论文的合成实验不需要账本。**
+> - **Level 3（从头重跑，主路径）**：`scripts/reproduce.py` 用代码 + 冻结种子从零重跑 H0/H1 Monte Carlo，
+>   产出科学账本后与 canonical 对账，**零外部数据依赖**。
+> - **许可**：代码 MIT；结果数据与论文源文件 CC BY 4.0（见 `LICENSE`、`LICENSES/`）。
 
 ## Overview
 
 重叠滑动窗口会使"窗口级置换检验"失去可交换性前提，从而让拓扑扫描检验的校准失效。本仓库给出：
 算法实现（BPI / MOMENTS 两种表示、扫描统计量、M0 朴素置换与 M1 依赖乘子两种校准器）、
-冻结实验协议与治理链、一次封存的正式 H0/H1 运行，以及从 canonical 汇总重建全部图表与论文的脚本。
+冻结实验协议、一次正式 H0/H1 运行，以及从 canonical 汇总重建全部图表与论文的脚本。
 
 ## Scientific question
 
@@ -64,10 +63,8 @@ docs/                 method_overview / result_definitions / faq
 examples/             最小可用示例（复现单格 H0 / 单格 H1 / 窗口几何演示）
 ```
 
-> **本仓库只包含复现所必需的当前树**（2026-09-20 精简）：交付包副本、审计/治理过程登记项、
-> 封存证据（seal/preflight）、一次性构建器与审计工具**均已剔除**，逐项登记在
-> [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv) 的 `PRUNED_FROM_PUBLIC_TREE` 段
-> （含剔除原因与保留位置），并保留在开发历史与工作区归档中。
+> 本仓库只包含复现论文所需的内容；审计/治理过程件与封存证据已剔除，见
+> [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv)。
 
 ## Quick start
 
@@ -169,13 +166,13 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 ## License
 
-本仓库**不是单一许可对象**（2026-09-20 作者确认）：
+本仓库分三部分许可：
 
 | 对象 | 许可 | 文件 |
 |---|---|---|
 | 代码（`src/`、`scripts/`、`tests/`、`paper/scripts/`、`configs/`） | **MIT** | [`LICENSE`](LICENSE) |
 | 本项目自行产生的结果数据（`results/`、`artifacts/`、清单与归档账本） | **CC BY 4.0** | [`LICENSES/DATA_LICENSE.txt`](LICENSES/DATA_LICENSE.txt) |
-| 论文源文件与 PDF（`paper/`） | **CC BY 4.0**（published version 依目标期刊政策） | [`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt) |
+| 论文源文件与 PDF（`paper/`） | **CC BY 4.0** | [`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt) |
 | 第三方组件与数据 | 见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)（PAMAP2 为 CC BY 4.0，**不重新分发**） | — |
 
 转载/再分发时请按 CC BY 4.0 保留署名（`AUTHORS.md` 与 `CITATION.cff` 给出了署名信息）。
@@ -184,20 +181,12 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 - 缺陷与复现报告：使用仓库的 issue 模板（`Bug report` / `Reproducibility report`），
   请附 `git rev-parse HEAD`、环境与本机输出；
-- 贡献路径与硬性约束（不得改 `pyproject.toml`/`uv.lock` 与已封存对象）见 [`CONTRIBUTING.md`](CONTRIBUTING.md)；
-- ⚠️ **匿名审稿兼容**：若目标期刊采用双盲审稿，公开仓库/作者名单/ORCID/提交历史的暴露时间须服从期刊规定；
-  在此之前请勿公开关联作者身份（详见 [`AUTHORS.md`](AUTHORS.md)）。
+- 贡献路径与硬性约束（不得改 `pyproject.toml`/`uv.lock` 与已封存对象）见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
 
 ---
 
-**已知披露项（如实登记）**：
+**说明**：
 
-- 表 1–5 的原始生成器未保留——现由 `paper/scripts/make_tables.py` 由 canonical 源重新生成，正文 `\input`
-  生成结果，生成链已在 CI 中 fail-closed 校验；
-- `matplotlib` 仅为锁定环境中的依赖（`pyproject.toml`/`uv.lock` 属 R1 冻结对象，本代未修改）；
-- 3 个 legacy 图件 meta（`Figure3_fixedM_type1`、`Figure4_fixedT_type1`、`Figure7_h1_power`）由历史生成器
-  产出，其 `script_sha256` 无对应现役脚本，`build_figures.py --check` 将其列入 legacy 白名单；
-- 旧 `p = 0` 值仅作历史字节保留（现行值见 `results/bootstrap/`）。
-
-全部见 [`reproducibility/VALIDATION_SUMMARY.md`](reproducibility/VALIDATION_SUMMARY.md) §3 与
-[`reproducibility/FAILURE_POLICY.md`](reproducibility/FAILURE_POLICY.md) §5。
+- 正文表 1–5 由 `paper/scripts/make_tables.py` 从 canonical 源生成，正文 `\input` 生成结果；
+- 图件生成依赖 `matplotlib`（锁定环境提供）；
+- `H0_PRIMARY_CONTRASTS.json` 中历史 `p = 0` 值仅作字节保留，现行有效值见 `results/bootstrap/`。

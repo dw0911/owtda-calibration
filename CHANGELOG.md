@@ -28,11 +28,10 @@
 ### 2026-09-20 — 许可/作者定稿与账本归档（发布门闭合，未推送）
 
 - **三项许可定稿**（作者确认）：代码 **MIT**（根 `LICENSE`）、本项目结果数据 **CC BY 4.0**
-  （`LICENSES/DATA_LICENSE.txt`）、论文源文件与 PDF **CC BY 4.0**（`LICENSES/PAPER_LICENSE.txt`，
-  published version 依目标期刊政策）；`CITATION.cff` 的 `license` 同步为 `MIT`，并注明三对象划分。
+  （`LICENSES/DATA_LICENSE.txt`）、论文源文件与 PDF **CC BY 4.0**（`LICENSES/PAPER_LICENSE.txt`）；
+  `CITATION.cff` 的 `license` 同步为 `MIT`，并注明三对象划分。
 - **作者定稿**：**王平（Wang Ping），河北金融学院与数据科学学院，13088010056@163.com**；
-  已同步 `AUTHORS.md`、`CITATION.cff`（含 `affiliation`/`email`）与 `paper/main.tex` 的 `\author{}`（三处一致）；
-  作者选择**公开署名**（不采用匿名/双盲隐藏）。
+  已同步 `AUTHORS.md`、`CITATION.cff`（含 `affiliation`/`email`）与 `paper/main.tex` 的 `\author{}`（三处一致）。
 - **账本归档（本地完成，DOI 待登记）**：四份正式账本 + 两组大型索引（合计 **3.67 GB**）逐项校验；
   两组索引打包为**确定性 tar**（`mtime=0`、成员排序、无 uid/gid），真实 SHA-256/大小与三份成员的逐文件哈希
   已登记进 `data/manifests/external_artifacts.json`；`scripts/fetch_archived_data.py --verify-only`

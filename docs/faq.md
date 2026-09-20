@@ -26,6 +26,3 @@
 **Q7 图件重新生成后为什么 PDF/SVG 的哈希变了？**
 它们内嵌创建时间等元数据；**PNG 逐字节稳定**，内容由 canonical 表决定。`scripts/build_figures.py --check`
 因此校验的是"输入哈希"而不是输出字节。
-
-**Q8 双盲审稿怎么办？**
-若目标期刊双盲：公开仓库/作者名/提交历史的暴露时间须服从期刊规定。见 `AUTHORS.md` 与 README §Contact。

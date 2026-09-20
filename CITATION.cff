@@ -2,8 +2,7 @@ cff-version: 1.2.0
 message: "若使用本仓库或引用其研究结果，请按此引用。"
 title: "重叠滑动窗口下拓扑扫描检验的交换性失效与校准边界 (OW-TDA-CAL-R1)"
 type: software
-# 版本口径：`version` 是**论文快照 release** 的版本，对应 annotated tag `v1.0.0-paper`；
-# package 自身的 version（pyproject.toml）由 R1 冻结链钉住，保持 0.1.0 不变（库版本 ≠ 论文快照版本）。
+# version 对应发布标签 v1.0.0-paper。
 version: 1.0.0
 authors:
   - name: "王平 (Wang Ping)"
@@ -15,8 +14,7 @@ keywords:
   - permutation calibration
   - dependent bootstrap
   - persistent homology
-# 三对象许可（2026-09-20 决策）：代码 MIT；结果数据与论文源文件 CC BY 4.0。
-# 本字段对应**软件**许可；数据与论文见 LICENSES/DATA_LICENSE.txt 与 LICENSES/PAPER_LICENSE.txt。
+# 软件许可 MIT；数据与论文源文件许可见 LICENSES/。
 license: MIT
 repository-code: "https://github.com/dw0911/owtda-calibration"
 date-released: "2026-09-20"

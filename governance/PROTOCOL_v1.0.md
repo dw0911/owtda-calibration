@@ -69,5 +69,4 @@
 
 - [ ] protocol_content_hash / freeze_id 在共同冻结批计算；
 - [ ] COMPUTE_FREEZE.json（基线 §17 G0）列出 DGP/window/feature/method/runner/config 文件白名单；
-- [ ] AMENDMENT_REGISTRY / INVALIDATION_REGISTRY / STATE_REGISTRY 初始登记机制落地；
-- [ ] 编辑部咨询结果并入 §1.4 投稿适配（征稿详情暂缓填写）。
+- [ ] AMENDMENT_REGISTRY / INVALIDATION_REGISTRY / STATE_REGISTRY 初始登记机制落地。

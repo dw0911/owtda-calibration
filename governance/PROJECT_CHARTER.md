@@ -16,9 +16,6 @@
 | `project_id`（canonical ASCII） | `owtda-cal-r1` |
 | `protocol_id` | 由 `PROTOCOL_v1.0.md` 正文内容哈希确定（协议定稿时登记；B01 未定稿） |
 | `evidence_generation_id` 初代 | `G01` |
-| 目标期刊 | 《山东大学学报（理学版）》"拓扑数据分析"专题 |
-| 专题投稿截止 | 2026-10-31（编辑部未确认前以咨询为准） |
-| 目标投稿日 | 2026-10-28 |
 | 计划文档状态 | 方案定稿；冻结日 2026-09-23 |
 
 `project_id` 与 DMB-R1（旧代 `bpi-scan` / 方法线 DMB-R1）完全不同，两代 ledger、
@@ -140,8 +137,6 @@ shard/attempt 证据，再按计划 §18.2 失效范围表处置，禁止现场�
 | 10-05/06 | H0 phase seal → ALT 正式 admission；锁 H0 主分析 |
 | 10-06~10 | H1 运行与 seal；size-standardized analysis |
 | 10-11/12 | PAMAP2 prediction →（seal 后）unseal truth → evaluation seal；科学 GO/NO-GO |
-| 10-13~22 | 中文论文首稿 → clean-build → 独立审计 → 红队 → Analysis Freeze |
-| 10-28 | 投稿（10-31 为紧急缓冲，不安排首次投稿） |
 
 预设分流（不改变科学范围）：9/17 或 9/23 REAL Gate 失败 → REAL omission；
 9/18 T4 未闭合 → 理论降级；9/22 计算 Gate 失败 → 停止赶投先做性能工程；

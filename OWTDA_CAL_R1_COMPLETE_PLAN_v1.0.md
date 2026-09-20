@@ -4,16 +4,13 @@
 > 英文名称：Exchangeability Failure and Calibration Boundaries of Topological Scans with Overlapping Windows  
 > 项目标识：`OWTDA-CAL-R1`  
 > 计划日期：2026-09-09  
-> 目标期刊：《山东大学学报（理学版）》“拓扑数据分析”专题  
-> 目标投稿日：2026-10-28  
-> 用户提供的专题截止日：2026-10-31  
 > 文档状态：方案定稿，待本地实现核验与共同冻结；任何正式 Monte Carlo 开始前必须转为 `FROZEN`
 
 ---
 
 ## 0. 总裁定
 
-本项目结束原 DMB-R1 的“通用可靠校准方法”叙事，建立全新的证据代际。新论文研究以下问题：
+本项目结束原 DMB-R1 的"通用可靠校准方法"叙事，建立全新的证据代际。新论文研究以下问题：
 
 > 单条时间序列经重叠滑动窗口、点云构造、持续同调与有限维 persistence-intensity 映射后，普通置换所要求的交换性在哪些条件下失效或不再有保证；naive permutation 与冻结 DMB 规则的有限样本校准误差怎样随窗口重叠率、原序列依赖、数据预算及拓扑表征而变化。
 
@@ -30,7 +27,7 @@
 
 - 不研究递归切分和多变点 FWER；
 - 不把旧 DMB-R1 ledger 合并进正式估计；
-- 不恢复“persistence intensity 普遍优于 scalar”的主张；
+- 不恢复"persistence intensity 普遍优于 scalar"的主张；
 - 不把 HASC 或 TSSB 作为本轮主要真实数据证据；
 - 不在正式结果出现后调整 DMB 带宽、核、候选区间、等价带或 MC 数；
 - 不宣称首次发现滑动窗口产生依赖、首次研究依赖 TDA、首次使用 block/bootstrap 进行 TDA 推断；
@@ -40,17 +37,7 @@
 
 ## 1. 学术定位与可防守创新
 
-### 1.1 论文题目
-
-投稿题目暂定：
-
-> **重叠窗口拓扑扫描的校准边界**
-
-内部完整题目保留为：
-
-> **重叠滑动窗口下拓扑扫描检验的交换性失效与有限样本校准边界**
-
-### 1.2 与近邻工作的边界
+### 1.1 与近邻工作的边界
 
 1. Han、Kim 与 Kim 的 weighted persistence intensity 两样本检验以两组独立同分布 persistence diagrams 为前提；本项目研究单序列重叠窗口派生 diagrams 中交换性可能失效且不能直接沿用 IID 保证的情形。  
    <https://arxiv.org/html/2607.20893v1>
@@ -70,13 +57,6 @@
 > 本研究针对无需独立 Phase-I 样本的离线单序列拓扑最大扫描，系统考察重叠率、原序列依赖和采集预算共同作用下的有限样本校准边界。
 
 只有 C2 或 C3 获支持时，结果段才可进一步写普通置换出现预注册幅度的反保守/失真；只有 C5 获支持时，才可写冻结 DMB-R1 在 IID 非重叠端存在实质保守性。两项不得互相替代。
-
-### 1.4 投稿适配
-
-该研究同时落在“数据统计与拓扑推断”和“信号处理中的拓扑学方法”范围。期刊官网可核验的正式专题名为“拓扑数据分析”：  
-<https://lxbwk.njournal.sdu.edu.cn/CN/news/folder.do?folderId=1>
-
-正式稿的不可缺证据为“理论结果 + 系统模拟”；PAMAP2 是预注册的说明性增强项，只有完整通过身份、隔离和 evaluation seal 才进入正文。专题征稿没有规定研究论文必须含真实案例，因此 REAL omission 不自动否决合成主线；此时删除条件性图8/表6/真实案例章节，并在局限中说明外部验证尚缺。纯粹展示一次 Gate 失败不足以支撑研究性论文。
 
 ---
 
@@ -135,7 +115,7 @@ REAL_EVALUATION
 ANALYSIS
 ```
 
-正文中的“H0/H1”分别是科学含义，机器身份必须写 `NULL/ALT`；smoke 不得复用 formal phase 名。
+正文中的"H0/H1"分别是科学含义，机器身份必须写 `NULL/ALT`；smoke 不得复用 formal phase 名。
 
 本轮没有方法筛选，因此取消容易产生混代的 DEV→CONFIRM 选择链。项目级状态固定为：
 
@@ -188,7 +168,7 @@ INDEX_FROZEN → ADMITTED → RUNNING → RUN_SEALED
 
 初次 full run 和局部组件重跑都必须从新的 `INDEX_FROZEN` 开始。`RUN_SEALED` 只证明特定 run 的三类 expected indexes、shards 与字节内容完整，产生后不可取消或改写。`INVALIDATED/SUPERSEDED` 作用于 logical slot 的 active binding/validity registry；仍被其他未受影响 logical slots 引用的旧 run 保持可引用，引用数归零后才能另记为 archival-superseded。
 
-phase 的 `*_SEALED` 是版本化事件 `{active_component_manifest_hash, active_data_index_hash, active_feature_index_hash, active_evaluation_index_hash, phase_seal_hash}`，每次新 active revision 都产生新事件；旧事件语义不得随“当前 manifest”漂移。`REAL_LABELS_UNSEALED` 后，同一 task/evidence generation 禁止新建或 supersede prediction。若此后发现 prediction 缺陷，进入 `REAL_INVALIDATED_POST_UNSEAL` 并省略真实结果；只有使用从未接触 truth 的全新隔离 executor 与新 evidence/task generation 才可重新开始。
+phase 的 `*_SEALED` 是版本化事件 `{active_component_manifest_hash, active_data_index_hash, active_feature_index_hash, active_evaluation_index_hash, phase_seal_hash}`，每次新 active revision 都产生新事件；旧事件语义不得随"当前 manifest"漂移。`REAL_LABELS_UNSEALED` 后，同一 task/evidence generation 禁止新建或 supersede prediction。若此后发现 prediction 缺陷，进入 `REAL_INVALIDATED_POST_UNSEAL` 并省略真实结果；只有使用从未接触 truth 的全新隔离 executor 与新 evidence/task generation 才可重新开始。
 
 每条状态变更 append-only。通用终止状态为 `ABORTED`、`INVALIDATED` 或 `SUPERSEDED`，且必须引用原因对象和受影响身份范围。`DEADLINE_NO_GO` 只属于日程处置字段 `schedule_disposition`，不充当科学项目或 run 状态。blind smoke 只检查运行时间、字段和错误，不输出拒绝率汇总，也不进入参数选择。
 
@@ -285,7 +265,7 @@ T_M(k)=
 
 BPI 的 cell-area 权重和 MOMENTS 的 Frobenius 权重直接编码在特征向量 \(Y_i\) 中，因此扫描器统一使用普通欧氏范数。候选集、exclusion、tie、退化处理和最大值位置规则对所有校准器完全相同。
 
-候选 \(k\) 使用 1-based “左侧窗口数”语义，表示窗口 \(k\) 与 \(k+1\) 之间。若多个候选满足
+候选 \(k\) 使用 1-based "左侧窗口数"语义，表示窗口 \(k\) 与 \(k+1\) 之间。若多个候选满足
 
 \[
 T_M(k)\ge T_M-64\epsilon_{64}\max(1,T_M),
@@ -293,7 +273,7 @@ T_M(k)\ge T_M-64\epsilon_{64}\max(1,T_M),
 
 其中 \(\epsilon_{64}=2^{-52}\)。先找最长连续 plateau，并列时取最左 plateau，再取该段的 lower median 作为 \(\widehat k\)。该规则只选择位置；resampling exceed 仍使用 float64 精确 \(T_b^*\ge T_{obs}\)。
 
-本轮只研究第一次全局扫描。递归检测会引入“第一次切分改变第二次样本空间”的选择效应，需要另一套 FWER 理论。
+本轮只研究第一次全局扫描。递归检测会引入"第一次切分改变第二次样本空间"的选择效应，需要另一套 FWER 理论。
 
 ### 3.4 统计量—理论对齐 Gate
 
@@ -462,7 +442,7 @@ T_M\Rightarrow
 \frac{\|\Omega_\Phi^{1/2}B_p^0(t)\|_2^2}{t(1-t)},
 \]
 
-而排列参考极限将 \(\Omega_\Phi\) 换为 \(\Gamma_0\)。真实分布包含窗口间的“合唱共振”，naive permutation 只保留每个窗口单独的音量。\(\Omega_\Phi\ne\Gamma_0\) 足以证明向量高斯过程的协方差错配；欧氏范数扫描的极限律由协方差矩阵的特征值决定。若两者的特征值多重集不同，则归一化平方范数过程的分布不同；最大值分布的严格差异仍需单独证明，或通过两种极限临界值律直接比较。全文不得把单纯的矩阵不等写成 \(T_M\) 极限分布必然不同的充分条件。
+而排列参考极限将 \(\Omega_\Phi\) 换为 \(\Gamma_0\)。真实分布包含窗口间的"合唱共振"，naive permutation 只保留每个窗口单独的音量。\(\Omega_\Phi\ne\Gamma_0\) 足以证明向量高斯过程的协方差错配；欧氏范数扫描的极限律由协方差矩阵的特征值决定。若两者的特征值多重集不同，则归一化平方范数过程的分布不同；最大值分布的严格差异仍需单独证明，或通过两种极限临界值律直接比较。全文不得把单纯的矩阵不等写成 \(T_M\) 极限分布必然不同的充分条件。
 
 ### T5：有限样本依赖放大诊断
 
@@ -498,7 +478,7 @@ E\left\|M^{-1/2}
 
 ### T6：理论交付标准
 
-主文至少包括 T2、T3、T4 和 T5 定义；T1 的完整证明可放补充材料。T4 必须由一名未参与实现的人逐行审读。若 2026-09-18 前无法闭合 T4，论文降级为“精确反例 + 解析 VIF + 系统有限样本图谱”，并删除渐近定理创新表述。正式 MC 可在统计量—理论对齐已经完成后继续。
+主文至少包括 T2、T3、T4 和 T5 定义；T1 的完整证明可放补充材料。T4 必须由一名未参与实现的人逐行审读。若 2026-09-18 前无法闭合 T4，论文降级为"精确反例 + 解析 VIF + 系统有限样本图谱"，并删除渐近定理创新表述。正式 MC 可在统计量—理论对齐已经完成后继续。
 
 ---
 
@@ -828,7 +808,7 @@ R_0=2500.
 1.96\times0.00436=0.00854.
 \]
 
-该规模能清楚地区分 0.01、0.05 和 0.07。这里的 2,500 是按 \(\pm0.009\) 精度目标反推并向上取整后的固定值，不能写成“至少 2,500”。
+该规模能清楚地区分 0.01、0.05 和 0.07。这里的 2,500 是按 \(\pm0.009\) 精度目标反推并向上取整后的固定值，不能写成"至少 2,500"。
 
 总量：
 
@@ -917,7 +897,7 @@ NUMEXPR_NUM_THREADS=1
 
 任一分段 Gate 失败时，即使合计时间达标也不得 admission；计算较快的另一阶段不能借给依赖顺序尚未满足的阶段。H0 seal 只安排在其分段计算完成后，ALT 必须继续等待 authoritative H0 seal。
 
-同理以 smoke 的持久化增量外推峰值磁盘并乘 1.25；要求 `estimated_peak_disk <= 0.8 * F_free_space`。运行期 PH 与 feature cache 只在单个 shard 内存活，写完科学结果即释放。若 wall、内存或磁盘任一不满足，先进行不改变浮点运算顺序和结果的性能修复并重跑 smoke；9月23日仍不满足时停止本次赶投，不在正式结果出现后删格或减少 MC 数。
+同理以 smoke 的持久化增量外推峰值磁盘并乘 1.25；要求 `estimated_peak_disk <= 0.8 * F_free_space`。运行期 PH 与 feature cache 只在单个 shard 内存活，写完科学结果即释放。若 wall、内存或磁盘任一不满足，先进行不改变浮点运算顺序和结果的性能修复并重跑 smoke；9月23日仍不满足时停止推进，不在正式结果出现后删格或减少 MC 数。
 
 ---
 
@@ -971,7 +951,7 @@ H_0:D_{OV}^{M}\le0.10,
 H_1:D_{OV}^{M}>0.10.
 \]
 
-0.10 是实际意义阈值。\(\rho=0.8\) 不混入该因果口径，只作为原序列依赖的效应修饰分析。P1 只支持“两个注册 DGP 的等权平均效应”；AR 与 CIRCLE 的逐 DGP 差和 CI 同时报告，但本轮不以平均检验推出两个 DGP 各自均超过阈值或对所有 DGP 普遍成立。
+0.10 是实际意义阈值。\(\rho=0.8\) 不混入该因果口径，只作为原序列依赖的效应修饰分析。P1 只支持"两个注册 DGP 的等权平均效应"；AR 与 CIRCLE 的逐 DGP 差和 CI 同时报告，但本轮不以平均检验推出两个 DGP 各自均超过阈值或对所有 DGP 普遍成立。
 
 ### 10.3 P2：固定采集预算下两 DGP 等权平均的 stride/overlap 对比
 
@@ -984,7 +964,7 @@ D_{ST}^{T}
 \right].
 \]
 
-检验 \(H_0:D_{ST}^{T}\le0.10\) 对 \(H_1:D_{ST}^{T}>0.10\)。Fixed-\(T\) 中 stride 同时改变窗口数量 \(M\)，因此结果只称“固定采集预算下、两个注册 DGP 等权平均的 stride/overlap 对比”。P1、P2 均成立时，才使用“在两个注册 DGP 的等权平均意义下，跨两种预算制度稳定出现实质失校准模式”。
+检验 \(H_0:D_{ST}^{T}\le0.10\) 对 \(H_1:D_{ST}^{T}>0.10\)。Fixed-\(T\) 中 stride 同时改变窗口数量 \(M\)，因此结果只称"固定采集预算下、两个注册 DGP 等权平均的 stride/overlap 对比"。P1、P2 均成立时，才使用"在两个注册 DGP 的等权平均意义下，跨两种预算制度稳定出现实质失校准模式"。
 
 ### 10.4 P3：IID、非重叠端两个 DGP 等权平均的 DMB-R1 保守性
 
@@ -1002,7 +982,7 @@ H_0:D_{CONS}\le0.01,
 H_1:D_{CONS}>0.01.
 \]
 
-只有两个注册 DGP 的等权平均保守幅度超过一个百分点且 Holm 校正后成立，才使用“等权平均意义下实质性保守”措辞；不得写成两个 DGP 都保守或全域保守。
+只有两个注册 DGP 的等权平均保守幅度超过一个百分点且 Holm 校正后成立，才使用"等权平均意义下实质性保守"措辞；不得写成两个 DGP 都保守或全域保守。
 
 ### 10.5 效应修饰和控制表征
 
@@ -1069,9 +1049,9 @@ p^{Holm}_{(i)}=
 | 无连续性修正 95% Wilson CI 下界高于 0.065 | `MATERIAL_ANTI_CONSERVATISM` |
 | 其他 | `BOUNDARY_OR_INDETERMINATE` |
 
-等价带相当于工程公差；估计值与完整 CI 仍是主要结果。CI 覆盖 0.05 只能支持“未检出偏差”，不能自动转写为“校准良好”。
+等价带相当于工程公差；估计值与完整 CI 仍是主要结果。CI 覆盖 0.05 只能支持"未检出偏差"，不能自动转写为"校准良好"。
 
-全部标签只对对应的单个 `cell × feature × method` 成立，不提供跨 28 格、两种表征或两种方法的同时保证；不得统计“通过格数”后再作显著性结论，也不得由若干 pointwise 标签写成“整个注册域校准良好”。全域主张需要另行预注册 simultaneous intervals 或 intersection–union Gate，本轮不作该主张。
+全部标签只对对应的单个 `cell × feature × method` 成立，不提供跨 28 格、两种表征或两种方法的同时保证；不得统计"通过格数"后再作显著性结论，也不得由若干 pointwise 标签写成"整个注册域校准良好"。全域主张需要另行预注册 simultaneous intervals 或 intersection–union Gate，本轮不作该主张。
 
 ---
 
@@ -1120,7 +1100,7 @@ q_r=M^{-1}\sum_i\|Y_{ri}\|_2^2.
 =\widehat{\operatorname{tr}(\Omega_{\Phi,M})}/\widehat D_U.
 \]
 
-若原始 \(\widehat D_U\le10^{-12}\max(1,\bar q)\)，不启动该 cell 的 ratio bootstrap，点估计和 CI 均标记 `UNDEFINED_DEGENERATE`。否则从全部 \(R=2500\) 个 replicate 有放回整簇重抽 2,500 个，固定 2,000 次；每次都按重抽后的多重集重算分子与同一 \(\widehat D_U\) 公式。任何一次 bootstrap 分母未通过退化阈值，整项 CI 标记 `UNDEFINED_BOOTSTRAP_DEGENERACY`，不得删除该次后继续计算 percentile CI。全部 2,000 次均有效时，使用第 10.6 节冻结的 nearest-rank 分位数给出 percentile 95% CI。窗口均值实现必须恢复 T3 的解析值。BPI 的 \(A^{tr}_{\Phi,M}\) 只解释固定坐标系中的总方差重复；\(M/A\) 只称“信息量类比”，不能当成真实独立窗口数。
+若原始 \(\widehat D_U\le10^{-12}\max(1,\bar q)\)，不启动该 cell 的 ratio bootstrap，点估计和 CI 均标记 `UNDEFINED_DEGENERATE`。否则从全部 \(R=2500\) 个 replicate 有放回整簇重抽 2,500 个，固定 2,000 次；每次都按重抽后的多重集重算分子与同一 \(\widehat D_U\) 公式。任何一次 bootstrap 分母未通过退化阈值，整项 CI 标记 `UNDEFINED_BOOTSTRAP_DEGENERACY`，不得删除该次后继续计算 percentile CI。全部 2,000 次均有效时，使用第 10.6 节冻结的 nearest-rank 分位数给出 percentile 95% CI。窗口均值实现必须恢复 T3 的解析值。BPI 的 \(A^{tr}_{\Phi,M}\) 只解释固定坐标系中的总方差重复；\(M/A\) 只称"信息量类比"，不能当成真实独立窗口数。
 
 ---
 
@@ -1166,7 +1146,7 @@ X_t=F(U_t)+0.08\eta_t,
 - \(\tau=\lfloor T/2\rfloor\)，即 (T=12288) 时 6,144、(T=3120) 时 1,560；两个配置的真实连续边界都与候选 \(k=96\) 的窗口中心中点精确对齐；
 - 每格 \(R_1=1600\)。
 
-共 4 格。\(U_t\) 使用与 N-CIRCLE 相同的单条连续 latent AR/copula path，\(\eta_t\) 也在变点两侧连续；主实验固定 \(Q=I_2\)。无噪声 skeleton 分别为圆与 figure-eight，骨架拓扑不同；加入非退化 Gaussian noise 后两侧观测分布的支持均为 \(\mathbb R^2\)，所以结果只称“潜在骨架不同的含噪形状/分布变化”，不称观测支持拓扑变化。两侧只保证每个时点的边际均值与协方差相同；当 \(\rho=0.8\) 时，滞后协方差结构无需相同，因此严禁称为“二阶随机过程匹配”。高阶边际分布、曲率和距离结构也会变化，全文禁止使用 `topology-only`。
+共 4 格。\(U_t\) 使用与 N-CIRCLE 相同的单条连续 latent AR/copula path，\(\eta_t\) 也在变点两侧连续；主实验固定 \(Q=I_2\)。无噪声 skeleton 分别为圆与 figure-eight，骨架拓扑不同；加入非退化 Gaussian noise 后两侧观测分布的支持均为 \(\mathbb R^2\)，所以结果只称"潜在骨架不同的含噪形状/分布变化"，不称观测支持拓扑变化。两侧只保证每个时点的边际均值与协方差相同；当 \(\rho=0.8\) 时，滞后协方差结构无需相同，因此严禁称为"二阶随机过程匹配"。高阶边际分布、曲率和距离结构也会变化，全文禁止使用 `topology-only`。
 
 两种 H1 alternative 的 `DGP_family` 均固定为 `CIRCLE_BASED_H1`，`scenario_id` 分别记录形状变化与 mean-shift；所以它们在相同 replicate 下共享 `master_replicate_id/cluster_id`，但因 `data_model_config_hash` 不同而拥有不同的 physical/data-unit 身份。
 
@@ -1285,7 +1265,7 @@ HASC 因语料身份和公开复现条件尚未闭合，不进入本轮正式证
 - 每个 provisional clock segment 以首个 timestamp 为 \(t_0\)，用明确的 half-up 正值公式 \(j=\lfloor100(t-t_0)+0.5\rfloor\) 映射到整数网格，禁止调用语言默认 `round`。要求 \(|t-(t_0+j/100)|\le10^{-4}\) 秒且 \(j\) 严格递增；重复 grid index 或超容差触发 `DATA_TIMEBASE_FAIL`；
 - 缺失 grid index 没有 activity label，不填成 0 且不插值；先在每个 provisional clock segment 内以缺失 grid row 切出 provisional grid-contiguous segments；
 - 在 provisional grid-contiguous segment 内，对已有 grid row 的三轴传感器 NaN，先以原始 m/s² 值逐轴识别左右端点均有限、连续长度 \(r=1,\ldots,50\) 行的 run。端点为 \(x_0,x_1\) 时，第 \(k\) 个缺失值固定按 `delta=np.subtract(x1,x0,dtype=float64)`、`lam=np.divide(float64(k),float64(r+1))`、`prod=np.multiply(lam,delta,dtype=float64)`、`xk=np.add(x0,prod,dtype=float64)` 的四步顺序计算，每步舍入到 binary64，禁止 FMA contraction或代数改写；任一轴存在长度 \(>50\) 或无界 run 的行进入三轴统一 `bad_row = OR(axis_bad)`。删除全部 bad rows；final analysis segment 定义为剩余行中 grid index 连续的最大非空段，按时间顺序从 0 编号。activityID 永不插值，禁止首尾外推或各轴分别切段；长度 1 与 50 的插值 fixtures 固定输入 bytes、输出 bytes 和 digest；
-- 插值和最终切段完成后，三个加速度通道统一除以标准重力 \(9.80665\) 一次，得到 `g` 单位；运算全程 binary64，不做结果驱动的全序列标准化。一个冻结 golden fixture 必须逐位验证“解析 → 网格 → 插值(m/s²) → 联合切段 → 除以 g”的顺序；
+- 插值和最终切段完成后，三个加速度通道统一除以标准重力 \(9.80665\) 一次，得到 `g` 单位；运算全程 binary64，不做结果驱动的全序列标准化。一个冻结 golden fixture 必须逐位验证"解析 → 网格 → 插值(m/s²) → 联合切段 → 除以 g"的顺序；
 - BPI coordinate cap 固定为 6 g、归一化 birth/lifetime grid 上界为 1、`point_limit=128`、`global_empirical_winsor=false`；
 - activity label=0 的 transient 段不作为活动状态；
 - `REAL_DATA_CONFIG_v1.json` 固定上述路径、列、活动集、采样率、解析/网格/插值/单位规则；`TASK_BUILDER_CONFIG_v1.json` 固定第 13.3 节规则；`REAL_SCOPE_SPEC_v1.json` 固定第 13.4 节的 stride、feature 与 method。每个 config hash 都按第 15.3 节的 `config_hash` 合同计算，`real_scope_spec_id` 固定等于 `REAL_SCOPE_SPEC_v1.json` 的 config hash；
@@ -1293,7 +1273,7 @@ HASC 因语料身份和公开复现条件尚未闭合，不进入本轮正式证
 
 ### 13.3 转移区间任务构造
 
-在运行任何方法前，根据官方 activity labels 自动构造自然连续任务。task builder 可以读取标签，方法 runner 只能读取不含标签和构造字段的传感器片段；该设计称“标签隔离评估”，不称双盲。
+在运行任何方法前，根据官方 activity labels 自动构造自然连续任务。task builder 可以读取标签，方法 runner 只能读取不含标签和构造字段的传感器片段；该设计称"标签隔离评估"，不称双盲。
 
 1. `bout` 定义为同一 grid-contiguous analysis segment 内 `activityID` 相同且非零的最大连续行段；候选是 `A bout → 可选 zero run → B bout`，要求 `activity_A != activity_B` 且不得跨 clock/grid/NaN 断段；
 2. A、B bout 各自精确要求行数 \(n_A,n_B\ge3000\)；
@@ -1306,7 +1286,7 @@ HASC 因语料身份和公开复现条件尚未闭合，不进入本轮正式证
    [\tau_L,\tau_R]=[a+0.5,b-0.5].
    \]
    当 \(b=a+1\) 时区间退化为一个半整数边界；
-8. 片段内不得含第三个非零活动状态，插值后传感器缺失比例必须为 0。逐任务原始 entrywise missing rate 冻结为“任务所提取行中、插值前 chest 三轴的 literal-NaN 数 / \((3T)\)”；另报 `rows_with_any_nan/T` 时必须使用该独立名称。两者逐任务进入 truth diagnostics，并以“先受试者内任务均值、再受试者等权平均”汇总；
+8. 片段内不得含第三个非零活动状态，插值后传感器缺失比例必须为 0。逐任务原始 entrywise missing rate 冻结为"任务所提取行中、插值前 chest 三轴的 literal-NaN 数 / \((3T)\)"；另报 `rows_with_any_nan/T` 时必须使用该独立名称。两者逐任务进入 truth diagnostics，并以"先受试者内任务均值、再受试者等权平均"汇总；
 9. 保留所有满足规则的转移，不按活动类别、任务数量或方法表现筛选；同一受试者的多个任务保持 subject cluster 身份；
 10. task index 从 `task_index_generation_id="TI01"` 开始。片段信号在完成插值与单位变换后按 `object_kind="pamap2_chest_accel_task_v1"`、`dtype=">f8"`、`shape=[T,3]`、列顺序 `x,y,z`、行顺序为递增 grid index 计算第 15.4 节 `task_signal_hash`。`task_id` 的 HMAC payload 必须绑定 `task_candidate_id, task_index_generation_id, task_builder_config_hash, L_A, L_B, task_root_entry_hash, task_signal_hash`；
 11. runner 输入目录固定为 `real_tasks/<task_index_generation_id>/<task_id>/`，只含 opaque task ID、上述 \(T\times3\) float64 signal、从 1 开始的 sample index 和从 0 开始的相对秒，不含 candidate ID、subject/file/原始 timestamp/activity/\(a,b,L_A,L_B\)。任务目录自身通过 schema 与 `task_signal_hash` 再核验；
@@ -1342,7 +1322,7 @@ HASC 因语料身份和公开复现条件尚未闭合，不进入本轮正式证
 
 - REAL runner 也是 total function：全部 \(12N_{task}\) 条 prediction 都必须 `eligibility=true`，零/常数特征按第 10.1 节返回固定结果；任何非有限值、error、timeout 或数据依赖 ineligible 都阻断 seal。运行完整性 coverage 固定为 1，不使用 eligible-only 或 common-support 分母；
 - 对每个 `feature_id × method_id × task_id`，三个 stride pair \((100,50),(100,25),(50,25)\) 的 decision agreement 固定为 \(1\{R_{s_1}=R_{s_2}\}\)，all-three agreement 为 \(1\{R_{100}=R_{50}=R_{25}\}\)；active prediction 必须完整达到 \(12N_{task}\)，缺任一对应 prediction 时 REAL run 不能 seal，也不计算 agreement；
-- 为防止“全部不拒绝”产生平凡的高 agreement，对每个 `feature × method × stride` 同时报告受试者等权边际决定率
+- 为防止"全部不拒绝"产生平凡的高 agreement，对每个 `feature × method × stride` 同时报告受试者等权边际决定率
   \[
   \widehat r_{fms}=\frac1H\sum_{h=1}^H\frac1{n_h}\sum_{q=1}^{n_h}R_{hqfms}.
   \]
@@ -1432,7 +1412,7 @@ analysis_bootstrap
 real_task_id_salt
 ```
 
-`SEED_REGISTRY_v1.0.json` 采用 strict `entries[]` schema。每个 entry 恰含复合主键 `(project_id,protocol_id,freeze_id,evidence_generation_id,phase,stream_family,component_generation_id)`、二选一的 `root_key_hex` 或隔离 `secret_ref`、`root_key_commitment` 与 `root_entry_hash`；未知字段拒绝。entries 先验证复合主键唯一，再按该七元组 ASCII 排序。registry append-only，同一主键禁止覆盖；换 key 必须先提升对应 component generation 或全局 evidence generation。runner 只能从已签发的 `RUN_COMPONENT_SET` 解析一个精确 `root_entry_hash`，禁止按标签取“最新 key”。
+`SEED_REGISTRY_v1.0.json` 采用 strict `entries[]` schema。每个 entry 恰含复合主键 `(project_id,protocol_id,freeze_id,evidence_generation_id,phase,stream_family,component_generation_id)`、二选一的 `root_key_hex` 或隔离 `secret_ref`、`root_key_commitment` 与 `root_entry_hash`；未知字段拒绝。entries 先验证复合主键唯一，再按该七元组 ASCII 排序。registry append-only，同一主键禁止覆盖；换 key 必须先提升对应 component generation 或全局 evidence generation。runner 只能从已签发的 `RUN_COMPONENT_SET` 解析一个精确 `root_entry_hash`，禁止按标签取"最新 key"。
 
 用于封存明文而不驱动随机计算的 `candidate_manifest_salt` 与 `truth_commitment_salt` 进入独立的 `SECRET_COMMITMENT_REGISTRY_v1.0.json`。registry 恰含 immutable `entries[]` 与 append-only `reveal_events[]`。每个 entry 恰含 `(project_id,protocol_id,freeze_id,evidence_generation_id,task_index_generation_id,secret_kind)`、`secret_ref,secret_commitment,secret_entry_hash`；`secret_kind∈{CANDIDATE_MANIFEST_SALT,GROUND_TRUTH_SALT}`，`secret_entry_hash=H("secret_commitment_entry",project_id=...,protocol_id=...,freeze_id=...,evidence_generation_id=...,task_index_generation_id=...,secret_kind=...,secret_commitment=...)`。entries 先检查复合键唯一，再按该键 ASCII 排序。salt 为 CSPRNG 32 bytes；公开前只保存受控 `secret_ref` 和 SHA256 commitment，unseal 后追加 `{secret_entry_hash,revealed_salt_sha256,reveal_event_hash}`，禁止覆盖 entry 或历史 event。
 
@@ -1895,7 +1875,7 @@ stdout_hash, stderr_hash
 
 ### 16.1 Discriminated-union schema
 
-正式实现必须提供 `scientific_row.schema.json`，以 `row_type × phase × DGP_family × feature_id × method_id` 为 discriminator；所有对象禁止未知字段。每种 schema 的字段要逐项标为 `required value`、`required null` 或 `forbidden`，不得在“省略字段”和“写 null”之间自行选择。最低条件矩阵固定为：
+正式实现必须提供 `scientific_row.schema.json`，以 `row_type × phase × DGP_family × feature_id × method_id` 为 discriminator；所有对象禁止未知字段。每种 schema 的字段要逐项标为 `required value`、`required null` 或 `forbidden`，不得在"省略字段"和"写 null"之间自行选择。最低条件矩阵固定为：
 
 | 条件 | required value | required null | forbidden |
 |---|---|---|---|
@@ -1945,7 +1925,7 @@ active binding 正规化为三层，禁止在 `(phase,feature,method)` 条目中
 
 首次 `REAL_EVALUATION` 是跨 phase 的纯 join revision：其 ACTIVE DATA/FEATURE indexes 必须从 typed upstream 所绑定的 current `REAL_PREDICTION` phase seal 逐 byte 继承，行内 `source_run_seal_hash` 继续指向原 prediction run seals；ACTIVE EVALUATION index 才引用本 phase 的 join-only run seal。evaluation builder 只把已 sealed prediction rows与已 sealed truth rows连接，禁止重算 data、feature、observed statistic或 p 值。
 
-validity registry 是按 phase 分离的 append-only hash chain。首个 head 固定为 `validity_genesis_hash=H("validity_genesis",project_id=...,protocol_id=...,freeze_id=...,evidence_generation_id=...,phase=...)`。此后每个 `INVALIDATE` event 在删除自身 `event_hash` 后恰含 `schema_version,event_type,project_id,protocol_id,freeze_id,evidence_generation_id,phase,logical_kind,logical_key,expected_current_concrete_id,expected_current_source_run_seal_hash,reason_code,reason_object_hash,prev_event_hash`；`event_type="INVALIDATE"`，`logical_kind∈{DATA,FEATURE,EVALUATION}`。`event_hash=SHA256(canonical_json(event_without_event_hash).encode("utf-8")+b"\n")`，且 `prev_event_hash` 必须等于写入瞬间该 phase 的 chain tip；新 head 就是新 `event_hash`。事件写入还须 CAS 验证 expected concrete ID/source seal 与当前 active binding 一致，禁止对历史 binding 补写“当前失效”。
+validity registry 是按 phase 分离的 append-only hash chain。首个 head 固定为 `validity_genesis_hash=H("validity_genesis",project_id=...,protocol_id=...,freeze_id=...,evidence_generation_id=...,phase=...)`。此后每个 `INVALIDATE` event 在删除自身 `event_hash` 后恰含 `schema_version,event_type,project_id,protocol_id,freeze_id,evidence_generation_id,phase,logical_kind,logical_key,expected_current_concrete_id,expected_current_source_run_seal_hash,reason_code,reason_object_hash,prev_event_hash`；`event_type="INVALIDATE"`，`logical_kind∈{DATA,FEATURE,EVALUATION}`。`event_hash=SHA256(canonical_json(event_without_event_hash).encode("utf-8")+b"\n")`，且 `prev_event_hash` 必须等于写入瞬间该 phase 的 chain tip；新 head 就是新 `event_hash`。事件写入还须 CAS 验证 expected concrete ID/source seal 与当前 active binding 一致，禁止对历史 binding 补写"当前失效"。
 
 初版 `parent_phase_seal_hash=null` 时，通常三个 replacement sets 分别等于完整 scope 的全部 data/feature/evaluation logical keys。唯一例外是首次 `REAL_EVALUATION`：data/feature replacement sets 固定为空，evaluation replacement set等于完整 evaluation scope；data/feature active bindings按上一段从 prediction authority seal继承。后续 revision 必须从拟绑定 validity head 沿 `prev_event_hash` 反向遍历并恰好到达 parent phase seal 所绑定 head；未到达、断链、分叉或循环均拒绝。只读取这段新增事件，并对仍命中 parent active binding 的 event 计算 data→feature→evaluation 依赖闭包；三个 replacement hashes 分别按 `H("data_replacement_key_set",keys=<ASCII排序去重64hex list>)`、`H("feature_replacement_key_set",keys=<...>)`、`H("evaluation_replacement_key_set",keys=<...>)` 计算。`REAL_EVALUATION` validity chain 禁止产生 DATA/FEATURE invalidation；prediction/data/feature 在 truth unseal 后发现缺陷时走 `REAL_INVALIDATED_POST_UNSEAL`。没有新命中事件时三个 delta 必须为空，禁止创建仅为换行的 revision。
 
@@ -2113,15 +2093,13 @@ typed upstream refs 的顺序与内容冻结为：NULL `[]`；ALT `[{role:"sourc
 
 ### 18.3 稿件科学 GO/NO-GO
 
-2026-10-12 作一次投稿价值判断：
-
 - C1 理论反例必须成立；
 - T3 解析式与独立数值实现一致；
 - C2 或 C3 至少一项按 Holm 规则得到 L2 支持；
 - 28 格 H0 与 8 格 H1 全部 seal；
 - 论文主张与近邻文献仍有明确差异。
 
-如上述条件不满足，停止赶投本专题；完整负结果继续归档。该判断不触发参数调整。
+如上述条件不满足，完整负结果继续归档。该判断不触发参数调整。
 
 ---
 
@@ -2447,8 +2425,8 @@ sealed trial JSON
 | 日期 | 工作 | 必须交付 |
 |---|---|---|
 | 9月9日 | 关闭 DMB-R1，定稿本计划 | 终止记录、Prior Evidence、Plan v1.0 |
-| 9月10日 | 建新仓库、Charter、Claim Matrix 和论文骨架；检查投稿系统 | 干净项目身份、栏目记录 |
-| 9月11日 | 更新文献检索并向编辑部咨询专题/附件格式 | 文献矩阵、150–200字咨询摘要 |
+| 9月10日 | 建新仓库、Charter、Claim Matrix 和论文骨架 | 干净项目身份 |
+| 9月11日 | 更新文献检索 | 文献矩阵 |
 | 9月12日 | 下载 PAMAP2、固定 raw hash；检查 F: 容量 | DATA_MANIFEST RC、host preflight |
 | 9月13日 | 提交 dataset hash、task root/salt commitments；实现 timestamp/字段/缺失导入器；签发 task-build admission | seed commitments、importer tests、`REAL_TASK_BUILD_ADMITTED` |
 | 9月14日 | 使用已承诺 task root 运行首次 label-only enumeration | task index RC、初步 Data Gate |
@@ -2470,22 +2448,8 @@ sealed trial JSON
 | 10月10日 | H1 ledger seal 与 size-standardized analysis | power/localization summaries |
 | 10月11日 | 对已冻结 PAMAP2 tasks 运行 label-isolated predictions；未完整 seal 时保持 truth 封闭 | prediction phase seal 或 `REAL_DEFERRED` |
 | 10月12日 | 仅在 prediction 已 seal 时 unseal truth，验证 truth seal、签发 evaluation admission并构建 evaluation phase seal；科学 GO/NO-GO | truth/evaluation seals 或延期记录、最终 Claim Matrix 草案 |
-| 10月13–18日 | 完成中文论文首稿 | manuscript v1.0 |
-| 10月19日 | 从候选 sealed analysis inputs 生成 pre-release inventory 并重建全部表图；该 inventory 禁止命名或充当 RELEASE_INDEX | clean-build report |
-| 10月20日 | 独立统计审计 | statistical audit |
-| 10月21日 | 近邻文献和夸大措辞红队 | reviewer-style report |
-| 10月22日 | 完成实质修改，Analysis Freeze | manuscript v1.1 |
-| 10月23日 | 补充材料和复现说明 | supplement、REPRODUCE |
-| 10月24–25日 | 期刊格式、双人数字核对 | Word、PDF、checklist |
-| 10月26日 | 作者、基金、贡献、利益冲突确认 | author sign-off |
-| 10月27日 | 投稿系统 dry-run | upload checklist |
-| 10月28日 | 正式投稿 | 稿号、回执、提交包快照 |
-| 10月29–30日 | 只处理系统退回或附件问题 | 更正记录 |
-| 10月31日 | 紧急缓冲，不安排首次投稿 | 截止状态确认 |
 
-若编辑部 5 个工作日未回复 9月11日的咨询，9月18日只跟进一次。行政回复不影响 9月24日前的理论、代码和模拟准备。
-
-`REAL_COMPUTE_SCHEDULE_GATE` 在 task index 冻结后按实际 \(N_{task}\) 独立外推 wall time、peak RAM 与 peak disk，并要求全部 prediction 可在 10月11日结束前完成。若不满足，调整日历或计算资源，禁止抽取任务子集；截至 admission 日仍不满足时不签发 REAL prediction admission，truth 保持封闭，写 `schedule_disposition=REAL_DEFERRED`，不得误记为 data omission。若截至 10月12日 prediction phase seal 仍未形成，采用同一 disposition；真实案例不进入本次投稿，合成证据继续。
+`REAL_COMPUTE_SCHEDULE_GATE` 在 task index 冻结后按实际 \(N_{task}\) 独立外推 wall time、peak RAM 与 peak disk，并要求全部 prediction 可在 10月11日结束前完成。若不满足，调整日历或计算资源，禁止抽取任务子集；截至 admission 日仍不满足时不签发 REAL prediction admission，truth 保持封闭，写 `schedule_disposition=REAL_DEFERRED`，不得误记为 data omission。若截至 10月12日 prediction phase seal 仍未形成，采用同一 disposition；真实案例不进入正文，合成证据继续。
 
 ---
 
@@ -2504,10 +2468,10 @@ sealed trial JSON
 
 1. 9月17日 `REAL_DATA_TASK_GATE` 或 9月23日 `REAL_ISOLATION_ADMISSION_GATE` 失败：PAMAP2 进入 `REAL_OMITTED_BY_DATA_GATE`；
 2. 9月18日 T4 未闭合：按 T6 降级理论措辞；
-3. 9月22日计算 Gate 失败：停止本次专题赶投，先完成性能工程或迁移计算资源。
+3. 9月22日计算 Gate 失败：停止推进，先完成性能工程或迁移计算资源。
 4. REAL 专属 compute-schedule Gate 失败而合成 Gate 通过：只将 REAL 记为 `REAL_DEFERRED` 并保持 truth 封闭，合成主线继续。
 
-9月23日冻结后，延误只改变投稿日期，不改变科学范围。若 10月8日仍未 seal H0，或 10月12日仍未 seal H1，`schedule_disposition` 自动写为 `DEADLINE_NO_GO`；科学 run 状态保持原值，研究继续完成，但不为追赶 10月31日删格、减 MC、换方法或省略不利结果。
+9月23日冻结后，延误不改变科学范围。若 10月8日仍未 seal H0，或 10月12日仍未 seal H1，`schedule_disposition` 自动写为 `DEADLINE_NO_GO`；科学 run 状态保持原值，研究继续完成，但不为追赶截止日期删格、减 MC、换方法或省略不利结果。
 
 ---
 
@@ -2662,7 +2626,7 @@ ZIP 形成后另生成包外 strict `RELEASE_ATTESTATION_<release_id>.json`，�
 - [ ] release attestation、签名和预登记 public key 验证通过；
 - [ ] `open_runs=0`；
 - [ ] Claim Matrix 每项具有最终状态；
-- [ ] 投稿主张未超出证据范围。
+- [ ] 主张未超出证据范围。
 
 ---
 
@@ -2675,7 +2639,7 @@ b(s)\approx
 \left\lceil\frac{W+L_{raw}}s\right\rceil,
 \]
 
-出发，但 Bartlett taper 会再次衰减样本自协方差，因此该式只能进入开发阶段，必须先推导目标协方差再预注册确认。R2 可用同一乘子路径联合校准“候选位置 × 预注册窗口尺度”的最大统计量。另一条路线是在原始时间轴做 block bootstrap，每次重新生成窗口、点云、持续图和扫描量，同时对块拼接缝采用删窗或 taper。
+出发，但 Bartlett taper 会再次衰减样本自协方差，因此该式只能进入开发阶段，必须先推导目标协方差再预注册确认。R2 可用同一乘子路径联合校准"候选位置 × 预注册窗口尺度"的最大统计量。另一条路线是在原始时间轴做 block bootstrap，每次重新生成窗口、点云、持续图和扫描量，同时对块拼接缝采用删窗或 taper。
 
 R2 必须拥有新协议、新方法 ID、新 seed 和独立确认数据。本轮结果只能用于提出 R2 假设，不能充当 R2 的确认数据。
 
@@ -2683,4 +2647,4 @@ R2 必须拥有新协议、新方法 ID、新 seed 和独立确认数据。本�
 
 ## 28. 一句话执行口径
 
-> 先证明并冻结“窗口如何改变依赖”，随后用新数据完整绘制方法在哪些区域反保守、近名义或保守；任何不利数值都保留，任何数值实现变化都按依赖矩阵作废受影响证据。
+> 先证明并冻结"窗口如何改变依赖"，随后用新数据完整绘制方法在哪些区域反保守、近名义或保守；任何不利数值都保留，任何数值实现变化都按依赖矩阵作废受影响证据。
