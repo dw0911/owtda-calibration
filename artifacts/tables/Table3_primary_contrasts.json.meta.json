@@ -1,7 +1,7 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "content_sha256": "2a90dc31468b2b4211adefa0d8c8e627c494a475a0b7a271f63d8614a3b82126",
-  "generated_at": "2026-09-20T15:01:42Z",
+  "content_sha256": "da8e9ee57f3fa5b9dc4309f7b5cffe7c85b795a8f60baa1f237d9f928ee51053",
+  "generated_at": "2026-09-20T15:26:16Z",
   "input_sha256": {
     "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
     "P1_P3_BOOTSTRAP_SUMMARY": "6ff17bde1c61581d6fec4771e6efe280f1067620e69bc4ca82162264118099a4"
@@ -14,10 +14,10 @@
   "outputs": {
     "Table3_primary_contrasts.csv": "41e815895b9b94b28476197b57e5cfe5df15a6b08ac0aabd3923c2ef20e67618",
     "Table3_primary_contrasts.json": "01b32c55b87b9fed7a8a91130aa9f118f4a3c5b244845455d6839cb07551599b",
-    "Table3_primary_contrasts.tex": "2b3e6f6956d2a3f9859c1e49fa40abf5c703dac75eb133afd196a00f19609dee"
+    "Table3_primary_contrasts.tex": "465af1c0b3f7e993e6cc241172dee635f94359d3dbd158a6375263ea78b613bb"
   },
   "schema_version": 1,
   "script": "paper/scripts/make_tables.py",
-  "script_sha256": "31f65b64e3ebfdd8e1c8a6967940604d2e1b51e037b343ca48f6c6252edf5aab",
+  "script_sha256": "aa76e3fb6cead5c253b47b315e6d71458e1d2eb09a7289d58d6e65e59b8c709d",
   "title": "Primary contrasts P1-P3"
 }

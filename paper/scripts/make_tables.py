@@ -69,9 +69,9 @@ SCENARIO_ORDER = ("shape_change", "mean_shift")
 # Registered estimand wording for the three primary contrasts. This is *text* that describes the
 # frozen estimand; the numbers next to it are always read from the canonical sources below.
 PRIMARY_DIRECTION = {
-    "P1": r"固定窗口数下 $s{=}16$ 减 $s{=}64$ 的 M0 拒绝率差",
-    "P2": r"固定观测长度下 $s{=}16$ 减 $s{=}64$ 的 M0 拒绝率差",
-    "P3": r"$0.05$ 减 M1 拒绝率",
+    "P1": r"fixed-$M$：$s{=}16$ 减 $s{=}64$",
+    "P2": r"fixed-$T$：$s{=}16$ 减 $s{=}64$",
+    "P3": r"$0.05$ 减 M1",
 }
 
 # Table artifacts that are intentionally not produced by this generator (kept for the audit trail).
@@ -229,11 +229,12 @@ def build_primary(contrasts: dict, bootstrap: dict) -> dict:
 
     tex_lines = [
         r"\begin{table}[ht]", r"\centering",
+        r"\footnotesize",
         r"\caption{主对比 P1--P3 的效应量与推断结果。置信区间为边际 95\% basic 自助区间；"
         r"Holm 校正 $p$ 由 10,000 次配对 cluster bootstrap 的尾部计数按加一规则计算"
         r"（$p=(1+\#\{\text{尾部}\})/10001$）。}\label{tab:primary}",
         r"\begin{tabular}{llccccc}", r"\toprule",
-        r"对比 & 估计量方向 & 点估计 & 预设阈值 & 超额效应 & 95\% basic CI & Holm $p$\\", r"\midrule",
+        r"对比 & 估计量 & 点估计 & 阈值 & 超额效应 & 95\% basic CI & Holm $p$\\", r"\midrule",
     ]
     for r in rows:
         lo, hi = r["ci95_basic"]
@@ -244,8 +245,9 @@ def build_primary(contrasts: dict, bootstrap: dict) -> dict:
     tex_lines += [
         r"\bottomrule", r"\end{tabular}", "",
         r"\begin{minipage}{0.94\textwidth}", r"\vspace{0.4em}",
-        r"\footnotesize 注：三项尾部计数经真实 bootstrap 抽样核验均为 0，故原始 "
-        r"$p=1/10001\approx9.999\times10^{-5}$；经 Holm 逐步校正后三项调整 $p$ 均为 "
+        r"\footnotesize 注：P1/P2 为 M0 拒绝率差（P1 固定窗口数，P2 固定观测长度），"
+        r"P3 为 $0.05$ 减 M1 拒绝率。三项尾部计数经真实 bootstrap 抽样核验均为 0，"
+        r"故原始 $p=1/10001\approx9.999\times10^{-5}$；经 Holm 逐步校正后三项调整 $p$ 均为 "
         r"$3/10001\approx0.00030$。点估计与阈值之差为超额效应；正文按预设单侧阈值与多重性规则"
         r"给出支持与否的表述，表中仅列统计量。",
         r"\end{minipage}", r"\end{table}", "",
@@ -276,10 +278,11 @@ def build_calibration(h0_rows: list[dict]) -> dict:
 
     tex_lines = [
         r"\begin{table}[ht]", r"\centering",
+        r"\footnotesize",
         r"\caption{逐格校准分类计数（每行 $n=28$）。完整 112 行拒绝率、Wilson 区间与分类结果见补充材料。}"
         r"\label{tab:calibration}",
         r"\begin{tabular}{llcccc}", r"\toprule",
-        "表示 & 方法 & " + " & ".join(f"{head} $n\\,(\\%)$" for head in VOCABULARY_HEAD) + r"\\",
+        "表示 & 方法 & " + " & ".join(VOCABULARY_HEAD) + r"\\",
         r"\midrule",
     ]
     for row in rows:
@@ -288,7 +291,7 @@ def build_calibration(h0_rows: list[dict]) -> dict:
     tex_lines += [
         r"\bottomrule", r"\end{tabular}", "",
         r"\begin{minipage}{0.94\textwidth}", r"\vspace{0.4em}",
-        r"\footnotesize 注：实用校准采用 90\% Wilson 区间完整落在等效带 $[0.035,0.065]$ 内，"
+        r"\footnotesize 注：括号内为该类计数占 28 格的百分比。实用校准采用 90\% Wilson 区间完整落在等效带 $[0.035,0.065]$ 内，"
         r"对应预设的实用等效性判据（两个单侧 5\% 判定等价于一个 90\% 双侧区间）；实质保守要求 "
         r"95\% 区间完整位于实用带下方，实质反保守要求 95\% 区间完整位于实用带上方；"
         r"边界/未定为既不满足实用校准、也不满足实质保守或实质反保守的剩余状态。"
