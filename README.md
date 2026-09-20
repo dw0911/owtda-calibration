@@ -64,11 +64,15 @@ uv sync --frozen
 
 ```powershell
 python -m pytest tests -q                 # 回归测试
-python -m ruff check .                    # 静态检查
+python -m ruff check src tests audit scripts configs   # 静态检查（代码与工具域）
+python scripts/check_canonical.py         # canonical 序列化契约（递归）
 python audit/validate_freeze.py           # 冻结对象与 registry 自洽性
 python audit/validate_schemas.py          # 逐行 schema 合同
 python scripts/verify_release_contracts.py --help   # 发布合同验证器
 ```
+
+> 说明：`ruff check .` 会额外报出 3 个**交付/构建脚本**（`release/analysis/scripts/*`、`manuscript/scripts/make_figures.py`）
+> 的 14 项风格提示——它们保留了交付时的紧凑风格，逻辑无问题，如实披露（见 `REPRODUCIBILITY.md` §4）。
 
 ## 5. 复现论文
 

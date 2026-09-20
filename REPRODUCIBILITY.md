@@ -34,8 +34,28 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 1. 输入（已入库，canonical）：
    - `artifacts/summaries/`：`CANONICAL_SUMMARY.json`、`H0_POINTWISE.json`、`MANUSCRIPT_VALUES.json`、`FIGURE_DATA.json`、`TABLE_DATA.json`、`H1_REANALYSIS.json`、`P1_P3_BOOTSTRAP.json` 等；
    - `release/analysis/`：交付版分析对象与分析脚本（`scripts/` 子目录）。
-2. 生成图/表：`manuscript/scripts/make_figures.py`（图）与 `audit/build_supplement.py`（补充表）。
-3. 一致性校验：`audit/verify_manuscript_values.py`（正文数值 ↔ canonical 汇总，30 项）。
+2. **生成表与补充材料**（仅读 canonical 汇总，不调用 MC/PH）：
+
+   ```powershell
+   python audit/build_corrected_assets.py `
+     --h0 artifacts/summaries/H0_POINTWISE.json `
+     --h1 release/analysis/H1_REANALYSIS.json `
+     --out <新目录（须不存在）>
+   ```
+
+   产出 `H0_ALL_112`、`H1_ALL_16_GEOMETRY_COMPLETE`、`H1_SCENARIO_SAME_FOUR_CONDITIONS`、`H1_SCENARIO_DIFFERENCES`、
+   `Table_H1_COMMON_ESTIMAND.tex` 与两张修正热图；与仓库 `artifacts/tables/`、`manuscript/supplement/` 可直接对照。
+
+3. **生成正文图**（读 `artifacts/tables/` 的 canonical CSV）：
+
+   ```powershell
+   python manuscript/scripts/make_figures.py     # 输出 artifacts/figures/（Fig1–5 + supplement，每图附 meta.json）
+   ```
+
+   > 注：该脚本在 2026-09-20 生成本仓库图件后仅做过**可移植性修订**（绝对路径 → 仓库相对；绘图逻辑未变）。
+   > 各图 `meta.json` 的 `script_sha256` 对应**生成时刻**的脚本字节；重新生成会刷新 `generated_at` 与 `script_sha256`（可预期的元数据差异），图件内容由 §2/§3.2 的 canonical 表决定。
+
+4. **一致性/契约校验**：`python scripts/check_canonical.py`（canonical 序列化递归检查）、`python -m pytest tests -q`。
 
 ### 路径 B — 分析链（由封存账本重算）
 
@@ -44,9 +64,14 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
    `artifacts/ledgers/H1_ALT/{evaluation,feature}.scientific.jsonl`；
 2. 重算：canonical 汇总与 bootstrap（见 `release/analysis/` 内脚本与 `governance/ANALYSIS_INPUT_MANIFEST_*.json`、
    `RESOLVED_BOOTSTRAP_PLAN_INDEX_*.jsonl`；分析身份：`analysis_id=18797cfe…`）；
-3. P1–P3 精确值：真实 draws 已在库（`governance/actual_primary_draws.json`，各 10,000），
-   用交付包工具复核：`python tools/analysis_repairs.py --draws governance/actual_primary_draws.json --out <new>.json`
-   （工具随 R1 审计包提供；重算得到 bootstrap p / CI / Holm，并替换正文 `<0.05` 占位）。
+3. P1–P3 精确值：真实 draws 已在库（`governance/actual_primary_draws.json`，各 10,000）。用**仓库内工具**重算：
+
+   ```powershell
+   python audit/analysis_repairs.py --draws governance/actual_primary_draws.json --out <新文件>.json
+   ```
+
+   得到 bootstrap 单侧 p / basic CI / Holm（回归测试：`tests/test_analysis_repairs.py`），用于替换正文 `<0.05` 占位。
+   H1 的账本级重分析（由封存账本出发）见 `release/analysis/scripts/reanalyse_h1.py`；账本不在仓库内（见 §5）。
 
 ### 路径 C — 全链重跑（需要算力）
 
@@ -68,12 +93,16 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 | 命令 | 覆盖 |
 |---|---|
 | `python -m pytest tests -q` | 契约 / 攻击式回归（"故意破坏必须失败"） |
-| `python -m ruff check .` | 静态检查 |
+| `python -m ruff check src tests audit scripts configs` | 静态检查（代码与工具域，全清） |
+| `python scripts/check_canonical.py` | canonical 序列化契约（governance / artifacts 递归） |
 | `python audit/validate_freeze.py` | 冻结对象、seed/component registry、REAL 链、快照重算 |
 | `python audit/validate_schemas.py` | 逐行 schema（24 variants、拒绝未知字段） |
 | `python audit/validate_runs.py` / `validate_identity.py` | RUN 身份与 expected index 闭合 |
 | `python scripts/verify_release_contracts.py` / `verify_audit_dossier.py` | 发布/审计包合同 |
-| `python audit/verify_manuscript_values.py` | 正文数值 ↔ canonical 汇总 |
+
+> `ruff check .`（全仓库）另报 **14 项**风格提示，全部位于 3 个交付/构建脚本
+> （`release/analysis/scripts/reanalyse_h1.py`、`release/analysis/scripts/review_delivery.py`、`manuscript/scripts/make_figures.py`）——
+> 它们保留了交付时的紧凑风格，逻辑无问题，如实披露；代码与工具域（上方命令）为全清。
 
 ## 5. 不随仓库分发的大对象（如实披露）
 
@@ -88,6 +117,7 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 | `governance/ACTIVE_*_INDEX_*.jsonl`（6 个） | 7–140 MB | 大型派生索引；汇总见 `governance/active_index_summary.json`；可由冻结计划与种子再生成 |
 
 - 账本为**签名绑定的原始证据**：其哈希已在 RUN/PHASE seal 与审计记录中固定；获取到账本后按上表校验即可确认字节一致。
+- 大索引的校验工具已入库：`python audit/check_active_indexes.py`（指向本地索引文件即可复核与 `ACTIVE_*` 契约的一致性）。
 - 大索引不入库的原因：单文件超过 GitHub 100 MB 限制或属可再生的派生对象（不影响 seal 与论文数值的可验证性）。
 
 ## 6. 封存证据摘要（论文数字的血缘）

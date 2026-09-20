@@ -22,9 +22,10 @@ import numpy as np
 plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei"]
 plt.rcParams["axes.unicode_minus"] = False
 
-ROOT = Path(r"F:\BPI\bpi\owtda-calibration")
+# 路径解析为仓库相对（2026-09-20 生成本仓库图件后，仅做可移植性修订；绘图逻辑未变）。
+ROOT = Path(__file__).resolve().parents[2]
 FIG = ROOT / "artifacts" / "figures"
-VER = Path(r"F:\BPI\_fig_audit\OWTDA_Figure_Table_Audit_20260920\verified_data")
+VER = ROOT / "artifacts" / "tables"
 FIG.mkdir(parents=True, exist_ok=True)
 
 CTX = json.loads((ROOT / "governance" / "bootstrap_context.json").read_text(encoding="utf-8"))
