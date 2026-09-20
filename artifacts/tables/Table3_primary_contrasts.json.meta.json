@@ -18,6 +18,6 @@
   },
   "schema_version": 1,
   "script": "paper/scripts/make_tables.py",
-  "script_sha256": "ed764ce174ac6f50e35069f4b106f55e416bdf2ee398c8a34355a0bdeb8b5397",
+  "script_sha256": "5cec124eee5ca742e082442b4cc2737adfc3a3832998b02d2a6721d10c9b9c74",
   "title": "Primary contrasts P1-P3"
 }

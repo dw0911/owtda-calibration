@@ -31,7 +31,6 @@
       "configs/"
     ]
   },
-  "git_commit": "b8ba511412fbaaadaffc940ca7e69e537261ad8a",
   "paper_pdf_sha256": "6b53564cbf5de5f2ab5ad79d700f534676891dfdafcdaffa62114581560868fa",
   "paper_version": "2026-09 (R5-paper snapshot)",
   "phases": {
@@ -83,6 +82,7 @@
       }
     }
   },
+  "provenance": "freeze:6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
   "release": "v1.0.0-paper",
   "seals": {
     "H0_NULL": {

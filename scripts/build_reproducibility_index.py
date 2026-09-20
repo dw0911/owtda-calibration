@@ -69,26 +69,44 @@ def write_seed_manifest() -> int:
                 columns.append(key)
     target = OUT / "SEED_MANIFEST.csv"
     with target.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=[*columns, "git_commit"])
+        writer = csv.DictWriter(handle, fieldnames=[*columns, "provenance"])
         writer.writeheader()
-        commit = _git_commit()
+        provenance = _frozen_provenance()
         for entry in entries:
             row = {key: flat(entry.get(key)) for key in columns}
-            row["git_commit"] = commit
+            row["provenance"] = provenance
             writer.writerow(row)
     print(f"wrote reproducibility/SEED_MANIFEST.csv ({len(entries)} entries)")
     return len(entries)
 
 
-def _git_commit() -> str:
-    import subprocess
+def _frozen_provenance() -> str:
+    """Stable provenance marker for the frozen registries this module summarises.
+
+    It must NOT be ``HEAD``: this module is re-run by the release workflow at the tagged commit, and
+    a HEAD-derived value rewrites these files, so ``git diff --exit-code`` fails — no file can
+    record the hash of the commit that adds it (2026-09-20 remediation, same reasoning as
+    ``scripts/build_release_manifest.py``). The seed registry and the freeze objects are anchored to
+    the freeze, so the freeze id is the correct, stable provenance for them.
+    """
+    try:
+        freeze_id = load(FREEZE_MANIFEST).get("freeze_id", "UNKNOWN")
+    except Exception:  # noqa: BLE001
+        freeze_id = "UNKNOWN"
+    return f"freeze:{freeze_id}"
+
+
+def _release_name() -> str:
+    """``v{version}-paper`` read from CITATION.cff — the same single source of truth used by
+    ``scripts/build_release_manifest.py`` and asserted against the pushed tag by the release job."""
+    import re
 
     try:
-        out = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
-                             check=True, capture_output=True, text=True)
-        return out.stdout.strip()
-    except Exception:  # noqa: BLE001
-        return "UNCOMMITTED_OR_NO_GIT"
+        text = (REPO / "CITATION.cff").read_text(encoding="utf-8")
+    except OSError:
+        return "vUNKNOWN"
+    match = re.search(r'(?m)^version:\s*"?([^"\n]+)"?\s*$', text)
+    return f"v{match.group(1).strip()}-paper" if match else "vUNKNOWN"
 
 
 def write_artifact_index() -> int:
@@ -140,8 +158,8 @@ def write_formal_manifest() -> None:
                 }
         seals[phase] = entry
     manifest = {
-        "release": "v1.0.0-paper",
-        "git_commit": _git_commit(),
+        "release": _release_name(),
+        "provenance": _frozen_provenance(),
         "freeze": {
             "freeze_id": freeze.get("freeze_id"),
             "evidence_generation_id": freeze.get("evidence_generation_id", "G01"),
