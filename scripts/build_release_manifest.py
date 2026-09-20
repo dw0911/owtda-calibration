@@ -144,7 +144,10 @@ def main(argv: list[str] | None = None) -> int:
 
     OUT.write_text(fresh, encoding="utf-8", newline="\n")
     manifest = json.loads(fresh)
-    print(f"wrote {OUT.relative_to(REPO)} — {manifest['release']['name']} @ {manifest['release']['commit'][:12]}")
+    print(
+        f"wrote {OUT.relative_to(REPO)} — {manifest['release']['name']} "
+        f"({len(manifest['artifacts'])} artifact hashes, {len(manifest['tree_digests'])} tree digests)"
+    )
     return 0
 
 
