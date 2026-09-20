@@ -1,7 +1,7 @@
 \begin{table}[ht]
 \centering
 \footnotesize
-\caption{主对比 P1--P3 的效应量与推断结果。置信区间为边际 95\% basic 自助区间；Holm 校正 $p$ 由 10,000 次配对 cluster bootstrap 的尾部计数按加一规则计算（$p=(1+\#\{\text{尾部}\})/10001$）。}\label{tab:primary}
+\caption{主对比 P1--P3 的效应量与推断结果。置信区间为边际 95\% basic 自助区间；原始单侧 bootstrap $p$ 值由 10,000 次整簇重采样的尾部计数按加一规则计算，随后对三项主对比实施 Holm 逐步校正，表中报告调整后 $p$ 值。}\label{tab:primary}
 \begin{tabular}{llccccc}
 \toprule
 对比 & 估计量 & 点估计 & 阈值 & 超额效应 & 95\% basic CI & Holm $p$\\

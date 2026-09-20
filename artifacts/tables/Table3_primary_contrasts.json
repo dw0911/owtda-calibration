@@ -2,8 +2,6 @@
   "rows": [
     {
       "bootstrap_iterations": 10000,
-      "canonical_p_boot_one_sided": 0.0,
-      "canonical_p_holm": 0.0,
       "ci95_basic": [
         0.5209999999999999,
         0.5494
@@ -11,6 +9,8 @@
       "claim_state": "SUPPORTED",
       "contrast": "P1",
       "excess": 0.4354,
+      "legacy_invalid_p_boot_one_sided": 0.0,
+      "legacy_invalid_p_holm": 0.0,
       "p_holm": 0.00029997000299970003,
       "p_raw_one_sided": 9.999000099990002e-05,
       "point_estimate": 0.5354,
@@ -19,8 +19,6 @@
     },
     {
       "bootstrap_iterations": 10000,
-      "canonical_p_boot_one_sided": 0.0,
-      "canonical_p_holm": 0.0,
       "ci95_basic": [
         0.5194000000000001,
         0.5462
@@ -28,6 +26,8 @@
       "claim_state": "SUPPORTED",
       "contrast": "P2",
       "excess": 0.433,
+      "legacy_invalid_p_boot_one_sided": 0.0,
+      "legacy_invalid_p_holm": 0.0,
       "p_holm": 0.00029997000299970003,
       "p_raw_one_sided": 9.999000099990002e-05,
       "point_estimate": 0.533,
@@ -36,8 +36,6 @@
     },
     {
       "bootstrap_iterations": 10000,
-      "canonical_p_boot_one_sided": 0.0,
-      "canonical_p_holm": 0.0,
       "ci95_basic": [
         0.022400000000000003,
         0.0308
@@ -45,6 +43,8 @@
       "claim_state": "SUPPORTED",
       "contrast": "P3",
       "excess": 0.0166,
+      "legacy_invalid_p_boot_one_sided": 0.0,
+      "legacy_invalid_p_holm": 0.0,
       "p_holm": 0.00029997000299970003,
       "p_raw_one_sided": 9.999000099990002e-05,
       "point_estimate": 0.026600000000000002,

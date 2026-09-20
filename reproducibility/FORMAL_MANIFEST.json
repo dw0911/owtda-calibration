@@ -9,7 +9,7 @@
     "results/canonical/H1_REANALYSIS.json": "945ba22ecb59d8492007c15cee9525186e19797ee2cd7772b9a0289ef4d9255e",
     "results/canonical/H1_SCENARIO_DIFFERENCES.json": "16a04495549309c291e428bb1433ccc5a7662cf3a874d11bf506b5a3fdd407dc",
     "results/canonical/MANUSCRIPT_VALUES.json": "7d223e304dddc91bcd24335b88dd93a295bdfd08b127fc6c39dab8c687e2bb36",
-    "results/canonical/P1_P3_BOOTSTRAP.json": "00194c4f9d38955b0d5d2cd1b32db5983a34721dcb09b324f9468e94986fede8",
+    "results/canonical/P1_P3_BOOTSTRAP.json": "fdbdb5c4568e50f0e93a17d4e3b66d1d5a1e271260d74ddb048e0c0762f31e15",
     "results/canonical/TABLE_DATA.json": "e6220f636feaf76d2e0f8b91231215e2fe635f5e34d4a71a6dacbcd94e1faecf",
     "results/canonical/activation_summary.json": "e7a96d4bd34e7df1ae4131ab5a5fb8a5593800d5fb1e6a845c59bec7aa88a2bf",
     "results/canonical/active_index_summary.json": "d9914131c7e42ca70c6931ed73cdb99227e795badfc20439fb0033c7077a1e0a",
@@ -28,7 +28,7 @@
       "configs/"
     ]
   },
-  "paper_pdf_sha256": "21f25022e43903cd2c220e9d4d277b43177009804271de6ab7373f8c998839c0",
+  "paper_pdf_sha256": "8c42266827052616e346a71d8887431c0b345f0a402423cc0a014fe8bc36c954",
   "paper_version": "2026-09 (R5-paper snapshot)",
   "phases": {
     "ALT": {

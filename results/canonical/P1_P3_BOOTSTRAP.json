@@ -15,8 +15,8 @@
         0.5494
       ],
       "claim_state": "SUPPORTED",
-      "p_boot_one_sided": 0.0,
-      "p_holm": 0.0,
+      "p_boot_one_sided": 9.999000099990002e-05,
+      "p_holm": 0.00029997000299970003,
       "point_estimate": 0.5354,
       "threshold": 0.1
     },
@@ -27,8 +27,8 @@
         0.5462
       ],
       "claim_state": "SUPPORTED",
-      "p_boot_one_sided": 0.0,
-      "p_holm": 0.0,
+      "p_boot_one_sided": 9.999000099990002e-05,
+      "p_holm": 0.00029997000299970003,
       "point_estimate": 0.533,
       "threshold": 0.1
     },
@@ -39,8 +39,8 @@
         0.0308
       ],
       "claim_state": "SUPPORTED",
-      "p_boot_one_sided": 0.0,
-      "p_holm": 0.0,
+      "p_boot_one_sided": 9.999000099990002e-05,
+      "p_holm": 0.00029997000299970003,
       "point_estimate": 0.0266,
       "threshold": 0.01
     }

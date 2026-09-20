@@ -30,7 +30,7 @@ FIGURES = REPO / "artifacts" / "figures"
 LOOKUP_DIRS = (REPO / "artifacts" / "tables", REPO / "results" / "canonical", REPO / "results" / "bootstrap")
 
 MANUSCRIPT_FIGURES = {
-    "Figure1_method_schematic",
+    # Figure1_method_schematic moved to TikZ source (paper/figures/) — 2026-09-21 audit.
     "Figure2_alternative_geometry",
     "Figure3_M0_type1_surface",
     "Figure4_M1_deviation_surface",

@@ -1,7 +1,7 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "content_sha256": "34964cf8255f404f64eee38722c55b8fcc599749ac24914091d95d337dee504b",
-  "generated_at": "2026-09-20T15:01:42Z",
+  "content_sha256": "8db7f37836e30bfd5a4fa3126a003bcc3f7f3aecc84485f20815140c11e4e494",
+  "generated_at": "2026-09-20T19:03:47Z",
   "input_sha256": {
     "H1_REANALYSIS": "945ba22ecb59d8492007c15cee9525186e19797ee2cd7772b9a0289ef4d9255e"
   },
@@ -12,10 +12,10 @@
   "outputs": {
     "Table5_h1_power.csv": "30853a08413942c26ae0b77b590b041d3b6c038e2a1b72f6f755c98f8ea74133",
     "Table5_h1_power.json": "03aad93d1f6b032047a750fe9b88bbbd596a83a89f661b540e6c9664fad8ad1b",
-    "Table5_h1_power.tex": "ca9b78e6a06ba6ea2ce8ecbaa62089cd7c7399229edcbea743955e1f340613c5"
+    "Table5_h1_power.tex": "450912403273706e2f4c033448a1ee0f31211da11a96bea2281dc2785bcabf38"
   },
   "schema_version": 1,
   "script": "paper/scripts/make_tables.py",
-  "script_sha256": "aa76e3fb6cead5c253b47b315e6d71458e1d2eb09a7289d58d6e65e59b8c709d",
+  "script_sha256": "0c7beacb8052311dd6ceb3e67f7aa0865fe75ca3b6de4cf64788a493550e133f",
   "title": "H1 power/localization"
 }

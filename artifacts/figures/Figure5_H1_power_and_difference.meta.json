@@ -1,7 +1,7 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "content_sha256": "d488f9e11c885c6dc44b8b9dbd689390c95425e0f387c9284822bb6e642bd933",
-  "generated_at": "2026-09-20T12:05:32Z",
+  "content_sha256": "64bc9758a4b8d8043c90cc5fa4ea0b4d81880069e18d62719cc0c0293853f679",
+  "generated_at": "2026-09-20T19:52:38Z",
   "input_sha256": {
     "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611",
     "H1_ALL_16_GEOMETRY_COMPLETE.csv": "8c44d0d47fab6c8e3fb7e20661ca086f4b11ad7e8bd5aada3da03457c620f079",
@@ -14,14 +14,14 @@
   ],
   "kind": "FIGURE",
   "outputs": {
-    "Figure5_H1_power_and_difference.pdf": "f112ddd4942bfaeceacf9d361db2863cd7c8dbc12fb20acfffacee5afe5adcad",
-    "Figure5_H1_power_and_difference.png": "d69f53d6bcadbdd64924897c703b15d9a4ebe09ecc9f851e4bf1207c5fb0814c",
-    "Figure5_H1_power_and_difference.svg": "eb1bb465935e1b857d0ffd0fe87a02f221373b6c1f17d1ad5b2d3dbbd35130aa"
+    "Figure5_H1_power_and_difference.pdf": "4ea0153ca18ba66a01a9710435cd964ab4e55da5a527f0c515e604030e258e71",
+    "Figure5_H1_power_and_difference.png": "b6c2e032bffef5775b3f3541a9478a79494d1e8ad23919ddebcea4de1eca74a7",
+    "Figure5_H1_power_and_difference.svg": "205124ce1942b02923f9a7f918bf90a5ea4fdb91afe674dfce916d8ce54f621c"
   },
   "referenced_by": [
     "paper/sections/06_h1.tex"
   ],
   "schema_version": 1,
   "script": "paper/scripts/make_figures.py",
-  "script_sha256": "c67052defc4716d5f36e80f11f2729c71ea8c038df7a2fefbe9a993345fa4990"
+  "script_sha256": "3cf14f302915fe70a19285448cc14e4aa6bfd8c6c19cd673a2f7e7ee7317c222"
 }

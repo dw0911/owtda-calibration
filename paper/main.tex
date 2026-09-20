@@ -3,6 +3,19 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools,bm}
 \usepackage{booktabs,array}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc}
+\usepackage{subcaption}
+% 面板标签 (a)(b) 置于面板上方（学术惯例：面板标签在上方，整图 caption 在下方）；
+% 与图2–5 的 matplotlib 面板标题位置保持一致。
+\captionsetup[subfigure]{position=top}
+% 图内统一配色（流程/机制示意图共用，见 figures/*.tex）
+\definecolor{flowblue}{HTML}{33475B}
+\definecolor{flowfill}{HTML}{EEF3FA}
+\definecolor{m0fill}{HTML}{FDEAEA}
+\definecolor{m1fill}{HTML}{EAF5EA}
+\definecolor{sharedred}{HTML}{C0392B}
+\definecolor{winblue}{HTML}{4A90D9}
 \usepackage{microtype}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
@@ -41,8 +54,14 @@
   }%
 }
 
-\title{重叠窗口拓扑扫描的校准边界\\\large Finite-Sample Calibration Boundaries of Topological Windowed Scanning}
-\author{王平\\河北金融学院与数据科学学院\\\texttt{13088010056@163.com}}
+\title{重叠窗口拓扑扫描的有限样本校准边界\\\large Finite-Sample Calibration Boundaries for Topological Change-Point Scans with Overlapping Windows}
+\author{
+  王平\textsuperscript{1}\quad
+  黄盛南\textsuperscript{1}\quad
+  张晓媛\textsuperscript{1,*}\\[2mm]
+  \small $^1$河北金融学院统计与数据科学学院\\[1mm]
+  \small 通讯作者：张晓媛，\texttt{zxy0407010229@163.com}
+}
 \date{2026年9月}
 
 \begin{document}
@@ -64,6 +83,9 @@
 \input{sections/07_real}
 \input{sections/08_discussion}
 \input{sections/09_conclusion}
+
+\section*{Data and Code Availability}
+复现本文结果的代码、配置、种子清单、完整逐格数据与补充材料由仓库 \url{https://github.com/dw0911/owtda-calibration} 提供。本稿对应 git 标签 \texttt{v1.1.0-paper}；全部合成数据均由该版本代码与固定随机种子生成，不依赖外部数据归档，独立数据 DOI 尚在建立中，未作为已提供材料列出。补充材料 S5 给出代码入口与复现步骤。
 
 \bibliographystyle{unsrt}
 \bibliography{bibliography}

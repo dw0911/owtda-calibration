@@ -1,0 +1,1741 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="655.864716pt" height="454.79952pt" viewBox="0 0 655.864716 454.79952" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 454.79952 
+L 655.864716 454.79952 
+L 655.864716 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 82.132 420.72607 
+L 295.489198 420.72607 
+L 295.489198 20.934375 
+L 82.132 20.934375 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g clip-path="url(#p8600e0e86a)">
+    <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAowAAATGCAYAAACsIPXmAAAXUklEQVR4nO3Yv6vVdRjA8XvyiGld06KIKJqEShxNamy4JQRFQ1IQSLgq/Rhda3UQ+gsajKCgSbrg3mJLCEVLZEO1iIpI3ZsnOHd/D2c438/wes2f4eEZPrx5ZhvHzy02YAQ7d6eeAPbs37QJxuBfZBAPTT0AAABjE4wAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAmh97/GC/gDX59e97ds0QPnnjyNQjwNKlqw9sgiG4MAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAACCEQCA1bkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQ5me3HukXsCYXv7pv1wzh/Jnfpx4Bli5de8YmGIILIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACACAYAQBYnQsjAABJMAIAkGa3ft5a9BNYj6PvPGvVDOG/azemHgGW9p1+xSYYggsjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkGYbx88t+gmsyc5dq2YM+zenngD27Ny2CYbgwggAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQg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RAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEASIIRAIAkGAEAEIwAAKzOhREAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBIghEAgCQYAQBI87NvPtwvYE22f9tv1wzh/Lv3px4Blq78eMQmGIILIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAAaf76qzf6BazLFy/YNUM4deL61CPAntkpm2AILowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAAAhGAABW58IIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAECabbz04aKfwJrs3rVqxjDfnHoC2LNzxyYYggsjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAkAQjAABJMAIAIBgBAFidCyMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAEkwAgCQBCMAAGn+1olD/QLW5LufrJoxXNg6OvUIsHT5+12bYAgujAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAACEYAAFbnwggAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQBKMAAAkwQgAQJpd/fr8op/Aepz+7IFVM4Q/v7w59Qiw9PQHz9kEQ3BhBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgzV87eb1fwLo89LJdM4Qnn/pr6hFgz+x5m2AILowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCABAEowAACTBCACAYAQAYHUujAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAJMEIAEASjAAAbJT/AQ8vZCHnlNRQAAAAAElFTkSuQmCC" id="image6cdb2c63dd" transform="scale(1 -1) translate(0 -399.927273)" x="82.145455" y="-20.835884" width="213.381818" height="399.927273"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="ma75b11884b" d="M 0 0 
+L 0 3.5 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#ma75b11884b" x="108.80165" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(87.297841 441.478136) rotate(-20)">BPI/M0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#ma75b11884b" x="162.140949" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(140.637141 441.478136) rotate(-20)">BPI/M1</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#ma75b11884b" x="215.480249" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(179.881051 446.608438) rotate(-20)">MOMENTS/M0</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#ma75b11884b" x="268.819548" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(233.220351 446.608438) rotate(-20)">MOMENTS/M1</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_5">
+      <defs>
+       <path id="mdc5345be84" d="M 0 0 
+L -3.5 0 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="33.427865" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <!-- N-AR $\rho$=0, $s$=8 -->
+      <g transform="translate(31 36.34974)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="58.414846" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <!-- N-AR $\rho$=0, $s$=16 -->
+      <g transform="translate(27.6 61.336721)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="83.401827" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <!-- N-AR $\rho$=0, $s$=32 -->
+      <g transform="translate(27.6 86.323702)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="108.388808" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <!-- N-AR $\rho$=0, $s$=64 -->
+      <g transform="translate(27.6 111.310683)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="133.375789" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <!-- N-AR $\rho$=0.8, $s$=8 -->
+      <g transform="translate(24.2 136.297664)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="158.36277" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <!-- N-AR $\rho$=0.8, $s$=16 -->
+      <g transform="translate(20.8 161.284645)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="50.873688" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="183.349751" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <!-- N-AR $\rho$=0.8, $s$=32 -->
+      <g transform="translate(20.8 186.271626)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="50.873688" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="208.336732" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <!-- N-AR $\rho$=0.8, $s$=64 -->
+      <g transform="translate(20.8 211.258607)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="50.873688" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="233.323713" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <!-- N-CIRCLE $\rho$=0, $s$=8 -->
+      <g transform="translate(17.4 236.245588)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="258.310694" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <!-- N-CIRCLE $\rho$=0, $s$=16 -->
+      <g transform="translate(14 261.232569)">
+       <text>
+        <tspan x="0" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="57.670563" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="30.585938" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="283.297675" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <!-- N-CIRCLE $\rho$=0, $s$=32 -->
+      <g transform="translate(14 286.21955)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="308.284656" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <!-- N-CIRCLE $\rho$=0, $s$=64 -->
+      <g transform="translate(14 311.206531)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_13">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="333.271637" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=8 -->
+      <g transform="translate(10.6 336.193512)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_14">
+     <g id="line2d_18">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="358.258618" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=16 -->
+      <g transform="translate(7.2 361.180493)">
+       <text>
+        <tspan x="0" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="64.467438" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="30.585938" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_15">
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="383.245599" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=32 -->
+      <g transform="translate(7.2 386.167474)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="64.467438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_16">
+     <g id="line2d_20">
+      <g>
+       <use xlink:href="#mdc5345be84" x="82.132" y="408.23258" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=64 -->
+      <g transform="translate(7.2 411.154455)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="64.467438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="line2d_21">
+    <path d="M 82.132 220.830222 
+L 295.489198 220.830222 
+" clip-path="url(#p8600e0e86a)" style="fill: none; stroke: #ffffff; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_22">
+    <path d="M 82.132 120.882299 
+L 295.489198 120.882299 
+" clip-path="url(#p8600e0e86a)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_23">
+    <path d="M 82.132 320.778146 
+L 295.489198 320.778146 
+" clip-path="url(#p8600e0e86a)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 82.132 420.72607 
+L 82.132 20.934375 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 295.489198 420.72607 
+L 295.489198 20.934375 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 82.132 420.72607 
+L 295.489198 420.72607 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 82.132 20.934375 
+L 295.489198 20.934375 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="35.763803" transform="rotate(-0 108.80165 35.763803)">0.9712</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="35.763803" transform="rotate(-0 162.140949 35.763803)">0.0808</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="35.763803" transform="rotate(-0 215.480249 35.763803)">0.9976</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="35.763803" transform="rotate(-0 268.819548 35.763803)">0.0712</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="60.750784" transform="rotate(-0 108.80165 60.750784)">0.7356</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="60.750784" transform="rotate(-0 162.140949 60.750784)">0.0672</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="60.750784" transform="rotate(-0 215.480249 60.750784)">0.9136</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="60.750784" transform="rotate(-0 268.819548 60.750784)">0.0680</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="85.737765" transform="rotate(-0 108.80165 85.737765)">0.3044</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="85.737765" transform="rotate(-0 162.140949 85.737765)">0.0492</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="85.737765" transform="rotate(-0 215.480249 85.737765)">0.4376</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="85.737765" transform="rotate(-0 268.819548 85.737765)">0.0404</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="110.724746" transform="rotate(-0 108.80165 110.724746)">0.0504</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="110.724746" transform="rotate(-0 162.140949 110.724746)">0.0224</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="110.724746" transform="rotate(-0 215.480249 110.724746)">0.0492</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="110.724746" transform="rotate(-0 268.819548 110.724746)">0.0192</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="135.711727" transform="rotate(-0 108.80165 135.711727)">0.9324</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="135.711727" transform="rotate(-0 162.140949 135.711727)">0.0892</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="135.711727" transform="rotate(-0 215.480249 135.711727)">0.9816</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="135.711727" transform="rotate(-0 268.819548 135.711727)">0.0676</text>
+   </g>
+   <g id="text_41">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="160.698708" transform="rotate(-0 108.80165 160.698708)">0.6688</text>
+   </g>
+   <g id="text_42">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="160.698708" transform="rotate(-0 162.140949 160.698708)">0.0788</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="160.698708" transform="rotate(-0 215.480249 160.698708)">0.7928</text>
+   </g>
+   <g id="text_44">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="160.698708" transform="rotate(-0 268.819548 160.698708)">0.0628</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="185.685689" transform="rotate(-0 108.80165 185.685689)">0.2640</text>
+   </g>
+   <g id="text_46">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="185.685689" transform="rotate(-0 162.140949 185.685689)">0.0408</text>
+   </g>
+   <g id="text_47">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="185.685689" transform="rotate(-0 215.480249 185.685689)">0.3440</text>
+   </g>
+   <g id="text_48">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="185.685689" transform="rotate(-0 268.819548 185.685689)">0.0312</text>
+   </g>
+   <g id="text_49">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="210.67267" transform="rotate(-0 108.80165 210.67267)">0.0524</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="210.67267" transform="rotate(-0 162.140949 210.67267)">0.0276</text>
+   </g>
+   <g id="text_51">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="210.67267" transform="rotate(-0 215.480249 210.67267)">0.0432</text>
+   </g>
+   <g id="text_52">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="210.67267" transform="rotate(-0 268.819548 210.67267)">0.0216</text>
+   </g>
+   <g id="text_53">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="235.65965" transform="rotate(-0 108.80165 235.65965)">0.8816</text>
+   </g>
+   <g id="text_54">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="235.65965" transform="rotate(-0 162.140949 235.65965)">0.0436</text>
+   </g>
+   <g id="text_55">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="235.65965" transform="rotate(-0 215.480249 235.65965)">0.9988</text>
+   </g>
+   <g id="text_56">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="235.65965" transform="rotate(-0 268.819548 235.65965)">0.0700</text>
+   </g>
+   <g id="text_57">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="260.646631" transform="rotate(-0 108.80165 260.646631)">0.4384</text>
+   </g>
+   <g id="text_58">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="260.646631" transform="rotate(-0 162.140949 260.646631)">0.0480</text>
+   </g>
+   <g id="text_59">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="260.646631" transform="rotate(-0 215.480249 260.646631)">0.9376</text>
+   </g>
+   <g id="text_60">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="260.646631" transform="rotate(-0 268.819548 260.646631)">0.0760</text>
+   </g>
+   <g id="text_61">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="285.633612" transform="rotate(-0 108.80165 285.633612)">0.1088</text>
+   </g>
+   <g id="text_62">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="285.633612" transform="rotate(-0 162.140949 285.633612)">0.0284</text>
+   </g>
+   <g id="text_63">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="285.633612" transform="rotate(-0 215.480249 285.633612)">0.4984</text>
+   </g>
+   <g id="text_64">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="285.633612" transform="rotate(-0 268.819548 285.633612)">0.0332</text>
+   </g>
+   <g id="text_65">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="310.620593" transform="rotate(-0 108.80165 310.620593)">0.0528</text>
+   </g>
+   <g id="text_66">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="310.620593" transform="rotate(-0 162.140949 310.620593)">0.0244</text>
+   </g>
+   <g id="text_67">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="310.620593" transform="rotate(-0 215.480249 310.620593)">0.0532</text>
+   </g>
+   <g id="text_68">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="310.620593" transform="rotate(-0 268.819548 310.620593)">0.0228</text>
+   </g>
+   <g id="text_69">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="335.607574" transform="rotate(-0 108.80165 335.607574)">0.9384</text>
+   </g>
+   <g id="text_70">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="335.607574" transform="rotate(-0 162.140949 335.607574)">0.0496</text>
+   </g>
+   <g id="text_71">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="335.607574" transform="rotate(-0 215.480249 335.607574)">0.9968</text>
+   </g>
+   <g id="text_72">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="335.607574" transform="rotate(-0 268.819548 335.607574)">0.0792</text>
+   </g>
+   <g id="text_73">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="108.80165" y="360.594555" transform="rotate(-0 108.80165 360.594555)">0.5416</text>
+   </g>
+   <g id="text_74">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="360.594555" transform="rotate(-0 162.140949 360.594555)">0.0524</text>
+   </g>
+   <g id="text_75">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="215.480249" y="360.594555" transform="rotate(-0 215.480249 360.594555)">0.8796</text>
+   </g>
+   <g id="text_76">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="360.594555" transform="rotate(-0 268.819548 360.594555)">0.0848</text>
+   </g>
+   <g id="text_77">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="385.581536" transform="rotate(-0 108.80165 385.581536)">0.1556</text>
+   </g>
+   <g id="text_78">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="385.581536" transform="rotate(-0 162.140949 385.581536)">0.0280</text>
+   </g>
+   <g id="text_79">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="385.581536" transform="rotate(-0 215.480249 385.581536)">0.4560</text>
+   </g>
+   <g id="text_80">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="385.581536" transform="rotate(-0 268.819548 385.581536)">0.0472</text>
+   </g>
+   <g id="text_81">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="108.80165" y="410.568517" transform="rotate(-0 108.80165 410.568517)">0.0528</text>
+   </g>
+   <g id="text_82">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="162.140949" y="410.568517" transform="rotate(-0 162.140949 410.568517)">0.0244</text>
+   </g>
+   <g id="text_83">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="215.480249" y="410.568517" transform="rotate(-0 215.480249 410.568517)">0.0516</text>
+   </g>
+   <g id="text_84">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="268.819548" y="410.568517" transform="rotate(-0 268.819548 410.568517)">0.0236</text>
+   </g>
+   <g id="text_85">
+    <!-- fixed-$M$（$M=192$） -->
+    <g transform="translate(145.520599 14.934375)">
+     <text>
+      <tspan x="0" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">f</tspan>
+      <tspan x="4.5" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">i</tspan>
+      <tspan x="9" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">x</tspan>
+      <tspan x="13.5" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">e</tspan>
+      <tspan x="18" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">d</tspan>
+      <tspan x="22.5" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">-</tspan>
+      <tspan x="35.731934" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">（</tspan>
+      <tspan x="77.555577" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">）</tspan>
+      <tspan x="27" y="-0.109375" style="font-size: 9px; font-family: 'cmmi10'">M</tspan>
+      <tspan x="44.731934" y="-0.109375" style="font-size: 9px; font-family: 'cmmi10'">M</tspan>
+      <tspan x="55.263872" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">=</tspan>
+      <tspan x="64.055577" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">1</tspan>
+      <tspan x="68.555577" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">9</tspan>
+      <tspan x="73.055577" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">2</tspan>
+     </text>
+    </g>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_7">
+    <path d="M 376.901198 420.72607 
+L 590.258396 420.72607 
+L 590.258396 20.934375 
+L 376.901198 20.934375 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g clip-path="url(#p38271bc835)">
+    <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAowAAATGCAYAAACsIPXmAAAXZklEQVR4nO3YPajWZRjA4XPiFY9plqIHCRuCQoozBEEuUURR9LUFNlRCgxH0BUIErQ3NEgitLRnUmBgNLRERgUMQThF9KohZ4EGiTvCeNX7DO7z/Z7iu5Vme4eaeftyrKxsntlZgBJsXp54Atu06ZBOM4dqvU08AczdsPwAA8P8EIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJAEIwAASTACAJBmR/bt7B+wJBeu77BrhvDygzdOPQLMnf58j00wBBdGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAIAlGAACSYAQAQDACALA4F0YAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAAJJgBAAgCUYAANLshUd39w9Ykrc/vMWuGcKbx3+ZegSYO/3lrTbBEFw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" id="image2c9470d894" transform="scale(1 -1) translate(0 -399.927273)" x="377.018182" y="-20.835884" width="213.381818" height="399.927273"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_5">
+     <g id="line2d_24">
+      <g>
+       <use xlink:href="#ma75b11884b" x="403.570848" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_86">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(382.06704 441.478136) rotate(-20)">BPI/M0</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#ma75b11884b" x="456.910147" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_87">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(435.406339 441.478136) rotate(-20)">BPI/M1</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_26">
+      <g>
+       <use xlink:href="#ma75b11884b" x="510.249447" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_88">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(474.650249 446.608438) rotate(-20)">MOMENTS/M0</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#ma75b11884b" x="563.588746" y="420.72607" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_89">
+      <text style="font-size: 7.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif" transform="translate(527.989549 446.608438) rotate(-20)">MOMENTS/M1</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_17">
+     <g id="line2d_28">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="33.427865" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_90">
+      <!-- N-AR $\rho$=0, $s$=8 -->
+      <g transform="translate(325.769198 36.34974)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_18">
+     <g id="line2d_29">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="58.414846" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_91">
+      <!-- N-AR $\rho$=0, $s$=16 -->
+      <g transform="translate(322.369198 61.336721)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_19">
+     <g id="line2d_30">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="83.401827" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_92">
+      <!-- N-AR $\rho$=0, $s$=32 -->
+      <g transform="translate(322.369198 86.323702)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_20">
+     <g id="line2d_31">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="108.388808" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_93">
+      <!-- N-AR $\rho$=0, $s$=64 -->
+      <g transform="translate(322.369198 111.310683)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="37.279938" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="40.678375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_21">
+     <g id="line2d_32">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="133.375789" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_94">
+      <!-- N-AR $\rho$=0.8, $s$=8 -->
+      <g transform="translate(318.969198 136.297664)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_22">
+     <g id="line2d_33">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="158.36277" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_95">
+      <!-- N-AR $\rho$=0.8, $s$=16 -->
+      <g transform="translate(315.569198 161.284645)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="50.873688" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_23">
+     <g id="line2d_34">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="183.349751" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_96">
+      <!-- N-AR $\rho$=0.8, $s$=32 -->
+      <g transform="translate(315.569198 186.271626)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="50.873688" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_24">
+     <g id="line2d_35">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="208.336732" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_97">
+      <!-- N-AR $\rho$=0.8, $s$=64 -->
+      <g transform="translate(315.569198 211.258607)">
+       <text>
+        <tspan x="0" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">A</tspan>
+        <tspan x="10.195312" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="13.59375" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="20.50679" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="23.905228" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="27.303665" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="30.702103" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="34.10054" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="37.498978" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="44.076813" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="47.47525" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="50.873688" y="-0.25" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="16.992188" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="40.897415" y="-0.25" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_25">
+     <g id="line2d_36">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="233.323713" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_98">
+      <!-- N-CIRCLE $\rho$=0, $s$=8 -->
+      <g transform="translate(312.169198 236.245588)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_26">
+     <g id="line2d_37">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="258.310694" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_99">
+      <!-- N-CIRCLE $\rho$=0, $s$=16 -->
+      <g transform="translate(308.769198 261.232569)">
+       <text>
+        <tspan x="0" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="57.670563" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="30.585938" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_27">
+     <g id="line2d_38">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="283.297675" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_100">
+      <!-- N-CIRCLE $\rho$=0, $s$=32 -->
+      <g transform="translate(308.769198 286.21955)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_28">
+     <g id="line2d_39">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="308.284656" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_101">
+      <!-- N-CIRCLE $\rho$=0, $s$=64 -->
+      <g transform="translate(308.769198 311.206531)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="50.873688" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="54.272125" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_29">
+     <g id="line2d_40">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="333.271637" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_102">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=8 -->
+      <g transform="translate(305.369198 336.193512)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_30">
+     <g id="line2d_41">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="358.258618" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_103">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=16 -->
+      <g transform="translate(301.969198 361.180493)">
+       <text>
+        <tspan x="0" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">1</tspan>
+        <tspan x="64.467438" y="-0.28125" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="30.585938" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.28125" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_31">
+     <g id="line2d_42">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="383.245599" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_104">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=32 -->
+      <g transform="translate(301.969198 386.167474)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">3</tspan>
+        <tspan x="64.467438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">2</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_32">
+     <g id="line2d_43">
+      <g>
+       <use xlink:href="#mdc5345be84" x="376.901198" y="408.23258" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_105">
+      <!-- N-CIRCLE $\rho$=0.8, $s$=64 -->
+      <g transform="translate(301.969198 411.154455)">
+       <text>
+        <tspan x="0" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">N</tspan>
+        <tspan x="3.398438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">-</tspan>
+        <tspan x="6.796875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="10.195312" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">I</tspan>
+        <tspan x="13.59375" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">R</tspan>
+        <tspan x="16.992188" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">C</tspan>
+        <tspan x="20.390625" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">L</tspan>
+        <tspan x="23.789062" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">E</tspan>
+        <tspan x="27.1875" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="34.10054" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="37.498978" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">0</tspan>
+        <tspan x="40.897415" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">.</tspan>
+        <tspan x="44.295853" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">8</tspan>
+        <tspan x="47.69429" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">,</tspan>
+        <tspan x="51.092728" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'"> </tspan>
+        <tspan x="57.670563" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">=</tspan>
+        <tspan x="61.069" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">6</tspan>
+        <tspan x="64.467438" y="-0.296875" style="font-size: 6.8px; font-family: 'SimSun'">4</tspan>
+        <tspan x="30.585938" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">½</tspan>
+        <tspan x="54.491165" y="-0.296875" style="font-size: 6.8px; font-family: 'cmmi10'">s</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+   </g>
+   <g id="line2d_44">
+    <path d="M 376.901198 220.830222 
+L 590.258396 220.830222 
+" clip-path="url(#p38271bc835)" style="fill: none; stroke: #ffffff; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_45">
+    <path d="M 376.901198 120.882299 
+L 590.258396 120.882299 
+" clip-path="url(#p38271bc835)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_46">
+    <path d="M 376.901198 320.778146 
+L 590.258396 320.778146 
+" clip-path="url(#p38271bc835)" style="fill: none; stroke: #ffffff; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 376.901198 420.72607 
+L 376.901198 20.934375 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 590.258396 420.72607 
+L 590.258396 20.934375 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 376.901198 420.72607 
+L 590.258396 420.72607 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 376.901198 20.934375 
+L 590.258396 20.934375 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_106">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="35.763803" transform="rotate(-0 403.570848 35.763803)">0.9756</text>
+   </g>
+   <g id="text_107">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="35.763803" transform="rotate(-0 456.910147 35.763803)">0.1136</text>
+   </g>
+   <g id="text_108">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="35.763803" transform="rotate(-0 510.249447 35.763803)">0.9984</text>
+   </g>
+   <g id="text_109">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="35.763803" transform="rotate(-0 563.588746 35.763803)">0.1184</text>
+   </g>
+   <g id="text_110">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="60.750784" transform="rotate(-0 403.570848 60.750784)">0.7356</text>
+   </g>
+   <g id="text_111">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="60.750784" transform="rotate(-0 456.910147 60.750784)">0.0672</text>
+   </g>
+   <g id="text_112">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="60.750784" transform="rotate(-0 510.249447 60.750784)">0.9136</text>
+   </g>
+   <g id="text_113">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="60.750784" transform="rotate(-0 563.588746 60.750784)">0.0680</text>
+   </g>
+   <g id="text_114">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="85.737765" transform="rotate(-0 403.570848 85.737765)">0.2776</text>
+   </g>
+   <g id="text_115">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="85.737765" transform="rotate(-0 456.910147 85.737765)">0.0288</text>
+   </g>
+   <g id="text_116">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="85.737765" transform="rotate(-0 510.249447 85.737765)">0.4260</text>
+   </g>
+   <g id="text_117">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="85.737765" transform="rotate(-0 563.588746 85.737765)">0.0212</text>
+   </g>
+   <g id="text_118">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="110.724746" transform="rotate(-0 403.570848 110.724746)">0.0608</text>
+   </g>
+   <g id="text_119">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="110.724746" transform="rotate(-0 456.910147 110.724746)">0.0088</text>
+   </g>
+   <g id="text_120">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="110.724746" transform="rotate(-0 510.249447 110.724746)">0.0584</text>
+   </g>
+   <g id="text_121">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="110.724746" transform="rotate(-0 563.588746 110.724746)">0.0020</text>
+   </g>
+   <g id="text_122">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="135.711727" transform="rotate(-0 403.570848 135.711727)">0.9480</text>
+   </g>
+   <g id="text_123">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="135.711727" transform="rotate(-0 456.910147 135.711727)">0.1180</text>
+   </g>
+   <g id="text_124">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="135.711727" transform="rotate(-0 510.249447 135.711727)">0.9912</text>
+   </g>
+   <g id="text_125">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="135.711727" transform="rotate(-0 563.588746 135.711727)">0.1064</text>
+   </g>
+   <g id="text_126">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="160.698708" transform="rotate(-0 403.570848 160.698708)">0.6688</text>
+   </g>
+   <g id="text_127">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="160.698708" transform="rotate(-0 456.910147 160.698708)">0.0788</text>
+   </g>
+   <g id="text_128">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="160.698708" transform="rotate(-0 510.249447 160.698708)">0.7928</text>
+   </g>
+   <g id="text_129">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="160.698708" transform="rotate(-0 563.588746 160.698708)">0.0628</text>
+   </g>
+   <g id="text_130">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="185.685689" transform="rotate(-0 403.570848 185.685689)">0.2668</text>
+   </g>
+   <g id="text_131">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="185.685689" transform="rotate(-0 456.910147 185.685689)">0.0352</text>
+   </g>
+   <g id="text_132">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="185.685689" transform="rotate(-0 510.249447 185.685689)">0.3336</text>
+   </g>
+   <g id="text_133">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="185.685689" transform="rotate(-0 563.588746 185.685689)">0.0228</text>
+   </g>
+   <g id="text_134">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="210.67267" transform="rotate(-0 403.570848 210.67267)">0.0548</text>
+   </g>
+   <g id="text_135">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="210.67267" transform="rotate(-0 456.910147 210.67267)">0.0108</text>
+   </g>
+   <g id="text_136">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="210.67267" transform="rotate(-0 510.249447 210.67267)">0.0492</text>
+   </g>
+   <g id="text_137">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="210.67267" transform="rotate(-0 563.588746 210.67267)">0.0056</text>
+   </g>
+   <g id="text_138">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="235.65965" transform="rotate(-0 403.570848 235.65965)">0.8900</text>
+   </g>
+   <g id="text_139">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="235.65965" transform="rotate(-0 456.910147 235.65965)">0.0808</text>
+   </g>
+   <g id="text_140">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="235.65965" transform="rotate(-0 510.249447 235.65965)">0.9996</text>
+   </g>
+   <g id="text_141">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="235.65965" transform="rotate(-0 563.588746 235.65965)">0.1320</text>
+   </g>
+   <g id="text_142">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="260.646631" transform="rotate(-0 403.570848 260.646631)">0.4384</text>
+   </g>
+   <g id="text_143">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="260.646631" transform="rotate(-0 456.910147 260.646631)">0.0480</text>
+   </g>
+   <g id="text_144">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="260.646631" transform="rotate(-0 510.249447 260.646631)">0.9376</text>
+   </g>
+   <g id="text_145">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="260.646631" transform="rotate(-0 563.588746 260.646631)">0.0760</text>
+   </g>
+   <g id="text_146">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="285.633612" transform="rotate(-0 403.570848 285.633612)">0.1200</text>
+   </g>
+   <g id="text_147">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="285.633612" transform="rotate(-0 456.910147 285.633612)">0.0188</text>
+   </g>
+   <g id="text_148">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="285.633612" transform="rotate(-0 510.249447 285.633612)">0.4820</text>
+   </g>
+   <g id="text_149">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="285.633612" transform="rotate(-0 563.588746 285.633612)">0.0164</text>
+   </g>
+   <g id="text_150">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="310.620593" transform="rotate(-0 403.570848 310.620593)">0.0472</text>
+   </g>
+   <g id="text_151">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="310.620593" transform="rotate(-0 456.910147 310.620593)">0.0060</text>
+   </g>
+   <g id="text_152">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="310.620593" transform="rotate(-0 510.249447 310.620593)">0.0520</text>
+   </g>
+   <g id="text_153">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="310.620593" transform="rotate(-0 563.588746 310.620593)">0.0024</text>
+   </g>
+   <g id="text_154">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="335.607574" transform="rotate(-0 403.570848 335.607574)">0.9432</text>
+   </g>
+   <g id="text_155">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="335.607574" transform="rotate(-0 456.910147 335.607574)">0.0824</text>
+   </g>
+   <g id="text_156">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="335.607574" transform="rotate(-0 510.249447 335.607574)">0.9964</text>
+   </g>
+   <g id="text_157">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="335.607574" transform="rotate(-0 563.588746 335.607574)">0.1412</text>
+   </g>
+   <g id="text_158">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="403.570848" y="360.594555" transform="rotate(-0 403.570848 360.594555)">0.5416</text>
+   </g>
+   <g id="text_159">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="360.594555" transform="rotate(-0 456.910147 360.594555)">0.0524</text>
+   </g>
+   <g id="text_160">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="510.249447" y="360.594555" transform="rotate(-0 510.249447 360.594555)">0.8796</text>
+   </g>
+   <g id="text_161">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="360.594555" transform="rotate(-0 563.588746 360.594555)">0.0848</text>
+   </g>
+   <g id="text_162">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="385.581536" transform="rotate(-0 403.570848 385.581536)">0.1584</text>
+   </g>
+   <g id="text_163">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="385.581536" transform="rotate(-0 456.910147 385.581536)">0.0184</text>
+   </g>
+   <g id="text_164">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="385.581536" transform="rotate(-0 510.249447 385.581536)">0.4144</text>
+   </g>
+   <g id="text_165">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="385.581536" transform="rotate(-0 563.588746 385.581536)">0.0276</text>
+   </g>
+   <g id="text_166">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="403.570848" y="410.568517" transform="rotate(-0 403.570848 410.568517)">0.0552</text>
+   </g>
+   <g id="text_167">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="456.910147" y="410.568517" transform="rotate(-0 456.910147 410.568517)">0.0056</text>
+   </g>
+   <g id="text_168">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="510.249447" y="410.568517" transform="rotate(-0 510.249447 410.568517)">0.0616</text>
+   </g>
+   <g id="text_169">
+    <text style="font-size: 6.5px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle; fill: #ffffff" x="563.588746" y="410.568517" transform="rotate(-0 563.588746 410.568517)">0.0032</text>
+   </g>
+   <g id="text_170">
+    <!-- fixed-$T$（$T=3120$） -->
+    <g transform="translate(441.504797 14.934375)">
+     <text>
+      <tspan x="0" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">f</tspan>
+      <tspan x="4.5" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">i</tspan>
+      <tspan x="9" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">x</tspan>
+      <tspan x="13.5" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">e</tspan>
+      <tspan x="18" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">d</tspan>
+      <tspan x="22.5" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">-</tspan>
+      <tspan x="32.255859" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">（</tspan>
+      <tspan x="75.103428" y="-0.109375" style="font-size: 9px; font-family: 'SimSun'">）</tspan>
+      <tspan x="27" y="-0.109375" style="font-size: 9px; font-family: 'cmmi10'">T</tspan>
+      <tspan x="41.255859" y="-0.109375" style="font-size: 9px; font-family: 'cmmi10'">T</tspan>
+      <tspan x="48.311724" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">=</tspan>
+      <tspan x="57.103428" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">3</tspan>
+      <tspan x="61.603428" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">1</tspan>
+      <tspan x="66.103428" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">2</tspan>
+      <tspan x="70.603428" y="-0.109375" style="font-size: 9px; font-family: 'cmr10'">0</tspan>
+     </text>
+    </g>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_12">
+    <path d="M 600.420924 373.268141 
+L 615.664716 373.268141 
+L 615.664716 68.392304 
+L 600.420924 68.392304 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <image xlink:href="data:image/png;base64,
+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" id="imageb229b63f32" transform="scale(1 -1) translate(0 -305.018182)" x="600.545455" y="-68.072727" width="15.054545" height="305.018182"/>
+   <g id="matplotlib.axis_5"/>
+   <g id="matplotlib.axis_6">
+    <g id="ytick_33">
+     <g id="line2d_47">
+      <defs>
+       <path id="m170d1f0f39" d="M 0 0 
+L 3.5 0 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m170d1f0f39" x="615.664716" y="373.268141" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_171">
+      <text style="font-size: 8px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="622.664716" y="376.705641" transform="rotate(-0 622.664716 376.705641)">0.0</text>
+     </g>
+    </g>
+    <g id="ytick_34">
+     <g id="line2d_48">
+      <g>
+       <use xlink:href="#m170d1f0f39" x="615.664716" y="312.292974" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_172">
+      <text style="font-size: 8px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="622.664716" y="315.730474" transform="rotate(-0 622.664716 315.730474)">0.2</text>
+     </g>
+    </g>
+    <g id="ytick_35">
+     <g id="line2d_49">
+      <g>
+       <use xlink:href="#m170d1f0f39" x="615.664716" y="251.317806" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_173">
+      <text style="font-size: 8px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="622.664716" y="254.755306" transform="rotate(-0 622.664716 254.755306)">0.4</text>
+     </g>
+    </g>
+    <g id="ytick_36">
+     <g id="line2d_50">
+      <g>
+       <use xlink:href="#m170d1f0f39" x="615.664716" y="190.342639" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_174">
+      <text style="font-size: 8px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="622.664716" y="193.780139" transform="rotate(-0 622.664716 193.780139)">0.6</text>
+     </g>
+    </g>
+    <g id="ytick_37">
+     <g id="line2d_51">
+      <g>
+       <use xlink:href="#m170d1f0f39" x="615.664716" y="129.367471" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_175">
+      <text style="font-size: 8px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="622.664716" y="132.804971" transform="rotate(-0 622.664716 132.804971)">0.8</text>
+     </g>
+    </g>
+    <g id="ytick_38">
+     <g id="line2d_52">
+      <g>
+       <use xlink:href="#m170d1f0f39" x="615.664716" y="68.392304" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_176">
+      <text style="font-size: 8px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="622.664716" y="71.829804" transform="rotate(-0 622.664716 71.829804)">1.0</text>
+     </g>
+    </g>
+    <g id="text_177">
+     <text style="font-size: 10px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: middle" x="647.258466" y="220.830222" transform="rotate(-90 647.258466 220.830222)">I 类错误率</text>
+    </g>
+   </g>
+   <g id="LineCollection_1"/>
+   <g id="patch_13">
+    <path d="M 600.420924 373.268141 
+L 608.04282 373.268141 
+L 615.664716 373.268141 
+L 615.664716 68.392304 
+L 608.04282 68.392304 
+L 600.420924 68.392304 
+L 600.420924 373.268141 
+z
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p8600e0e86a">
+   <rect x="82.132" y="20.934375" width="213.357198" height="399.791695"/>
+  </clipPath>
+  <clipPath id="p38271bc835">
+   <rect x="376.901198" y="20.934375" width="213.357198" height="399.791695"/>
+  </clipPath>
+ </defs>
+</svg>

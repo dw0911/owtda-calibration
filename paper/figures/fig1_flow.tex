@@ -1,0 +1,37 @@
+% 图 1(a)：重叠窗口拓扑扫描与校准的统计推断主流程（横向）。
+% 依赖 main.tex 中定义的 flowblue/flowfill/m0fill/m1fill 配色与 tikz 库。
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw=flowblue, fill=flowfill, rounded corners=2pt,
+              align=center, inner xsep=6pt, inner ysep=5pt, line width=0.6pt},
+  arr/.style={-{Stealth[length=2.4mm]}, flowblue, line width=0.6pt},
+]
+\node[box] (raw) {原始序列\\ $X_1,\ldots,X_T$};
+\node[box, right=4mm of raw] (win) {重叠滑动窗口\\ $I_1,\ldots,I_M$};
+\node[box, right=4mm of win] (pc) {窗口点云\\ $P_i$};
+\node[box, fill=m0fill, above right=3mm and 4mm of pc] (bpi) {持续同调 $\to$ 持续图\\ $\to$ BPI（800 维）};
+\node[box, fill=m1fill, below right=3mm and 4mm of pc] (mom) {MOMENTS\\ （5/9 维）};
+\coordinate (mid1) at ($(bpi.south east)!0.5!(mom.north east)$);
+\node[box, right=4mm of mid1] (scan) {最大扫描\\ $T_M,\ \hat k$};
+
+\node[box, fill=m0fill, below=15mm of scan, xshift=-19mm] (m0) {M0：全局随机置换重采样\\ $T_M^{*(1\ldots B)}$};
+\node[box, fill=m1fill, below=15mm of scan, xshift=19mm] (m1) {M1：相关乘子重采样\\ （近似局部依赖）};
+
+\coordinate (mid2) at ($(m0.south)!0.5!(m1.south)$);
+\node[box, below=6mm of mid2] (ref) {参考分布 $\{T_M^*\}$\\ ＋ 观测 $T_M$};
+\node[box, left=6mm of ref] (pv) {Monte Carlo\\ $p$ 值};
+\node[box, left=6mm of pv] (dec) {拒绝 / 不拒绝\\ ＋ 位置估计 $\hat k$};
+
+\draw[arr] (raw) -- (win);
+\draw[arr] (win) -- (pc);
+\draw[arr] (pc) -- (bpi);
+\draw[arr] (pc) -- (mom);
+\draw[arr] (bpi) -- (scan);
+\draw[arr] (mom) -- (scan);
+\draw[arr] (scan) -- (m0);
+\draw[arr] (scan) -- (m1);
+\draw[arr] (m0) -- (ref);
+\draw[arr] (m1) -- (ref);
+\draw[arr] (ref) -- (pv);
+\draw[arr] (pv) -- (dec);
+\end{tikzpicture}

@@ -40,7 +40,8 @@
     "results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json",
     "artifacts/tables/H0_ALL_112.csv",
     "artifacts/tables/H1_ALL_16_GEOMETRY_COMPLETE.csv",
-    "artifacts/figures/Figure1_method_schematic.pdf",
+    "paper/figures/fig1_flow.tex",
+    "paper/figures/fig1_overlap.tex",
     "artifacts/figures/Figure5_H1_power_and_difference.pdf",
     "paper/main.pdf",
     "reproducibility/SHA256SUMS"

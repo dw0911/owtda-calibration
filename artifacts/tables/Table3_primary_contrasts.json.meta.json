@@ -1,7 +1,7 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "content_sha256": "da8e9ee57f3fa5b9dc4309f7b5cffe7c85b795a8f60baa1f237d9f928ee51053",
-  "generated_at": "2026-09-20T15:26:16Z",
+  "content_sha256": "76d193f926c23acb818afad0c5ee08e55559b194aca99c68491f1a726fa1932d",
+  "generated_at": "2026-09-20T20:25:48Z",
   "input_sha256": {
     "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
     "P1_P3_BOOTSTRAP_SUMMARY": "6ff17bde1c61581d6fec4771e6efe280f1067620e69bc4ca82162264118099a4"
@@ -12,12 +12,12 @@
   ],
   "kind": "TABLE",
   "outputs": {
-    "Table3_primary_contrasts.csv": "41e815895b9b94b28476197b57e5cfe5df15a6b08ac0aabd3923c2ef20e67618",
-    "Table3_primary_contrasts.json": "01b32c55b87b9fed7a8a91130aa9f118f4a3c5b244845455d6839cb07551599b",
-    "Table3_primary_contrasts.tex": "465af1c0b3f7e993e6cc241172dee635f94359d3dbd158a6375263ea78b613bb"
+    "Table3_primary_contrasts.csv": "ad9ba446f54a855c9e7271696faa558c2de91954e1cdc14dd45b9a0e5fa1df56",
+    "Table3_primary_contrasts.json": "b59f05faf1e4bd754dc6c565aae5bfc9b1e379cef5709afab58852d733c34eb2",
+    "Table3_primary_contrasts.tex": "7c6e4a7dd80f975e5083bcb3c89d2e9105988a0f3effe7e1415bfaf57f0ae195"
   },
   "schema_version": 1,
   "script": "paper/scripts/make_tables.py",
-  "script_sha256": "aa76e3fb6cead5c253b47b315e6d71458e1d2eb09a7289d58d6e65e59b8c709d",
+  "script_sha256": "0c7beacb8052311dd6ceb3e67f7aa0865fe75ca3b6de4cf64788a493550e133f",
   "title": "Primary contrasts P1-P3"
 }

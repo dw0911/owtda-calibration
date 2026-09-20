@@ -8,6 +8,8 @@
 
 \subsection{窗口局部映射的依赖范围}\label{sec:t1}
 
+固定局部窗口映射的依赖继承是后续机制分析的基础，相关结果已见文献\cite{NieYue2026}（附录命题 6）。为明确本文的窗口与映射条件，下面给出原始观测独立同分布情形的自包含证明。
+
 \begin{proposition}[局部映射的有限依赖范围]\label{prop:dependency}
 设原始观测 $\{X_t\}$ 独立同分布，且
 \[
@@ -31,7 +33,7 @@ $$(j-i)s\ge\left\lceil W/s\right\rceil s\ge W,$$
 \subsection{交换性失效的精确反例}\label{sec:t2}
 
 \begin{proposition}[高斯窗口均值的非交换性]\label{prop:counterexample}
-设 $X_t\overset{\mathrm{iid}}{\sim}N(0,\sigma^2)$，其中 $\sigma^2>0$；设 $1\le s<W$ 且窗口数 $M\ge3$。令
+设 $X_t\overset{\mathrm{iid}}{\sim}N(0,\sigma^2)$，其中 $\sigma^2>0$；设 $1\le s<W$ 且窗口数 $M\ge3$。记 $(x)_+=\max(x,0)$。令
 \[
  Z_i=\frac1W\sum_{t\in I_i}X_t.
 \]
@@ -129,25 +131,4 @@ $$(j-i)s\ge\left\lceil W/s\right\rceil s\ge W,$$
 
 协方差结构的差异为失校准提供了机制解释。对于一般多维非线性特征，协方差矩阵不相等本身仍不足以推出最大扫描统计量的极限分布必然不同；同样，重叠率增加也不保证每一种表示或校准器的 I 类错误率单调变化。
 
-\subsection{向量特征的有限样本依赖诊断量}\label{sec:t5}
-
-设平稳向量特征满足 $\mu=\mathbb E(Y_i)$，并定义
-\[
- \Gamma_h=\operatorname{Cov}(Y_0,Y_h).
-\]
-归一化样本和的有限样本协方差矩阵可写为
-\begin{align}
- \Omega_{\Phi,M}
- &:=\operatorname{Var}\left\{
- \frac1{\sqrt M}\sum_{i=1}^M(Y_i-\mu)\right\}\notag\\
- &=\Gamma_0+\sum_{h=1}^{M-1}
- \left(1-\frac hM\right)(\Gamma_h+\Gamma_h^\top).
- \label{eq:vector-long-run}
-\end{align}
-当 $\operatorname{tr}(\Gamma_0)>0$ 时，定义迹比
-\begin{equation}\label{eq:trace-amplification}
- A^{\mathrm{tr}}_{\Phi,M}
- =\frac{\operatorname{tr}(\Omega_{\Phi,M})}
-        {\operatorname{tr}(\Gamma_0)}.
-\end{equation}
-该比值概括给定特征坐标系下，原始顺序的总部分和方差相对于边际协方差的放大或收缩；分母为零时不予定义。最大扫描还取决于协方差的方向结构、特征谱和候选位置上的联合极值，因此式\eqref{eq:trace-amplification}仅作为机制诊断量。本文的主要经验结论不依赖该比值与 I 类错误率之间的单调关系或因果解释。
+上述结果证明，窗口重叠能够破坏窗口级随机化所需的联合对称条件，并揭示全局随机置换遗漏原顺序滞后协方差的机制；但这些解析结果没有给出 BPI 最大扫描的有限样本误报率闭式表达。因此，第~\ref{sec:h0} 节通过预设设计网格上的 Monte Carlo 实验评估完整非线性管线的实际有限样本校准。

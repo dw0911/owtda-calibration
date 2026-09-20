@@ -221,18 +221,19 @@ def build_primary(contrasts: dict, bootstrap: dict) -> dict:
             "p_raw_one_sided": float(corrected["p_raw_one_sided"]),
             "p_holm": float(corrected["p_holm"]),
             "claim_state": registered["claim_state"],
-            # superseded legacy bytes kept for the audit trail (p = 0 is illegal under the
-            # registered (tail+1)/(B+1) rule; see reproducibility/VALIDATION_SUMMARY.md)
-            "canonical_p_boot_one_sided": float(registered["p_boot_one_sided"]),
-            "canonical_p_holm": float(registered["p_holm"]),
+            # Legacy p = 0 values (illegal under the (tail+1)/(B+1) rule) kept only for the
+            # audit trail; MUST NOT be read by downstream consumers — use p_raw_one_sided /
+            # p_holm above instead (2026-09-21 scoped audit item 7).
+            "legacy_invalid_p_boot_one_sided": float(registered["p_boot_one_sided"]),
+            "legacy_invalid_p_holm": float(registered["p_holm"]),
         })
 
     tex_lines = [
         r"\begin{table}[ht]", r"\centering",
         r"\footnotesize",
         r"\caption{主对比 P1--P3 的效应量与推断结果。置信区间为边际 95\% basic 自助区间；"
-        r"Holm 校正 $p$ 由 10,000 次配对 cluster bootstrap 的尾部计数按加一规则计算"
-        r"（$p=(1+\#\{\text{尾部}\})/10001$）。}\label{tab:primary}",
+        r"原始单侧 bootstrap $p$ 值由 10,000 次整簇重采样的尾部计数按加一规则计算，"
+        r"随后对三项主对比实施 Holm 逐步校正，表中报告调整后 $p$ 值。}\label{tab:primary}",
         r"\begin{tabular}{llccccc}", r"\toprule",
         r"对比 & 估计量 & 点估计 & 阈值 & 超额效应 & 95\% basic CI & Holm $p$\\", r"\midrule",
     ]
@@ -258,7 +259,7 @@ def build_primary(contrasts: dict, bootstrap: dict) -> dict:
         "tex": "\n".join(tex_lines),
         "csv_fields": ["contrast", "point_estimate", "threshold", "excess", "ci95_basic",
                        "bootstrap_iterations", "tail_count", "p_raw_one_sided", "p_holm", "claim_state",
-                       "canonical_p_boot_one_sided", "canonical_p_holm"],
+                       "legacy_invalid_p_boot_one_sided", "legacy_invalid_p_holm"],
         "csv_rows": [{**r, "ci95_basic": json.dumps(r["ci95_basic"])} for r in rows],
         "json_rows": rows,
         "inputs": ["H0_PRIMARY_CONTRASTS", "P1_P3_BOOTSTRAP_SUMMARY"],
@@ -292,7 +293,7 @@ def build_calibration(h0_rows: list[dict]) -> dict:
         r"\bottomrule", r"\end{tabular}", "",
         r"\begin{minipage}{0.94\textwidth}", r"\vspace{0.4em}",
         r"\footnotesize 注：括号内为该类计数占 28 格的百分比。实用校准采用 90\% Wilson 区间完整落在等效带 $[0.035,0.065]$ 内，"
-        r"对应预设的实用等效性判据（两个单侧 5\% 判定等价于一个 90\% 双侧区间）；实质保守要求 "
+        r"对应预设的实用等效性判据（该 90\% 区间与相应单侧 score 检验存在反演关系）；实质保守要求 "
         r"95\% 区间完整位于实用带下方，实质反保守要求 95\% 区间完整位于实用带上方；"
         r"边界/未定为既不满足实用校准、也不满足实质保守或实质反保守的剩余状态。"
         r"上述计数为预设设计网格内的描述性分布，不构成方法在更广参数空间中的通过率。",
@@ -354,12 +355,12 @@ def build_h1_power(h1: dict) -> dict:
 
     tex_lines = [
         r"\begin{table}[ht]", r"\centering",
-        r"\caption{同一场景内四个预设条件的等权描述性汇总。尺寸标准化功效使用各自匹配的零假设临界值；"
+        r"\caption{同一场景内四个预设条件的等权描述性汇总。尺寸校正功效使用各自匹配的零假设临界值；"
         r"平均归一化 MAE 为无条件位置误差除以对应 $T$ 后的均值；联合成功率按式\eqref{eq:joint-success}"
         r"分别计算。}\label{tab:h1-power}",
         r"\begingroup", r"\footnotesize", r"\setlength{\tabcolsep}{3.5pt}",
         r"\begin{tabular}{llccrr}", r"\toprule",
-        r"场景 & 表示 & 尺寸标准化功效 & 归一化定位误差 & \multicolumn{2}{c}{联合成功率}\\",
+        r"场景 & 表示 & 尺寸校正功效 & 归一化定位误差 & \multicolumn{2}{c}{联合成功率}\\",
         r"\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-6}",
         r" & & $\widehat\beta_{\mathrm{std}}$ & nMAE & M0 & M1\\", r"\midrule",
     ]

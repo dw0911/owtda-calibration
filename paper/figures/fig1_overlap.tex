@@ -1,0 +1,49 @@
+% 图 1(b)：窗口重叠与共享观测 + 全局随机置换破坏邻接。
+\begin{tikzpicture}[
+  font=\small,
+  obs/.style={circle, draw=flowblue, fill=white, inner sep=1.2pt, line width=0.5pt},
+  shared/.style={circle, draw=sharedred, fill=sharedred!25, inner sep=1.7pt, line width=0.6pt},
+]
+% 时间轴与观测
+\foreach \i in {1,...,8} { \coordinate (X\i) at (\i, 0); }
+\draw[flowblue, line width=0.5pt] (0.5,0) -- (8.5,0);
+\foreach \i in {1,7,8} { \node[obs] at (X\i) {}; }
+\foreach \i in {2,3,4,5,6} { \node[shared] at (X\i) {}; }
+\foreach \i in {1,...,8} { \node[below=1.5mm, font=\footnotesize] at (X\i) {$X_{\i}$}; }
+
+% 四个窗口（各覆盖 4 个连续观测，相邻窗口共享 3 个观测；与下方全局随机置换的 4 个窗口一致）
+\draw[winblue, line width=1.3pt] (1,1.9) -- (4,1.9);
+\draw[winblue, line width=0.8pt] (1,1.68) -- (1,2.12);
+\draw[winblue, line width=0.8pt] (4,1.68) -- (4,2.12);
+\node[right=1mm, font=\footnotesize] at (4,1.9) {窗口1};
+
+\draw[winblue, line width=1.3pt] (2,1.35) -- (5,1.35);
+\draw[winblue, line width=0.8pt] (2,1.13) -- (2,1.57);
+\draw[winblue, line width=0.8pt] (5,1.13) -- (5,1.57);
+\node[right=1mm, font=\footnotesize] at (5,1.35) {窗口2};
+
+\draw[winblue, line width=1.3pt] (3,0.8) -- (6,0.8);
+\draw[winblue, line width=0.8pt] (3,0.58) -- (3,1.02);
+\draw[winblue, line width=0.8pt] (6,0.58) -- (6,1.02);
+\node[right=1mm, font=\footnotesize] at (6,0.8) {窗口3};
+
+\draw[winblue, line width=1.3pt] (4,0.25) -- (7,0.25);
+\draw[winblue, line width=0.8pt] (4,0.03) -- (4,0.47);
+\draw[winblue, line width=0.8pt] (7,0.03) -- (7,0.47);
+\node[right=1mm, font=\footnotesize] at (7,0.25) {窗口4};
+
+% 共享标注（置于窗口条上方）
+\node[sharedred, font=\footnotesize] at (4.5,2.6) {共享观测（相邻窗口重叠 $W-s$ 个观测）};
+
+% 全局随机置换示意（方块组居中于时间轴中心 x≈4.5，避免视觉偏左）
+\foreach \i/\n in {1/1,2/2,3/3,4/4} {
+  \node[draw=flowblue, fill=flowfill, minimum size=7mm, font=\footnotesize] at ({2.25+0.9*\i}, -2.3) {\n};
+}
+\node[left=2mm, font=\footnotesize] at (3.15,-2.3) {原始窗口序};
+\foreach \i/\n in {1/3,2/1,3/4,4/2} {
+  \node[draw=flowblue, fill=flowfill, minimum size=7mm, font=\footnotesize] at ({2.25+0.9*\i}, -3.8) {\n};
+}
+\node[left=2mm, font=\footnotesize] at (3.15,-3.8) {随机置换后};
+\draw[-{Stealth[length=2mm]}, sharedred, line width=0.6pt] (3.6,-2.7) -- (3.6,-3.4);
+\node[sharedred, right=2mm, font=\footnotesize] at (3.6,-3.05) {窗口级邻接被破坏};
+\end{tikzpicture}

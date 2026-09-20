@@ -1,7 +1,7 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "content_sha256": "5e17e56ba0aa275675ebde2e709b37cca29c69912d404dd80ebabc171e3f37df",
-  "generated_at": "2026-09-20T12:05:30Z",
+  "content_sha256": "d94fda73cfc3b2f0f90ceff7c82479d4ed7a6d68b63cdc5b71751c63023421b9",
+  "generated_at": "2026-09-20T19:57:52Z",
   "input_sha256": {
     "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611",
     "H1_ALL_16_GEOMETRY_COMPLETE.csv": "8c44d0d47fab6c8e3fb7e20661ca086f4b11ad7e8bd5aada3da03457c620f079",
@@ -14,14 +14,14 @@
   ],
   "kind": "FIGURE",
   "outputs": {
-    "Figure3_M0_type1_surface.pdf": "1a9a87c07c8deebe6a68bfae88615245b5b83765e2563846dad06ab7942987f2",
-    "Figure3_M0_type1_surface.png": "ebb5ef3998ea9e9b4374755c2cd00ee5aef82fd6e1de241086917f7ff3b65cff",
-    "Figure3_M0_type1_surface.svg": "a0df0647e558599a0d06125f85d16ccbfb5756894075b0f80f8adad9f12f6081"
+    "Figure3_M0_type1_surface.pdf": "65296f606421060aaada78b340a928fcd275789b0fcdcaf7169646530ab23dd1",
+    "Figure3_M0_type1_surface.png": "50c02fa2669daa176f5b03b070e73f08885a77677e2ea04f9e31d9a5f0b706ba",
+    "Figure3_M0_type1_surface.svg": "058fe4ddfe566aee0bf91adb1cbe044cf2346759c76e76a2fac03eced3761676"
   },
   "referenced_by": [
     "paper/sections/05_h0.tex"
   ],
   "schema_version": 1,
   "script": "paper/scripts/make_figures.py",
-  "script_sha256": "c67052defc4716d5f36e80f11f2729c71ea8c038df7a2fefbe9a993345fa4990"
+  "script_sha256": "3cf14f302915fe70a19285448cc14e4aa6bfd8c6c19cd673a2f7e7ee7317c222"
 }

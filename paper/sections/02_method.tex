@@ -2,10 +2,23 @@
 
 图~\ref{fig:flow}给出整体流程与统计冲突的来源：窗口是随机化单位，但重叠使原始观测被多个随机化单位共享。后续小节依次定义窗口构造、两种表示、最大扫描统计量与两种校准方法。
 
-\begin{figure}[ht]
+\begin{figure}[tbp]
 \centering
-\includegraphics[width=0.95\textwidth]{../artifacts/figures/Figure1_method_schematic.pdf}
-\caption{重叠窗口拓扑扫描与校准流程。原始序列经重叠窗口映射为窗口点云，再分别形成持续图/BPI 与矩表示 MOMENTS；最大扫描统计量给出检验统计量与位置估计；M0 对窗口顺序作全排列以构造参考分布，M1 使用相关乘子保留滞后依赖结构。虚线框标出被相邻窗口重复使用的原始观测：全排列重排窗口顺序时，原有的局部协方差结构被破坏，这是后文交换性失效机制的直观来源。}\label{fig:flow}
+\begin{subfigure}[t]{0.92\linewidth}
+\centering
+\caption{统计推断主流程}\label{fig:flow-a}
+\input{figures/fig1_flow}
+\end{subfigure}
+
+\vspace{1.2em}
+
+\begin{subfigure}[t]{0.85\linewidth}
+\centering
+\caption{窗口重叠与共享观测机制}\label{fig:flow-b}
+\input{figures/fig1_overlap}
+\end{subfigure}
+
+\caption{重叠窗口拓扑扫描与校准流程。(a) 原始序列经重叠窗口映射为窗口点云，再分别经持续同调—向量化分支得到 BPI、经均值—协方差分支得到矩表示 MOMENTS，进入最大扫描得到检验统计量 $T_M$ 与位置估计 $\hat k$；随后 M0 全局随机置换重采样、M1 相关乘子重采样分别构造参考分布，并通过 Monte Carlo $p$ 值形成拒绝决策。(b) 重叠机制：相邻窗口共享原始观测（红色），全局随机置换重排窗口顺序时原有邻接被破坏，这是后文交换性失效机制的直观来源。}\label{fig:flow}
 \end{figure}
 
 \subsection{窗口构造与局部点云}\label{sec:windows}
@@ -24,11 +37,11 @@
 
 \subsection{固定网格持续强度表示}\label{sec:bpi}
 
-对每个点云 $P_i$，在系数域 $\mathbb F_2$ 上计算 Vietoris--Rips 持续同调，并保留 0 维和 1 维同调通道中有限且寿命为正的 birth--death 对。相关计算框架和有限维表示可分别参见\cite{Bauer2021,Adams2017}。记第 $q\in\{0,1\}$ 个同调通道的持续图为
+对每个点云 $P_i$，在系数域 $\mathbb F_2$ 上按欧氏距离计算 Vietoris--Rips 持续同调，并保留 0 维和 1 维同调通道中有限且寿命为正的 birth--death 对。过滤采用边长阈值的直径约定：单形 $\sigma$ 的过滤值为其顶点间最大欧氏距离，即 $\operatorname{diam}(\sigma)$；尺度 $\varepsilon$ 下纳入所有满足 $\operatorname{diam}(\sigma)\le\varepsilon$ 的单形，即 $\operatorname{VR}_\varepsilon(P)=\{\sigma\subseteq P:\operatorname{diam}(\sigma)\le\varepsilon\}$。过滤不设数据驱动的截断上限，持续图坐标直接以欧氏距离尺度报告。由于有限欧氏点云的 Vietoris--Rips 过滤在过滤值达到点云直径时形成完全复形，所有 1 维同调类在此时均已消亡，仅最后一个 0 维连通分量的 death 为 $\infty$；实现中只丢弃该显式无限 death 分量，其余有限类全部保留。相关计算框架和有限维表示可分别参见\cite{Bauer2021,Adams2017}。记第 $q\in\{0,1\}$ 个同调通道的持续图为
 \[
  \mathcal D_i^{(q)}=\{(b_{ij}^{(q)},d_{ij}^{(q)})\}_j.
 \]
-给定场景固定的尺度上界 $c$，将每个有限持续图点转换为归一化 birth--lifetime 坐标
+给定场景固定的尺度上界 $c$，将每个有限持续图点转换为归一化 birth--lifetime 坐标。尺度上界 $c$ 仅用于该坐标缩放与截断，不用于提前终止过滤；过滤本身以 $+\infty$ 为阈值完整计算。
 \begin{equation}\label{eq:bpi-normalization}
  u_{ij}^{(q)}=\min\left(\frac{b_{ij}^{(q)}}{c},1\right),\qquad
  v_{ij}^{(q)}=\min\left(\frac{d_{ij}^{(q)}-b_{ij}^{(q)}}{c},1\right).
@@ -40,7 +53,7 @@
  \sum_j v_{ij}^{(q)}
  \exp\left\{-\frac{(g_r-u_{ij}^{(q)})^2+(g_\ell-v_{ij}^{(q)})^2}{2\sigma^2}\right\}.
 \end{equation}
-每个同调通道产生 $20\times20=400$ 个坐标。按 0 维、1 维同调通道的顺序向量化并连接，再除以 $\sqrt 2$，得到 800 维特征
+每个同调通道产生 $20\times20=400$ 个坐标。按 0 维、1 维同调通道的顺序向量化并连接，再除以 $\sqrt 2$（该缩放使两个同调通道对总平方距离的贡献取等权平均），得到 800 维特征
 \begin{equation}\label{eq:bpi-vector}
  Y_i^{\mathrm{BPI}}
  =\frac{1}{\sqrt2}
@@ -49,7 +62,7 @@
    \operatorname{vec}(Z_i^{(1)})
  \end{bmatrix}.
 \end{equation}
-空通道记为 400 维零向量。N-AR 时延点云取 $c=6$，圆形模型及其备择取 $c=2.5$。为便于标识，本文将式\eqref{eq:bpi}--\eqref{eq:bpi-vector}所定义的固定网格持续强度向量记为 BPI。该算子在网格中心评价核强度，与对像素区域积分的某些 persistence-image 实现存在定义差异。
+空通道记为 400 维零向量。N-AR 时延点云取 $c=6$，圆形模型及其备择取 $c=2.5$。为便于标识，本文将式\eqref{eq:bpi}--\eqref{eq:bpi-vector}所定义的固定网格持续强度向量简称为 BPI（Betti persistence intensity），作为本文这一具体实现的标识；该名称不指代某个通用标准方法。该算子在网格中心评价核强度，与对像素区域积分的 persistence image\cite{Adams2017}实现存在定义差异。
 
 \subsection{矩表示}\label{sec:moments}
 
@@ -73,7 +86,7 @@ MOMENTS 特征依次连接均值、协方差对角元以及按固定字典序排
 
 \subsection{最大扫描统计量与位置估计}\label{sec:scan}
 
-对任一窗口特征序列 $Y_1,\ldots,Y_M\in\mathbb R^p$，令
+本文采用的最大扫描统计量属于变点分析中标准化部分和型统计量的常见构造\cite{CsorgoHorvath1997}。对任一窗口特征序列 $Y_1,\ldots,Y_M\in\mathbb R^p$，令
 \begin{equation}\label{eq:bridge}
  U_M(k)=\frac1{\sqrt M}
  \left(\sum_{i=1}^kY_i-\frac{k}{M}\sum_{i=1}^M Y_i\right),
@@ -86,13 +99,15 @@ MOMENTS 特征依次连接均值、协方差对角元以及按固定字典序排
 \end{equation}
 其中
 \[
- \mathcal K_M=\{\lceil0.15M\rceil,\ldots,M-\lceil0.15M\rceil\}.
+ \mathcal K_M=\{\lceil0.15M\rceil,\ldots,M-\lceil0.15M\rceil\},
 \]
+比例 $0.15$ 为确认性分析前固定的边界保护比例，用于避免左右片段过短。
 等价地，若 $\bar Y_{1:k}$ 和 $\bar Y_{k+1:M}$ 分别表示左右两段样本均值，则
 \begin{equation}\label{eq:scan-equivalent}
  Q_M(k)=\frac{k(M-k)}{M}
  \|\bar Y_{1:k}-\bar Y_{k+1:M}\|_2^2.
 \end{equation}
+因此，该扫描统计量直接响应左右两段窗口特征的均值之差，检验对象是特征均值层面的变化；它不构成对任意原始分布或任意拓扑变化都具有一致检出能力的通用检验。
 
 为使浮点并列情形具有确定性，令 $\epsilon_{64}=2^{-52}$，将满足
 \[
@@ -102,18 +117,18 @@ MOMENTS 特征依次连接均值、协方差对角元以及按固定字典序排
 \begin{equation}\label{eq:location-map}
  \widehat\tau=\left(\widehat k-\frac12\right)s+\frac{W+1}{2}.
 \end{equation}
-若特征序列精确恒定，则规定 $T_M=0$。所有校准方法均使用相同的观测统计量、候选集合和位置规则。
+该映射将第 $\widehat k$ 与第 $\widehat k+1$ 个窗口之间的分割点对应到二者中心之间的中点。若特征序列精确恒定，则规定 $T_M=0$。所有校准方法均使用相同的观测统计量、候选集合和位置规则。
 
 \subsection{校准方法}\label{sec:calibration}
 
-朴素置换方法记为 M0。条件于观测到的窗口特征，M0 对 $1,\ldots,M$ 作均匀随机排列，并在每个排列序列上重新计算式\eqref{eq:scan}。该方法保留经验边际分布，却不保留原始窗口顺序中的局部依赖。
+朴素置换方法记为 M0。M0 从排列群 $\mathfrak S_M$ 上的均匀分布中独立抽取随机排列；下文称为全局随机置换，以区别于块置换或局部置换。条件于观测到的窗口特征，M0 对每个随机排列序列重新计算式\eqref{eq:scan}。该方法保留经验边际分布，却不保留原始窗口顺序中的局部依赖。
 
 依赖乘子自助法记为 M1。令 $\bar Y=M^{-1}\sum_{i=1}^M Y_i$、$Z_i=Y_i-\bar Y$，并取
 \begin{equation}\label{eq:dmb-bandwidth}
  b=\max\left\{\left\lfloor\frac Ws\right\rfloor+1,
                  \left\lceil M^{1/3}\right\rceil\right\}.
 \end{equation}
-生成独立标准正态新息 $\varepsilon_1,\ldots,\varepsilon_{M+b-1}$，定义
+乘子新息 $\varepsilon_1,\ldots,\varepsilon_{M+b-1}$ 为独立标准正态，由与观测样本分离的随机流生成，因而与观测样本相互独立；不同内层重复使用各自的随机流独立生成。定义
 \begin{equation}\label{eq:dmb-multiplier}
  \xi_i=b^{-1/2}\sum_{j=0}^{b-1}\varepsilon_{i+j},
  \qquad i=1,\ldots,M.
@@ -133,4 +148,4 @@ M1 不作循环回绕，并对乘子加权序列 $\{\xi_iZ_i\}_{i=1}^M$ 应用�
 \begin{equation}\label{eq:mc-pvalue}
  p=\frac{K+1}{B+1}=\frac{K+1}{1000}.
 \end{equation}
-本文以 $p\le0.05$ 拒绝零假设，等价于 $K\le49$。加一修正确保有限重采样下的 $p$ 值严格为正。
+本文以 $p\le0.05$ 拒绝零假设，等价于 $K\le49$。加一形式避免有限重采样下报告零 $p$ 值\cite{PhipsonSmyth2010}，但不恢复重叠窗口的交换性，也不替代对 M1 参考近似有效性的评估；随机排列检验的有限样本有效性仍需相应的群不变性条件\cite{HemerikGoeman2018}。

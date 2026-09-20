@@ -11,15 +11,15 @@
  \alpha_{\mathrm{eff}}(\theta)
  =\Pr_{H_0,\theta}\{p_\theta\le0.05\}.
 \end{equation}
-映射 $\theta\mapsto\alpha_{\mathrm{eff}}(\theta)$ 构成本文的有限样本校准表面。本文所称经验校准边界，是预设设计网格中逐格有效尺寸由实用校准区转入保守区或反保守区时形成的条件边界。
+映射 $\theta\mapsto\alpha_{\mathrm{eff}}(\theta)$ 构成本文的有限样本校准图谱。本文所称经验校准边界，是预设设计网格中有序设计维度（主要为步长或重叠率）上相邻格点发生校准状态变化的位置。
 
-每个零假设配置均报告拒绝率及无连续性修正的 Wilson 区间。预先冻结的实用等价带为
+每个零假设配置均报告拒绝率及无连续性修正的 Wilson 区间\cite{Wilson1927}。预先冻结的实用等价带为
 \[
  \mathcal E=[0.035,0.065].
 \]
 逐格分类规则如下：90\% Wilson 区间完整包含于 $\mathcal E$ 时，记为点态实用校准；95\% Wilson 区间上界低于 $0.035$ 时，记为实质保守；95\% Wilson 区间下界高于 $0.065$ 时，记为实质反保守；其余情形记为边界或未定。该分类属于点态判断，不构成设计域上的同时概率保证。
 
-备择实验考察两个相互关联的对象：其一，使用匹配零假设经验临界值计算的尺寸标准化功效，用于比较表示所保留的信号信息；其二，基于观测扫描曲线得到的定位误差和“检出且定位成功”的联合概率。相应定义见第~\ref{sec:alternatives} 节和第~\ref{sec:h1-localization} 节。
+备择实验考察两个相互关联的对象：其一，使用匹配零假设经验临界值计算的尺寸校正功效，用于比较表示所保留的信号信息；其二，基于观测扫描曲线得到的定位误差和“检出且定位成功”的联合概率。相应定义见第~\ref{sec:alternatives} 节和第~\ref{sec:h1-localization} 节。
 
 \subsection{零假设数据生成过程}\label{sec:dgp}
 
@@ -42,14 +42,15 @@ N-CIRCLE 先以标准正态分布函数 $\Phi$ 作概率积分变换，再映射
  C(u)=(\cos 2\pi u,\sin 2\pi u),\qquad
  X_t=C(U_t)+0.08\eta_t,
 \end{equation}
-其中 $\eta_t\overset{\mathrm{iid}}{\sim}N_2(0,I_2)$，并与潜变量过程独立。对每个固定 $t$，$U_t$ 服从 $U(0,1)$；当 $\rho=0$ 时，两类原始过程均为独立同分布序列，当 $\rho=0.8$ 时则保留时间依赖。N-CIRCLE 的定义基于平稳高斯过程的边际变换，不涉及随机游走或增量过程。
+其中 $\eta_t\overset{\mathrm{iid}}{\sim}N_2(0,I_2)$，并与潜变量过程独立。对每个固定 $t$，$U_t$ 服从 $U(0,1)$；当 $\rho=0$ 时，两类原始过程均为独立同分布序列，当 $\rho=0.8$ 时则保留时间依赖。N-CIRCLE 的定义基于平稳高斯过程的边际变换，不涉及随机游走或增量过程。两个数据生成过程覆盖两类典型观测形态：N-AR 为标量序列，须经时延嵌入形成点云，对应一维时间序列场景；N-CIRCLE 为二维序列，窗口点云直接进入持续同调，对应多维观测场景。其潜在无噪声曲线具有圆形几何；加入观测噪声后，含噪观测分布的严格支撑为整个 $\mathbb R^2$，但有限点云在所考察过滤尺度上仍呈现明显的环状持续结构，便于考察拓扑表示对循环结构变化的敏感性。依赖水平取 $\rho\in\{0,0.8\}$，分别对应独立同分布与较强时间依赖两种端点情形，用于检验交换性失效对原序列依赖程度的敏感性。
 
 \subsection{双预算制度}\label{sec:budget}
 
-窗口宽度固定为 $W=64$，步长取
+窗口宽度在确认性分析前固定为 $W=64$；本文不对该取值的最优性作主张。步长取
 \[
- s\in\{8,16,32,64\}.
+ s\in\{8,16,32,64\},
 \]
+对应名义重叠率 $1-s/W$ 依次为 $87.5\%$、$75\%$、$50\%$ 与 $0$，覆盖从高重叠到无重叠的梯度，用于刻画重叠程度对校准的影响。
 本文采用两种互补的预算制度：
 \begin{itemize}
 \item \textbf{固定窗口数（fixed-$M$）}：令 $M=192$，并由 $T=W+s(M-1)$ 确定原始序列长度；对应的 $T$ 依次为 $1592$、$3120$、$6176$ 和 $12288$。
@@ -67,12 +68,12 @@ N-CIRCLE 先以标准正态分布函数 $\Phi$ 作概率积分变换，再映射
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.95\textwidth]{../artifacts/figures/Figure2_alternative_geometry.pdf}
-\caption{两类备择构造。左两幅为形状变化：变点前为圆形点云，变点后改为八字曲线；右两幅为均值平移：变点后圆形点云整体平移。圆与八字只匹配单时点均值与协方差，完整滞后联合分布未被声明为相同；平移备择直接改变均值。两个场景分别针对 BPI 与 MOMENTS 的结构敏感性。}\label{fig:alternatives}
+\caption{两类备择构造。(a) 形状变化：变点前为圆 $C(U_t)=(\cos2\pi U_t,\sin2\pi U_t)$，变点后改为 8 字形曲线 $F(U_t)=(\sin2\pi U_t,\sin4\pi U_t)$；(b) 均值平移：变点后整体平移 $+0.5v$，图中 $v=(1,0)$ 为示例方向，正式实验中 $v$ 跨重复随机、重复内固定。散点为含观测噪声 $0.08\eta_t$ 的 64 个点；圆与 8 字形曲线仅匹配单时点均值与协方差，完整滞后联合分布未被声明为相同。两个场景分别针对 BPI 与 MOMENTS 的结构敏感性。}\label{fig:alternatives}
 \end{figure}
 
 \subsection{Monte Carlo 设置}\label{sec:mc}
 
-每个零假设配置独立复制 $R_0=2500$ 次，每个备择配置独立复制 $R_1=1600$ 次。每次方法校准均使用 $B=999$ 次内层重采样，并按式\eqref{eq:mc-pvalue}计算 $p$ 值。零假设部分包含
+每格内部 $R_0=2500$（零假设）或 $R_1=1600$（备择）次主重复相互独立；不同格之间按主重复编号保留配对结构。每次方法校准均使用 $B=999$ 次内层重采样，并按式\eqref{eq:mc-pvalue}计算 $p$ 值。零假设部分包含
 \[
  28\times2\text{（表示）}\times2\text{（方法）}\times2500
  =280{,}000
@@ -89,25 +90,22 @@ N-CIRCLE 先以标准正态分布函数 $\Phi$ 作概率积分变换，再映射
 
 令 $\pi_{g,\rho,s,m}^{(r)}$ 表示在 BPI 表示、预算制度 $r$ 和校准方法 $m\in\{\mathrm{M0},\mathrm{M1}\}$ 下的零假设拒绝概率，且 $g\in\mathcal G=\{\mathrm{N\mbox{-}AR},\mathrm{N\mbox{-}CIRCLE}\}$。三个主对比均在确认性分析前冻结：
 \begin{align}
-\mathrm{P1}:\quad
- D_{\mathrm{OV}}^{M}
- &=\frac12\sum_{g\in\mathcal G}
+\mathrm{P1}:\quad & D_{\mathrm{OV}}^{M}
+ =\frac12\sum_{g\in\mathcal G}
  \left(\pi_{g,0,16,\mathrm{M0}}^{(M)}
       -\pi_{g,0,64,\mathrm{M0}}^{(M)}\right),
  \label{eq:p1}\\
-\mathrm{P2}:\quad
- D_{\mathrm{ST}}^{T}
- &=\frac12\sum_{g\in\mathcal G}
+\mathrm{P2}:\quad & D_{\mathrm{ST}}^{T}
+ =\frac12\sum_{g\in\mathcal G}
  \left(\pi_{g,0,16,\mathrm{M0}}^{(T)}
       -\pi_{g,0,64,\mathrm{M0}}^{(T)}\right),
  \label{eq:p2}\\
-\mathrm{P3}:\quad
- D_{\mathrm{CONS}}
- &=0.05-\frac12\sum_{g\in\mathcal G}
+\mathrm{P3}:\quad & D_{\mathrm{CONS}}
+ =0.05-\frac12\sum_{g\in\mathcal G}
  \pi_{g,0,64,\mathrm{M1}}^{(M)}.
  \label{eq:p3}
 \end{align}
-P1 与 P2 检验单侧假设 $D\le0.10$ 对 $D>0.10$；P3 检验 $D_{\mathrm{CONS}}\le0.01$ 对 $D_{\mathrm{CONS}}>0.01$。MOMENTS 的同构对比仅作次级描述，不进入主要多重性族。
+P1 与 P2 检验单侧假设 $D\le0.10$ 对 $D>0.10$；P3 检验 $D_{\mathrm{CONS}}\le0.01$ 对 $D_{\mathrm{CONS}}>0.01$。阈值 $0.10$ 与 $0.01$ 均为查看确认性结果前规定的最小实质差异：$0.10$ 对应两个数据生成过程等权平均下至少 10 个百分点的 I 类错误率差异，$0.01$ 对应相对于名义水平 $0.05$ 至少 1 个百分点的保守偏差。MOMENTS 的同构对比仅作次级描述，不进入主要多重性族。
 
 主对比使用 10,000 次按数据生成过程分层的整簇自助法。同一主重复编号下的全部相关条件、表示和方法随簇共同重采样，以保留配对结构。对一般效应量 $\widehat\theta$ 及单侧阈值 $\theta_0$，自助 $p$ 值定义为
 \begin{equation}\label{eq:bootstrap-p}
@@ -117,16 +115,16 @@ P1 与 P2 检验单侧假设 $D\le0.10$ 对 $D>0.10$；P3 检验 $D_{\mathrm{CON
  \ge \widehat\theta-\theta_0\}}
  {10001}.
 \end{equation}
-因此，自助 $p$ 值不可能等于零。若 $q_\gamma$ 表示 10,000 个自助估计的 nearest-rank $\gamma$ 分位数，则边际 95\% basic 区间为
+因此，自助 $p$ 值不可能等于零。若 $q_\gamma$ 表示 10,000 个自助估计的最近秩（nearest-rank）$\gamma$ 分位数，则边际 95\% 基本型自助区间（basic bootstrap interval）\cite{DavisonHinkley1997}为
 \begin{equation}\label{eq:basic-ci}
  \left[2\widehat\theta-q_{0.975},\,
        2\widehat\theta-q_{0.025}\right],
  \qquad
  q_\gamma=\widehat\theta^*_{(\lceil10000\gamma\rceil)}.
 \end{equation}
-三个单侧 $p$ 值采用 Holm step-down 校正，族水平为 $0.05$。本文将校正后 $p\le0.05$ 作为预先设定的操作性支持标准，同时用式\eqref{eq:basic-ci}报告效应量不确定性；该区间为边际区间，不解释为 Holm 同时置信区间。
+三个单侧 $p$ 值采用 Holm step-down 校正\cite{Holm1979}，族水平为 $0.05$。本文将校正后 $p\le0.05$ 作为预先设定的操作性支持标准，同时用式\eqref{eq:basic-ci}报告效应量不确定性；该区间为边际区间，不解释为 Holm 同时置信区间。
 
-\subsection{备择构造与尺寸标准化功效}\label{sec:alternatives}
+\subsection{备择构造与尺寸校正功效}\label{sec:alternatives}
 
 备择实验以 N-CIRCLE 为基础，并在完整序列上连续生成同一潜变量过程和观测噪声，不在变点处重置随机状态。令
 \[
@@ -150,9 +148,9 @@ P1 与 P2 检验单侧假设 $D\le0.10$ 对 $D>0.10$；P3 检验 $D_{\mathrm{CON
  \qquad
  v=(\cos2\pi V,\sin2\pi V),\quad V\sim U(0,1),
 \end{equation}
-其中每次 Monte Carlo 重复抽取一个方向 $v$，并在该重复内固定。每个备择场景均使用 $M=192$、$s\in\{16,64\}$ 和 $\rho\in\{0,0.8\}$，共四个条件。
+其中方向变量 $V\sim U(0,1)$ 由独立随机流生成，与潜变量过程、观测噪声相互独立；每次 Monte Carlo 重复抽取一个方向 $v$，并在该重复内固定。每个备择场景均使用 $M=192$、$s\in\{16,64\}$ 和 $\rho\in\{0,0.8\}$，共四个条件。
 
-尺寸标准化功效使用与备择条件、表示和几何配置匹配的零假设观测统计量。将 $R_0=2500$ 个零假设统计量按升序记为
+尺寸校正功效使用与备择条件、表示和几何配置匹配的零假设观测统计量。将 $R_0=2500$ 个零假设统计量按升序记为
 \[
  T_{M,(1)}^{H_0}\le\cdots\le T_{M,(R_0)}^{H_0},
 \]
@@ -163,13 +161,15 @@ P1 与 P2 检验单侧假设 $D\le0.10$ 对 $D>0.10$；P3 检验 $D_{\mathrm{CON
  \widehat c_{0.95}^{H_0}=T_{M,(2376)}^{H_0}.
 \end{equation}
 对备择统计量 $T_{M,r}^{H_1}$，定义
-\begin{equation}\label{eq:size-standardized-power}
+\begin{equation}\label{eq:size-adjusted-power}
  \widehat\beta_{\mathrm{std}}
  =\frac1{R_1}\sum_{r=1}^{R_1}
  \mathbf1\{T_{M,r}^{H_1}>\widehat c_{0.95}^{H_0}\}.
 \end{equation}
-由于 M0 与 M1 共享同一观测统计量，式\eqref{eq:size-standardized-power}在每个“条件--表示”组合上只计算一次，用于评价表示敏感性，不用于排列两种校准方法的优劣。
+由于 M0 与 M1 共享同一观测统计量，式\eqref{eq:size-adjusted-power}在每个“条件--表示”组合上只计算一次，用于评价表示敏感性，不用于排列两种校准方法的优劣。
+
+场景层面的表示差 $\Delta$ 通过两层整簇自助法估计。重采样单位为主复制（cluster）：零假设层按 N-CIRCLE 主复制整簇重采样以重算经验临界值，备择层按备择主复制整簇重采样以重算功效；共进行 2000 个联合 bootstrap 重复，每次分别独立重采样 H0 簇和 H1 簇，并产生一个场景差值。BPI 与 MOMENTS 使用同一重采样索引成对移动，四个 $(\rho,s)$ 条件在每个场景内先计算各自的 BPI 减 MOMENTS 功效差，再等权平均得到场景差。区间采用最近秩法（nearest-rank）定义的 2000 次百分位区间（$2.5\%$ 与 $97.5\%$ 分位数）。
 
 \subsection{可复现性边界}\label{sec:repro}
 
-实验协议、随机种子、配置和主要分析规则均在确认性分析前冻结。零假设与备择结果来自不可变的正式试次记录，正文数值由统一汇总文件生成。试次身份、配置哈希、环境锁定、失败留证和完整逐格结果在补充材料及代码仓库中提供；这些工程记录服务于结果追溯，不构成本文的独立方法贡献。
+实验协议、随机种子、配置和主要分析规则均在查看正式结果前确定。零假设与备择结果来自不可变的正式试次记录，正文数值由统一汇总文件生成。代码、环境文件、规范化结果和完整逐格输出由冻结的软件 release 提供，其地址见文末 Data and Code Availability。
