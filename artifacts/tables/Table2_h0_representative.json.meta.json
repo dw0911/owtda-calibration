@@ -1,12 +1,21 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-18T19:48:33Z",
+  "content_sha256": "138c0a626ede5ec6a91b2705c0f5313244b7ce0ba5bf5357e566ba11f608c279",
+  "generated_at": "2026-09-20T12:03:35Z",
   "input_sha256": {
-    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
-    "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
-    "H1_REANALYSIS": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2"
+    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621"
   },
+  "inputs": [
+    "H0_POINTWISE"
+  ],
   "kind": "TABLE",
+  "outputs": {
+    "Table2_h0_representative.csv": "3f15ddc0988be4a2235105601db0fc4ce98f04e30bff65ef997c51c9d25b72c7",
+    "Table2_h0_representative.json": "1bfcd8327f6cef42e0254218ac67e849c8c7cdeb3e252bcc7b2366fadb78ef32",
+    "Table2_h0_representative.tex": "c107d863a1ac4d718ae0769c78ca024dc8b8077170801f1553c8dad1c8ab468e"
+  },
   "schema_version": 1,
-  "script_sha256": "d2fe7f6a69c962c83e424436dadfa037b8713577ab30100b2f0373bd1bae4fad"
+  "script": "paper/scripts/make_tables.py",
+  "script_sha256": "ed764ce174ac6f50e35069f4b106f55e416bdf2ee398c8a34355a0bdeb8b5397",
+  "title": "Representative H0 calibration (full 112 rows in H0_POINTWISE.json)"
 }

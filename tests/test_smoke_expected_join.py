@@ -10,6 +10,7 @@ Mutation discipline (audit A05): every check below also has a deliberately broke
 case that **must** fail, including the one that keeps the row count identical.
 """
 
+import os
 from pathlib import Path
 
 import pytest
@@ -284,11 +285,13 @@ def test_delivered_s03_ledger_is_not_silently_accepted():
     If this ever passes, either the generation changed without a new run or the
     expectation was re-derived from the runner's own output.
     """
-    ledger_path = Path(
-        "f:/BPI/_audit_r1/smoke/S03/SMOKE_NULL/evaluation_rows.jsonl"
-    )
+    # The audited S03 evidence lives outside the repository. Its location is machine specific, so
+    # it is resolved from $OWTDA_AUDIT_EVIDENCE_ROOT instead of a hard-coded Windows path
+    # (2026-09-20 audit: no local absolute paths in tracked files). Absent evidence -> skip.
+    evidence_root = Path(os.environ.get("OWTDA_AUDIT_EVIDENCE_ROOT", "_audit_r1"))
+    ledger_path = evidence_root / "smoke" / "S03" / "SMOKE_NULL" / "evaluation_rows.jsonl"
     if not ledger_path.exists():  # pragma: no cover - evidence not present
-        pytest.skip("S03 evidence root not available on this machine")
+        pytest.skip("S03 evidence root not available (set OWTDA_AUDIT_EVIDENCE_ROOT)")
     import json
 
     rows = [

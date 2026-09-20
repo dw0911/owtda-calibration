@@ -81,4 +81,4 @@ owtda-calibration/
 
 ## 6. 历史与过程稿
 
-100+ 过程稿目录（r4 时代 + 反复试跑产物）已归档至 `F:\BPI\bpi\archive\`，不在提交范围。
+100+ 过程稿目录（r4 时代 + 反复试跑产物）已归档至工作区 `<workspace>/archive/`，不在提交范围。

@@ -27,7 +27,7 @@ Design rules
 
 Usage::
 
-    python scripts/build_audit_dossier.py --evidence-root f:/BPI/_audit_r1
+    python scripts/build_audit_dossier.py --evidence-root <AUDIT_EVIDENCE_ROOT>
 """
 
 from __future__ import annotations

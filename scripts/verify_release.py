@@ -15,8 +15,11 @@ quick (seconds, no Monte Carlo):
   * reproducibility/SHA256SUMS verified when present.
 
 analysis (adds the level-2 checks):
-  * scripts/bootstrap_primary_contrasts.py --check    (P1-P3 regeneration hash equality)
-  * scripts/build_tables.py --check                   (tables regeneration byte equality)
+  * scripts/bootstrap_primary_contrasts.py --check    (P1-P3 regeneration, semantic comparison:
+                                                       JSON as parsed objects, npz by key/dtype/
+                                                       shape/element equality; cross-platform)
+  * scripts/build_tables.py --check                   (Table 1-5 regeneration, semantic comparison
+                                                       against paper/scripts/make_tables.py)
 
 Exit code 0 only when every executed check passed.
 
@@ -239,7 +242,7 @@ def check_primary(res: Result) -> None:
 
 def check_artifact_provenance(res: Result, info: Result) -> None:
     candidates: dict[str, Path] = {}
-    for path in list(TABLES.glob("*")) + list(CANON.glob("*")):
+    for path in list(TABLES.glob("*")) + list(CANON.glob("*")) + list(BOOT.glob("*")):
         if path.is_file():
             candidates.setdefault(path.name, path)
             candidates.setdefault(path.stem, path)
@@ -318,7 +321,7 @@ def check_sums(res: Result) -> None:
 def check_level2(res: Result) -> None:
     for label, argv in (
         ("P1-P3 regeneration", [sys.executable, "scripts/bootstrap_primary_contrasts.py", "--check"]),
-        ("tables regeneration", [sys.executable, "scripts/build_tables.py", "--check"]),
+        ("manuscript tables regeneration", [sys.executable, "scripts/build_tables.py", "--check"]),
         ("canonical H0 self-consistency", [sys.executable, "scripts/analyse_h0.py", "--check"]),
     ):
         proc = subprocess.run(argv, cwd=REPO, capture_output=True, text=True, check=False)

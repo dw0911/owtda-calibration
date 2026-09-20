@@ -1,7 +1,8 @@
 # ============================================================
 # OW-TDA-CAL-R1 .gitignore
-# 注意：.gitattributes 设置 `* -text`（禁止行尾转换）。
-# 科学对象以 exact bytes 计算 SHA256，任何 EOL 转换都会破坏字节身份。
+# 行尾策略见 .gitattributes（2026-09-20 修订）：
+#   科学对象/冻结对象 → `-text`（exact bytes，SHA256 绑定）；
+#   源码/文档/CI      → `text eol=lf`。
 # ============================================================
 
 # --- Python / 工具噪音 ---
@@ -48,6 +49,9 @@ governance/ACTIVE_*_INDEX_*.jsonl
 # 外部归档下载目标目录（只保留 .gitkeep）
 data/external/*
 !data/external/.gitkeep
+
+# --- LaTeX 严格构建哨兵（CI 用 touch 生成；不入库） ---
+paper/STRICT.tex
 
 # --- LaTeX 编译中间件（可再生；paper/main.pdf 与 *.tex 仍会入库） ---
 paper/*.aux

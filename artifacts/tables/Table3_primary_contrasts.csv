@@ -1,4 +1,4 @@
-contrast,bootstrap_iterations,ci95_basic,claim_state,p_boot_one_sided,p_holm,point_estimate,threshold
-P1,10000,"[0.521, 0.5494]",SUPPORTED,0.0,0.0,0.5354,0.1
-P2,10000,"[0.5194, 0.5462]",SUPPORTED,0.0,0.0,0.533,0.1
-P3,10000,"[0.0224, 0.0308]",SUPPORTED,0.0,0.0,0.0266,0.01
+contrast,point_estimate,threshold,excess,ci95_basic,bootstrap_iterations,tail_count,p_raw_one_sided,p_holm,claim_state,canonical_p_boot_one_sided,canonical_p_holm
+P1,0.5354,0.1,0.4354,"[0.5209999999999999, 0.5494]",10000,0,9.999000099990002e-05,0.00029997000299970003,SUPPORTED,0.0,0.0
+P2,0.533,0.1,0.433,"[0.5194000000000001, 0.5462]",10000,0,9.999000099990002e-05,0.00029997000299970003,SUPPORTED,0.0,0.0
+P3,0.026600000000000002,0.01,0.0166,"[0.022400000000000003, 0.0308]",10000,0,9.999000099990002e-05,0.00029997000299970003,SUPPORTED,0.0,0.0

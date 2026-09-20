@@ -1,12 +1,23 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-18T19:48:33Z",
+  "content_sha256": "9205eedb6e201d172fd767a62b77f6c122757c0dc24fb8383b8da9f67883fbc0",
+  "generated_at": "2026-09-20T12:03:35Z",
   "input_sha256": {
-    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
     "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
-    "H1_REANALYSIS": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2"
+    "P1_P3_BOOTSTRAP_SUMMARY": "6ff17bde1c61581d6fec4771e6efe280f1067620e69bc4ca82162264118099a4"
   },
+  "inputs": [
+    "H0_PRIMARY_CONTRASTS",
+    "P1_P3_BOOTSTRAP_SUMMARY"
+  ],
   "kind": "TABLE",
+  "outputs": {
+    "Table3_primary_contrasts.csv": "41e815895b9b94b28476197b57e5cfe5df15a6b08ac0aabd3923c2ef20e67618",
+    "Table3_primary_contrasts.json": "01b32c55b87b9fed7a8a91130aa9f118f4a3c5b244845455d6839cb07551599b",
+    "Table3_primary_contrasts.tex": "3a680b843f2c91eae1a15c6b08393326530c25d6627995206fa5858886cedc9e"
+  },
   "schema_version": 1,
-  "script_sha256": "d2fe7f6a69c962c83e424436dadfa037b8713577ab30100b2f0373bd1bae4fad"
+  "script": "paper/scripts/make_tables.py",
+  "script_sha256": "ed764ce174ac6f50e35069f4b106f55e416bdf2ee398c8a34355a0bdeb8b5397",
+  "title": "Primary contrasts P1-P3"
 }

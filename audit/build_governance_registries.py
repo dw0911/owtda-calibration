@@ -323,7 +323,7 @@ def main() -> int:
                 "audit/resource_sampler.py",
                 "tests/test_resource_sampler.py",
                 "tests/test_admission_verdict.py",
-                "f:/BPI/_audit_r1/smoke/S04（两次留档尝试 + 本次运行）",
+                "_audit_r1/smoke/S04（两次留档尝试 + 本次运行）",
             ],
             {
                 "scope": "resource_instrument",

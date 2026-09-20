@@ -1,12 +1,21 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-18T19:48:33Z",
+  "content_sha256": "d21755e81731a2c2ac2a574268cc9d9c74c99e7cf54230ab820742b2ec1f7d18",
+  "generated_at": "2026-09-20T12:03:35Z",
   "input_sha256": {
-    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
-    "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
-    "H1_REANALYSIS": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2"
+    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621"
   },
+  "inputs": [
+    "H0_POINTWISE"
+  ],
   "kind": "TABLE",
+  "outputs": {
+    "Table1_design.csv": "c57edb4d3dbf729c87630ca3ebe8307949866130d80e54fe308728afb625aeca",
+    "Table1_design.json": "3e824a819f50c63d7fa5655b00a5b286df498f2aa4904a9f01d3c28ffad5360b",
+    "Table1_design.tex": "6037b83d41ecc5e97a8fef43cd1fe1eb9f84d910f3ba0380bfeed8ace0bbd0cc"
+  },
   "schema_version": 1,
-  "script_sha256": "d2fe7f6a69c962c83e424436dadfa037b8713577ab30100b2f0373bd1bae4fad"
+  "script": "paper/scripts/make_tables.py",
+  "script_sha256": "ed764ce174ac6f50e35069f4b106f55e416bdf2ee398c8a34355a0bdeb8b5397",
+  "title": "Window geometry under the two budget regimes"
 }

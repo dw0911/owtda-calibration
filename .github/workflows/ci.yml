@@ -18,31 +18,56 @@ jobs:
       - name: unit + contract tests
         run: uv run python -m pytest tests -q
       - name: static checks (code and tooling scope)
-        run: uv run ruff check src tests audit scripts configs
+        run: uv run ruff check src tests audit scripts configs paper/scripts
       - name: validate formal configs
         run: uv run python -c "import json,pathlib;[json.loads(p.read_text(encoding='utf-8-sig')) for p in pathlib.Path('configs').rglob('*.json')]"
       - name: smoke (pipeline-level, no paper numbers)
         run: uv run python scripts/run_smoke.py
       - name: release verification (level 1 quick)
         run: uv run python scripts/verify_release.py --level quick
-      - name: tables regenerate identically
+      - name: release verification (level 2 analysis)
+        run: uv run python scripts/verify_release.py --level analysis
+      - name: manuscript tables regenerate identically (Table 1-5)
         run: uv run python scripts/build_tables.py --check
-      - name: figure metas resolve
+      - name: figure metas resolve and match
         run: uv run python scripts/build_figures.py --check
-      - name: P1-P3 legality and regeneration
+      - name: P1-P3 legality and semantic regeneration
         run: uv run python scripts/bootstrap_primary_contrasts.py --check
+      - name: release manifest is current
+        run: uv run python scripts/build_release_manifest.py --check
       - name: canonical schema walk
         run: uv run python scripts/check_canonical.py
+      - name: plotting dependency available (figure regeneration path)
+        run: uv run python -c "import matplotlib; print('matplotlib', matplotlib.__version__)"
 
   paper:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: enable the strict manuscript build
+        run: touch paper/STRICT.tex
+      - name: manuscript tables regenerate identically (Table 1-5)
+        run: python3 paper/scripts/make_tables.py --check
       - uses: xu-cheng/latex-action@v3
         with:
-          root_file: paper/main.tex
-          working_directory: .
+          # main.tex uses paper-relative inputs; the working directory must be paper/
+          working_directory: paper
+          root_file: main.tex
           latexmk_use_xelatex: true
+      - name: fail on undefined references or citations
+        working-directory: paper
+        run: |
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" main.log; then
+            echo "::error::undefined references or citations in main.log"
+            exit 1
+          fi
+      - name: fail on missing-figure placeholders
+        working-directory: paper
+        run: |
+          if grep -q "图件缺失" main.log; then
+            echo "::error::the strict build rendered a missing-figure placeholder"
+            exit 1
+          fi
       - name: upload compiled manuscript
         uses: actions/upload-artifact@v4
         with:

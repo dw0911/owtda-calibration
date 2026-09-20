@@ -59,27 +59,8 @@ N-CIRCLE 先以标准正态分布函数 $\Phi$ 作概率积分变换，再映射
 
 表~\ref{tab:design}给出两种预算制度下的完整窗口几何。该表同时说明：7 个唯一窗口几何的来源；两种制度在 $s=16$ 处的共享；$T$ 与 $M$ 如何随制度和步长变化；以及 M1 依赖乘子带宽为何随配置改变。
 
-\begin{table}[ht]
-\centering
-\caption{双预算制度下的窗口几何设计。重叠率为 $1-s/W$；$b$ 为 M1 依赖乘子带宽，按 $b=\max\{\lfloor W/s\rfloor+1,\lceil M^{1/3}\rceil\}$ 确定。}\label{tab:design}
-\begin{tabular}{cccccccc}
-\toprule
-$s$ & 重叠率 & \multicolumn{3}{c}{固定窗口数（fixed-$M$）} & \multicolumn{3}{c}{固定观测长度（fixed-$T$）}\\
-\cmidrule(lr){3-5}\cmidrule(lr){6-8}
- & $1-s/W$ & $T$ & $M$ & $b$ & $T$ & $M$ & $b$\\
-\midrule
-8 & 87.5\% & 1592 & 192 & 9 & 3120 & 383 & 9\\
-16 & 75.0\% & 3120 & 192 & 6 & 3120 & 192 & 6\\
-32 & 50.0\% & 6176 & 192 & 6 & 3120 & 96 & 5\\
-64 & 0\% & 12288 & 192 & 6 & 3120 & 48 & 4\\
-\bottomrule
-\end{tabular}
+\input{../artifacts/tables/Table1_design.tex}
 
-\begin{minipage}{0.94\textwidth}
-\vspace{0.4em}
-\footnotesize 注：$s=16$ 行在两种制度下给出相同的 $(T,M)=(3120,192)$，为共享配置；唯一配置计数中只计一次，但在两种预算视角下分别用于解释，因此该行会被两张热图有意重复展示。$s=64$ 时 $s=W$，窗口不重叠，重叠率为 0，对应 M1 保守性主对比 P3 的非重叠端。
-\end{minipage}
-\end{table}
 
 图~\ref{fig:alternatives}展示两类备择构造的几何形态。
 

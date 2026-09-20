@@ -163,13 +163,85 @@ def build(draws_path: Path, contrasts_path: Path, out_dir: Path) -> dict[str, ob
         },
         "seed_registry": "governance/SEED_REGISTRY_v1.0.json (entry: ANALYSIS bootstrap)",
         "script": "scripts/bootstrap_primary_contrasts.py",
-        "git_commit": git_commit(),
+        # Provenance fields are deliberately separated: the commit that produced the bytes is not
+        # necessarily the commit at which someone re-verified them (2026-09-20 audit finding P0-2).
+        "generated_at_commit": git_commit(),
+        "verified_at_commit": None,
         "note": "draw generation itself is registered under the frozen plan; this script re-runs only the registered tail rule.",
     }
     (out_dir / "P1_P3_DRAWS.meta.json").write_text(
         json.dumps(meta, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     return summary
+
+
+def compare_semantically(fresh_dir: Path, committed_dir: Path) -> tuple[bool, list[str]]:
+    """Compare regenerated outputs with the committed ones by scientific content, not by bytes.
+
+    Cross-platform note (2026-09-20 audit finding P0-2): the committed JSON/P1-P3 npz are
+    byte-stable only within one platform. Line endings (CRLF vs LF) and the ZIP metadata field
+    ``create_system`` written by ``numpy.savez_compressed`` differ between Windows and Linux, so a
+    SHA-256 comparison of the files is not a valid reproducibility criterion. The registered
+    numbers are identical; this checker therefore compares:
+
+      * the summary JSON as parsed objects;
+      * the npz by member names, dtype, shape and element-wise equality.
+
+    Byte-level differences are reported as informational notes, never as failures.
+    """
+    notes: list[str] = []
+    ok = True
+
+    summary_name = "P1_P3_BOOTSTRAP_SUMMARY.json"
+    fresh_summary, committed_summary = fresh_dir / summary_name, committed_dir / summary_name
+    if not committed_summary.exists():
+        return False, [f"MISSING {summary_name} in {committed_dir}"]
+
+    fresh_obj = json.loads(fresh_summary.read_text(encoding="utf-8"))
+    committed_obj = json.loads(committed_summary.read_text(encoding="utf-8"))
+    if fresh_obj != committed_obj:
+        ok = False
+        notes.append(f"SEMANTIC MISMATCH {summary_name}: parsed objects differ")
+    elif fresh_summary.read_bytes() != committed_summary.read_bytes():
+        notes.append(f"byte-only difference (line endings): {summary_name} — semantics identical")
+
+    npz_name = "P1_P3_DRAWS.npz"
+    fresh_npz, committed_npz = fresh_dir / npz_name, committed_dir / npz_name
+    if not committed_npz.exists():
+        return False, notes + [f"MISSING {npz_name} in {committed_dir}"]
+
+    with np.load(fresh_npz) as fresh_arrays, np.load(committed_npz) as committed_arrays:
+        if list(fresh_arrays.files) != list(committed_arrays.files):
+            ok = False
+            notes.append(f"SEMANTIC MISMATCH {npz_name}: member sets differ")
+        else:
+            for key in fresh_arrays.files:
+                a, b = fresh_arrays[key], committed_arrays[key]
+                if a.dtype != b.dtype or a.shape != b.shape or not np.array_equal(a, b):
+                    ok = False
+                    notes.append(f"SEMANTIC MISMATCH {npz_name}: array {key} differs")
+            if ok and fresh_npz.read_bytes() != committed_npz.read_bytes():
+                notes.append(
+                    f"byte-only difference (ZIP create_system metadata): {npz_name} — "
+                    "arrays element-wise identical"
+                )
+
+    meta_path = committed_dir / "P1_P3_DRAWS.meta.json"
+    if meta_path.exists():
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        generated = meta.get("generated_at_commit")
+        head = git_commit()
+        if generated and generated != head:
+            notes.append(
+                f"INFO meta.generated_at_commit={generated[:12]} != HEAD={head[:12]} "
+                "(provenance of the bytes; not a reproducibility failure)"
+            )
+        if "git_commit" in meta:
+            ok = False
+            notes.append("SEMANTIC MISMATCH meta: legacy field git_commit must be split into "
+                         "generated_at_commit / verified_at_commit")
+
+    return ok, notes
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -195,14 +267,12 @@ def main(argv: list[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory() as tmp:
         build(args.draws, args.contrasts, Path(tmp))
-        bad = 0
-        for name in ("P1_P3_DRAWS.npz", "P1_P3_BOOTSTRAP_SUMMARY.json"):
-            fresh, committed = Path(tmp) / name, args.out_dir / name
-            if not committed.exists() or sha256_of(fresh) != sha256_of(committed):
-                print(f"MISMATCH {name}")
-                bad += 1
-        print("P1-P3 bootstrap: OK" if bad == 0 else f"P1-P3 bootstrap: {bad} mismatch(es)")
-        return 1 if bad else 0
+        ok, notes = compare_semantically(Path(tmp), args.out_dir)
+        for note in notes:
+            print(f"  {note}")
+        print(f"verified_at_commit={git_commit()}")
+        print("P1-P3 bootstrap: OK" if ok else "P1-P3 bootstrap: SEMANTIC MISMATCH")
+        return 0 if ok else 1
 
 
 if __name__ == "__main__":

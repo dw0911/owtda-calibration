@@ -3,8 +3,14 @@
 **OW-TDA-CAL-R1** · 注册项目名（CHARTER v1.0 英文全称）：*Exchangeability Failure and Calibration Boundaries of
 Topological Scans with Overlapping Windows* · 目标期刊：《山东大学学报（理学版）》"拓扑数据分析"专题
 
-> 论文配套的**完整可复现仓库**：代码、冻结配置、治理与身份链、论文源文件、规范化汇总结果与图表生成脚本。
-> 快照：**v1.0.0-paper**（2026-09-20）——正式 H0/H1 已封存保留；论文图表重构与图件血缘打包进行中。
+> 论文配套的**可复现仓库**：代码、冻结配置、治理与身份链、论文源文件、规范化汇总结果与图表生成脚本。
+> 快照：**v1.0.0-paper**（annotated tag，2026-09-20）——正式 H0/H1 已封存保留。
+>
+> **可验证范围（如实声明）**
+> - **Level 1（默认、可任意克隆验证）**：代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
+> - **Level 2（账本级重做）**：依赖**尚未发布的外部归档**（四份正式 ledger 与两组大型索引，DOI/URL 为 PENDING）。
+>   `scripts/fetch_archived_data.py --verify-only` 因此会以**退出码 2** 明确报告依赖缺失，而不是静默通过。
+> - **发布状态**：仓库在许可、作者名单与双盲策略闭合前保持 **private**（见 `LICENSE`、`AUTHORS.md`）。
 
 ## Overview
 
@@ -35,15 +41,18 @@ H0 共 **280,000** evaluation、H1 共 **51,200**，合计 **331,200**（数据�
 src/owtda_cal/        核心实现（DGP、窗口/点云/PH、BPI/MOMENTS、扫描、M0/M1、身份与账本、正式流水线）
 configs/              schema + 各 phase 配置；configs/formal/ 为冻结设计的可读快照
 scripts/              规范入口（verify_release / run_h0 / run_h1 / analyse_h0 / analyse_h1 /
-                      bootstrap_primary_contrasts / build_tables / build_figures / run_smoke / fetch_archived_data）
+                      bootstrap_primary_contrasts / build_tables / build_figures / run_smoke /
+                      fetch_archived_data / build_release_manifest）
 audit/                独立验证器（freeze/schema/admission 校验、攻击套件、repo 守卫、资源采样）
 tests/                契约与攻击式回归（1069 项通过）
 results/canonical/    **正文数值的单一真源**（canonical 汇总 + 主张—证据映射）
 results/bootstrap/    P1–P3 真实 draws（npz）+ 推断摘要 + 元数据
-artifacts/figures|tables/  图与表（脚本生成；每项附 meta.json：输入哈希、脚本哈希）
+artifacts/figures|tables/  图与表（脚本生成；每项附 meta.json：输入/输出哈希、脚本哈希、稿件引用）
 artifacts/seals|preflight|audit|archive|smoke/  封存证据与历史工程证据
 governance/           冻结对象、registry、append-only 变更链（身份真源）
-paper/                论文 LaTeX 工程（main.tex + sections + bib + main.pdf）+ 补充材料
+paper/                论文 LaTeX 工程（main.tex + sections + bib + main.pdf）+ 补充材料；
+                      paper/scripts/make_tables.py 由 canonical 源生成正文表 1–5，
+                      正文以 \input{../artifacts/tables/TableX.tex} 引用（不再手工硬编码）
 release/              2026-09-18 交付包原始副本（审计留存）
 reproducibility/      RUNBOOK / ENVIRONMENT / COMPUTE_REQUIREMENTS / DATA_AVAILABILITY /
                       FAILURE_POLICY / VALIDATION_SUMMARY / FORMAL_MANIFEST / RELEASE_MANIFEST /
@@ -71,7 +80,10 @@ python scripts/verify_release.py --level quick     # 最快：秒级验证全部
 python scripts/verify_release.py --level quick
 
 # Level 2 由正式记录重做分析（分钟级；账本见 §Data and large-file archive）
-python scripts/fetch_archived_data.py --verify-only
+# 账本归档 DOI 未闭合前，第一条命令会以退出码 2 明确报告依赖缺失（不是静默通过）；
+# --report-only 只列状态。Level 1 不受影响。
+python scripts/fetch_archived_data.py --verify-only --report-only   # 查看归档状态
+python scripts/fetch_archived_data.py --verify-only                 # 归档就绪后必须返回 0
 python scripts/analyse_h0.py --from-ledger data/external/H0_NULL_evaluation.scientific.jsonl
 python scripts/bootstrap_primary_contrasts.py
 python scripts/build_tables.py && python scripts/build_figures.py
@@ -94,12 +106,32 @@ Level 3（全量重跑）。每层的命令、输入、预期产物与失败策�
 | 层级 | 预期 |
 |---|---|
 | Level 1 | `verify_release --level quick` 全部 PASS（H0 112/28、H1 16、P1–P3 合法性、图表血缘、SHA256SUMS） |
-| Level 2 | 与 `results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json`、`results/canonical/*` 一致（表 CSV 逐字节；图 PNG 逐字节） |
+| Level 2 | 与 `results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json`、`results/canonical/*` 一致（表 CSV 逐字节；图 PNG 逐字节）；**需先取得外部归档**，未闭合时 `fetch_archived_data.py --verify-only` 返回 2 |
 | Level 3 | H0 280,000 / H1 51,200 evaluation 行，逐格与 canonical 汇总在容差内一致 |
 | 论文 | `paper/main.pdf`（XeLaTeX；22→23 页） |
 
 机器可读清单：[`reproducibility/EXPECTED_OUTPUTS.json`](reproducibility/EXPECTED_OUTPUTS.json)、
 图形/表格血缘：[`reproducibility/ARTIFACT_INDEX.csv`](reproducibility/ARTIFACT_INDEX.csv)。
+
+## Table and figure generation
+
+正文表 1–5 与全部图件均由 canonical 源生成，正文只引用生成物（不再手工硬编码）：
+
+| 产物 | 生成器 | 校验命令 | 说明 |
+|---|---|---|---|
+| `artifacts/tables/Table{1..5}_*.{tex,csv,json,json.meta.json}` | `paper/scripts/make_tables.py`（别名入口 `scripts/build_tables.py`） | `python scripts/build_tables.py --check` | 缺表、数值差异、多余未提交产物都会使校验返回非零 |
+| `artifacts/figures/Figure*.{pdf,svg,png,meta.json}` | `paper/scripts/make_figures.py`（别名入口 `scripts/build_figures.py`） | `python scripts/build_figures.py --check` | 校验输入哈希、**当前生成脚本哈希**、输出哈希与稿件引用 |
+
+- 图内标签为中文，需要**可确定获得**的 CJK 字体：Windows/macOS 使用系统字体，Debian/Ubuntu 使用
+  `fonts-noto-cjk`（本机解析到 `Noto Sans SC`）。缺字体时 `make_figures.py` 默认**报错退出**，
+  不会静默产出缺字方框；CI 用 `--check-fonts` 断言字体存在。
+- `matplotlib` 是图件生成路径的依赖，通过锁定环境（`uv sync --frozen`）获得；`pyproject.toml`
+  与 `uv.lock` 属 R1 冻结对象（字节由 `governance/FREEZE_MANIFEST.json` 钉住），本代不做修改，
+  依赖因此显式记录在本文与 `reproducibility/ENVIRONMENT.md`。
+- 同一 matplotlib 版本下重生成逐字节稳定：PNG/SVG 稳定（SVG 的时间戳元数据被剥离），
+  PDF 抑制创建/修改时间。
+- 论文编译的工作目录是 `paper/`。CI 与发布构建使用**严格模式**（`touch paper/STRICT.tex`）：
+  缺图件、缺表或未定义引用都会直接失败，而不是渲染"图件缺失"占位框。
 
 ## Data and large-file archive
 
@@ -135,7 +167,9 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 - 论文：[`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt)（依期刊政策，PENDING）；
 - 第三方：见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)（PAMAP2 为 CC BY 4.0，不重新分发）。
 
-> ⚠️ **三项许可均待作者确认**——这是"最低发布门"中的一项，请在公开推送前完成决策并登记到 `governance/PROJECT_CHARTER.md` §11。
+> ⚠️ **三项许可均待作者确认**——这是公开推送（P0-1）的前置条件。在闭合之前仓库必须保持
+> **private**：`LICENSE` 当前为"保留所有权利、禁止对外分发"，与 public 直接冲突。
+> 决策清单与操作步骤见 [`LICENSE`](LICENSE)、[`AUTHORS.md`](AUTHORS.md)。
 
 ## Contact and issue reporting
 
@@ -147,7 +181,17 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 ---
 
-**已知披露项（如实登记）**：表 1–5 原始生成器未保留；`validate_freeze` 的 `source_tree_hash` 单项不匹配；
-旧 `p = 0` 值仅作历史字节保留（现行值见 `results/bootstrap/`）；M0 范围口径待核对。
+**已知披露项（如实登记）**：
+
+- 表 1–5 的原始生成器未保留——现由 `paper/scripts/make_tables.py` 由 canonical 源重新生成，正文 `\input`
+  生成结果，生成链已在 CI 中 fail-closed 校验；
+- `matplotlib` 仅为锁定环境中的依赖（`pyproject.toml`/`uv.lock` 属 R1 冻结对象，本代未修改）；
+- 3 个 legacy 图件 meta（`Figure3_fixedM_type1`、`Figure4_fixedT_type1`、`Figure7_h1_power`）由历史审计
+  生成器产出，其 `script_sha256` 无对应现役脚本，`build_figures.py --check` 将其列入 legacy 白名单；
+- 部分**封存证据**对象内含本机绝对路径（Windows 盘符/用户目录）。这些对象以 exact bytes 计算 SHA-256，
+  改写会破坏封存身份，因此本代不改写；如需匿名化须走治理变更流程；
+- `validate_freeze` 的 `source_tree_hash` 单项不匹配；旧 `p = 0` 值仅作历史字节保留（现行值见
+  `results/bootstrap/`）；M0 范围口径待核对。
+
 全部见 [`reproducibility/VALIDATION_SUMMARY.md`](reproducibility/VALIDATION_SUMMARY.md) §3 与
 [`reproducibility/FAILURE_POLICY.md`](reproducibility/FAILURE_POLICY.md) §5。

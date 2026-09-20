@@ -37,5 +37,13 @@ $env:MKL_NUM_THREADS = "1"; $env:NUMEXPR_NUM_THREADS = "1"
 
 | 平台 | 结果 |
 |---|---|
-| Windows（本仓库快照的构建环境） | `pytest tests -q` → **1069 passed / 1 skipped**；`ruff check src tests audit scripts configs` 全清；论文 XeLaTeX 编译通过（MiKTeX） |
+| Windows（本仓库快照的构建环境） | `pytest tests -q` → **1069 passed / 1 skipped**；`ruff check src tests audit scripts configs paper/scripts` 全清；论文 XeLaTeX 编译通过（MiKTeX） |
 | 纯净克隆（从 git bundle，`uv sync --frozen`） | 同上（2026-09-20 复现校验，见 `../reproducibility/VALIDATION_SUMMARY.md`） |
+
+## 5. 论文图表生成路径的附加依赖
+
+| 项 | 说明 |
+|---|---|
+| `matplotlib` | 生成 `artifacts/figures/*` 所需；通过锁定环境（`uv sync --frozen`）获得。`pyproject.toml`/`uv.lock` 属冻结对象（见 §1 警告），本代未把 matplotlib 提升为直接依赖；CI 设有一项 `import matplotlib` 检查，确保该路径可用。 |
+| CJK 字体 | 图内标签为中文，需可确定获得的字体：Windows/macOS 用系统字体，Debian/Ubuntu 用 `fonts-noto-cjk`（本机与 CI 均解析到 `Noto Sans SC`）。`paper/scripts/make_figures.py --check-fonts` 断言字体存在；缺字体时生成脚本默认**报错退出**，不静默产出缺字方框。 |
+| 论文编译 | 工作目录为 `paper/`（`main.tex` 使用 paper 相对输入）；XeLaTeX + bibtex（本机 MiKTeX；CI 用 `xu-cheng/latex-action`）。CI 与发布构建使用严格模式 `touch paper/STRICT.tex`：缺图件、缺表或未定义引用都会失败。 |

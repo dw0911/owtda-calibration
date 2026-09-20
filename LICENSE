@@ -1,5 +1,27 @@
-LICENSE — 待定
+LICENSE — 待定（公开发布门，P0-1）
+================================
 
-本仓库的代码、规格与文档许可以在正式发布（OWTDA-CAL-R1 release）时确定。
-在当前 DRAFT/PROTOCOL_FROZEN 阶段，保留所有权利（All rights reserved），
-禁止对外分发。确定许可证后本文件将被替换；许可证决策记录于 PROJECT_CHARTER.md。
+本仓库的代码、规格与文档许可以及"结果数据"许可尚未确定，因此当前状态为：
+**保留所有权利（All rights reserved）；仅限私有审阅，禁止对外分发。**
+
+> 这与仓库的可见性一致：在许可决策完成之前，仓库必须保持 **private**。
+> 转为 public 之前，必须完成下面的三项决策并替换本文件、`LICENSES/DATA_LICENSE.txt`
+> 与 `LICENSES/PAPER_LICENSE.txt`，同时更新 `CITATION.cff` 的 `license` 字段。
+
+## 待决策项（由通讯作者确认）
+
+| 对象 | 候选许可 | 当前状态 |
+|---|---|---|
+| 仓库代码（`src/`、`scripts/`、`audit/`、`tests/`、`paper/scripts/`） | MIT、BSD-3-Clause 或 Apache-2.0 | PENDING |
+| 本仓库自行产生的结果数据（`results/`、`artifacts/` 中的规范汇总与图表） | CC BY 4.0 或 CC0 | PENDING |
+| 论文源文件与 PDF（`paper/`） | 依目标期刊政策 | PENDING |
+
+第三方组件的许可与数据出处见 `THIRD_PARTY_NOTICES.md` 与 `DATA_SOURCES.md`；
+正式账本（约 3.2 GB）不随仓库分发，其归档与获取方式见
+`reproducibility/DATA_AVAILABILITY.md`。
+
+## 决策登记
+
+三项决策完成后：① 替换本文件与 `LICENSES/` 下的两个占位文件；
+② 同步 `CITATION.cff`（`license`、`preferred-citation`）；
+③ 在 `governance/CHANGELOG.md` 记录该变更；④ 之后才可以把仓库可见性改为 public。

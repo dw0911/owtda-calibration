@@ -1,12 +1,21 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-18T19:48:33Z",
+  "content_sha256": "905a837847d893036e57feb7003d75f99378639b058e544a9a716d631bc7c6dc",
+  "generated_at": "2026-09-20T12:03:35Z",
   "input_sha256": {
-    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
-    "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
-    "H1_REANALYSIS": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2"
+    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621"
   },
+  "inputs": [
+    "H0_POINTWISE"
+  ],
   "kind": "TABLE",
+  "outputs": {
+    "Table4_calibration.csv": "6edc71b4fe729aa5410f5de33d39df6bc12b2403280f124ddb6bdaf921b894b1",
+    "Table4_calibration.json": "b24ab2e270a7eb6754b42bb8060d0d3603c683e41a8f9561f962a9ea608f278d",
+    "Table4_calibration.tex": "538cccc96c11398d0894b8a75e5e938275042a555f41f909ff0589200121bc67"
+  },
   "schema_version": 1,
-  "script_sha256": "d2fe7f6a69c962c83e424436dadfa037b8713577ab30100b2f0373bd1bae4fad"
+  "script": "paper/scripts/make_tables.py",
+  "script_sha256": "ed764ce174ac6f50e35069f4b106f55e416bdf2ee398c8a34355a0bdeb8b5397",
+  "title": "Calibration-boundary summary (counts per cell)"
 }

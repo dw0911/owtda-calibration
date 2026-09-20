@@ -16,15 +16,28 @@
 \setlength{\parskip}{0.25em}
 \setlist{nosep,leftmargin=2.4em}
 
-% 本地存在图件时载入原图；缺少图件时保留可编译占位，便于先审阅正文与公式。
+% 图件载入策略（两种模式）
+%   审阅模式（默认）：本地有图件则载入原图；缺图时插入可编译占位框，便于先审阅正文与公式。
+%   严格模式（strict）：缺图直接报错，CI 与发布构建必须使用——避免把"缺图"隐藏成编译成功。
+%   启用方式：在 paper/ 下创建哨兵文件 STRICT.tex（CI 用 `touch paper/STRICT.tex`），
+%   或改用 `xelatex -jobname=... "\def\STRICTFIGURES{}\input{main}"`。
+\newif\ifstrictfigures
+\strictfiguresfalse
+\IfFileExists{STRICT.tex}{\strictfigurestrue}{}
+
 \let\OriginalIncludeGraphics\includegraphics
 \RenewDocumentCommand{\includegraphics}{O{} m}{%
   \IfFileExists{#2}{%
     \OriginalIncludeGraphics[#1]{#2}%
   }{%
-    \begin{minipage}[c][4.2cm][c]{0.82\linewidth}
-      \centering\small 图件缺失：\texttt{\detokenize{#2}}
-    \end{minipage}%
+    \ifstrictfigures
+      \PackageError{owtda-paper}{Strict build: missing figure `\detokenize{#2}'}%
+        {The strict build (paper/STRICT.tex present) requires every figure to exist.}%
+    \else
+      \begin{minipage}[c][4.2cm][c]{0.82\linewidth}
+        \centering\small 图件缺失：\texttt{\detokenize{#2}}
+      \end{minipage}%
+    \fi
   }%
 }
 

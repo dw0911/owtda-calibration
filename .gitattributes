@@ -1,4 +1,66 @@
-# 字节身份安全：禁止 git 行尾转换。
-# canonical JSON/JSONL/CSV 等科学对象以 exact bytes 计算 SHA256，
-# 任何 autocrlf/eol 转换都会破坏字节身份。故全部文件 -text。
+# =============================================================================
+# 行尾与字节身份策略（2026-09-20 修订；对应外部审计 P0-2 / A2）
+#
+# 背景
+#   本仓库有两类对象：
+#   (a) 以 exact bytes 计算 SHA-256 的科学对象与封存证据——规范化结果、图表、
+#       冻结对象、运行封条。其哈希登记在
+#         reproducibility/SHA256SUMS
+#         reproducibility/FORMAL_MANIFEST.json
+#         governance/FREEZE_MANIFEST.json
+#       等清单中；任何行尾转换都会破坏字节身份，进而破坏可复现性链。
+#   (b) 源码、脚本、测试、文档与 CI 配置——这些没有参与哈希绑定，应使用统一的
+#       跨平台行尾（LF），否则 Windows 检出会产生 CRLF、Linux 检出产生 LF，
+#       同一提交在不同平台呈现不同字节。
+#
+# 旧的单一规则 `* -text` 把 (b) 也一并封存，导致源码/文档行尾随平台漂移。
+#   旧文件（含 b8ba511 之前提交的全部源码）在 Windows 上以 CRLF 提交，Linux 读者
+#   看到 CRLF，`build_sha256sums.py` 之类的工具在两端算出的字节不一致。
+#
+# 现行策略
+#   ① 默认：`* -text` → exact bytes，禁止任何转换（科学对象、冻结对象、封存证据）；
+#   ② 文本区（下文显式列出）→ `text eol=lf`（未参与任何 SHA-256 绑定的源码/文档/CI）。
+#
+# ⚠️ gitattributes 的**最后一条匹配规则生效**，因此通配默认必须写在最前面，
+#    显式的文本区规则写在后面才会覆盖它。（首版把通配写在末尾，导致
+#    `text` 被 unset、`eol=lf` 失效、重规范化静默不发生——2026-09-20 修正。）
+#
+# ⚠️ 凡是被上面三类清单登记过 SHA-256 的路径，一律不得加入 ② 区——
+#    包括 src/owtda_cal/**（由 governance/FREEZE_MANIFEST.json 钉住 40 个文件）、
+#    configs/**、environment/**、pyproject.toml、uv.lock、results/**、artifacts/**、
+#    release/**、governance/**、reproducibility/**、data/**、external_prior_evidence/**。
+#    改动这些路径的字节需要走治理变更流程，不能靠行尾转换完成。
+# =============================================================================
+
+# ---- ① 默认区：exact bytes（必须最先出现）----
 * -text
+
+# ---- ② 文本区：统一 LF（未参与任何 SHA-256 绑定的源码 / 文档 / CI）----
+/tests/**                     text eol=lf
+/scripts/**                   text eol=lf
+/audit/**                     text eol=lf
+/docs/**                      text eol=lf
+/examples/**                  text eol=lf
+/.github/**                   text eol=lf
+/paper/sections/**            text eol=lf
+/paper/scripts/**             text eol=lf
+/paper/main.tex               text eol=lf
+/paper/*.tex                  text eol=lf
+/paper/*.bib                  text eol=lf
+/paper/*.md                   text eol=lf
+/README.md                    text eol=lf
+/AUTHORS.md                   text eol=lf
+/CHANGELOG.md                 text eol=lf
+/CONTRIBUTING.md              text eol=lf
+/DATA_SOURCES.md              text eol=lf
+/REPRODUCIBILITY.md           text eol=lf
+/THIRD_PARTY_NOTICES.md       text eol=lf
+/AUDIT_SUBMISSION_SUMMARY.md  text eol=lf
+/EXCLUDED_ARTIFACTS.csv       text eol=lf
+/CITATION.cff                 text eol=lf
+/LICENSE                      text eol=lf
+/LICENSES/**                  text eol=lf
+/Makefile                     text eol=lf
+/Dockerfile                   text eol=lf
+/.gitignore                   text eol=lf
+/.gitattributes               text eol=lf

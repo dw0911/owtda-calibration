@@ -2,7 +2,7 @@
 
 > 提交 ID：`OWTDA-CAL-R1-AUDIT-SUBMISSION-20260910`
 > 生成日期：2026-09-10（北京时间）
-> 生成者：本地执行方（登记主机 `f:/BPI/owtda-calibration`，Windows 11 / 16 核）
+> 生成者：本地执行方（登记主机 `<repo-root>`，Windows 11 / 16 核）
 > 对象：方案方 / 独立审计
 
 本文件夹是**自包含、逐字节可验证**的归档：覆盖 OW-TDA-CAL-R1 全部已完成的实验批次

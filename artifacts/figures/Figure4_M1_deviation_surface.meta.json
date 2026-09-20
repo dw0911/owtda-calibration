@@ -1,12 +1,27 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-19T18:03:55Z",
+  "content_sha256": "203c48e6a6bc9bf6edaf3ce5edbfdb8c9e0500e32b0bfd8238a9fb8f6cec91ef",
+  "generated_at": "2026-09-20T12:05:32Z",
   "input_sha256": {
     "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611",
     "H1_ALL_16_GEOMETRY_COMPLETE.csv": "8c44d0d47fab6c8e3fb7e20661ca086f4b11ad7e8bd5aada3da03457c620f079",
     "H1_SCENARIO_DIFFERENCES.csv": "1acc1779d18dae8db4f5708657f32d4a4e6cea32dec47ebc1423165430e683ae"
   },
+  "inputs": [
+    "H0_ALL_112.csv",
+    "H1_ALL_16_GEOMETRY_COMPLETE.csv",
+    "H1_SCENARIO_DIFFERENCES.csv"
+  ],
   "kind": "FIGURE",
+  "outputs": {
+    "Figure4_M1_deviation_surface.pdf": "35dcf44e378c7c4316f7b028c42187891bc656d3a11a784dbb472c8a0fc82eb6",
+    "Figure4_M1_deviation_surface.png": "e1e115a1727a4a01add980bb73d6b09b938fe9d9137880193e13f47fdc7e5e7f",
+    "Figure4_M1_deviation_surface.svg": "16cbc1202be0cde2971a99d0e0a123a7dc082c4f5c3d60aad41f067b0c27a6a3"
+  },
+  "referenced_by": [
+    "paper/sections/05_h0.tex"
+  ],
   "schema_version": 1,
-  "script_sha256": "835a0c842039692cf2be20bdd7f925aa285b0e7e5c4b64a59fbf0cf490840f80"
+  "script": "paper/scripts/make_figures.py",
+  "script_sha256": "c67052defc4716d5f36e80f11f2729c71ea8c038df7a2fefbe9a993345fa4990"
 }

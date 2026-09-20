@@ -21,7 +21,7 @@ the P0-1 cleanliness proof.  ``--from`` resumes at a named stage.
 
 Usage::
 
-    python scripts/run_supplement_sequence.py --evidence-root f:/BPI/_audit_r1 --from commit_src
+    python scripts/run_supplement_sequence.py --evidence-root <AUDIT_EVIDENCE_ROOT> --from commit_src
 """
 
 from __future__ import annotations

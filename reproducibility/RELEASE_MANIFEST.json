@@ -1,0 +1,45 @@
+{
+  "artifacts": {
+    "data/manifests/external_artifacts.json": "74b49144a45c3664b6768bea52d327867d895ce18b26beb4e0ab1827eb562290",
+    "paper/main.pdf": "6b53564cbf5de5f2ab5ad79d700f534676891dfdafcdaffa62114581560868fa",
+    "reproducibility/ARTIFACT_INDEX.csv": "259b0d0fbc03d4d9575ae11962b01c46d546f871e5cb404720cac1185fc319c1",
+    "reproducibility/FORMAL_MANIFEST.json": "b36a26e6e0999fe962e7b682d767bf83f12da2668aed21888467656726c17a5a"
+  },
+  "doi": {
+    "code": null,
+    "data": null,
+    "note": "Filled in after both Zenodo deposits are closed (see reproducibility/DATA_AVAILABILITY.md §3); null means 'not yet deposited'."
+  },
+  "kind": "RELEASE_MANIFEST",
+  "notes": [
+    "Deterministic for a given commit: no wall-clock fields, so `git diff --exit-code` must be empty after regenerating this file.",
+    "The formal 3.2 GB ledgers are not distributed; see data/manifests/ and reproducibility/DATA_AVAILABILITY.md for the external archive DOI.",
+    "Tree digests cover results/canonical, results/bootstrap, artifacts/tables and artifacts/figures; every paper number derives from those files."
+  ],
+  "release": {
+    "branch": "main",
+    "commit": "b8ba511412fbaaadaffc940ca7e69e537261ad8a",
+    "commit_date": "2026-09-20T19:14:27+08:00",
+    "name": "v1.0.0-paper",
+    "tags_at_head": [],
+    "tracked_files": 668,
+    "tree": "23423e5e7816473ea2bec9c03c98413705a9a050",
+    "version": "1.0.0"
+  },
+  "schema_version": 1,
+  "tree_digests": {
+    "artifacts/figures": "3b2f6a9931c512f689f498ac8f7f486afd05d8a39aa361d126fb4e7e0ec5865a",
+    "artifacts/tables": "321397175a2ae8c20f2ba76e1053edc97eb0c1c47cc63a57c8c58d7953e98fd8",
+    "results/bootstrap": "cad58c62fb822dd1b623b3feb9b6b789b3c04626c4777446b2464f518f512ea8",
+    "results/canonical": "46c3d522afc732b38777cb953ada0e014803f7161964e40bb7acc08d64e55bde"
+  },
+  "verification_commands": [
+    "python scripts/verify_release.py --level quick",
+    "python scripts/verify_release.py --level analysis",
+    "python scripts/bootstrap_primary_contrasts.py --check",
+    "python scripts/build_tables.py --check",
+    "python paper/scripts/make_tables.py --check",
+    "python scripts/build_figures.py --check",
+    "python -m pytest tests -q"
+  ]
+}

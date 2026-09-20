@@ -31,8 +31,8 @@
       "configs/"
     ]
   },
-  "git_commit": "e98e2a3127456f41158f95b1fc65181e868e7870",
-  "paper_pdf_sha256": "448695e1fb4e3ce3417a03f5fd813ea8291fb732498ca774749b7b7979ddf083",
+  "git_commit": "b8ba511412fbaaadaffc940ca7e69e537261ad8a",
+  "paper_pdf_sha256": "6b53564cbf5de5f2ab5ad79d700f534676891dfdafcdaffa62114581560868fa",
   "paper_version": "2026-09 (R5-paper snapshot)",
   "phases": {
     "ALT": {

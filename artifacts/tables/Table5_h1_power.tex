@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\caption{同一场景内四个预设条件的等权描述性汇总。尺寸标准化功效使用各自匹配的零假设临界值；平均归一化 MAE 为无条件位置误差除以对应 $T$ 后的均值；联合成功率按式\eqref{eq:joint-success}分别计算。}\label{tab:h1-power}
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llccrr}
+\toprule
+场景 & 表示 & 检出能力 & 定位误差 & \multicolumn{2}{c}{检出--定位联合成功}\\
+\cmidrule(lr){3-3}\cmidrule(lr){4-4}\cmidrule(lr){5-6}
+ & & $\widehat\beta_{\mathrm{std}}$ & nMAE & M0 & M1\\
+\midrule
+形状变化 & BPI & 1.00000 & 0.00409 & 0.9839 & 0.9839\\
+形状变化 & MOMENTS & 0.06203 & 0.20165 & 0.0144 & 0.0009\\
+均值平移 & BPI & 0.05375 & 0.20255 & 0.0087 & 0.0011\\
+均值平移 & MOMENTS & 1.00000 & 0.00330 & 0.9052 & 0.9052\\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table}

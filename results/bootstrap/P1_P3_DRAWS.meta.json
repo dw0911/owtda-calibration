@@ -1,6 +1,6 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "git_commit": "e98e2a3127456f41158f95b1fc65181e868e7870",
+  "generated_at_commit": "b8ba511412fbaaadaffc940ca7e69e537261ad8a",
   "kind": "BOOTSTRAP_DRAWS",
   "note": "draw generation itself is registered under the frozen plan; this script re-runs only the registered tail rule.",
   "outputs": {
@@ -13,5 +13,6 @@
   "script": "scripts/bootstrap_primary_contrasts.py",
   "seed_registry": "governance/SEED_REGISTRY_v1.0.json (entry: ANALYSIS bootstrap)",
   "source_draws": "governance/actual_primary_draws.json",
-  "source_draws_sha256": "5ef7c69f582adffce51c1d941a901d4f9bb7d5ff63e93aeabfcba1c8c36d7f68"
+  "source_draws_sha256": "5ef7c69f582adffce51c1d941a901d4f9bb7d5ff63e93aeabfcba1c8c36d7f68",
+  "verified_at_commit": null
 }

@@ -9,6 +9,7 @@ ref/binding builders and writes the ALT run component set + ``run_admission``.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -25,10 +26,26 @@ GOV = REPO / "governance"
 
 
 def _h0_phase_seal_hash() -> str:
-    h0_seal = json.loads(
-        Path(r"F:\BPI\r5_h0_run\PHASE_SEAL.json").read_text(encoding="utf-8")
+    """Phase seal of the authoritative H0 run, used as the ALT run's parent.
+
+    Resolution order (2026-09-20: the previous hard-coded ``F:\\BPI\\r5_h0_run\\PHASE_SEAL.json``
+    only existed on the build host and broke every clone):
+
+      1. ``$OWTDA_H0_SEAL`` — an explicit seal path, for auditing a different delivery;
+      2. ``artifacts/seals/H0_NULL/PHASE_SEAL.json`` — the seal distributed with this repository
+         (identical ``phase_seal_hash`` to the delivered copy).
+    """
+    candidates = [
+        os.environ.get("OWTDA_H0_SEAL"),
+        REPO / "artifacts" / "seals" / "H0_NULL" / "PHASE_SEAL.json",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).is_file():
+            return json.loads(Path(candidate).read_text(encoding="utf-8"))["phase_seal_hash"]
+    raise SystemExit(
+        "H0 PHASE_SEAL.json not found; set OWTDA_H0_SEAL to the delivery seal "
+        "(artifacts/seals/H0_NULL/PHASE_SEAL.json is the in-repo copy)"
     )
-    return h0_seal["phase_seal_hash"]
 
 
 def main() -> int:

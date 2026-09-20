@@ -1,12 +1,21 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-18T19:48:33Z",
+  "content_sha256": "34799e098a7bbf80bbdadb2a5f7f6983584d3393c8a41c359e9657efedcdc9c1",
+  "generated_at": "2026-09-20T12:03:35Z",
   "input_sha256": {
-    "H0_POINTWISE": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
-    "H0_PRIMARY_CONTRASTS": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
     "H1_REANALYSIS": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2"
   },
+  "inputs": [
+    "H1_REANALYSIS"
+  ],
   "kind": "TABLE",
+  "outputs": {
+    "Table5_h1_power.csv": "30853a08413942c26ae0b77b590b041d3b6c038e2a1b72f6f755c98f8ea74133",
+    "Table5_h1_power.json": "03aad93d1f6b032047a750fe9b88bbbd596a83a89f661b540e6c9664fad8ad1b",
+    "Table5_h1_power.tex": "135cee54574476d6669e030fa607fdce1e46e798ca3e6f2169b082bd5f5d86aa"
+  },
   "schema_version": 1,
-  "script_sha256": "d2fe7f6a69c962c83e424436dadfa037b8713577ab30100b2f0373bd1bae4fad"
+  "script": "paper/scripts/make_tables.py",
+  "script_sha256": "ed764ce174ac6f50e35069f4b106f55e416bdf2ee398c8a34355a0bdeb8b5397",
+  "title": "H1 power/localization"
 }

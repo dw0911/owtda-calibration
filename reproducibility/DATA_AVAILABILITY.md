@@ -17,6 +17,11 @@
 | canonical 汇总、图、表 | **本仓库**（`results/`、`artifacts/`） | 直接可用；SHA-256 见 `reproducibility/SHA256SUMS` |
 | PAMAP2（真实数据） | UCI ML Repository | 自行下载并校验（见 `../DATA_SOURCES.md`）；本代 REAL 线为 `REAL_OMITTED_BY_DATA_GATE` |
 
+> **退出码语义（P0-6）**：`scripts/fetch_archived_data.py --verify-only` 在任一请求对象不可用时返回 **2**，
+> 并明确提示"Level 2 无法完成、Level 1 仍可验证"；`--report-only` 只列状态并返回 0。
+> 归档就绪后该命令必须返回 0，否则视为发布门未闭合。已登记的 `local_source` 既可以是文件本身，
+> 也可以是包含该文件的目录（按 `filename` 解析）。
+
 ## 3. DOI 登记流程（发布顺序）
 
 1. 整理 `main` → 2. 本地完成 quick / analysis 两级验证 → 3. CI 全绿 → 4. 冻结 commit →

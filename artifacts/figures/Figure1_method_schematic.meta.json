@@ -1,12 +1,27 @@
 {
   "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
-  "generated_at": "2026-09-19T18:03:53Z",
+  "content_sha256": "642759e7233233128b010c9624f9f0a023d81839e0210bee68cc82f0cc46e6ec",
+  "generated_at": "2026-09-20T12:05:29Z",
   "input_sha256": {
     "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611",
     "H1_ALL_16_GEOMETRY_COMPLETE.csv": "8c44d0d47fab6c8e3fb7e20661ca086f4b11ad7e8bd5aada3da03457c620f079",
     "H1_SCENARIO_DIFFERENCES.csv": "1acc1779d18dae8db4f5708657f32d4a4e6cea32dec47ebc1423165430e683ae"
   },
+  "inputs": [
+    "H0_ALL_112.csv",
+    "H1_ALL_16_GEOMETRY_COMPLETE.csv",
+    "H1_SCENARIO_DIFFERENCES.csv"
+  ],
   "kind": "FIGURE",
+  "outputs": {
+    "Figure1_method_schematic.pdf": "ef3de225edfcd5ed57596a9b65aa6738c06151a2fe3b9d886cb0c3ccdd976a51",
+    "Figure1_method_schematic.png": "54530763c8bb2ea49625cb2277dcd167ac4069605b2c17008bc2322f327b9e3a",
+    "Figure1_method_schematic.svg": "314ecebd7fc2ac2b633a4b89b139e4f28aa63400cac4a1bcdeabb0b25eb1b926"
+  },
+  "referenced_by": [
+    "paper/sections/02_method.tex"
+  ],
   "schema_version": 1,
-  "script_sha256": "835a0c842039692cf2be20bdd7f925aa285b0e7e5c4b64a59fbf0cf490840f80"
+  "script": "paper/scripts/make_figures.py",
+  "script_sha256": "c67052defc4716d5f36e80f11f2729c71ea8c038df7a2fefbe9a993345fa4990"
 }

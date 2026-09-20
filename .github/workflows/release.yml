@@ -19,25 +19,61 @@ jobs:
           python-version: "3.12"
       - name: install locked environment
         run: uv sync --frozen
-      - name: verify release set
+
+      - name: verify the release set (levels 1-2)
         run: |
-          uv run python scripts/verify_release.py --level quick
-          uv run python scripts/bootstrap_primary_contrasts.py --check
+          uv run python scripts/verify_release.py --level analysis
           uv run python scripts/build_tables.py --check
-      - name: rebuild sums and manifests
+          uv run python scripts/build_figures.py --check
+
+      - name: rebuild sums, index and release manifest
         run: |
           uv run python scripts/build_reproducibility_index.py
           uv run python scripts/build_sha256sums.py
-      - name: compile manuscript
+          uv run python scripts/build_release_manifest.py
+
+      # The release must publish the bytes that are committed under the tag: if regenerating any
+      # derived file changes the tree, the tag is stale and the release job fails instead of
+      # attaching files that no commit produced (2026-09-20 audit finding P0-4).
+      - name: release tree must match the tag (no uncommitted drift)
+        run: |
+          git --no-pager diff --stat
+          git diff --exit-code
+
+      - name: verify the attached files exist
+        run: |
+          test -f reproducibility/SHA256SUMS
+          test -f reproducibility/FORMAL_MANIFEST.json
+          test -f reproducibility/RELEASE_MANIFEST.json
+
+      - name: enable the strict manuscript build
+        run: touch paper/STRICT.tex
+
+      - name: compile manuscript (paper-relative working directory)
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: paper/main.tex
+          working_directory: paper
+          root_file: main.tex
           latexmk_use_xelatex: true
-      - name: build source archive and release manifest
+
+      - name: fail on undefined references/citations or placeholder figures
+        working-directory: paper
+        run: |
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" main.log; then
+            echo "::error::undefined references or citations in main.log"; exit 1
+          fi
+          if grep -q "图件缺失" main.log; then
+            echo "::error::the strict build rendered a missing-figure placeholder"; exit 1
+          fi
+
+      - name: build source archive and checksums
         run: |
           git archive --format=tar.gz --prefix=owtda-calibration/ -o owtda-calibration-source.tar.gz HEAD
           cp paper/main.pdf manuscript.pdf
-          sha256sum owtda-calibration-source.tar.gz manuscript.pdf reproducibility/SHA256SUMS > release-SHA256SUMS.txt
+          sha256sum owtda-calibration-source.tar.gz manuscript.pdf \
+            reproducibility/SHA256SUMS reproducibility/RELEASE_MANIFEST.json > release-SHA256SUMS.txt
+          cat release-SHA256SUMS.txt
+
       - name: publish GitHub release
         uses: softprops/action-gh-release@v2
         with:

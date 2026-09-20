@@ -5,6 +5,8 @@ on:
   push:
     paths:
       - "paper/**"
+      - "artifacts/tables/**"
+      - "artifacts/figures/**"
       - ".github/workflows/paper.yml"
 
 jobs:
@@ -12,15 +14,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # The manuscript is compiled from paper/ because main.tex uses paper-relative inputs
+      # (\input{sections/...}, ../artifacts/...). Compiling from the repository root fails with
+      # "File `sections/00_abstract.tex' not found" (2026-09-20 audit finding P0-3).
+      - name: enable the strict manuscript build
+        run: touch paper/STRICT.tex
+
+      - name: manuscript tables regenerate identically (Table 1-5)
+        run: python3 paper/scripts/make_tables.py --check
+
       - uses: xu-cheng/latex-action@v3
         with:
-          root_file: paper/main.tex
+          working_directory: paper
+          root_file: main.tex
           latexmk_use_xelatex: true
-      - name: check for undefined references
+
+      - name: fail on undefined references or citations
+        working-directory: paper
         run: |
-          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" paper/main.log; then
-            echo "undefined references found"; exit 1
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" main.log; then
+            echo "::error::undefined references or citations in main.log"
+            exit 1
           fi
+
+      - name: fail on missing-figure placeholders
+        working-directory: paper
+        run: |
+          if grep -q "图件缺失" main.log; then
+            echo "::error::the strict build rendered a missing-figure placeholder"
+            exit 1
+          fi
+
+      - name: overfull box report (informational)
+        working-directory: paper
+        run: grep -c 'Overfull \hbox' main.log || true
+
       - uses: actions/upload-artifact@v4
         with:
           name: manuscript-pdf
