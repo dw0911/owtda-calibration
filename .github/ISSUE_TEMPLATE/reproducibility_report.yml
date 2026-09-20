@@ -1,0 +1,42 @@
+name: Reproducibility report
+description: 报告你在一级/二级/三级复现中的结果（成功或失败）
+labels: [reproducibility]
+body:
+  - type: dropdown
+    id: level
+    attributes:
+      label: 复现层级
+      options:
+        - "Level 1 quick（verify_release --level quick）"
+        - "Level 2 analysis（账本 → 分析链）"
+        - "Level 3 full（完整 Monte Carlo 重跑）"
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit / release
+      description: `git rev-parse HEAD` 或 release tag
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: 环境
+      description: OS / CPU / 内存 / Python 版本 / `uv.lock` 是否 float-free 重建
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 结果
+      description: 关键数字与预期值（`reproducibility/EXPECTED_OUTPUTS.json`）的比对；附哈希
+    validations:
+      required: true
+  - type: textarea
+    id: diff
+    attributes:
+      label: 差异与日志
+      description: 任何不一致、报错或与论文不符之处（粘贴命令与原始输出）
+    validations:
+      required: false

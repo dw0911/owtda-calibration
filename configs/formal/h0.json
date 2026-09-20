@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "name": "h0",
+  "description": "Pointwise calibration surface over the two budget regimes (H0/NULL phase).",
+  "authoritative_sources": [
+    "governance/SCOPE_SPEC_v1.json",
+    "governance/SCOPE_DESIGN_NULL_<scope_design_hash>.csv",
+    "governance/COMPUTE_FREEZE.json",
+    "OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md §9/§21"
+  ],
+  "note": "本文件是冻结设计的可读快照；权威值在 governance 对象中（其哈希进入 freeze_id）。校验方式见 scripts/verify_release.py（逐格与 canonical 对账）。",
+  "design": {
+    "W": 64,
+    "stride": [8, 16, 32, 64],
+    "fixed_M": { "M": 192, "T_implied": { "64": 12288, "32": 6176, "16": 3120, "8": 1592 } },
+    "fixed_T": { "T": 3120, "M_implied": { "64": 48, "32": 96, "16": 192, "8": 383 } },
+    "rho": [0, 0.8],
+    "dgp_families": ["N_AR", "N_CIRCLE"],
+    "representations": ["BPI_FIXED20_H01_SIGMA005_GAMMA1_V1", "MOMENTS_MEAN_COV_FROB_V1"],
+    "methods": ["M0_NAIVE_PERM_B999_V1", "M1_DMB_R1_TRI_EXTIID_B999_V1"],
+    "replicates_R0": 2500,
+    "resamples_B": 999,
+    "burn_in": 1000,
+    "alpha": 0.05,
+    "practical_band": [0.035, 0.065],
+    "unique_cells": 28,
+    "shared_configuration": "s=16, T=3120, M=192 satisfies both budget definitions and is one scientific cell",
+    "bpi_dimension": 800,
+    "moments_dimension": { "2d": 5, "3d": 9 }
+  },
+  "expected": { "evaluation_units": 112, "evaluation_rows": 280000, "data_units": 70000, "feature_rows": 140000 }
+}

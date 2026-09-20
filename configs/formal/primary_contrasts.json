@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "name": "primary_contrasts",
+  "description": "P1-P3 confirmatory contrasts: cluster bootstrap over DGP strata, one-sided tail rule, Holm step-down.",
+  "authoritative_sources": [
+    "governance/SAP_v1.0.md",
+    "governance/ESTIMAND_SPEC_REGISTRY_v1.json",
+    "results/canonical/H0_PRIMARY_CONTRASTS.json (point estimates and thresholds)"
+  ],
+  "inference": {
+    "bootstrap_iterations": 10000,
+    "sampling_unit": "DGP-master-cluster",
+    "stratification": "two registry DGPs sampled independently",
+    "pvalue_rule": "(tail_count + 1) / (B + 1)",
+    "ci_method": "basic interval, nearest-rank",
+    "multiple_testing": "Holm step-down",
+    "one_sided_alpha": 0.05
+  },
+  "contrasts": {
+    "P1": { "estimand": "fixed-M overlap distortion (s=16 vs s=64, M0)", "threshold": 0.10 },
+    "P2": { "estimand": "fixed-T stride/overlap contrast (s=16 vs s=64, M0)", "threshold": 0.10 },
+    "P3": { "estimand": "DMB conservatism at the non-overlapping end (s=64)", "threshold": 0.01 }
+  },
+  "equivalent_band": [0.035, 0.065],
+  "current_values": "results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json (tail counts, p, Holm, CI)",
+  "legacy_note": "results/canonical/H0_PRIMARY_CONTRASTS.json 的 p=0 字段为 2026-09-18 旧值（非法），仅作历史字节保留。"
+}

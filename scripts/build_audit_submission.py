@@ -66,7 +66,7 @@ ROLE_BY_PREFIX = (
     ("audit/", "audit_toolchain"),
     ("scripts/", "submission_toolchain"),
     ("configs/", "configs"),
-    ("manuscript/", "manuscript"),
+    ("paper/", "paper"),
     ("external_prior_evidence/", "prior_evidence"),
     ("_incoming/", "batch_delivery"),
 )

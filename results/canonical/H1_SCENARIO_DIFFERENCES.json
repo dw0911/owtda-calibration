@@ -1,0 +1,22 @@
+[
+  {
+    "scenario": "shape_change",
+    "BPI": 1.0,
+    "MOMENTS": 0.062031249999999996,
+    "difference": 0.93796875,
+    "lower95": 0.9296875,
+    "upper95": 0.9460937500000001,
+    "bootstrap_draws": 2000,
+    "estimand": "BPI minus MOMENTS, equal mean over four conditions"
+  },
+  {
+    "scenario": "mean_shift",
+    "BPI": 0.05375,
+    "MOMENTS": 1.0,
+    "difference": -0.94625,
+    "lower95": -0.9534375,
+    "upper95": -0.9384374999999999,
+    "bootstrap_draws": 2000,
+    "estimand": "BPI minus MOMENTS, equal mean over four conditions"
+  }
+]

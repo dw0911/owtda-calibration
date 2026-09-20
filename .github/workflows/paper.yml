@@ -1,0 +1,27 @@
+name: paper
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "paper/**"
+      - ".github/workflows/paper.yml"
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper/main.tex
+          latexmk_use_xelatex: true
+      - name: check for undefined references
+        run: |
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" paper/main.log; then
+            echo "undefined references found"; exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manuscript-pdf
+          path: paper/main.pdf

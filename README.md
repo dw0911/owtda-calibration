@@ -1,120 +1,153 @@
-# OW-TDA-CAL-R1
+# Finite-Sample Calibration Boundaries of Topological Windowed Scanning
 
-**重叠滑动窗口下拓扑扫描检验的交换性失效与校准边界**
-*Exchangeability Failure and Calibration Boundaries of Topological Scans with Overlapping Windows*
+**OW-TDA-CAL-R1** · 注册项目名（CHARTER v1.0 英文全称）：*Exchangeability Failure and Calibration Boundaries of
+Topological Scans with Overlapping Windows* · 目标期刊：《山东大学学报（理学版）》"拓扑数据分析"专题
 
-> 论文配套的**完整可复现仓库**：实现代码、冻结配置、治理与身份链、论文源码（LaTeX）、canonical 图表数据与封存证据。
-> 目标期刊：《山东大学学报（理学版）》"拓扑数据分析"专题。
-> **快照：2026-09-20（R5-paper 阶段）**——正式 H0/H1 已封存保留；论文修订（R1）与图表重构（5 图 4 表）进行中。
+> 论文配套的**完整可复现仓库**：代码、冻结配置、治理与身份链、论文源文件、规范化汇总结果与图表生成脚本。
+> 快照：**v1.0.0-paper**（2026-09-20）——正式 H0/H1 已封存保留；论文图表重构与图件血缘打包进行中。
+
+## Overview
+
+重叠滑动窗口会使"窗口级置换检验"失去可交换性前提，从而让拓扑扫描检验的校准失效。本仓库给出：
+算法实现（BPI / MOMENTS 两种表示、扫描统计量、M0 朴素置换与 M1 依赖乘子两种校准器）、
+冻结实验协议与治理链、一次封存的正式 H0/H1 运行，以及从 canonical 汇总重建全部图表与论文的脚本。
+
+## Scientific question
+
+在重叠窗口、双预算（fixed-M 与 fixed-T）设计下：**朴素置换校准的有限样本 Type-I 边界在哪里？**
+**依赖乘子（DMB）能把边界收回到什么程度？** 以及**不同拓扑表示（BPI vs MOMENTS）对两类备择的功效选择性如何？**
+
+## Main findings
+
+| 量 | 结果 |
+|---|---|
+| H0 逐格（28 唯一格 × 2,500 replicate） | M0 朴素置换**严重反保守**（BPI 0.4267、MOMENTS 0.5462 的合并拒绝率）；M1 DMB 接近名义（0.0458 / 0.0506） |
+| P1 / P2 / P3（10,000 次 cluster bootstrap + Holm） | **0.5354 / 0.5330 / 0.0266**（阈值 0.10 / 0.10 / 0.01，全部 SUPPORTED；tail = 0 → p = 1/10001，Holm = 3/10001） |
+| H1 表示差 Δ(BPI − MOMENTS)（8 格 × 1,600 replicate） | shape change **+0.9380** [0.9297, 0.9461]；mean shift **−0.9463** [−0.9534, −0.9384]（镜像） |
+| 交换性失效 | 精确反例 + 解析方差放大（理论节 T1–T5；T4 按 proposition 降级披露） |
+
+**冻结规模**：`R₀ = 2500`（H0）、`R₁ = 1600`（H1）、`B = 999`；
+H0 共 **280,000** evaluation、H1 共 **51,200**，合计 **331,200**（数据单元 82,800 / 特征行 165,600）。
+
+## Repository structure
+
+```text
+src/owtda_cal/        核心实现（DGP、窗口/点云/PH、BPI/MOMENTS、扫描、M0/M1、身份与账本、正式流水线）
+configs/              schema + 各 phase 配置；configs/formal/ 为冻结设计的可读快照
+scripts/              规范入口（verify_release / run_h0 / run_h1 / analyse_h0 / analyse_h1 /
+                      bootstrap_primary_contrasts / build_tables / build_figures / run_smoke / fetch_archived_data）
+audit/                独立验证器（freeze/schema/admission 校验、攻击套件、repo 守卫、资源采样）
+tests/                契约与攻击式回归（1069 项通过）
+results/canonical/    **正文数值的单一真源**（canonical 汇总 + 主张—证据映射）
+results/bootstrap/    P1–P3 真实 draws（npz）+ 推断摘要 + 元数据
+artifacts/figures|tables/  图与表（脚本生成；每项附 meta.json：输入哈希、脚本哈希）
+artifacts/seals|preflight|audit|archive|smoke/  封存证据与历史工程证据
+governance/           冻结对象、registry、append-only 变更链（身份真源）
+paper/                论文 LaTeX 工程（main.tex + sections + bib + main.pdf）+ 补充材料
+release/              2026-09-18 交付包原始副本（审计留存）
+reproducibility/      RUNBOOK / ENVIRONMENT / COMPUTE_REQUIREMENTS / DATA_AVAILABILITY /
+                      FAILURE_POLICY / VALIDATION_SUMMARY / FORMAL_MANIFEST / RELEASE_MANIFEST /
+                      SEED_MANIFEST / EXPECTED_OUTPUTS / ARTIFACT_INDEX / SHA256SUMS
+data/                 manifests（正式账本 + 外部归档 + 校验和）、sample、external（占位）
+docs/                 method_overview / artifact_map / result_definitions / faq
+examples/             最小可用示例（复现单格 H0 / 单格 H1 / 窗口几何演示）
+external_prior_evidence/  旧代 DMB-R1 终止归档（L1 历史证据，隔离存放）
+```
+
+> 规范命名与上述实际路径的逐一映射（含"为何未改名"）见 [`docs/artifact_map.md`](docs/artifact_map.md)。
+
+## Quick start
+
+```powershell
+git clone <repo> && cd owtda-calibration
+uv sync --frozen                                   # 按 uv.lock 建环境
+python scripts/verify_release.py --level quick     # 最快：秒级验证全部论文数值与血缘
+```
+
+**完整复现（三层）**
+
+```powershell
+# Level 1 快速完整性验证（秒级）
+python scripts/verify_release.py --level quick
+
+# Level 2 由正式记录重做分析（分钟级；账本见 §Data and large-file archive）
+python scripts/fetch_archived_data.py --verify-only
+python scripts/analyse_h0.py --from-ledger data/external/H0_NULL_evaluation.scientific.jsonl
+python scripts/bootstrap_primary_contrasts.py
+python scripts/build_tables.py && python scripts/build_figures.py
+python scripts/verify_release.py --level analysis
+
+# Level 3 完整 Monte Carlo 重跑（小时级）
+python scripts/run_smoke.py
+python scripts/run_h0.py --plan <冻结计划> --certificate <G4 证书> --seed-registry governance/SEED_REGISTRY_v1.0.json --out <新证据目录>
+python scripts/run_h1.py --plan <同上> --certificate <同上> --out <新证据目录>
+```
+
+## Reproduction levels
+
+见 [`reproducibility/RUNBOOK.md`](reproducibility/RUNBOOK.md)：Level 1（秒级完整性）→ Level 2（账本 → 分析链）→
+Level 3（全量重跑）。每层的命令、输入、预期产物与失败策略（fail-closed）在 RUNBOOK 与
+[`reproducibility/FAILURE_POLICY.md`](reproducibility/FAILURE_POLICY.md) 中给出。
+
+## Expected outputs
+
+| 层级 | 预期 |
+|---|---|
+| Level 1 | `verify_release --level quick` 全部 PASS（H0 112/28、H1 16、P1–P3 合法性、图表血缘、SHA256SUMS） |
+| Level 2 | 与 `results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json`、`results/canonical/*` 一致（表 CSV 逐字节；图 PNG 逐字节） |
+| Level 3 | H0 280,000 / H1 51,200 evaluation 行，逐格与 canonical 汇总在容差内一致 |
+| 论文 | `paper/main.pdf`（XeLaTeX；22→23 页） |
+
+机器可读清单：[`reproducibility/EXPECTED_OUTPUTS.json`](reproducibility/EXPECTED_OUTPUTS.json)、
+图形/表格血缘：[`reproducibility/ARTIFACT_INDEX.csv`](reproducibility/ARTIFACT_INDEX.csv)。
+
+## Data and large-file archive
+
+- **合成数据**：由代码 + 冻结种子生成，无需外部数据；
+- **真实数据（PAMAP2）**：不随仓库分发，出处/许可/逐文件 SHA-256 见 [`DATA_SOURCES.md`](DATA_SOURCES.md)（本代 REAL 线为 `REAL_OMITTED_BY_DATA_GATE`）；
+- **正式账本（约 3.2 GB）与大型派生索引**：登记在 [`data/manifests/`](data/manifests/)（大小 + SHA-256 + seal 绑定），
+  DOI 待 Zenodo 归档（见 [`reproducibility/DATA_AVAILABILITY.md`](reproducibility/DATA_AVAILABILITY.md)），
+  获取与校验用 `python scripts/fetch_archived_data.py`。
+
+## Computational requirements
+
+见 [`reproducibility/COMPUTE_REQUIREMENTS.md`](reproducibility/COMPUTE_REQUIREMENTS.md)：
+Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB**、swap 增量 0、峰值磁盘约 0.4 GiB（账本 3.2 GB）；
+**不需要 GPU**；Level 1/2 任意现代 CPU（分级实测：quick 秒级、回归约 77 s、编译约 1 min）。
+
+## Paper and supplementary material
+
+- 论文源文件与编译产物：[`paper/`](paper/)（`main.tex` + `sections/` + `bibliography.bib` + `main.pdf`）；
+- 补充材料：`paper/supplement/`（补充数据表）与 `artifacts/tables/`（正文表）；
+- 论文方法/理论/协议的权威定义：`paper/sections/02_method.tex`、`03_theory.tex`、`04_protocol.tex`
+  与 `governance/{METHOD_SPEC,PROTOCOL,SAP,DATA_SPEC}_v1.0.md`。
+
+## Citation
+
+引用方式见 [`CITATION.cff`](CITATION.cff)（GitHub 会显示 "Cite this repository"）。
+**软件 release 与论文请同时引用**；若使用了归档账本，请再引用数据 DOI。
+作者名单与 DOI 当前为 PENDING（见 [`AUTHORS.md`](AUTHORS.md)），定稿后同步更新。
+
+## License
+
+- 代码：根 [`LICENSE`](LICENSE)（当前为占位"保留所有权利"，发布前替换为最终选择，如 MIT/BSD-3-Clause/Apache-2.0）；
+- 结果数据：[`LICENSES/DATA_LICENSE.txt`](LICENSES/DATA_LICENSE.txt)（PENDING）；
+- 论文：[`LICENSES/PAPER_LICENSE.txt`](LICENSES/PAPER_LICENSE.txt)（依期刊政策，PENDING）；
+- 第三方：见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)（PAMAP2 为 CC BY 4.0，不重新分发）。
+
+> ⚠️ **三项许可均待作者确认**——这是"最低发布门"中的一项，请在公开推送前完成决策并登记到 `governance/PROJECT_CHARTER.md` §11。
+
+## Contact and issue reporting
+
+- 缺陷与复现报告：使用仓库的 issue 模板（`Bug report` / `Reproducibility report`），
+  请附 `git rev-parse HEAD`、环境与本机输出；
+- 贡献路径与硬性约束（不得改 `pyproject.toml`/`uv.lock` 与已封存对象）见 [`CONTRIBUTING.md`](CONTRIBUTING.md)；
+- ⚠️ **匿名审稿兼容**：若目标期刊采用双盲审稿，公开仓库/作者名单/ORCID/提交历史的暴露时间须服从期刊规定；
+  在此之前请勿公开关联作者身份（详见 [`AUTHORS.md`](AUTHORS.md)）。
 
 ---
 
-## 1. 研究概要
-
-重叠滑动窗口会破坏"窗口级置换检验"所依赖的可交换性前提，进而使拓扑扫描（persistent-homology based scan）检验的校准失效。本代研究给出：
-
-1. **精确反例**：原始样本 IID、窗口边际同分布时，重叠窗口特征仍可以不可交换（T2）；
-2. **有限样本校准图谱**：fixed-M / fixed-T 双预算、28 个 H0 格 × 2,500 replicate、8 个 H1 格 × 1,600 replicate 的逐格 Type-I 与功效；
-3. **表示选择性**：BPI 与 MOMENTS 在两类备择（单时点边际均值-协方差匹配的 shape-change 与 mean-shift）下的镜像功效差；
-4. **可重放证据链**：身份 / 账本 / seal / 表图逐字节可复算（治理链 append-only）。
-
-**主要结果（已封存）**
-
-| 量 | 值 |
-|---|---|
-| H0：M0 朴素置换（BPI / MOMENTS） | 拒绝率 0.4267 / 0.5462（严重反保守） |
-| H0：M1 DMB 依赖乘子（BPI / MOMENTS） | 0.0458 / 0.0506（接近名义 0.05） |
-| P1 / P2 / P3（Holm） | 0.5354 / 0.5330 / 0.0266（阈值 0.10 / 0.10 / 0.01，全部 SUPPORTED） |
-| H1 表示差 Δ(BPI−MOMENTS) | shape-change **+0.9380** [0.9297, 0.9461]；mean-shift **−0.9463** [−0.9534, −0.9384] |
-
-## 2. 仓库内容
-
-| 路径 | 内容 |
-|---|---|
-| `src/owtda_cal/` | 核心实现（DGP、特征 BPI/MOMENTS、扫描统计、校准器 M0/M1、身份/哈希/账本、正式流水线） |
-| `tests/` | 契约与攻击式回归测试（含"故意破坏必须失败"用例） |
-| `configs/` | schema 与各类运行配置（smoke / confirm_null / confirm_h1 / real） |
-| `governance/` | 章程、协议与规格（PROTOCOL / METHOD_SPEC / SAP / DATA_SPEC）、registry、冻结与身份对象、append-only `CHANGELOG.md` |
-| `scripts/` | 编排与证据工具（审计包构建/验证、正式 runner、序列执行、release 导出等） |
-| `audit/` | 独立验证器（freeze/schema/admission 校验、攻击套件、资源采样、repo 守卫） |
-| `artifacts/` | 封存证据与成稿数据：`seals/`、`preflight/`、`summaries/`、`tables/`、`figures/`、`audit/`、`archive/`、`smoke/` |
-| `manuscript/` | 论文 LaTeX 工程（`main.tex` + `sections/` + `bibliography.bib` + `main.pdf` + 补充材料 CSV + 绘图脚本） |
-| `release/` | 正式交付包：`analysis/`（canonical 汇总与分析脚本）、`certificate/`、`h0_run/`、`h1_run/`、`plan/`、`summary/` |
-| `environment/` | 冻结环境记录（版本、BLAS、线程设置、pip freeze、重建测试） |
-| `external_prior_evidence/` | 旧代 DMB-R1 终止归档（L1 历史证据；按治理要求隔离存放，不参与本代估计） |
-
-> 不随仓库分发的大对象（3.2 GB 原始账本 + 6 个大型派生索引）及其 SHA256、再生成方式：
-> 见 [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) 与 [`EXCLUDED_ARTIFACTS.csv`](EXCLUDED_ARTIFACTS.csv)。
-
-## 3. 安装
-
-```powershell
-# Python 3.12；依赖以 pyproject.toml + uv.lock 锁定
-uv sync --frozen
-# 等价替代：
-# python -m venv .venv
-# .\.venv\Scripts\Activate.ps1
-# pip install -e ".[test,dev]"
-```
-
-冻结运行环境约定（与正式结果一致）：`PYTHONDONTWRITEBYTECODE=1`、`OMP/OPENBLAS/MKL/NUMEXPR_NUM_THREADS=1`；
-详见 `environment/` 与 `scripts/frozen_env.py`。
-
-## 4. 快速验证
-
-```powershell
-python -m pytest tests -q                 # 回归测试
-python -m ruff check src tests audit scripts configs   # 静态检查（代码与工具域）
-python scripts/check_canonical.py         # canonical 序列化契约（递归）
-python audit/validate_freeze.py           # 冻结对象与 registry 自洽性
-python audit/validate_schemas.py          # 逐行 schema 合同
-python scripts/verify_release_contracts.py --help   # 发布合同验证器
-```
-
-> 说明：`ruff check .` 会额外报出 3 个**交付/构建脚本**（`release/analysis/scripts/*`、`manuscript/scripts/make_figures.py`）
-> 的 14 项风格提示——它们保留了交付时的紧凑风格，逻辑无问题，如实披露（见 `REPRODUCIBILITY.md` §4）。
-
-## 5. 复现论文
-
-三级复现路径（详见 [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md)）：
-
-1. **图表/表（轻量）**：由 `artifacts/summaries/` + `release/analysis/` 的 canonical 汇总重生成图与表；
-2. **分析链**：由封存账本（本地，不随仓库分发）重算 canonical 汇总、bootstrap 与 Holm；
-3. **全链重跑**：预检 → 冻结/准入 → H0/H1 运行与 seal → 分析 → 成稿（需要相应算力）。
-
-数据流唯一（禁止硬编码数字）：
-
-```text
-sealed trial JSON → validated canonical ledger → canonical summaries
-→ tables/figures → manuscript_values.json → manuscript consistency checker
-```
-
-## 6. 数据
-
-真实数据（PAMAP2 Protocol）**不随本仓库分发**；出处、许可、文件清单与逐文件 SHA256 见
-[`DATA_SOURCES.md`](DATA_SOURCES.md)。本代 REAL 线为 `REAL_OMITTED_BY_DATA_GATE`（正文条件章节），
-复现合成主线**不需要**真实数据。
-
-## 7. 证据链与治理
-
-- 正式运行 seal（H0/NULL 与 H1/ALT 的 RUN + PHASE seal，H1 parent 精确指向 H0）位于 `artifacts/seals/`；
-  计数：NULL 70,000 data units / 140,000 feature rows / 280,000 evaluation rows；ALT 12,800 / 25,600 / 51,200。
-- 所有治理与证据变更 **append-only**（`governance/CHANGELOG.md`、`*_REGISTRY.jsonl`、`reasons/`）；已 seal 对象不可覆盖。
-- **字节身份**：`.gitattributes` 设置 `* -text`；canonical 对象以 exact bytes 计算 SHA256，禁止 EOL 转换。
-
-## 8. 引用与许可
-
-- 引用：见 [`CITATION.cff`](CITATION.cff)（作者名单与最终标题将在稿件定稿时更新）。
-- 许可：`LICENSE` 当前为占位（All rights reserved，until publication decision）——决策将在投稿前登记并替换。
-
-## 9. 已知限制与未闭合项（如实披露）
-
-1. **P1–P3 精确调整后 p 值**：真实 10,000 次 cluster-bootstrap draws 已入库
-   （`governance/actual_primary_draws.json`，P1/P2/P3 各 10,000）；最终表仍待以正式工具重算后替换 `<0.05` 占位。
-2. **图表重构**：当前图件正按审查规格重绘（5 图 4 表 + 补充材料）；本快照含重构前的已核验数据。
-3. **T4（Ω=qΓ0 的过程极限）**：未闭合，正文按 proposition 处理（理论降级为精确反例 + 解析方差放大 + 系统校准图谱）。
-4. **REAL/PAMAP2**：因数据闸门（23<24 合格任务）omission，正文为条件章节。
-5. 历史过程稿、旧代项目与大型本地证据不随仓库分发；如需，见 `external_prior_evidence/` 与各章说明。
-6. **表 1–5 的原始生成器脚本未随项目保留**（表数据、输入哈希与 canonical 输入均已入库；补充数据表可逐字节复现）——
-   投稿前随图表重构一并重建，详见 `REPRODUCIBILITY.md` §3.5。
-7. 在发布快照上运行 `audit/validate_freeze.py` 会报 1 项 `source_tree_hash` 不匹配（原因与影响见 `REPRODUCIBILITY.md` §4）。
+**已知披露项（如实登记）**：表 1–5 原始生成器未保留；`validate_freeze` 的 `source_tree_hash` 单项不匹配；
+旧 `p = 0` 值仅作历史字节保留（现行值见 `results/bootstrap/`）；M0 范围口径待核对。
+全部见 [`reproducibility/VALIDATION_SUMMARY.md`](reproducibility/VALIDATION_SUMMARY.md) §3 与
+[`reproducibility/FAILURE_POLICY.md`](reproducibility/FAILURE_POLICY.md) §5。

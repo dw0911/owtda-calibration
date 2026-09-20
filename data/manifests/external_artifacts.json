@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "policy": "Large scientific artifacts are not distributed with the repository. They are registered here with size and SHA-256; the deposit DOI is recorded once assigned (Zenodo). scripts/fetch_archived_data.py verifies or downloads them into data/external/.",
+  "deposit": {
+    "repository": "Zenodo",
+    "record": "PENDING_DEPOSIT",
+    "doi": null,
+    "note": "Create the deposit from the v1.0.0-paper GitHub release, then fill doi/release fields here and in CITATION.cff."
+  },
+  "artifacts": [
+    {
+      "name": "H0_EVALUATION_LEDGER",
+      "artifact": "formal H0/NULL evaluation ledger",
+      "filename": "H0_NULL_evaluation.scientific.jsonl",
+      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H0_NULL\\run\\ac6f9e201a19cfc6d1edb0d02bcc7ee0e7556b7083e3571106d2bd8058883f81\\f94341f89cde8bafa930548f1c67446c57587f7b9c164e6690a906b268533ed1.final\\evaluation.scientific.jsonl",
+      "size_bytes": 1404096576,
+      "sha256": "744141035fdb5f651b19f3e7998cc4f7223356dcdc7eea1f92a2390e689391d8",
+      "rows": 280000,
+      "schema": "configs/schema/scientific_row.schema.json",
+      "doi": null,
+      "url": null,
+      "bound_by": "EXPERIMENTS/20260918_H0_NULL/RUN_SEAL.json + PHASE_SEAL.json (evaluation-ledger hash)"
+    },
+    {
+      "name": "H0_FEATURE_LEDGER",
+      "artifact": "formal H0/NULL feature-sufficient ledger",
+      "filename": "H0_NULL_feature.scientific.jsonl",
+      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H0_NULL\\run\\ac6f9e201a19cfc6d1edb0d02bcc7ee0e7556b7083e3571106d2bd8058883f81\\f94341f89cde8bafa930548f1c67446c57587f7b9c164e6690a906b268533ed1.final\\feature.scientific.jsonl",
+      "size_bytes": 1437310000,
+      "sha256": "16b854523097d258095a70e2ea2d0ad07669100e5ccb70caff336c4dfaf43a5f",
+      "rows": 140000,
+      "schema": "configs/schema/feature_sufficient_row.schema.json",
+      "doi": null,
+      "url": null,
+      "bound_by": "EXPERIMENTS/20260918_H0_NULL/RUN_SEAL.json + PHASE_SEAL.json (feature-ledger hash)"
+    },
+    {
+      "name": "H1_EVALUATION_LEDGER",
+      "artifact": "formal H1/ALT evaluation ledger",
+      "filename": "H1_ALT_evaluation.scientific.jsonl",
+      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H1_ALT\\run\\",
+      "size_bytes": 266379930,
+      "sha256": "82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7",
+      "rows": 51200,
+      "schema": "configs/schema/scientific_row.schema.json",
+      "doi": null,
+      "url": null,
+      "bound_by": "EXPERIMENTS/20260918_H1_ALT/RUN_SEAL.json + PHASE_SEAL.json (parent = H0 phase seal)"
+    },
+    {
+      "name": "H1_FEATURE_LEDGER",
+      "artifact": "formal H1/ALT feature-sufficient ledger",
+      "filename": "H1_ALT_feature.scientific.jsonl",
+      "local_source": "F:\\BPI\\EXPERIMENTS\\20260918_H1_ALT\\run\\",
+      "size_bytes": 262233600,
+      "sha256": "4ba3d1f7407719bec9e72d4b9d8b26f4cb5a1cf1528b4940315cd9e2c1c191cd",
+      "rows": 25600,
+      "schema": "configs/schema/feature_sufficient_row.schema.json",
+      "doi": null,
+      "url": null,
+      "bound_by": "EXPERIMENTS/20260918_H1_ALT/RUN_SEAL.json + PHASE_SEAL.json"
+    },
+    {
+      "name": "ACTIVE_INDEX_SET_E6ECAC",
+      "artifact": "analysis-layer ACTIVE data/feature/evaluation indices (e6ecac revision)",
+      "filename": "ACTIVE_INDEX_SET_e6ecac.jsonl.bundle",
+      "local_source": "F:\\BPI\\SRC\\owtda-calibration\\governance\\",
+      "size_bytes": 250700000,
+      "sha256": "SET_OF_THREE_NOT_A_SINGLE_FILE",
+      "rows": null,
+      "schema": "governance/ACTIVE_*_INDEX_<revision>.jsonl",
+      "doi": null,
+      "url": null,
+      "note": "Three files, hashes in EXCLUDED_ARTIFACTS.csv; regenerate from the frozen plan/ledgers rather than transporting bytes."
+    },
+    {
+      "name": "ACTIVE_INDEX_SET_C89C90",
+      "artifact": "analysis-layer ACTIVE data/feature/evaluation indices (c89c90 revision)",
+      "filename": "ACTIVE_INDEX_SET_c89c90.jsonl.bundle",
+      "local_source": "F:\\BPI\\SRC\\owtda-calibration\\governance\\",
+      "size_bytes": 45849600,
+      "sha256": "SET_OF_THREE_NOT_A_SINGLE_FILE",
+      "rows": null,
+      "schema": "governance/ACTIVE_*_INDEX_<revision>.jsonl",
+      "doi": null,
+      "url": null,
+      "note": "Three files, hashes in EXCLUDED_ARTIFACTS.csv."
+    }
+  ]
+}

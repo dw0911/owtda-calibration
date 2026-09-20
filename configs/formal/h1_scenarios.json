@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "name": "h1_scenarios",
+  "description": "Two registered alternative constructions, each matched to the circle-based H0 at a single time point (marginal mean and covariance).",
+  "authoritative_sources": [
+    "governance/SCOPE_DESIGN_ALT_<scope_design_hash>.csv",
+    "OWTDA_CAL_R1_COMPLETE_PLAN_v1.0.md §7/§12",
+    "paper/sections/04_protocol.tex (H1 definitions)"
+  ],
+  "note": "本文件是冻结设计的可读快照；权威值在 governance 对象中。",
+  "scenarios": {
+    "shape_change": {
+      "construction": "circle -> figure-eight (C(u) = (cos 2πu, sin 2πu) ; F(u) = (sin 2πu, sin 4πu))",
+      "change_point": "τ_true = T//2 + 0.5",
+      "matched_to": "N_CIRCLE null (same latent path, noise scale 0.08)"
+    },
+    "mean_shift": {
+      "construction": "mean shift of magnitude 0.5 in direction v(θ), θ ~ U(0,1) after τ_true",
+      "amplitude_delta": 0.5,
+      "matched_to": "N_CIRCLE null (single-time-point marginal mean and covariance)"
+    }
+  },
+  "design": {
+    "geometry": { "W": 64, "M": 192, "stride": [16, 64], "rho": [0, 0.8] },
+    "replicates_R1": 1600,
+    "resamples_B": 999,
+    "critical_value": { "definition": "empirical 0.95 quantile of the null scan statistic within the matched H0 cell", "rank": 2376, "n_null": 2500 },
+    "localization": { "estimator": "tau_hat = (k_hat - 0.5) s + (W + 1) / 2", "success_threshold": "|tau_hat - tau_true| <= W / 2" },
+    "joint_success": "detection AND localization; missed trials stay in the denominator"
+  },
+  "expected": { "cell_features": 16, "evaluation_rows": 51200, "data_units": 12800, "feature_rows": 25600 }
+}

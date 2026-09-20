@@ -15,6 +15,7 @@ __pycache__/
 htmlcov/
 build/
 dist/
+.ipynb_checkpoints/
 
 # --- 虚拟环境与锁运行时产物 ---
 .venv/
@@ -27,30 +28,37 @@ venv/
 .DS_Store
 Thumbs.db
 
-# --- 临时与日志 ---
+# --- 临时文件 ---
 *.log.tmp
+*.tmp
+*.bak
 *_scratch/
 
 # --- 隔离秘密（不入库）：REAL task root key / task id salt 明文 ---
-# 只提交 commitment；丢失该文件需提升 task_index_generation_id 才能重跑 REAL。
 secrets/
 
 # ============================================================
 # 大数据与本地证据（不推送）
-# 出处、SHA256 与再生成方式见 REPRODUCIBILITY.md 与 EXCLUDED_ARTIFACTS.csv
+# 出处、SHA256 与再生成方式见 reproducibility/ 与 data/manifests/
 # ============================================================
 # 原始账本（H0/H1 evaluation+feature，合计约 3.2 GB，超过 GitHub 单文件限制）
 artifacts/ledgers/
 # 大型派生索引（ACTIVE_*_INDEX，7–140 MB；由冻结计划与种子可再生成）
 governance/ACTIVE_*_INDEX_*.jsonl
+# 外部归档下载目标目录（只保留 .gitkeep）
+data/external/*
+!data/external/.gitkeep
 
-# --- LaTeX 编译中间件（可再生；manuscript/main.pdf 与 *.tex 仍会入库） ---
-manuscript/*.aux
-manuscript/*.blg
-manuscript/*.log
-manuscript/*.out
-manuscript/*.bbl
-manuscript/*.synctex.gz
+# --- LaTeX 编译中间件（可再生；paper/main.pdf 与 *.tex 仍会入库） ---
+paper/*.aux
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.synctex.gz
 
-# --- 本地数据（如按 DATA_SOURCES.md 放入仓库工作目录时） ---
-data/
+# --- 本地数据（如按 DATA_SOURCES.md 放入仓库工作目录时；目录本身不忽略，只有内容） ---
+data/sample/*
+!data/sample/.gitkeep
+data/raw/*
+data/raw_download/*

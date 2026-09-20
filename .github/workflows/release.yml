@@ -1,0 +1,51 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: install locked environment
+        run: uv sync --frozen
+      - name: verify release set
+        run: |
+          uv run python scripts/verify_release.py --level quick
+          uv run python scripts/bootstrap_primary_contrasts.py --check
+          uv run python scripts/build_tables.py --check
+      - name: rebuild sums and manifests
+        run: |
+          uv run python scripts/build_reproducibility_index.py
+          uv run python scripts/build_sha256sums.py
+      - name: compile manuscript
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper/main.tex
+          latexmk_use_xelatex: true
+      - name: build source archive and release manifest
+        run: |
+          git archive --format=tar.gz --prefix=owtda-calibration/ -o owtda-calibration-source.tar.gz HEAD
+          cp paper/main.pdf manuscript.pdf
+          sha256sum owtda-calibration-source.tar.gz manuscript.pdf reproducibility/SHA256SUMS > release-SHA256SUMS.txt
+      - name: publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            owtda-calibration-source.tar.gz
+            manuscript.pdf
+            release-SHA256SUMS.txt
+            reproducibility/SHA256SUMS
+            reproducibility/FORMAL_MANIFEST.json
+            reproducibility/RELEASE_MANIFEST.json
+          generate_release_notes: true

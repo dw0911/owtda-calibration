@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "note": "Formal (paper) ledgers. Bytes are NOT distributed with the repository; hashes are bound by the RUN/PHASE seals listed below and verified by scripts/fetch_archived_data.py.",
+  "phases": {
+    "NULL": {
+      "role": "H0",
+      "data_units": 70000,
+      "feature_rows": 140000,
+      "evaluation_rows": 280000,
+      "ledgers": {
+        "evaluation": {
+          "path": "artifacts/ledgers/H0_NULL/evaluation.scientific.jsonl",
+          "size_bytes": 1404096576,
+          "sha256": "744141035fdb5f651b19f3e7998cc4f7223356dcdc7eea1f92a2390e689391d8"
+        },
+        "feature": {
+          "path": "artifacts/ledgers/H0_NULL/feature.scientific.jsonl",
+          "size_bytes": 1437310000,
+          "sha256": "16b854523097d258095a70e2ea2d0ad07669100e5ccb70caff336c4dfaf43a5f"
+        }
+      },
+      "seals": {
+        "run_seal": "artifacts/seals/H0_NULL/RUN_SEAL.json",
+        "phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
+        "formal_admission": "artifacts/seals/H0_NULL/FORMAL_ADMISSION.json"
+      }
+    },
+    "ALT": {
+      "role": "H1",
+      "data_units": 12800,
+      "feature_rows": 25600,
+      "evaluation_rows": 51200,
+      "ledgers": {
+        "evaluation": {
+          "path": "artifacts/ledgers/H1_ALT/evaluation.scientific.jsonl",
+          "size_bytes": 266379930,
+          "sha256": "82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7"
+        },
+        "feature": {
+          "path": "artifacts/ledgers/H1_ALT/feature.scientific.jsonl",
+          "size_bytes": 262233600,
+          "sha256": "4ba3d1f7407719bec9e72d4b9d8b26f4cb5a1cf1528b4940315cd9e2c1c191cd"
+        }
+      },
+      "seals": {
+        "run_seal": "artifacts/seals/H1_ALT/RUN_SEAL.json",
+        "phase_seal": "artifacts/seals/H1_ALT/PHASE_SEAL.json",
+        "formal_admission": "artifacts/seals/H1_ALT/FORMAL_ADMISSION.json",
+        "parent_phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json"
+      }
+    }
+  },
+  "totals": {
+    "data_units": 82800,
+    "feature_rows": 165600,
+    "evaluation_rows": 331200,
+    "inner_resampling_statistics": 330868800,
+    "ph_windows": 8207600
+  }
+}

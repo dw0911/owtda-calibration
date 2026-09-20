@@ -1,0 +1,2 @@
+# 外部归档下载目标目录：内容不入库。
+# 使用 python scripts/fetch_archived_data.py 获取并校验（见 ../README.md）。

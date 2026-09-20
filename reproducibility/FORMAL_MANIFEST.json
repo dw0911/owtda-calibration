@@ -1,0 +1,128 @@
+{
+  "canonical_results_sha256": {
+    "results/canonical/ANALYSIS_INPUT_MANIFEST_1f1c7492a87102aa2489e51279e852eb980a7deb02b79765190802992eb10b7f.json": "e6b77a315170aff302b57f711a33d13a2fd9703f50f731fb2e5f67004285ec68",
+    "results/canonical/CANONICAL_SUMMARY.json": "e7e754b3e585518256ef3d6597573952dfd9cba58d64e899874458ee8f9f4c3f",
+    "results/canonical/FIGURE_DATA.json": "2eabd5b289028d3b94c28f8db5b864ff9d8b5c0c36f816bf1f0834afc691d4b4",
+    "results/canonical/H0_POINTWISE.json": "75e550a50138375ac65da310823a519cc32095ec98c46af9cc493da63b015621",
+    "results/canonical/H0_PRIMARY_CONTRASTS.json": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
+    "results/canonical/H1_ALL_16_GEOMETRY_COMPLETE.json": "588b72f8ee141ea4053a1dabaab295485e426e78845907979a5dacdbcc37d96e",
+    "results/canonical/H1_REANALYSIS.json": "a0d4bbcd6b8d81d40fa62fd64e05174314f8fb56d6df31c995765d09497f15f2",
+    "results/canonical/H1_SCENARIO_DIFFERENCES.json": "16a04495549309c291e428bb1433ccc5a7662cf3a874d11bf506b5a3fdd407dc",
+    "results/canonical/MANUSCRIPT_VALUES.json": "7d223e304dddc91bcd24335b88dd93a295bdfd08b127fc6c39dab8c687e2bb36",
+    "results/canonical/P1_P3_BOOTSTRAP.json": "00194c4f9d38955b0d5d2cd1b32db5983a34721dcb09b324f9468e94986fede8",
+    "results/canonical/TABLE_DATA.json": "e6220f636feaf76d2e0f8b91231215e2fe635f5e34d4a71a6dacbcd94e1faecf",
+    "results/canonical/activation_summary.json": "e7a96d4bd34e7df1ae4131ab5a5fb8a5593800d5fb1e6a845c59bec7aa88a2bf",
+    "results/canonical/active_index_summary.json": "d9914131c7e42ca70c6931ed73cdb99227e795badfc20439fb0033c7077a1e0a",
+    "results/canonical/aggregation_summary.json": "04470f6c4536d4cad7010950a17a7003c0d6695d3df53e7be8a0d3dbe2381de7",
+    "results/canonical/bootstrap_context.json": "16f592043cf09f89ae9ccde3963ccc94fbabfc4313ddf7c018057c1736febbea",
+    "results/canonical/bootstrap_power_diff.json": "b12e4f3837b48839219e3cb6e94c19de8ca42ca116a9d68222fe2dfb060acbc5",
+    "results/canonical/percell_analysis.json": "ee2964f4d43b3f559e42749ed5b38a647e2460e78d41c21811eefab108426461",
+    "results/canonical/shard_hashes.json": "dd073e6982a7b5d45f1d266674518fa231245658a6e02103bb842b685242897b",
+    "results/canonical/validation_summary.json": "24621ae653d15c7472d59a0a4946a4e1ebaadf0e9220c88eef0775479ffcf975"
+  },
+  "code_doi": null,
+  "data_doi": null,
+  "freeze": {
+    "evidence_generation_id": "G01",
+    "freeze_id": "6057b5dcc81a03f917bcc67a8d1fcc7bc9a131de517f1e0471e93076ad41a79a",
+    "note": "source_tree_hash recorded by FREEZE_MANIFEST refers to an earlier revision; the published src/ is the later R4/R5 repair revision (see FAILURE_POLICY.md disclosures).",
+    "source_tree_scope": [
+      "src/",
+      "configs/"
+    ]
+  },
+  "git_commit": "e98e2a3127456f41158f95b1fc65181e868e7870",
+  "paper_pdf_sha256": "448695e1fb4e3ce3417a03f5fd813ea8291fb732498ca774749b7b7979ddf083",
+  "paper_version": "2026-09 (R5-paper snapshot)",
+  "phases": {
+    "ALT": {
+      "data_units": 12800,
+      "evaluation_rows": 51200,
+      "feature_rows": 25600,
+      "ledgers": {
+        "evaluation": {
+          "path": "artifacts/ledgers/H1_ALT/evaluation.scientific.jsonl",
+          "sha256": "82ddef2b75e303dedc9038cf29cc9dac26d1867e2c89fc951842c4b5967052c7",
+          "size_bytes": 266379930
+        },
+        "feature": {
+          "path": "artifacts/ledgers/H1_ALT/feature.scientific.jsonl",
+          "sha256": "4ba3d1f7407719bec9e72d4b9d8b26f4cb5a1cf1528b4940315cd9e2c1c191cd",
+          "size_bytes": 262233600
+        }
+      },
+      "role": "H1",
+      "seals": {
+        "formal_admission": "artifacts/seals/H1_ALT/FORMAL_ADMISSION.json",
+        "parent_phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
+        "phase_seal": "artifacts/seals/H1_ALT/PHASE_SEAL.json",
+        "run_seal": "artifacts/seals/H1_ALT/RUN_SEAL.json"
+      }
+    },
+    "NULL": {
+      "data_units": 70000,
+      "evaluation_rows": 280000,
+      "feature_rows": 140000,
+      "ledgers": {
+        "evaluation": {
+          "path": "artifacts/ledgers/H0_NULL/evaluation.scientific.jsonl",
+          "sha256": "744141035fdb5f651b19f3e7998cc4f7223356dcdc7eea1f92a2390e689391d8",
+          "size_bytes": 1404096576
+        },
+        "feature": {
+          "path": "artifacts/ledgers/H0_NULL/feature.scientific.jsonl",
+          "sha256": "16b854523097d258095a70e2ea2d0ad07669100e5ccb70caff336c4dfaf43a5f",
+          "size_bytes": 1437310000
+        }
+      },
+      "role": "H0",
+      "seals": {
+        "formal_admission": "artifacts/seals/H0_NULL/FORMAL_ADMISSION.json",
+        "phase_seal": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
+        "run_seal": "artifacts/seals/H0_NULL/RUN_SEAL.json"
+      }
+    }
+  },
+  "release": "v1.0.0-paper",
+  "seals": {
+    "H0_NULL": {
+      "PHASE_SEAL.json": {
+        "file_sha256": "e74f49b2c7d2d949f268a94bfb60268ba337fdf0eb286219eae9ca9f96ce13b8",
+        "path": "artifacts/seals/H0_NULL/PHASE_SEAL.json",
+        "recorded": {
+          "phase_seal_hash": "3913d4366afc7631cd072371cf02f45587fe2efb36ffa89500b143dabec3997a"
+        }
+      },
+      "RUN_SEAL.json": {
+        "file_sha256": "7282842a59301b2c75e8ec060863652af69a5b5ddbfc9c484a4f66829f6193ec",
+        "path": "artifacts/seals/H0_NULL/RUN_SEAL.json",
+        "recorded": {
+          "run_seal_hash": "241c2e951cf906e708f321c9038d28204f26efeffdbf4f6442af04d8016309dc"
+        }
+      }
+    },
+    "H1_ALT": {
+      "PHASE_SEAL.json": {
+        "file_sha256": "8bbddcb414529bb6369acc4c64d595b99ffca70302816fba62b003671f5fe537",
+        "path": "artifacts/seals/H1_ALT/PHASE_SEAL.json",
+        "recorded": {
+          "phase_seal_hash": "d1e4a8f78ed826c845c98003515ac37f14024e8f49d11a3770dc50509c26c149"
+        }
+      },
+      "RUN_SEAL.json": {
+        "file_sha256": "408fb36f039b15c73eec993d3c74f64504431667446a87bc59286df407b6b24a",
+        "path": "artifacts/seals/H1_ALT/RUN_SEAL.json",
+        "recorded": {
+          "run_seal_hash": "c5ecaead286c693f785a4bde051bd508bf846599cc6ac2ba81d6d442687a2715"
+        }
+      }
+    }
+  },
+  "totals": {
+    "data_units": 82800,
+    "evaluation_rows": 331200,
+    "feature_rows": 165600,
+    "inner_resampling_statistics": 330868800,
+    "ph_windows": 8207600
+  }
+}

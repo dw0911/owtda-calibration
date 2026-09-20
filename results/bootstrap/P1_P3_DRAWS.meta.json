@@ -1,0 +1,17 @@
+{
+  "analysis_id": "18797cfe99382763fa568ebaddd5e8d67e7a6bedda2260d41f985b9c377bc6d4",
+  "git_commit": "e98e2a3127456f41158f95b1fc65181e868e7870",
+  "kind": "BOOTSTRAP_DRAWS",
+  "note": "draw generation itself is registered under the frozen plan; this script re-runs only the registered tail rule.",
+  "outputs": {
+    "P1_P3_BOOTSTRAP_SUMMARY.json": "6ff17bde1c61581d6fec4771e6efe280f1067620e69bc4ca82162264118099a4",
+    "P1_P3_DRAWS.npz": "f3bed9e48e68b56bd57207e6ecd5b613d6d7602c500f87e1bec29a1b8cc5e453"
+  },
+  "point_estimate_source": "results/canonical/H0_PRIMARY_CONTRASTS.json",
+  "point_estimate_source_sha256": "c812ba02eac997fe25b91876c142dabb2213faaba62c7bec61a3f46cca73ba66",
+  "schema_version": 1,
+  "script": "scripts/bootstrap_primary_contrasts.py",
+  "seed_registry": "governance/SEED_REGISTRY_v1.0.json (entry: ANALYSIS bootstrap)",
+  "source_draws": "governance/actual_primary_draws.json",
+  "source_draws_sha256": "5ef7c69f582adffce51c1d941a901d4f9bb7d5ff63e93aeabfcba1c8c36d7f68"
+}

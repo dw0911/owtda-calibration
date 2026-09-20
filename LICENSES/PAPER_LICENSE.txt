@@ -1,0 +1,13 @@
+PAPER LICENSE / USE TERMS — 待定（PENDING）
+
+适用对象：paper/ 下的论文源文件（main.tex、sections/、bibliography.bib、补充材料）与编译产物。
+
+当前状态：**未确定**。论文尚未投稿/录用，版权与再分发条款由目标期刊政策与通讯作者共同确定。
+
+说明：
+  * 期刊政策优先：多数期刊对预印本与作者自存档有具体规定，请以《山东大学学报（理学版）》的
+    作者须知与版权协议为准（专题："拓扑数据分析"）。
+  * 在确定之前，论文源文件按"保留所有权利"处理；审稿期间的访问请遵循期刊的匿名审稿要求
+    （见 README §Contact 与 AUTHORS.md 的匿名兼容说明）。
+  * 论文录用后：在此登记最终条款（例如 CC BY 4.0 / 期刊独占许可 / 作者自存档版本条款），
+    并同步 README §License 与 CITATION.cff 的 preferred-citation。

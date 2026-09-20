@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: install locked environment
+        run: uv sync --frozen
+      - name: unit + contract tests
+        run: uv run python -m pytest tests -q
+      - name: static checks (code and tooling scope)
+        run: uv run ruff check src tests audit scripts configs
+      - name: validate formal configs
+        run: uv run python -c "import json,pathlib;[json.loads(p.read_text(encoding='utf-8-sig')) for p in pathlib.Path('configs').rglob('*.json')]"
+      - name: smoke (pipeline-level, no paper numbers)
+        run: uv run python scripts/run_smoke.py
+      - name: release verification (level 1 quick)
+        run: uv run python scripts/verify_release.py --level quick
+      - name: tables regenerate identically
+        run: uv run python scripts/build_tables.py --check
+      - name: figure metas resolve
+        run: uv run python scripts/build_figures.py --check
+      - name: P1-P3 legality and regeneration
+        run: uv run python scripts/bootstrap_primary_contrasts.py --check
+      - name: canonical schema walk
+        run: uv run python scripts/check_canonical.py
+
+  paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper/main.tex
+          working_directory: .
+          latexmk_use_xelatex: true
+      - name: upload compiled manuscript
+        uses: actions/upload-artifact@v4
+        with:
+          name: manuscript
+          path: paper/main.pdf

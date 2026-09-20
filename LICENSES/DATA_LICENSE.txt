@@ -1,0 +1,19 @@
+DATA / RESULTS LICENSE — 待定（PENDING）
+
+适用对象：本仓库自行生成的结果数据（results/ 下的 canonical 汇总、bootstrap 数组；
+artifacts/ 下的图、表与元数据；以及由本仓代码生成的合成实验数据）。
+
+当前状态：**未确定**。在投稿/发布决定前，这些对象与代码同为"保留所有权利（All rights reserved）"，
+不授予再分发许可。
+
+建议选项（待通讯作者与目标期刊确认后择一并登记）：
+  A. CC BY 4.0            —— 便于复现与二次研究（推荐用于规范化汇总与图表数据）
+  B. CC0 1.0              —— 最大化复用（对自带 DOI 的数据归档较常见）
+  C. 保留所有权利          —— 若期刊或机构政策要求
+
+不适用本文件：
+  * 第三方数据（PAMAP2 等）—— 遵循其原始许可，见 THIRD_PARTY_NOTICES.md 与 DATA_SOURCES.md；
+  * 论文正文与排版源文件 —— 见 LICENSES/PAPER_LICENSE.txt；
+  * 代码 —— 见仓库根 LICENSE。
+
+确定后：更新本文件、README §License、CITATION.cff，并在 governance/CHANGELOG.md 记录决策。

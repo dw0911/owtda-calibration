@@ -1,0 +1,48 @@
+{
+  "counts": {
+    "h0_cells": 28,
+    "h0_evaluation_rows": 280000,
+    "h0_units": 112,
+    "h1_cell_features": 16,
+    "h1_evaluation_rows": 51200
+  },
+  "level1_quick": "python scripts/verify_release.py --level quick  ->  all checks PASS",
+  "primary_contrasts": {
+    "P1": {
+      "ci95_basic": [
+        0.5209999999999999,
+        0.5494
+      ],
+      "p_holm": 0.00029997000299970003,
+      "p_raw": 9.999000099990002e-05
+    },
+    "P2": {
+      "ci95_basic": [
+        0.5194000000000001,
+        0.5462
+      ],
+      "p_holm": 0.00029997000299970003,
+      "p_raw": 9.999000099990002e-05
+    },
+    "P3": {
+      "ci95_basic": [
+        0.022400000000000003,
+        0.0308
+      ],
+      "p_holm": 0.00029997000299970003,
+      "p_raw": 9.999000099990002e-05
+    }
+  },
+  "required_files": [
+    "results/canonical/H0_POINTWISE.json",
+    "results/canonical/H0_PRIMARY_CONTRASTS.json",
+    "results/canonical/H1_REANALYSIS.json",
+    "results/bootstrap/P1_P3_BOOTSTRAP_SUMMARY.json",
+    "artifacts/tables/H0_ALL_112.csv",
+    "artifacts/tables/H1_ALL_16_GEOMETRY_COMPLETE.csv",
+    "artifacts/figures/Figure1_method_schematic.pdf",
+    "artifacts/figures/Figure5_H1_power_and_difference.pdf",
+    "paper/main.pdf",
+    "reproducibility/SHA256SUMS"
+  ]
+}
