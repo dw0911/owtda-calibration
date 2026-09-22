@@ -16,6 +16,6 @@
   },
   "schema_version": 1,
   "script": "paper/scripts/make_tables.py",
-  "script_sha256": "0c7beacb8052311dd6ceb3e67f7aa0865fe75ca3b6de4cf64788a493550e133f",
+  "script_sha256": "b7e9f0860b5b3d2a94cd7f51c8a38f64360d46851ee99e90808eec8e92e386a3",
   "title": "Window geometry under the two budget regimes"
 }

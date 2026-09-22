@@ -1,10 +1,9 @@
-# Finite-Sample Calibration Boundaries of Topological Windowed Scanning
+# Finite-Sample Calibration of Persistent-Homology-Based Change-Point Tests with Overlapping Windows
 
-**OW-TDA-CAL-R1** · *Exchangeability Failure and Calibration Boundaries of
-Topological Scans with Overlapping Windows*
+**OW-TDA-CAL-R1** · *基于持续同调的变点检验：重叠滑动窗口下的有限样本校准*
 
 > 论文配套的**可复现仓库**：代码、冻结配置、论文源文件、规范化汇总结果与图表生成脚本。
-> 发布快照：**v1.1.1-paper**。
+> 发布快照：**v1.2.0-paper**。
 >
 > **复现方式**
 > - **Level 1（秒级）**：`verify_release.py --level quick` 核验代码、canonical 结果、正文表 1–5 与图件、论文 PDF 的全部数值与血缘。
@@ -17,7 +16,7 @@ Topological Scans with Overlapping Windows*
 
 ## Overview
 
-重叠滑动窗口会使"窗口级置换检验"失去可交换性前提，从而让拓扑扫描检验的校准失效。本仓库给出：
+重叠滑动窗口会使"窗口级置换检验"失去可交换性前提，从而让基于持续同调特征的变点检验的校准失效。本仓库给出：
 算法实现（BPI / MOMENTS 两种表示、扫描统计量、M0 朴素置换与 M1 依赖乘子两种校准器）、
 冻结实验协议、一次正式 H0/H1 运行，以及从 canonical 汇总重建全部图表与论文的脚本。
 

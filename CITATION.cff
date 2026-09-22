@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "若使用本仓库或引用其研究结果，请按此引用。"
 title: "重叠滑动窗口下拓扑扫描检验的交换性失效与校准边界 (OW-TDA-CAL-R1)"
 type: software
-# version 对应发布标签 v1.1.1-paper。
-version: 1.1.1
+# version 对应发布标签 v1.2.0-paper。
+version: 1.2.0
 authors:
   - name: "王平 (Wang Ping)"
     affiliation: "河北金融学院统计与数据科学学院"

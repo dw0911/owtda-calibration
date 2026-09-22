@@ -1,4 +1,4 @@
-\section{重叠窗口拓扑扫描框架}\label{sec:method}
+\section{基于持续同调特征的变点检验}\label{sec:method}
 
 图~\ref{fig:flow}给出整体流程与统计冲突的来源：窗口是随机化单位，但重叠使原始观测被多个随机化单位共享。后续小节依次定义窗口构造、两种表示、最大扫描统计量与两种校准方法。
 
@@ -18,7 +18,7 @@
 \input{figures/fig1_overlap}
 \end{subfigure}
 
-\caption{重叠窗口拓扑扫描与校准流程。(a) 原始序列经重叠窗口映射为窗口点云，再分别经持续同调—向量化分支得到 BPI、经均值—协方差分支得到矩表示 MOMENTS，进入最大扫描得到检验统计量 $T_M$ 与位置估计 $\hat k$；随后 M0 全局随机置换重采样、M1 相关乘子重采样分别构造参考分布，并通过 Monte Carlo $p$ 值形成拒绝决策。(b) 重叠机制：相邻窗口共享原始观测（红色），全局随机置换重排窗口顺序时原有邻接被破坏，这是后文交换性失效机制的直观来源。}\label{fig:flow}
+\caption{基于持续同调特征的变点检验与校准流程。(a) 原始序列经重叠窗口映射为窗口点云，再分别经持续同调—向量化分支得到 BPI、经均值—协方差分支得到矩表示 MOMENTS，进入最大扫描得到检验统计量 $T_M$ 与位置估计 $\hat k$；随后 M0 无约束窗口级随机置换重采样、M1 相关乘子重采样分别构造参考分布，并通过 Monte Carlo $p$ 值形成拒绝决策。(b) 重叠机制：相邻窗口共享原始观测（红色），无约束窗口级随机置换重排窗口顺序时原有邻接被破坏，这是后文交换性失效机制的直观来源。}\label{fig:flow}
 \end{figure}
 
 \subsection{窗口构造与局部点云}\label{sec:windows}
@@ -37,7 +37,9 @@
 
 \subsection{固定网格持续强度表示}\label{sec:bpi}
 
-对每个点云 $P_i$，在系数域 $\mathbb F_2$ 上按欧氏距离计算 Vietoris--Rips 持续同调，并保留 0 维和 1 维同调通道中有限且寿命为正的 birth--death 对。过滤采用边长阈值的直径约定：单形 $\sigma$ 的过滤值为其顶点间最大欧氏距离，即 $\operatorname{diam}(\sigma)$；尺度 $\varepsilon$ 下纳入所有满足 $\operatorname{diam}(\sigma)\le\varepsilon$ 的单形，即 $\operatorname{VR}_\varepsilon(P)=\{\sigma\subseteq P:\operatorname{diam}(\sigma)\le\varepsilon\}$。过滤不设数据驱动的截断上限，持续图坐标直接以欧氏距离尺度报告。由于有限欧氏点云的 Vietoris--Rips 过滤在过滤值达到点云直径时形成完全复形，所有 1 维同调类在此时均已消亡，仅最后一个 0 维连通分量的 death 为 $\infty$；实现中只丢弃该显式无限 death 分量，其余有限类全部保留。相关计算框架和有限维表示可分别参见\cite{Bauer2021,Adams2017}。记第 $q\in\{0,1\}$ 个同调通道的持续图为
+对每个点云 $P_i$，在系数域 $\mathbb F_2$ 上按欧氏距离计算 Vietoris--Rips 持续同调，并保留 0 维和 1 维同调通道中有限且寿命为正的 birth--death 对。过滤采用边长阈值的直径约定：单形 $\sigma$ 的过滤值为其顶点间最大欧氏距离，即 $\operatorname{diam}(\sigma)$；尺度 $\varepsilon$ 下纳入所有满足 $\operatorname{diam}(\sigma)\le\varepsilon$ 的单形，即 $\operatorname{VR}_\varepsilon(P)=\{\sigma\subseteq P:\operatorname{diam}(\sigma)\le\varepsilon\}$。过滤不设数据驱动的截断上限，持续图坐标直接以欧氏距离尺度报告。由于有限欧氏点云的 Vietoris--Rips 过滤在过滤值达到点云直径时形成完全复形，所有 1 维同调类在此时均已消亡，仅最后一个 0 维连通分量的 death 为 $\infty$；实现中只丢弃该显式无限 death 分量，其余有限类全部保留。相关计算框架和有限维表示可分别参见\cite{Bauer2021,Adams2017}。
+
+记 $K_i(\varepsilon)=\operatorname{VR}_\varepsilon(P_i)$。随过滤尺度 $\varepsilon$ 增大，复形形成嵌套序列 $K_i(\varepsilon)\subseteq K_i(\varepsilon')$（$\varepsilon\le\varepsilon'$）。零维同调记录连通分支，一维同调记录未被二维单形填充的独立循环；贝蒂数 $\beta_q(K_i(\varepsilon))=\dim H_q(K_i(\varepsilon);\mathbb F_2)$ 表示该尺度下相应同调空间的维数。持续同调进一步记录这些类随过滤尺度的出现与消失，由持续图中的 $(b,d)$ 概括，其中 $b$ 与 $d$ 分别为出生尺度与消亡尺度，$d-b$ 是过滤尺度上的寿命，而非真实时间轴上的持续时长。记第 $q\in\{0,1\}$ 个同调通道的持续图为
 \[
  \mathcal D_i^{(q)}=\{(b_{ij}^{(q)},d_{ij}^{(q)})\}_j.
 \]
@@ -53,7 +55,7 @@
  \sum_j v_{ij}^{(q)}
  \exp\left\{-\frac{(g_r-u_{ij}^{(q)})^2+(g_\ell-v_{ij}^{(q)})^2}{2\sigma^2}\right\}.
 \end{equation}
-每个同调通道产生 $20\times20=400$ 个坐标。按 0 维、1 维同调通道的顺序向量化并连接，再除以 $\sqrt 2$（该缩放使两个同调通道对总平方距离的贡献取等权平均），得到 800 维特征
+每个同调通道产生 $20\times20=400$ 个坐标。按 0 维、1 维同调通道的顺序向量化并连接，再除以 $\sqrt 2$（该缩放使两个同调通道对总平方距离的贡献取等权平均），得到 800 维特征。此处涉及三类维数：同调维数 $q\in\{0,1\}$、点云所在空间维数 $d\in\{2,3\}$ 以及向量表示维数 $p=800$；$800$ 维特征不意味着本文研究了 $800$ 维拓扑。
 \begin{equation}\label{eq:bpi-vector}
  Y_i^{\mathrm{BPI}}
  =\frac{1}{\sqrt2}
@@ -62,7 +64,7 @@
    \operatorname{vec}(Z_i^{(1)})
  \end{bmatrix}.
 \end{equation}
-空通道记为 400 维零向量。N-AR 时延点云取 $c=6$，圆形模型及其备择取 $c=2.5$。为便于标识，本文将式\eqref{eq:bpi}--\eqref{eq:bpi-vector}所定义的固定网格持续强度向量简称为 BPI（Betti persistence intensity），作为本文这一具体实现的标识；该名称不指代某个通用标准方法。该算子在网格中心评价核强度，与对像素区域积分的 persistence image\cite{Adams2017}实现存在定义差异。
+空通道记为 400 维零向量。N-AR 时延点云取 $c=6$，圆形模型及其备择取 $c=2.5$。本文将每个持续图中以寿命加权的高斯核表面在固定网格中心进行评价，并将两个同调通道的结果拼接为向量，沿用实现标识 BPI。该表示与持续图像共享“持续图--加权核表面--有限维表示”的思路，但其离散化采用网格中心采样，区别于逐像素积分\cite{Adams2017}。BPI 仅标识本文的固定实现，不另行宣称一种标准 Betti 不变量，也不构成对随机持续图总体强度密度的估计\cite{WuKimRinaldo2023}。
 
 \subsection{矩表示}\label{sec:moments}
 
@@ -108,6 +110,12 @@ MOMENTS 特征依次连接均值、协方差对角元以及按固定字典序排
  \|\bar Y_{1:k}-\bar Y_{k+1:M}\|_2^2.
 \end{equation}
 因此，该扫描统计量直接响应左右两段窗口特征的均值之差，检验对象是特征均值层面的变化；它不构成对任意原始分布或任意拓扑变化都具有一致检出能力的通用检验。
+
+对 BPI 表示，令 $V_i^{(q)}=\operatorname{vec}(Z_i^{(q)})$ 为第 $q$ 个同调通道的未缩放向量，并分别对每个通道使用相同的桥接与标准化，得到 $Q_M^{(q)}(k)$。由 $Y_i^{\mathrm{BPI}}=\frac1{\sqrt2}[V_i^{(0)};V_i^{(1)}]$ 及平方欧氏范数的线性性，对每个候选位置 $k$ 有
+\[
+ Q_M^{\mathrm{BPI}}(k)=\frac12 Q_M^{(0)}(k)+\frac12 Q_M^{(1)}(k).
+\]
+因此总扫描同时受连通分支持续信息与循环持续信息影响。由于最大值的位置通常不同，$\max_k\tfrac12\bigl(Q_M^{(0)}(k)+Q_M^{(1)}(k)\bigr)$ 一般不等于两个通道最大值的平均 $\tfrac12\max_k Q_M^{(0)}(k)+\tfrac12\max_k Q_M^{(1)}(k)$。本文实验将两个同调通道合并报告，未单独分离零维与一维同调的贡献。
 
 为使浮点并列情形具有确定性，令 $\epsilon_{64}=2^{-52}$，将满足
 \[

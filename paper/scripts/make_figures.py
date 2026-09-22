@@ -244,7 +244,7 @@ CLASS_SYMBOLS = {
     "POINTWISE_PRACTICALLY_CALIBRATED": ("o", "实用校准"),
     "MATERIAL_CONSERVATISM": ("v", "实质保守"),
     "MATERIAL_ANTI_CONSERVATISM": ("^", "实质反保守"),
-    "BOUNDARY_OR_INDETERMINATE": ("s", "边界或未定"),
+    "BOUNDARY_OR_INDETERMINATE": ("s", "未定"),
 }
 
 

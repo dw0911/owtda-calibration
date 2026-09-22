@@ -1771,11 +1771,11 @@ z
 " style="stroke: #000000; stroke-width: 0.7"/>
     </defs>
     <g>
-     <use xlink:href="#m057ed011e5" x="86.83976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7"/>
+     <use xlink:href="#m057ed011e5" x="98.23976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7"/>
     </g>
    </g>
    <g id="text_119">
-    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="100.51976" y="367.09101" transform="rotate(-0 100.51976 367.09101)">实用校准</text>
+    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="111.91976" y="367.09101" transform="rotate(-0 111.91976 367.09101)">实用校准</text>
    </g>
    <g id="line2d_117">
     <defs>
@@ -1786,11 +1786,11 @@ z
 " style="stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
     </defs>
     <g>
-     <use xlink:href="#m604532383c" x="153.71976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+     <use xlink:href="#m604532383c" x="165.11976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
     </g>
    </g>
    <g id="text_120">
-    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="167.39976" y="367.09101" transform="rotate(-0 167.39976 367.09101)">实质保守</text>
+    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="178.79976" y="367.09101" transform="rotate(-0 178.79976 367.09101)">实质保守</text>
    </g>
    <g id="line2d_118">
     <defs>
@@ -1801,11 +1801,11 @@ z
 " style="stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
     </defs>
     <g>
-     <use xlink:href="#m17b8f8c57d" x="220.59976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+     <use xlink:href="#m17b8f8c57d" x="231.99976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
     </g>
    </g>
    <g id="text_121">
-    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="234.27976" y="367.09101" transform="rotate(-0 234.27976 367.09101)">实质反保守</text>
+    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="245.67976" y="367.09101" transform="rotate(-0 245.67976 367.09101)">实质反保守</text>
    </g>
    <g id="line2d_119">
     <defs>
@@ -1817,11 +1817,11 @@ z
 " style="stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
     </defs>
     <g>
-     <use xlink:href="#m675bbc2d6d" x="295.07976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+     <use xlink:href="#m675bbc2d6d" x="306.47976" y="364.43101" style="fill-opacity: 0; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
     </g>
    </g>
    <g id="text_122">
-    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="308.75976" y="367.09101" transform="rotate(-0 308.75976 367.09101)">边界或未定</text>
+    <text style="font-size: 7.6px; font-family: 'SimSun', 'Times New Roman', 'DejaVu Serif', serif; text-anchor: start" x="320.15976" y="367.09101" transform="rotate(-0 320.15976 367.09101)">未定</text>
    </g>
   </g>
  </g>

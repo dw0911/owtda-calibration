@@ -23,5 +23,5 @@
   ],
   "schema_version": 1,
   "script": "paper/scripts/make_figures.py",
-  "script_sha256": "be11d62c44fa41468c91ea6dd8b52460ed26b19ad21f5e99676386efb69eac29"
+  "script_sha256": "cbbe561d0c13a556858c9c815ce80b6de8762d3322f9b545c87ace32d9daafe4"
 }

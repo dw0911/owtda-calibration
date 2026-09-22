@@ -1,9 +1,9 @@
 {
   "artifacts": {
     "data/manifests/external_artifacts.json": "1f411735f9f243a4eb8bdcf7b2dd9258a5706c129e4df09c29821a6189608745",
-    "paper/main.pdf": "860e16c7ab56d0df74d4a8d402a33c60c2476d82a98069bfbf2c04c5e558b81d",
-    "reproducibility/ARTIFACT_INDEX.csv": "b33bbba3f8f5968f2e37fe98c632779388547217155c2a4d8699fa03e8f09460",
-    "reproducibility/FORMAL_MANIFEST.json": "bd4a8755f8cb44117b0076268f351554a275f53a2bcbe5e9977ec2b8002ba600"
+    "paper/main.pdf": "4428d6a220a894ae1f158befd1d12c3f7d28a460f376e36fbeba61fdd90bea32",
+    "reproducibility/ARTIFACT_INDEX.csv": "dfe129480d667aa347e1f27af9fc4b2472bdb62b1de792c31f2256085fb9883e",
+    "reproducibility/FORMAL_MANIFEST.json": "e98f887c2ea63fadd69d99ad9170af65ffaed94caa24a342d41c19e1820e8f57"
   },
   "doi": {
     "code": null,
@@ -18,13 +18,13 @@
     "Tree digests cover results/canonical, results/bootstrap, artifacts/tables and artifacts/figures; every paper number derives from those files."
   ],
   "release": {
-    "name": "v1.1.1-paper",
-    "version": "1.1.1"
+    "name": "v1.2.0-paper",
+    "version": "1.2.0"
   },
   "schema_version": 1,
   "tree_digests": {
-    "artifacts/figures": "32729afb97cb4da68eb1e026732e4b3d16a17883a408a5634342ac2c7983d617",
-    "artifacts/tables": "f363321fe20eeaa05e56aab29eddb2a0fd60aadcadbf8a913f7c8940a0319ed9",
+    "artifacts/figures": "2cfc54a82afe959000e4d8bb829964f955438439b81761abf98acb61c80ef465",
+    "artifacts/tables": "48e483d796ba7a6fe900204ded0a5f9a142a54a060991575eeb12e6d6ec2f99a",
     "results/bootstrap": "cad58c62fb822dd1b623b3feb9b6b789b3c04626c4777446b2464f518f512ea8",
     "results/canonical": "41149a09c6293974cc645fd2cc900b00e61c58723d2e04a1e26ae02c87245970"
   },

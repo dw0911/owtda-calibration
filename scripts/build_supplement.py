@@ -24,7 +24,7 @@ CLASS_ZH = {
     "POINTWISE_PRACTICALLY_CALIBRATED": "实用校准",
     "MATERIAL_CONSERVATISM": "实质保守",
     "MATERIAL_ANTI_CONSERVATISM": "实质反保守",
-    "BOUNDARY_OR_INDETERMINATE": "边界或未定",
+    "BOUNDARY_OR_INDETERMINATE": "未定",
 }
 
 DGP_ZH = {"N_AR": "N-AR", "N_CIRCLE": "N-CIRCLE"}
@@ -111,7 +111,7 @@ def build() -> str:
 下表给出 28 个唯一零假设配置 $\times$ 2 表示 $\times$ 2 方法共 112 个逐格评价单元的
 拒绝率（每格 $n=2500$）、95\% Wilson 区间（无连续性修正）与四类校准状态。
 列含义：DGP 为数据生成过程；$\rho$ 为原序列依赖；$s$ 为步长；$T$、$M$ 为观测长度与窗口数；
-分类取实用校准 / 实质保守 / 实质反保守 / 边界或未定。本表的分类列即正文第 5.2 节所称的
+分类取实用校准 / 实质保守 / 实质反保守 / 未定。本表的分类列即正文第 5.2 节所称的
 完整状态转换清单。
 
 \begingroup
@@ -178,7 +178,7 @@ BPI/M0、BPI/M1、MOMENTS/M0、MOMENTS/M1。}\label{fig:s1}
 
 \begin{itemize}
 \item 代码仓库：\url{https://github.com/dw0911/owtda-calibration}
-\item 本稿对应 git 标签 \texttt{v1.1.1-paper}
+\item 本稿对应 git 标签 \texttt{v1.2.0-paper}
 \item 全部合成数据由该版本代码与固定随机种子生成；独立数据 DOI 尚在建立中，未作为已提供材料列出
 \end{itemize}
 

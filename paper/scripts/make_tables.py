@@ -60,7 +60,7 @@ VOCABULARY = (
     "MATERIAL_ANTI_CONSERVATISM",
     "BOUNDARY_OR_INDETERMINATE",
 )
-VOCABULARY_HEAD = ("实用校准", "实质保守", "实质反保守", "边界/未定")
+VOCABULARY_HEAD = ("实用校准", "实质保守", "实质反保守", "未定")
 
 SCENARIO_LABEL = {"shape_change": "形状变化", "mean_shift": "均值平移"}
 # Row order as it appears in the manuscript (not alphabetical by scenario id).
@@ -295,7 +295,7 @@ def build_calibration(h0_rows: list[dict]) -> dict:
         r"\footnotesize 注：括号内为该类计数占 28 格的百分比。实用校准采用 90\% Wilson 区间完整落在等效带 $[0.035,0.065]$ 内，"
         r"对应预设的实用等效性判据（该 90\% 区间与相应单侧 score 检验存在反演关系）；实质保守要求 "
         r"95\% 区间完整位于实用带下方，实质反保守要求 95\% 区间完整位于实用带上方；"
-        r"边界/未定为既不满足实用校准、也不满足实质保守或实质反保守的剩余状态。"
+        r"未定为既不满足实用校准、也不满足实质保守或实质反保守的剩余状态。"
         r"上述计数为预设设计网格内的描述性分布，不构成方法在更广参数空间中的通过率。",
         r"\end{minipage}", r"\end{table}", "",
     ]
