@@ -50,7 +50,45 @@ jobs:
         working-directory: paper
         run: grep -c 'Overfull \hbox' main.log || true
 
+      # The short manuscript is the submission version: it must build from the repository
+      # alone, with no undefined references and with its numeric claims re-checked.
+      - name: short manuscript compiles
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper
+          root_file: main_short.tex
+          latexmk_use_xelatex: true
+
+      - name: fail on undefined references in the short manuscript
+        working-directory: paper
+        run: |
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" main_short.log; then
+            echo "::error::undefined references or citations in main_short.log"
+            exit 1
+          fi
+
+      - name: short-paper numeric claims match canonical summaries
+        run: python3 paper/scripts/check_short_claims.py
+
+      - name: supplement compiles
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/supplement
+          root_file: supplement.tex
+          latexmk_use_xelatex: true
+
+      - name: fail on undefined references in the supplement
+        working-directory: paper/supplement
+        run: |
+          if grep -E "LaTeX Warning: (Reference|Citation).*undefined" supplement.log; then
+            echo "::error::undefined references or citations in supplement.log"
+            exit 1
+          fi
+
       - uses: actions/upload-artifact@v4
         with:
           name: manuscript-pdf
-          path: paper/main.pdf
+          path: |
+            paper/main.pdf
+            paper/main_short.pdf
+            paper/supplement/supplement.pdf

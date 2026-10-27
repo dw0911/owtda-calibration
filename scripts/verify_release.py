@@ -10,8 +10,9 @@ quick (seconds, no Monte Carlo):
     registered canonical CI; MANUSCRIPT_VALUES matches the canonical sources.
   * Artifact provenance: every figure/table .meta.json input hash resolves to a file in
     the repository; report the known script_sha256 gaps (never a hard failure).
-  * Paper: LaTeX \\input / \\includegraphics targets exist; undefined references absent
-    when paper/main.log is present.
+  * Paper (long manuscript, short submission manuscript, supplement): LaTeX \\input /
+    \\includegraphics targets exist; PDFs present; undefined references absent when the
+    corresponding .log file is present.
   * reproducibility/SHA256SUMS verified when present.
 
 analysis (adds the level-2 checks):
@@ -277,28 +278,64 @@ def check_paper(res: Result) -> None:
     if not main.exists():
         res.add(False, "paper/main.tex present", str(main))
         return
-    tex_files = [main] + sorted((PAPER / "sections").glob("*.tex"))
-    missing = []
+    documents = [
+        (main, [main] + sorted((PAPER / "sections").glob("*.tex")),
+         PAPER / "main.pdf", PAPER / "main.log"),
+    ]
+    short = PAPER / "main_short.tex"
+    if short.exists():
+        documents.append(
+            (short, [short] + sorted((PAPER / "short_sections").glob("*.tex")),
+             PAPER / "main_short.pdf", PAPER / "main_short.log")
+        )
+    supplement = PAPER / "supplement" / "supplement.tex"
+    if supplement.exists():
+        documents.append(
+            (supplement, [supplement],
+             PAPER / "supplement" / "supplement.pdf",
+             PAPER / "supplement" / "supplement.log")
+        )
+
     pattern_input = re.compile(r"\\input\{([^}]+)\}")
     pattern_graphic = re.compile(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}")
-    for tex in tex_files:
-        text = tex.read_text(encoding="utf-8-sig")
-        for raw in pattern_input.findall(text):
-            target = (PAPER / raw).with_suffix(".tex")
-            if not target.exists() and not (PAPER / raw).exists():
-                missing.append(f"{tex.name} -> {raw}")
-        for raw in pattern_graphic.findall(text):
-            target = PAPER / raw
-            if not Path(target).exists():
-                missing.append(f"{tex.name} -> {raw}")
-    res.add(not missing, "LaTeX inputs/figure paths resolve", "; ".join(missing[:5]) or f"files={len(tex_files)}")
-    res.add((PAPER / "main.pdf").exists(), "paper/main.pdf present")
+    missing: list[str] = []
+    checked = 0
+    for _, tex_files, _, _ in documents:
+        for tex in tex_files:
+            text = tex.read_text(encoding="utf-8-sig")
+            base = tex.parent
+            for pattern in (pattern_input, pattern_graphic):
+                for raw in pattern.findall(text):
+                    checked += 1
+                    candidates = (
+                        base / raw,
+                        base / f"{raw}.tex",
+                        PAPER / raw,
+                        PAPER / f"{raw}.tex",
+                    )
+                    if not any(candidate.exists() for candidate in candidates):
+                        missing.append(f"{tex.name} -> {raw}")
+    res.add(
+        not missing,
+        "LaTeX inputs/figure paths resolve",
+        "; ".join(missing[:5]) or f"files={checked}",
+    )
 
-    log_path = PAPER / "main.log"
-    if log_path.exists():
+    for _, _, pdf, _ in documents:
+        res.add(pdf.exists(), f"{pdf.relative_to(REPO).as_posix()} present")
+
+    for _, _, _, log_path in documents:
+        if not log_path.exists():
+            continue
         log_text = log_path.read_text(encoding="utf-8", errors="replace")
-        undefined = len(re.findall(r"LaTeX Warning: (?:Reference|Citation) .* undefined", log_text))
-        res.add(undefined == 0, "no undefined LaTeX references/citations", f"count={undefined}")
+        undefined = len(
+            re.findall(r"LaTeX Warning: (?:Reference|Citation) .* undefined", log_text)
+        )
+        res.add(
+            undefined == 0,
+            f"no undefined LaTeX references ({log_path.name})",
+            f"count={undefined}",
+        )
 
 
 def check_sums(res: Result) -> None:

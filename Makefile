@@ -4,7 +4,7 @@
 
 PY ?= uv run python
 
-.PHONY: help install test lint smoke quick analysis tables figures p1p3 paper sums index clean
+.PHONY: help install test lint smoke quick analysis tables figures p1p3 paper paper-short sums index clean
 
 help:
 	@echo "install   安装锁定环境 (uv sync --frozen)"
@@ -16,7 +16,8 @@ help:
 	@echo "tables    由 canonical 汇总重建表"
 	@echo "figures   由表重建图"
 	@echo "p1p3      P1-P3 真实 draws → p / CI / Holm"
-	@echo "paper     编译论文（XeLaTeX）"
+	@echo "paper     编译长稿（XeLaTeX）"
+	@echo "paper-short 编译短稿与补充材料并核对正文数值"
 	@echo "sums      重算 reproducibility/SHA256SUMS"
 	@echo "index     重算复现清单（SEED/ARTIFACT/FORMAL/EXPECTED）"
 	@echo "clean     清理编译中间件与临时目录"
@@ -55,6 +56,11 @@ p1p3:
 
 paper:
 	cd paper && xelatex -interaction=nonstopmode main.tex && bibtex main && xelatex -interaction=nonstopmode main.tex && xelatex -interaction=nonstopmode main.tex
+
+paper-short:
+	cd paper && xelatex -interaction=nonstopmode main_short.tex && bibtex main_short && xelatex -interaction=nonstopmode main_short.tex && xelatex -interaction=nonstopmode main_short.tex
+	cd paper/supplement && xelatex -interaction=nonstopmode supplement.tex && xelatex -interaction=nonstopmode supplement.tex
+	$(PY) paper/scripts/check_short_claims.py
 
 sums:
 	$(PY) scripts/build_sha256sums.py

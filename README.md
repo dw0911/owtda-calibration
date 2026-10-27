@@ -150,8 +150,23 @@ Level 3 约 **28 h**（8 workers，冻结预算外推）；峰值 RSS **1.4 GiB*
 
 ## Paper and supplementary material
 
-- 论文源文件与编译产物：[`paper/`](paper/)（`main.tex` + `sections/` + `bibliography.bib` + `main.pdf`）；
-- 补充材料：`paper/supplement/supplement.pdf`（S1–S5：完整 112 行 H0、16 行 H1、分析规格、16×4 热图、代码与数据可用性）；
+- **长稿**：源文件与编译产物 [`paper/`](paper/)（`main.tex` + `sections/` + `bibliography.bib` + `main.pdf`，24 页）；
+- **短稿（投稿版，12 页）**：`paper/main_short.tex` + `short_sections/` + `short_tables/` → `paper/main_short.pdf`；
+  对应不可变标签 **`short-202610-submission`**（提交 `450d2a2`，分支 `paper/short-202610`）。
+  该标签是投稿定稿；分支上的后续提交只补充仓库文档与 CI，不改变论文数值；
+- **补充材料**：`paper/supplement/supplement.tex` → `supplement.pdf`（S1–S7：完整 112 行 H0、16 行备择、
+  主对比与自助规格、16×4 热图、代码与数据可用性、方法细节与证明、设计与次级结果）；
+- **编译与数值核验**：
+
+  ```powershell
+  cd paper
+  xelatex main_short && bibtex main_short && xelatex main_short && xelatex main_short
+  cd supplement
+  xelatex supplement && xelatex supplement
+  cd ../..
+  python paper/scripts/check_short_claims.py   # 对 canonical 汇总逐项断言正文数值
+  ```
+
 - 论文方法/理论/协议的权威定义：`paper/sections/02_method.tex`、`03_theory.tex`、`04_protocol.tex`
   与 `governance/{METHOD_SPEC,PROTOCOL,SAP,DATA_SPEC}_v1.0.md`。
 
