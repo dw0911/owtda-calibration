@@ -60,6 +60,15 @@ paper/*.log
 paper/*.out
 paper/*.bbl
 paper/*.synctex.gz
+# 子目录（short_sections 不经编译；supplement 需要同样的忽略规则）
+paper/**/*.aux
+paper/**/*.blg
+paper/**/*.log
+paper/**/*.out
+paper/**/*.bbl
+paper/**/*.synctex.gz
+# 本地逐页渲染预览（仅供人工目检，可再生）
+paper/**/_preview/
 
 # --- 本地数据（如按 DATA_SOURCES.md 放入仓库工作目录时；目录本身不忽略，只有内容） ---
 data/sample/*
