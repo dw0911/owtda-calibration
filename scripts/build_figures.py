@@ -9,8 +9,9 @@ Usage:
 
 ``--check`` verifies, for every non-legacy figure meta:
   * every recorded input hash resolves inside the repository and matches its file;
-  * ``script_sha256`` equals the hash of the *current* ``paper/scripts/make_figures.py``
-    (the 2026-09-20 audit flagged stale generator hashes as a provenance gap);
+  * ``script_sha256`` equals the hash of the generator declared in the meta
+    (``paper/scripts/make_figures.py`` or ``paper/scripts/make_short_figures.py``),
+    normalised to LF so every checkout agrees; a missing generator is a failure;
   * every recorded output hash matches the committed PDF/SVG/PNG bytes;
   * the manuscript figure is actually referenced by a ``.tex`` file.
 """
@@ -42,6 +43,15 @@ def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def script_sha256(path: Path) -> str:
+    """Hash a script after normalising CRLF to LF, so every checkout agrees.
+
+    Line endings are a checkout property (see .gitattributes), not a property of
+    the generator: the same script must verify on Windows and Linux.
+    """
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8-sig"))
 
@@ -54,7 +64,6 @@ def check_provenance() -> int:
                 candidates.setdefault(path.name, path)
                 candidates.setdefault(path.stem, path)
 
-    generator_sha = sha256_of(GENERATOR)
     checked = unresolved = mismatch = 0
     problems: list[str] = []
 
@@ -72,8 +81,12 @@ def check_provenance() -> int:
                 mismatch += 1
                 print(f"  HASH MISMATCH {name} ({meta_path.name})")
 
-        if meta.get("script_sha256") != generator_sha:
-            problems.append(f"{meta_path.name}: script_sha256 does not match paper/scripts/make_figures.py")
+        declared = meta.get("script") or "paper/scripts/make_figures.py"
+        declared_path = REPO / declared
+        if not declared_path.exists():
+            problems.append(f"{meta_path.name}: declared generator {declared} is missing")
+        elif script_sha256(declared_path) != meta.get("script_sha256"):
+            problems.append(f"{meta_path.name}: script_sha256 does not match {declared}")
 
         outputs = meta.get("outputs") or {}
         if not outputs:

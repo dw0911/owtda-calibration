@@ -72,6 +72,11 @@ def sha256_of(path: Path) -> str:
     return digest.hexdigest()
 
 
+def script_sha256(path: Path) -> str:
+    """Hash a script with CRLF normalised to LF, so every checkout agrees."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8-sig"))
 
@@ -247,8 +252,8 @@ def check_artifact_provenance(res: Result, info: Result) -> None:
         if path.is_file():
             candidates.setdefault(path.name, path)
             candidates.setdefault(path.stem, path)
-    repo_scripts = {sha256_of(p) for p in (REPO / "scripts").glob("*.py")} | {
-        sha256_of(p) for p in (PAPER / "scripts").glob("*.py")
+    repo_scripts = {script_sha256(p) for p in (REPO / "scripts").glob("*.py")} | {
+        script_sha256(p) for p in (PAPER / "scripts").glob("*.py")
     }
     checked = missing = mismatch = 0
     script_gaps = []

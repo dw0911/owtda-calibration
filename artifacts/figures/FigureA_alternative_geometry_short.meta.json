@@ -16,5 +16,5 @@
   ],
   "schema_version": 1,
   "script": "paper/scripts/make_short_figures.py",
-  "script_sha256": "7ba42e8303b557b9c4418fddca3eb4e9bf9d00d2ff72f55b6b5159a55e366b1c"
+  "script_sha256": "bd3a96d4e25ab55a45fea4c84f0ecc0352b4126ff8d6248d4fe15d3bbb251dc8"
 }
