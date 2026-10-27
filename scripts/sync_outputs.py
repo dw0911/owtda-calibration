@@ -1,11 +1,12 @@
 """将 git 仓库的对外产物同步到 OUTPUTS 交付目录。
 
-OUTPUTS（默认 ``F:\\BPI\\OUTPUTS``）是本仓库的对外交付镜像。本脚本刷新其中同步的
-三个子目录（paper / artifacts / reproducibility），并保留上一轮的过程/归档记录
-（audits/、github_release_*、structure_migration_*、data_archive_*）不动。
+交付目录（默认位于仓库上两级目录下的 ``OUTPUTS``，可用 ``--out`` 覆盖）是本仓库的
+对外交付镜像。本脚本刷新其中同步的三个子目录（paper / artifacts / reproducibility），
+并保留上一轮的过程/归档记录（audits/、github_release_*、structure_migration_*、
+data_archive_*）不动。
 
 用法：
-  python scripts/sync_outputs.py               # 同步到默认 OUTPUTS
+  python scripts/sync_outputs.py               # 同步到默认交付目录
   python scripts/sync_outputs.py --out DIR     # 同步到自定义目录
 """
 import argparse
