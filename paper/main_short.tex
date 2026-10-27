@@ -32,7 +32,7 @@
 \theoremstyle{remark}
 \newtheorem{remark}{注}
 
-\title{基于持续同调的变点检验：重叠滑动窗口下的\\[2pt]有限样本校准\\[4pt]
+\title{基于持续同调的变点检验：重叠滑动窗口下的\\[-6pt]有限样本校准\\[4pt]
 \large Finite-Sample Calibration of Persistent-Homology-Based Change-Point Tests with Overlapping Windows}
 \author{
   王平\textsuperscript{1}\quad
@@ -51,16 +51,15 @@
 
 \begin{document}
 \maketitle
-\enlargethispage{2\baselineskip}
-\vspace{-2.6em}
+\vspace{-2.4em}
 
-{\small
+{\footnotesize
 \noindent\textbf{摘要}\quad
 \input{short_sections/s00_abstract}
 \par}
 
-\vspace{0.1em}
-{\small
+\vspace{0.2em}
+{\footnotesize
 \noindent\textbf{Abstract.}\quad
 \input{short_sections/s00_abstract_en}\par}
 
@@ -73,7 +72,7 @@
 \input{short_sections/s07_discussion}
 
 \section*{数据与代码可用性}
-复现代码、配置、种子清单、完整逐格数据与补充材料见 \url{https://github.com/dw0911/owtda-calibration}。长稿基线为标签 \texttt{v1.2.0-paper}；本稿、图件与补充材料（S1--S7）对应标签 \texttt{short-202610}（分支 \path{paper/short-202610}）。图~\ref{fig:bpi-h0} 由 canonical 汇总 \path{H0_ALL_112.csv} 直接绘制；表~\ref{tab:calibration}、表~\ref{tab:primary} 与表~\ref{tab:h1} 的数值由 \path{paper/scripts/check_short_claims.py} 对 \path{H0_ALL_112.csv}、\path{P1_P3_BOOTSTRAP.json} 与 H1 汇总逐项断言核验，完整底层行见补充材料 S1--S2。全部合成数据由该版本代码与固定随机种子生成，不依赖外部数据归档。
+本文主稿、图件及补充材料 S1--S7 对应仓库 \url{https://github.com/dw0911/owtda-calibration} 中的标签 \texttt{short-202610-submission}（分支 \path{paper/short-202610}）。该版本提供代码、配置、随机种子及完整逐格结果；图表数据与生成说明见补充材料 S5。
 
 \bibliographystyle{unsrt}
 \bibliography{bibliography_short}

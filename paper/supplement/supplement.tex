@@ -280,11 +280,16 @@ BPI/M0、BPI/M1、MOMENTS/M0、MOMENTS/M1。}\label{fig:s1}
 
 复现本文结果的代码、配置、种子清单、完整逐格数据与全部生成脚本由仓库提供：
 
+{\setlength{\emergencystretch}{3em}
 \begin{itemize}
 \item 代码仓库：\url{https://github.com/dw0911/owtda-calibration}
-\item 长稿基线：git 标签 \texttt{v1.2.0-paper}；短稿分支 \texttt{paper/short-202610}
+\item 本短稿标签 \texttt{short-202610-submission}，分支 \path{paper/short-202610}；长稿基线 \texttt{v1.2.0-paper}。
+\item 正文图~2 由 canonical 汇总 \path{H0_ALL_112.csv} 直接绘制，作图脚本为 \path{paper/scripts/make_short_figures.py}
+\item 本材料图~1 由 \path{paper/scripts/make_figures.py} 从同一 CSV 生成，未重新录入数值
+\item 表~1--3 的数值由 \path{paper/scripts/check_short_claims.py} 对 \path{H0_ALL_112.csv}、\path{P1_P3_BOOTSTRAP.json} 与 H1 场景汇总逐项断言核验；完整底层行见 S1--S2
 \item 全部合成数据由该版本代码与固定随机种子生成；独立数据 DOI 尚在建立中，未作为已提供材料列出
 \end{itemize}
+\par}
 
 \section*{S6 方法细节与证明}
 
@@ -315,14 +320,20 @@ $\operatorname{diam}(\sigma)\le\varepsilon$ 的单形，
 \end{figure}
 
 \subsection*{S6.2 两个同调通道的扫描分解}
-令 $V_i^{(q)}=\operatorname{vec}(Z_i^{(q)})$ 为第 $q$ 个通道的未缩放向量，并分别对每个通道使用与正文相同的桥接与标准化，得到 $Q_M^{(q)}(k)$。
-由 $Y_i^{\mathrm{BPI}}=2^{-1/2}[V_i^{(0)};V_i^{(1)}]$ 及平方欧氏范数的线性性，
+令 $V_i^{(q)}=\operatorname{vec}(Z_i^{(q)})$，并以同一候选集合 $\mathcal K_M$ 和标准化规则分别计算通道扫描曲线 $Q_M^{(q)}(k)$。
+由拼接向量平方欧氏范数的可加性，
 \[
- Q_M^{\mathrm{BPI}}(k)=\tfrac12 Q_M^{(0)}(k)+\tfrac12 Q_M^{(1)}(k).
+ Q_M^{\mathrm{BPI}}(k)=\tfrac12 Q_M^{(0)}(k)+\tfrac12 Q_M^{(1)}(k),
 \]
-因此总扫描同时受连通分支持续信息与循环持续信息影响。由于两通道取最大值的位置通常不同，
-$\max_k\tfrac12(Q_M^{(0)}+Q_M^{(1)})\ge\tfrac12\max_kQ_M^{(0)}+\tfrac12\max_kQ_M^{(1)}$，且一般严格不等。
-正文合并报告两个通道，未单独分离零维与一维同调的贡献。
+因此
+\[
+ \max_{k\in\mathcal K_M}\frac{Q_M^{(0)}(k)+Q_M^{(1)}(k)}{2}
+ \le
+ \frac12\max_{k\in\mathcal K_M}Q_M^{(0)}(k)
+ +\frac12\max_{k\in\mathcal K_M}Q_M^{(1)}(k).
+\]
+若两个通道存在共同的最大化位置，则取等号；若不存在，则严格小于。
+本文合并报告两个同调通道，未单独分离其检出贡献。
 
 \subsection*{S6.3 位置估计的确定性规则}
 为使浮点并列情形具有确定性，令 $\epsilon_{64}=2^{-52}$，把满足
@@ -392,13 +403,16 @@ $\Gamma_h=\sigma^2(W-hs)_+/W^2$。又因 $1\le s<W$，
 $W=64$、$s=16$、$M=192$ 时 $r=4$，$A_{\mathrm{mean},M}=4-15/576\approx3.974$。
 
 \subsection*{S6.8 排列桥接的有限总体恒等式}
-给定 $z_1,\ldots,z_M$，令 $\bar z=M^{-1}\sum_iz_i$、$s_M^2=M^{-1}\sum_i(z_i-\bar z)^2$，并令 $\pi$ 为 $\{1,\ldots,M\}$ 上的均匀随机排列。对 $1\le k<M$，
+给定 $z_1,\ldots,z_M$，令 $\bar z=M^{-1}\sum_iz_i$、$s_M^2=M^{-1}\sum_i(z_i-\bar z)^2$，并令 $\pi$ 为 $\{1,\ldots,M\}$ 上的均匀随机排列。
+均匀随机排列下每个抽取位置的条件方差为 $s_M^2$，不同抽取位置的条件协方差为 $-s_M^2/(M-1)$，
+故前 $k$ 项和的条件方差为 $k s_M^2-k(k-1)s_M^2/(M-1)$。对 $1\le k<M$，除以 $M$ 得
 \[
  \operatorname{Var}_{\pi}\Bigl[\frac1{\sqrt M}\sum_{i=1}^k(z_{\pi(i)}-\bar z)\,\Bigm|\,z_1,\ldots,z_M\Bigr]
+ =\frac1M\Bigl[k s_M^2-\frac{k(k-1)}{M-1}s_M^2\Bigr]
  =\frac{k(M-k)}{M(M-1)}s_M^2 .
 \]
-该式源于不放回抽样中不同抽取位置的条件协方差 $-s_M^2/(M-1)$：$k(M-k)$ 个有序跨组对各自贡献该负协方差，再除以 $M(M-1)$ 归一化。
-因此排列桥接过程的条件变异只由经验边际量 $s_M^2$ 决定，而原始窗口顺序还携带 S6.7 所概括的滞后依赖。
+该条件方差由给定窗口值的经验边际方差决定，不包含原窗口顺序的滞后协方差；
+原始顺序的部分和方差还携带 S6.7 所概括的滞后项。
 
 \subsection*{S6.9 M1 在非重叠端的带宽}
 带宽 $b=\max\{\lfloor W/s\rfloor+1,\lceil M^{1/3}\rceil\}$ 在 $s=W=64$、$M=192$ 时取
@@ -466,8 +480,9 @@ BPI 与 MOMENTS 使用同一重采样索引成对移动，四个 $(\rho,s)$ 条�
 M1 依次为实质反保守、未定、实用校准与实质保守。该清单只记录预设格点的观测状态，不估计连续临界步长。
 
 \subsection*{S7.5 原序列依赖的效应修饰}
-记 $\pi^{(r)}_{g,\rho,s,\varphi}$ 为预算制度 $r\in\{M,T\}$、数据生成过程 $g$、依赖水平 $\rho$、
-步长 $s$ 与表示 $\varphi$ 下的零假设拒绝率。步长对比（$s=16$ 相对 $s=64$）的依赖修饰（差中差）定义为
+记 $\pi^{(r)}_{g,\rho,s,\varphi}$ 为采用无约束窗口级置换（M0）时，预算制度 $r\in\{M,T\}$、数据生成过程 $g$、依赖水平 $\rho$、
+步长 $s$ 与表示 $\varphi$ 下的零假设拒绝率。以下差中差仅描述 M0 下原序列依赖对步长对比的修饰，
+步长对比（$s=16$ 相对 $s=64$）的依赖修饰（差中差）定义为
 \[
  I^{(r)}_{g,\varphi}
  =\bigl[\pi^{(r)}_{g,0.8,16,\varphi}-\pi^{(r)}_{g,0.8,64,\varphi}\bigr]
@@ -479,7 +494,7 @@ $\times2$ 个 DGP 共 $8$ 个值。
 \begin{table}[ht]
 \centering
 \small
-\caption{原序列依赖对步长对比（$s=16$ 相对 $s=64$）的效应修饰 $I^{(r)}_{g,\varphi}$。正值表示 $\rho=0.8$ 放大步长对比。}\label{tab:s7-rho}
+\caption{M0 下原序列依赖对步长对比（$s=16$ 相对 $s=64$）的效应修饰 $I^{(r)}_{g,\varphi}$。正值表示 $\rho=0.8$ 放大步长对比。}\label{tab:s7-rho}
 \begin{tabular}{llcc}
 \toprule
 表示 & 数据生成过程 & $I^{(M)}$ & $I^{(T)}$\\
@@ -493,6 +508,10 @@ MOMENTS & N-CIRCLE & $-0.0564$ & $-0.0676$\\
 \end{table}
 
 \subsection*{S7.6 定位与联合成功率摘要}
+表~\ref{tab:s7-loc} 按场景等权汇总四个预设 $(\rho,s)$ 条件的尺寸校正功效
+$\widehat\beta_{\mathrm{std}}$、nMAE 与 M0/M1 联合成功率 $\widehat J_m$；nMAE 与
+$\widehat J_m$ 的定义见 S7.3。
+
 \begin{table}[ht]
 \centering
 \small

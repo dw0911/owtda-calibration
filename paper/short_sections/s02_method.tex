@@ -39,10 +39,10 @@
  \qquad
  \mathcal K_M=\{\lceil0.15M\rceil,\ldots,M-\lceil0.15M\rceil\},
 \end{equation}
-其中边界保护比例 $0.15$ 在确认性分析前固定；记 $Q_M(k)=k(M-k)M^{-1}\|\bar Y_{1:k}-\bar Y_{k+1:M}\|_2^2$ 为式\eqref{eq:scan}最大化内的量，则 $T_M=\max_{k\in\mathcal K_M}Q_M(k)$。等价地，取 $U_M(k)=M^{-1/2}\bigl(\sum_{i\le k}Y_i-\frac{k}{M}\sum_{i\le M}Y_i\bigr)$、$t_k=k/M$，则 $T_M=\max_k\|U_M(k)\|_2^2/[t_k(1-t_k)]$，即标准化部分和型扫描统计量\cite{CsorgoHorvath1997}。该统计量直接响应左右两段特征的均值之差，检验对象是特征均值层面的变化，不构成对任意拓扑变化的一致检出保证。对 BPI 表示，记 $Q_M^{(q)}(k)$ 为把式\eqref{eq:scan}用于第 $q$ 通道特征序列 $V_1^{(q)},\ldots,V_M^{(q)}$ 所得的同一量，由 $Y^{\mathrm{BPI}}=2^{-1/2}[V^{(0)};V^{(1)}]$ 得 $Q_M^{\mathrm{BPI}}(k)=\tfrac12Q_M^{(0)}(k)+\tfrac12Q_M^{(1)}(k)$，但两通道取最大值的位点通常不同，故总扫描不等于两个通道最大值的平均；本文合并报告两个通道，未单独分离 $0$ 维与 $1$ 维同调的贡献。位置估计取扫描曲线的最长合格平台（长度并列取最左，再取平台下中位数），并映射回时间轴（规则见 S6）；本文只把定位结果作为补充材料 S7 的次级描述。
+其中边界保护比例 $0.15$ 在确认性分析前固定；记 $Q_M(k)=k(M-k)M^{-1}\|\bar Y_{1:k}-\bar Y_{k+1:M}\|_2^2$ 为式\eqref{eq:scan}最大化内的量，则 $T_M=\max_{k\in\mathcal K_M}Q_M(k)$。等价地，取 $U_M(k)=M^{-1/2}\bigl(\sum_{i\le k}Y_i-\frac{k}{M}\sum_{i\le M}Y_i\bigr)$、$t_k=k/M$，则 $T_M=\max_k\|U_M(k)\|_2^2/[t_k(1-t_k)]$，即标准化部分和型扫描统计量\cite{CsorgoHorvath1997}。该统计量直接响应左右两段特征的均值之差，检验对象是特征均值层面的变化，不构成对任意拓扑变化的一致检出保证。对 BPI 表示，记 $Q_M^{(q)}(k)$ 为把式\eqref{eq:scan}用于第 $q$ 通道特征序列 $V_1^{(q)},\ldots,V_M^{(q)}$ 所得的同一量，由 $Y^{\mathrm{BPI}}=2^{-1/2}[V^{(0)};V^{(1)}]$ 得 $Q_M^{\mathrm{BPI}}(k)=\tfrac12Q_M^{(0)}(k)+\tfrac12Q_M^{(1)}(k)$，但两通道的最大化位置可能不同，因此总扫描一般不等于两个通道最大值的平均；本文合并报告两个通道，未单独分离 $0$ 维与 $1$ 维同调的贡献。位置估计取扫描曲线的最长合格平台（长度并列取最左，再取平台下中位数），并映射回时间轴（规则见 S6）；本文只把定位结果作为补充材料 S7 的次级描述。
 
 \subsection{两种校准方法}\label{sec:calibration}
-M0 为全局随机置换：从 $\mathfrak S_M$ 均匀抽取排列并重算式\eqref{eq:scan}，保留经验边际分布但打散原始顺序中的局部依赖。M1 为依赖乘子自助法：令 $\bar Y=M^{-1}\sum_iY_i$、$Z_i=Y_i-\bar Y$，取带宽
+M0 为无约束窗口级置换（即对全部窗口作全局随机置换）：从 $\mathfrak S_M$ 均匀抽取排列并重算式\eqref{eq:scan}，保留经验边际分布但打散原始顺序中的局部依赖。M1 为依赖乘子自助法：令 $\bar Y=M^{-1}\sum_iY_i$、$Z_i=Y_i-\bar Y$，取带宽
 \begin{equation}\label{eq:dmb-bandwidth}
  b=\max\left\{\left\lfloor\frac Ws\right\rfloor+1,\ \left\lceil M^{1/3}\right\rceil\right\},
 \end{equation}
