@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-10-27T07:54:01Z",
+  "input_sha256": {
+    "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611"
+  },
+  "inputs": [
+    "H0_ALL_112.csv"
+  ],
+  "kind": "FIGURE",
+  "outputs": {
+    "FigureB_BPI_H0_panels.pdf": "fd44d77a5c96290c764dd2af97e10f9b4de40d5f07fac6ffdf5197c558ab7ecd",
+    "FigureB_BPI_H0_panels.png": "fcf75c3e0884c6b63ad75744b85df6527180b4c1c003dcc2b20d71bcb79d8a75"
+  },
+  "referenced_by": [
+    "paper/short_sections/s05_h0.tex"
+  ],
+  "schema_version": 1,
+  "script": "paper/scripts/make_short_figures.py",
+  "script_sha256": "7ba42e8303b557b9c4418fddca3eb4e9bf9d00d2ff72f55b6b5159a55e366b1c"
+}

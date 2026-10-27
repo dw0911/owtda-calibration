@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\small
+\caption{主对比 P1--P3 的效应量与推断结果。}\label{tab:primary}
+\begin{tabular}{llccc}
+\toprule
+对比 & 估计量 & 点估计 & $95\%$ basic CI & Holm $p$\\
+\midrule
+P1 & fixed-$M$：$s{=}16$ 减 $s{=}64$（M0） & 0.5354 & $[0.5210,0.5494]$ & 0.00030\\
+P2 & fixed-$T$：$s{=}16$ 减 $s{=}64$（M0） & 0.5330 & $[0.5194,0.5462]$ & 0.00030\\
+P3 & $0.05$ 减 M1（$s{=}W{=}64$，fixed-$M$） & 0.0266 & $[0.0224,0.0308]$ & 0.00030\\
+\bottomrule
+\end{tabular}
+
+\vspace{0.2em}
+\begin{minipage}{0.95\textwidth}
+\footnotesize 注：P1、P2 的预设阈值为 $0.10$，P3 为 $0.01$。区间为 10{,}000 次整簇自助的边际 $95\%$ basic 区间；$p$ 值为三项 Holm 逐步校正后的单侧结果，原始 $p=1/10001$。
+\end{minipage}
+\end{table}

@@ -1,13 +1,27 @@
 \documentclass[UTF8,zihao=-4]{ctexart}
 \usepackage[a4paper,margin=2.2cm]{geometry}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs,array}
 \usepackage{longtable}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
 \usepackage[hidelinks]{hyperref}
 \usepackage{url}
 
+\definecolor{flowblue}{HTML}{33475B}
+\definecolor{flowfill}{HTML}{EEF3FA}
+\definecolor{m0fill}{HTML}{FDEAEA}
+\definecolor{m1fill}{HTML}{EAF5EA}
+\definecolor{sharedred}{HTML}{C0392B}
+\definecolor{winblue}{HTML}{4A90D9}
+
+\newtheorem{proposition}{命题}
+\theoremstyle{remark}
+\newtheorem{remark}{注}
+
 \setlength{\parindent}{2em}
+\setlength{\parskip}{0.2em}
 
 \title{补充材料：重叠窗口拓扑扫描的有限样本校准边界}
 \author{}
@@ -16,7 +30,36 @@
 \begin{document}
 \maketitle
 
-正文引用本补充材料时按 S1--S5 编号。所有数值与正文及冻结的 canonical 汇总文件一致。
+本补充材料对应短稿《基于持续同调的变点检验：重叠滑动窗口下的有限样本校准》（分支 \texttt{paper/short-202610}）。
+正文引用时按 S1--S7 编号。S1--S5 的表格与数值与长稿版本（标签 \texttt{v1.2.0-paper}）一致，未作改动；
+S6 汇集从正文移出的方法细节与全部证明，S7 汇集设计细则与次级结果。所有数值与正文及冻结的 canonical 汇总文件一致。
+
+\section*{S0 内容索引}
+
+\begin{center}
+\small
+\begin{tabular}{p{0.30\textwidth}p{0.26\textwidth}p{0.34\textwidth}}
+\toprule
+被移出正文的内容 & 正文位置 & 本补充材料位置\\
+\midrule
+校准流程与重叠机制示意图；完整过滤约定、平台与位置规则 & \S2.2、\S2.4 & S6.1--S6.3 及其插图\\
+矩表示 Frobenius 恒等式的推导 & \S2.3 & S6.4\\
+命题 1--3 的完整证明、长期方差与排列有限总体恒等式 & \S3 & S6.5--S6.8\\
+M1 带宽在非重叠端的取值与协方差结构 & \S2.5、\S7 & S6.9\\
+窗口几何、$T/M$/$b$ 枚举表；自助分位秩与 H1 联合自助细则 & \S4.1--\S4.3 & S7.1--S7.2\\
+nMAE、联合成功率与真实边界的完整定义 & \S6 & S7.3\\
+112 个逐格拒绝率、Wilson 区间与分类（含状态转换清单） & \S5.2 & S1\\
+16 行备择结果（功效、nMAE、联合成功率、名义功效） & \S6 & S2\\
+主对比尾部事件、配对单位、basic 区间、种子与表示差规格 & \S4.2--\S4.3 & S3\\
+完整 $16\times4$ 热图（两表示$\times$两方法） & 原图 3、图 4 & S4 及其插图\\
+逐条件定位摘要、原序列依赖效应修饰表 & \S5.3、\S6 & S7.4--S7.5\\
+代码与数据入口 & 文末 & S5\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5em}
+\noindent 说明：正文只保留两幅图与三张表；上述内容均为可核查性所需的细节，不改变任何结论。
 
 \section*{S1 完整 112 行零假设结果}
 
@@ -185,16 +228,39 @@ $\beta_0$、$\beta_1$ 分别为 M0、M1 的名义功效。
 
 \section*{S3 主对比与表示差自助法的完整规格}
 
-\textbf{主对比 P1--P3}：使用 10{,}000 次按数据生成过程分层的整簇自助法；同一主重复编号下
-的全部相关条件、表示和方法随簇共同重采样。单侧自助 $p$ 值按加一规则
-$p=(1+\#\{\text{尾部}\})/10001$ 计算，三个单侧 $p$ 值经 Holm step-down 校正。
-边际 95\% 区间为最近秩（nearest-rank）分位数定义的 basic bootstrap interval。
+\textbf{尾部事件与 $p$ 值}：记 $\widehat\theta_j$（$j\in\{\mathrm{P1},\mathrm{P2},\mathrm{P3}\}$）为点估计，
+$\theta_j^{0}$ 为预设阈值（P1、P2 为 $0.10$，P3 为 $0.01$），$d_{j,b}$ 为第 $b$ 个整簇自助复制
+（$b=1,\ldots,10{,}000$）。单侧尾部计数与 $p$ 值定义为
+\[
+ K_j=\#\bigl\{b:\ d_{j,b}-\widehat\theta_j\ \ge\ \widehat\theta_j-\theta_j^{0}\bigr\},
+ \qquad
+ p_j^{\mathrm{raw}}=\frac{K_j+1}{10{,}001},
+\]
+三项 $p$ 值经 Holm step-down 校正（族水平 $0.05$）；本数据上 $K_j=0$，故原始 $p=1/10001$，校正后为 $0.00030$。
 
-\textbf{表示差 $\Delta$}：通过两层整簇自助法估计，每层 2000 次。重采样单位为主复制：
-零假设层按 N-CIRCLE 主复制整簇重采样以重算经验临界值，备择层按备择主复制整簇重采样以重算功效；
-两层分别独立重采样。BPI 与 MOMENTS 使用同一重采样索引成对移动；四个 $(\rho,s)$ 条件
-在每个场景内先计算各自的 BPI 减 MOMENTS 功效差，再等权平均得到场景差。
-区间采用最近秩定义的 2000 次百分位区间（$2.5\%$ 与 $97.5\%$ 分位数）。
+\textbf{重采样单位与配对}：分层单位是数据生成过程，两个已登记的 DGP 在每个复制内独立重采样。
+同一复制内 P1--P3 共享同一组主复制索引；同一主重复编号下的条件、表示与方法随簇共同移动，
+因此三项对比成对计算。MOMENTS 的同构对比仅作次级描述，不进入 Holm 族。
+
+\textbf{basic 区间}：令 $q_\gamma$ 为 10{,}000 个 $d_{j,b}$ 的最近秩（nearest-rank）$\gamma$ 分位数，
+边际 $95\%$ 区间为
+\[
+ \bigl[\,2\widehat\theta_j-q_{0.975},\ \ 2\widehat\theta_j-q_{0.025}\,\bigr],
+\]
+该区间是边际区间，不解释为 Holm 同时置信区间。
+
+\textbf{随机种子}：数据生成、M0/M1 重采样与自助分析分别由独立的 stream family 驱动。
+子种子取 $\mathrm{HMAC\text{-}SHA256}(k_{\mathrm{root}},P)$ 的前 16 字节，并以 $\mathrm{PCG64DXSM}$ 实例化；
+其中 $P$ 为 canonical JSON 载荷，含固定域 \texttt{owtda-seed-v1}、\texttt{stream\_kind} 与命名域字段
+（条件、主重复编号等）。13 条 stream 的根密钥承诺登记于
+\texttt{governance/SEED\_REGISTRY\_v1.0.json}，其哈希进入 freeze id \texttt{6057b5dc\ldots}；
+逐 trial 子种子不在此重列，可用 \texttt{scripts/verify\_release.py} 对账。
+
+\textbf{表示差 $\Delta$}：通过两层整簇自助法估计，共 2000 个联合复制；每个复制内零假设层按
+N-CIRCLE 主复制整簇重采样以重算经验临界值，备择层按备择主复制整簇重采样以重算功效，两层独立抽样。
+BPI 与 MOMENTS 使用同一重采样索引成对移动；四个 $(\rho,s)$ 条件在每个场景内先计算各自的
+BPI 减 MOMENTS 功效差，再等权平均得到场景差。区间采用最近秩定义的 2000 次百分位区间
+（$2.5\%$ 与 $97.5\%$ 分位数）。
 
 \section*{S4 完整 16$\times$4 热图}
 
@@ -216,8 +282,235 @@ BPI/M0、BPI/M1、MOMENTS/M0、MOMENTS/M1。}\label{fig:s1}
 
 \begin{itemize}
 \item 代码仓库：\url{https://github.com/dw0911/owtda-calibration}
-\item 本稿对应 git 标签 \texttt{v1.2.0-paper}
+\item 长稿基线：git 标签 \texttt{v1.2.0-paper}；短稿分支 \texttt{paper/short-202610}
 \item 全部合成数据由该版本代码与固定随机种子生成；独立数据 DOI 尚在建立中，未作为已提供材料列出
 \end{itemize}
+
+\section*{S6 方法细节与证明}
+
+\subsection*{S6.1 过滤与持续图的完整约定}
+对每个窗口点云 $P$，在系数域 $\mathbb F_2$ 上按欧氏距离计算 Vietoris--Rips 持续同调。
+单形 $\sigma$ 的过滤值取顶点间最大欧氏距离，即 $\operatorname{diam}(\sigma)$；尺度 $\varepsilon$ 下纳入全部满足
+$\operatorname{diam}(\sigma)\le\varepsilon$ 的单形，
+\[
+ \operatorname{VR}_\varepsilon(P)=\{\sigma\subseteq P:\operatorname{diam}(\sigma)\le\varepsilon\}.
+\]
+过滤不设数据驱动的截断上限，持续图坐标直接以欧氏距离尺度报告。有限欧氏点云的 Vietoris--Rips 过滤在过滤值达到点云直径时形成完全复形，
+所有 $1$ 维同调类在此时均已消亡，仅最后一个 $0$ 维连通分量的 death 为 $\infty$；实现中只丢弃该显式无穷 death 分量，其余有限类全部保留。
+零维同调记录连通分支，一维同调记录未被二维单形填充的独立循环；
+贝蒂数 $\beta_q(K)=\dim H_q(K;\mathbb F_2)$ 为该尺度下相应同调空间的维数。
+持续图中的 $(b,d)$ 分别为出生与消亡尺度，$d-b$ 是过滤尺度上的寿命，而非真实时间轴上的持续时长。
+
+\begin{figure}[ht]
+\centering
+\resizebox{0.98\textwidth}{!}{\input{../figures/fig1_flow}}
+\caption{统计推断主流程（原长稿图 1a）。原始序列经重叠窗口映射为窗口点云，分别经持续同调—向量化分支得到 BPI、经均值—协方差分支得到 MOMENTS，
+进入最大扫描得到 $T_M$ 与位置估计 $\hat k$；M0 与 M1 分别构造参考分布，并由 Monte Carlo $p$ 值形成拒绝决策。}\label{fig:s6-flow}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\resizebox{0.86\textwidth}{!}{\input{../figures/fig1_overlap}}
+\caption{窗口重叠与共享观测（原长稿图 1b）。相邻窗口共享红色观测；全局随机置换重排窗口顺序时原有邻接被破坏，这是交换性失效机制的直观来源。}\label{fig:s6-overlap}
+\end{figure}
+
+\subsection*{S6.2 两个同调通道的扫描分解}
+令 $V_i^{(q)}=\operatorname{vec}(Z_i^{(q)})$ 为第 $q$ 个通道的未缩放向量，并分别对每个通道使用与正文相同的桥接与标准化，得到 $Q_M^{(q)}(k)$。
+由 $Y_i^{\mathrm{BPI}}=2^{-1/2}[V_i^{(0)};V_i^{(1)}]$ 及平方欧氏范数的线性性，
+\[
+ Q_M^{\mathrm{BPI}}(k)=\tfrac12 Q_M^{(0)}(k)+\tfrac12 Q_M^{(1)}(k).
+\]
+因此总扫描同时受连通分支持续信息与循环持续信息影响。由于两通道取最大值的位置通常不同，
+$\max_k\tfrac12(Q_M^{(0)}+Q_M^{(1)})\ge\tfrac12\max_kQ_M^{(0)}+\tfrac12\max_kQ_M^{(1)}$，且一般严格不等。
+正文合并报告两个通道，未单独分离零维与一维同调的贡献。
+
+\subsection*{S6.3 位置估计的确定性规则}
+为使浮点并列情形具有确定性，令 $\epsilon_{64}=2^{-52}$，把满足
+\[
+ Q_M(k)\ge T_M-64\,\epsilon_{64}\max(1,|T_M|)
+\]
+的连续候选段定义为合格平台。位置估计取最长平台；长度并列时取最左平台，再以该平台的下中位数作为 $\widehat k$。
+若特征序列精确恒定，则规定 $T_M=0$。由于 $k$ 表示第 $k$ 与第 $k+1$ 个窗口之间的分割，映射到原始时间轴后的连续边界估计为
+\[
+ \widehat\tau=\Bigl(\widehat k-\frac12\Bigr)s+\frac{W+1}{2},
+\]
+即把该分割点对应到两个相邻窗口中心之间的中点。所有校准方法使用相同的观测统计量、候选集合与位置规则。
+
+\subsection*{S6.4 矩表示的 Frobenius 恒等式}
+记 $\Delta\bar x=\bar x_i-\bar x_j$、$\Delta S=S_i-S_j$，则
+\[
+ \|Y_i^{\mathrm{MOM}}-Y_j^{\mathrm{MOM}}\|_2^2
+ =\|\Delta\bar x\|_2^2+\sum_{a}(\Delta S)_{aa}^2+2\sum_{a<b}(\Delta S)_{ab}^2
+ =\|\Delta\bar x\|_2^2+\|\Delta S\|_F^2 .
+\]
+最后一个等号用到实对称矩阵的 Frobenius 范数分解：对角元平方和加二倍非对角元平方和。特征向量中非对角元的 $\sqrt2$ 权重正来自该交叉项系数。
+
+\subsection*{S6.5 命题 1 的证明}
+取任意两个窗口指标集合 $A,B\subset\{1,\ldots,M\}$，并假设 $\min_{i\in A,j\in B}|i-j|>m$。对任意 $i\in A$ 与 $j\in B$，不妨设 $i<j$，则
+\[
+ (j-i)s\ge\lceil W/s\rceil s\ge W,
+\]
+从而 $I_i\cap I_j=\varnothing$。因此 $\{X_t:t\in\cup_{i\in A}I_i\}$ 与 $\{X_t:t\in\cup_{j\in B}I_j\}$ 生成的两个 $\sigma$-代数相互独立，
+其固定可测函数 $\{Y_i:i\in A\}$ 与 $\{Y_j:j\in B\}$ 也相互独立。由 $m$-依赖的定义即得结论。
+
+\subsection*{S6.6 命题 2 的完整证明与讨论}
+由于原始观测相互独立，只有被两个窗口共享的观测指标对协方差有贡献。交集 $I_i\cap I_{i+h}$ 含有 $(W-hs)_+$ 个指标，故
+$\Gamma_h=\sigma^2(W-hs)_+/W^2$。又因 $1\le s<W$，
+\[
+ \Gamma_1=\frac{\sigma^2}{W^2}(W-s)>\frac{\sigma^2}{W^2}(W-2s)_+=\Gamma_2 .
+\]
+考虑交换第 $2$、$3$ 个坐标的排列。交换前，第一坐标与第二、第三坐标的协方差分别为 $\Gamma_1$ 与 $\Gamma_2$；交换后两者互换，协方差矩阵由此改变。
+高斯向量的分布由均值与协方差矩阵唯一确定，因此交换后的联合分布与原分布不同。
+
+\begin{remark}
+结论并未覆盖所有固定局部映射：常数映射始终产生可交换序列。条件 $M\ge3$ 也具有实质作用：当 $M=2$ 时，两个等方差的联合高斯窗口均值具有对称协方差矩阵，
+交换两个坐标不改变其分布。
+\end{remark}
+
+\subsection*{S6.7 方差比与长期方差}
+在命题 2 的构造下，令 $\bar Z_M=M^{-1}\sum_{i=1}^MZ_i$、$\Gamma_0=\sigma^2/W$。按滞后展开协方差和，
+\[
+ M^2\operatorname{Var}(\bar Z_M)=M\Gamma_0+2\sum_{h=1}^{M-1}(M-h)\Gamma_h ,
+\]
+除以 $M^2$ 并代入 $\Gamma_h$ 得
+\[
+ \operatorname{Var}(\bar Z_M)=\frac{\Gamma_0}{M}A_{\mathrm{mean},M},
+ \qquad
+ A_{\mathrm{mean},M}=1+2\sum_{h=1}^{M-1}\Bigl(1-\frac hM\Bigr)\Bigl(1-\frac{hs}{W}\Bigr)_+ .
+\]
+若 $r=W/s$ 为正整数且 $M\ge r$，非零求和项仅为 $h=1,\ldots,r-1$。利用
+\[
+ \sum_{h=1}^{r-1}\Bigl(1-\frac hr\Bigr)=\frac{r-1}{2},
+ \qquad
+ \sum_{h=1}^{r-1}h\Bigl(1-\frac hr\Bigr)=\frac{r^2-1}{6},
+\]
+整理得 $A_{\mathrm{mean},M}=r-(r^2-1)/(3M)$，且长期方差
+\[
+ \Omega=\sum_{h=-\infty}^{\infty}\Gamma_h=\Gamma_0+2\sum_{h=1}^{r-1}\Gamma_h=r\Gamma_0 .
+\]
+只要 $r>1$ 就有 $\Omega>\Gamma_0$：原顺序下的部分和变异包含滞后协方差，随机排列参考则主要由窗口值的经验边际变异决定。
+$W=64$、$s=16$、$M=192$ 时 $r=4$，$A_{\mathrm{mean},M}=4-15/576\approx3.974$。
+
+\subsection*{S6.8 排列桥接的有限总体恒等式}
+给定 $z_1,\ldots,z_M$，令 $\bar z=M^{-1}\sum_iz_i$、$s_M^2=M^{-1}\sum_i(z_i-\bar z)^2$，并令 $\pi$ 为 $\{1,\ldots,M\}$ 上的均匀随机排列。对 $1\le k<M$，
+\[
+ \operatorname{Var}_{\pi}\Bigl[\frac1{\sqrt M}\sum_{i=1}^k(z_{\pi(i)}-\bar z)\,\Bigm|\,z_1,\ldots,z_M\Bigr]
+ =\frac{k(M-k)}{M(M-1)}s_M^2 .
+\]
+该式源于不放回抽样中不同抽取位置的条件协方差 $-s_M^2/(M-1)$：$k(M-k)$ 个有序跨组对各自贡献该负协方差，再除以 $M(M-1)$ 归一化。
+因此排列桥接过程的条件变异只由经验边际量 $s_M^2$ 决定，而原始窗口顺序还携带 S6.7 所概括的滞后依赖。
+
+\subsection*{S6.9 M1 在非重叠端的带宽}
+带宽 $b=\max\{\lfloor W/s\rfloor+1,\lceil M^{1/3}\rceil\}$ 在 $s=W=64$、$M=192$ 时取
+$b=\max\{2,6\}=6$；在 $s=8$、$M=192$ 时取 $b=\max\{9,6\}=9$。即使窗口不重叠，$\lceil M^{1/3}\rceil$ 仍使 $b>1$，
+相关乘子不会退化为独立乘子，这与正文 P3 在非重叠端检出保守偏差的方向相容。本文没有进一步分解带宽、桥接与高维特征谱各自的贡献。
+
+\section*{S7 设计细则与次级结果}
+
+\subsection*{S7.1 窗口几何与 M1 带宽}
+\begin{table}[ht]
+\centering
+\small
+\caption{双预算制度下的窗口几何。重叠率为 $1-s/W$；$b$ 为 M1 依赖乘子带宽。}\label{tab:s7-design}
+\begin{tabular}{cccccccc}
+\toprule
+$s$ & 重叠率 & \multicolumn{3}{c}{固定窗口数（fixed-$M$）} & \multicolumn{3}{c}{固定观测长度（fixed-$T$）}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+ & $1-s/W$ & $T$ & $M$ & $b$ & $T$ & $M$ & $b$\\
+\midrule
+8 & 87.5\% & 1592 & 192 & 9 & 3120 & 383 & 9 \\
+16 & 75.0\% & 3120 & 192 & 6 & 3120 & 192 & 6 \\
+32 & 50.0\% & 6176 & 192 & 6 & 3120 & 96 & 5 \\
+64 & 0.0\% & 12288 & 192 & 6 & 3120 & 48 & 4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+$s=16$ 行在两种制度下给出相同的 $(T,M)=(3120,192)$，为共享配置；唯一配置计数中只计一次，但在两种预算视角下分别用于解释。
+$s=64$ 时窗口不重叠，对应 M1 保守性主对比 P3 的非重叠端。
+
+\subsection*{S7.2 自助分位秩与 H1 联合自助}
+主对比使用 10{,}000 次按数据生成过程分层的整簇自助法；同一主重复编号下的全部相关条件、表示和方法随簇共同重采样。
+若 $q_\gamma$ 表示 10{,}000 个自助估计的最近秩（nearest-rank）$\gamma$ 分位数，则边际 $95\%$ basic 区间为
+\[
+ \bigl[2\widehat\theta-q_{0.975},\,2\widehat\theta-q_{0.025}\bigr],
+ \qquad q_\gamma=\widehat\theta^*_{(\lceil10000\gamma\rceil)} .
+\]
+三个单侧 $p$ 值采用 Holm step-down 校正，族水平 $0.05$。
+
+场景层面的表示差 $\Delta$ 使用两层整簇自助法：重采样单位为主复制，零假设层按 N-CIRCLE 主复制整簇重采样以重算经验临界值，
+备择层按备择主复制整簇重采样以重算功效；共 2000 个联合重复，每次分别独立重采样 H0 簇与 H1 簇。
+BPI 与 MOMENTS 使用同一重采样索引成对移动，四个 $(\rho,s)$ 条件在每个场景内先计算各自的 BPI 减 MOMENTS 功效差，再等权平均得到场景差。
+区间采用最近秩法定义的 2000 次百分位区间（$2.5\%$ 与 $97.5\%$ 分位数）。
+
+\subsection*{S7.3 定位指标与真实边界}
+由于变化发生在 $t=\lfloor T/2\rfloor$ 与 $t=\lfloor T/2\rfloor+1$ 之间，真实连续边界为
+\[
+ \tau_{\mathrm{true}}=\Bigl\lfloor\frac T2\Bigr\rfloor+\frac12 .
+\]
+本文报告无条件绝对误差 $E_r=|\widehat\tau_r-\tau_{\mathrm{true}}|$、原始尺度平均绝对误差 $R_1^{-1}\sum_rE_r$，以及归一化平均绝对误差
+\[
+ \operatorname{nMAE}=\frac1{R_1}\sum_{r=1}^{R_1}\frac{E_r}{T}.
+\]
+不同步长对应的 $T$ 不同，故正文采用 nMAE 保证条件间尺度可比。位置误差由观测统计量决定，同一“条件--表示”组合的 M0 与 M1 共享 $\widehat\tau_r$；
+校准方法只通过拒绝事件影响联合成功率
+\[
+ \widehat J_m=\frac1{R_1}\sum_{r=1}^{R_1}\mathbf 1\Bigl\{p_{r,m}\le0.05,\ |\widehat\tau_r-\tau_{\mathrm{true}}|\le\frac W2\Bigr\},
+ \qquad m\in\{\mathrm{M0},\mathrm{M1}\}.
+\]
+漏检重复保留在分母中，故该量同时评价检出与定位；$W/2$ 以窗口宽度定义局部定位容忍度，与 nMAE 的归一化口径不同。
+
+\subsection*{S7.4 校准状态转换清单}
+正文 \S5.2 的逐格状态清单即 S1 的“分类”列：按 DGP、$\rho$、$s$、表示与方法排序后，可直接读出相邻步长间的分类变化。
+以固定窗口数、N-AR、$\rho=0$、BPI 为例，M0 在 $s=8,16,32$ 为实质反保守、$s=64$ 转为实用校准；
+M1 依次为实质反保守、未定、实用校准与实质保守。该清单只记录预设格点的观测状态，不估计连续临界步长。
+
+\subsection*{S7.5 原序列依赖的效应修饰}
+记 $\pi^{(r)}_{g,\rho,s,\varphi}$ 为预算制度 $r\in\{M,T\}$、数据生成过程 $g$、依赖水平 $\rho$、
+步长 $s$ 与表示 $\varphi$ 下的零假设拒绝率。步长对比（$s=16$ 相对 $s=64$）的依赖修饰（差中差）定义为
+\[
+ I^{(r)}_{g,\varphi}
+ =\bigl[\pi^{(r)}_{g,0.8,16,\varphi}-\pi^{(r)}_{g,0.8,64,\varphi}\bigr]
+ -\bigl[\pi^{(r)}_{g,0,16,\varphi}-\pi^{(r)}_{g,0,64,\varphi}\bigr].
+\]
+正值表示 $\rho=0.8$ 放大该步长对比。表~\ref{tab:s7-rho} 给出 $2$ 种预算 $\times2$ 种表示
+$\times2$ 个 DGP 共 $8$ 个值。
+
+\begin{table}[ht]
+\centering
+\small
+\caption{原序列依赖对步长对比（$s=16$ 相对 $s=64$）的效应修饰 $I^{(r)}_{g,\varphi}$。正值表示 $\rho=0.8$ 放大步长对比。}\label{tab:s7-rho}
+\begin{tabular}{llcc}
+\toprule
+表示 & 数据生成过程 & $I^{(M)}$ & $I^{(T)}$\\
+\midrule
+BPI & N-AR & $-0.0688$ & $-0.0608$\\
+BPI & N-CIRCLE & $0.1032$ & $0.0952$\\
+MOMENTS & N-AR & $-0.1148$ & $-0.1116$\\
+MOMENTS & N-CIRCLE & $-0.0564$ & $-0.0676$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{S7.6 定位与联合成功率摘要}
+\begin{table}[ht]
+\centering
+\small
+\caption{同一场景内四个预设条件的等权汇总：尺寸校正功效、nMAE 与联合成功率。}\label{tab:s7-loc}
+\begin{tabular}{llccrr}
+\toprule
+场景 & 表示 & 尺寸校正功效 & nMAE & \multicolumn{2}{c}{联合成功率}\\
+\cmidrule(lr){5-6}
+ & & $\widehat\beta_{\mathrm{std}}$ & & M0 & M1\\
+\midrule
+形状变化 & BPI & 1.00000 & 0.00409 & 0.9839 & 0.9839\\
+形状变化 & MOMENTS & 0.06203 & 0.20165 & 0.0144 & 0.0009\\
+均值平移 & BPI & 0.05375 & 0.20255 & 0.0087 & 0.0011\\
+均值平移 & MOMENTS & 1.00000 & 0.00330 & 0.9052 & 0.9052\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent 注：当对应 H0 配置失校准时，较高的联合成功率可能部分来自过高的拒绝概率，须与匹配 H0 尺寸共同解释。
 
 \end{document}

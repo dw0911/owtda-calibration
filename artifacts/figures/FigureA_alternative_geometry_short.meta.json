@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-10-27T07:54:00Z",
+  "input_sha256": {
+    "H0_ALL_112.csv": "5a1f3f4e498a5f8296fdbd8603d1844fab73e464453fdde06ee6359f00642611"
+  },
+  "inputs": [
+    "H0_ALL_112.csv"
+  ],
+  "kind": "FIGURE",
+  "outputs": {
+    "FigureA_alternative_geometry_short.pdf": "ed604fc99497a17bf7d730662ce5bd93a1a2f298dcf1dcf32ea8cdc9909a7efe",
+    "FigureA_alternative_geometry_short.png": "4fed93c856219f7c481fc93029ea648eade6530a976474c8b8b8a43afff2349c"
+  },
+  "referenced_by": [
+    "paper/short_sections/s04_protocol.tex"
+  ],
+  "schema_version": 1,
+  "script": "paper/scripts/make_short_figures.py",
+  "script_sha256": "7ba42e8303b557b9c4418fddca3eb4e9bf9d00d2ff72f55b6b5159a55e366b1c"
+}
