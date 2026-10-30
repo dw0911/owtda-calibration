@@ -32,6 +32,9 @@
 \theoremstyle{remark}
 \newtheorem{remark}{注}
 
+% 多篇组合引用：外层使用中文圆括号（导师本轮编辑样式要求）
+\newcommand{\mcite}[1]{（\cite{#1}）}
+
 \title{基于持续同调的变点检验：重叠滑动窗口下的\\[-6pt]有限样本校准\\[4pt]
 \large Finite-Sample Calibration of Persistent-Homology-Based Change-Point Tests with Overlapping Windows}
 \author{
@@ -72,7 +75,7 @@
 \input{short_sections/s07_discussion}
 
 \section*{数据与代码可用性}
-本文主稿、图件及补充材料 S1--S7 对应仓库 \url{https://github.com/dw0911/owtda-calibration} 中的标签 \texttt{short-202610-submission}（分支 \path{paper/short-202610}）。该版本提供代码、配置、随机种子及完整逐格结果；图表数据与生成说明见补充材料 S5。
+本文主稿、图件及补充材料 S1--S7 对应仓库 \url{https://github.com/dw0911/owtda-calibration} 中的标签 \texttt{short-202610-submission-r1}（分支 \path{paper/short-202610}）。该版本提供代码、配置、随机种子及完整逐格结果；图表数据与生成说明见补充材料第~S5~节。
 
 \bibliographystyle{unsrt}
 \bibliography{bibliography_short}

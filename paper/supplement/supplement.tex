@@ -44,15 +44,17 @@ S6 汇集从正文移出的方法细节与全部证明，S7 汇集设计细则�
 \midrule
 校准流程与重叠机制示意图；完整过滤约定、平台与位置规则 & \S2.2、\S2.4 & S6.1--S6.3 及其插图\\
 矩表示 Frobenius 恒等式的推导 & \S2.3 & S6.4\\
-命题 1--3 的完整证明、长期方差与排列有限总体恒等式 & \S3 & S6.5--S6.8\\
+命题 1、命题 2 的证明及方差和排列参考推导 & \S3 & S6.5--S6.8\\
 M1 带宽在非重叠端的取值与协方差结构 & \S2.5、\S7 & S6.9\\
 窗口几何、$T/M$/$b$ 枚举表；自助分位秩与 H1 联合自助细则 & \S4.1--\S4.3 & S7.1--S7.2\\
 nMAE、联合成功率与真实边界的完整定义 & \S6 & S7.3\\
-112 个逐格拒绝率、Wilson 区间与分类（含状态转换清单） & \S5.2 & S1\\
+112 个逐格拒绝率、Wilson 区间与分类 & \S5.2 & S1\\
 16 行备择结果（功效、nMAE、联合成功率、名义功效） & \S6 & S2\\
 主对比尾部事件、配对单位、basic 区间、种子与表示差规格 & \S4.2--\S4.3 & S3\\
 完整 $16\times4$ 热图（两表示$\times$两方法） & 原图 3、图 4 & S4 及其插图\\
-逐条件定位摘要、原序列依赖效应修饰表 & \S5.3、\S6 & S7.4--S7.5\\
+校准状态转换的判读说明 & \S5.2 & S7.4\\
+定位指标定义与场景汇总 & \S5.3、\S6 & S7.3、S7.6\\
+原序列依赖的效应修饰表 & \S5.3 & S7.5\\
 代码与数据入口 & 文末 & S5\\
 \bottomrule
 \end{tabular}
@@ -66,8 +68,8 @@ nMAE、联合成功率与真实边界的完整定义 & \S6 & S7.3\\
 下表给出 28 个唯一零假设配置 $\times$ 2 表示 $\times$ 2 方法共 112 个逐格评价单元的
 拒绝率（每格 $n=2500$）、95\% Wilson 区间（无连续性修正）与四类校准状态。
 列含义：DGP 为数据生成过程；$\rho$ 为原序列依赖；$s$ 为步长；$T$、$M$ 为观测长度与窗口数；
-分类取实用校准 / 实质保守 / 实质反保守 / 未定。本表的分类列即正文第 5.2 节所称的
-完整状态转换清单。
+分类取实用校准 / 实质保守 / 实质反保守 / 未定。本表的分类列即主文第 5.2 节所称的
+完整逐格分类；状态转换的判读说明见本补充材料第 S7.4 节。
 
 \begingroup
 \footnotesize
@@ -271,7 +273,7 @@ fixed-$M$ 与 fixed-$T$。色标 $[0,1]$，格内标注四位小数。
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.95\textwidth]{../../artifacts/figures/FigureS1_H0_16x4_heatmap.pdf}
-\caption{完整 16$\times$4 逐格 I 类错误率热图。两面板分别为 fixed-$M$（$M=192$）与
+\caption{两种预算设计下的完整零假设拒绝率热图。两面板分别为 fixed-$M$（$M=192$）与
 fixed-$T$（$T=3120$）；16 行按 DGP$\times\rho\times s$ 排列，4 列为
 BPI/M0、BPI/M1、MOMENTS/M0、MOMENTS/M1。}\label{fig:s1}
 \end{figure}
@@ -283,10 +285,10 @@ BPI/M0、BPI/M1、MOMENTS/M0、MOMENTS/M1。}\label{fig:s1}
 {\setlength{\emergencystretch}{3em}
 \begin{itemize}
 \item 代码仓库：\url{https://github.com/dw0911/owtda-calibration}
-\item 本短稿标签 \texttt{short-202610-submission}，分支 \path{paper/short-202610}；长稿基线 \texttt{v1.2.0-paper}。
-\item 正文图~2 由 canonical 汇总 \path{H0_ALL_112.csv} 直接绘制，作图脚本为 \path{paper/scripts/make_short_figures.py}
-\item 本材料图~1 由 \path{paper/scripts/make_figures.py} 从同一 CSV 生成，未重新录入数值
-\item 表~1--3 的数值由 \path{paper/scripts/check_short_claims.py} 对 \path{H0_ALL_112.csv}、\path{P1_P3_BOOTSTRAP.json} 与 H1 场景汇总逐项断言核验；完整底层行见 S1--S2
+\item 本短稿标签 \texttt{short-202610-submission-r1}，分支 \path{paper/short-202610}；长稿基线 \texttt{v1.2.0-paper}。
+\item 主文图~2 由 canonical 汇总 \path{H0_ALL_112.csv} 直接绘制，作图脚本为 \path{paper/scripts/make_short_figures.py}
+\item 本材料图~\ref{fig:s1} 由 \path{paper/scripts/make_figures.py} 从同一 CSV 生成，未重新录入数值
+\item 主文表~1--3 的数值由 \path{paper/scripts/check_short_claims.py} 对 \path{H0_ALL_112.csv}、\path{P1_P3_BOOTSTRAP.json} 与 H1 场景汇总逐项断言核验；完整底层行见本材料第 S1--S2 节
 \item 全部合成数据由该版本代码与固定随机种子生成；独立数据 DOI 尚在建立中，未作为已提供材料列出
 \end{itemize}
 \par}
@@ -309,14 +311,14 @@ $\operatorname{diam}(\sigma)\le\varepsilon$ 的单形，
 \begin{figure}[ht]
 \centering
 \resizebox{0.98\textwidth}{!}{\input{../figures/fig1_flow}}
-\caption{统计推断主流程（原长稿图 1a）。原始序列经重叠窗口映射为窗口点云，分别经持续同调—向量化分支得到 BPI、经均值—协方差分支得到 MOMENTS，
+\caption{基于窗口特征的变点检验与校准流程。原始序列经重叠窗口映射为窗口点云，分别经持续同调—向量化分支得到 BPI、经均值—协方差分支得到 MOMENTS，
 进入最大扫描得到 $T_M$ 与位置估计 $\hat k$；M0 与 M1 分别构造参考分布，并由 Monte Carlo $p$ 值形成拒绝决策。}\label{fig:s6-flow}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
 \resizebox{0.86\textwidth}{!}{\input{../figures/fig1_overlap}}
-\caption{窗口重叠与共享观测（原长稿图 1b）。相邻窗口共享红色观测；全局随机置换重排窗口顺序时原有邻接被破坏，这是交换性失效机制的直观来源。}\label{fig:s6-overlap}
+\caption{重叠窗口的观测共享与随机重排示意。相邻窗口共享红色观测；全局随机置换重排窗口顺序时原有邻接被破坏，这是交换性失效机制的直观来源。}\label{fig:s6-overlap}
 \end{figure}
 
 \subsection*{S6.2 两个同调通道的扫描分解}
@@ -425,7 +427,7 @@ $b=\max\{2,6\}=6$；在 $s=8$、$M=192$ 时取 $b=\max\{9,6\}=9$。即使窗口�
 \begin{table}[ht]
 \centering
 \small
-\caption{双预算制度下的窗口几何。重叠率为 $1-s/W$；$b$ 为 M1 依赖乘子带宽。}\label{tab:s7-design}
+\caption{双预算制度下的窗口几何与乘子带宽。重叠率为 $1-s/W$；$b$ 为 M1 依赖乘子带宽。}\label{tab:s7-design}
 \begin{tabular}{cccccccc}
 \toprule
 $s$ & 重叠率 & \multicolumn{3}{c}{固定窗口数（fixed-$M$）} & \multicolumn{3}{c}{固定观测长度（fixed-$T$）}\\
@@ -475,7 +477,7 @@ BPI 与 MOMENTS 使用同一重采样索引成对移动，四个 $(\rho,s)$ 条�
 漏检重复保留在分母中，故该量同时评价检出与定位；$W/2$ 以窗口宽度定义局部定位容忍度，与 nMAE 的归一化口径不同。
 
 \subsection*{S7.4 校准状态转换清单}
-正文 \S5.2 的逐格状态清单即 S1 的“分类”列：按 DGP、$\rho$、$s$、表示与方法排序后，可直接读出相邻步长间的分类变化。
+主文第 5.2 节的逐格状态清单即本补充材料第 S1 节的“分类”列：按 DGP、$\rho$、$s$、表示与方法排序后，可直接读出相邻步长间的分类变化。
 以固定窗口数、N-AR、$\rho=0$、BPI 为例，M0 在 $s=8,16,32$ 为实质反保守、$s=64$ 转为实用校准；
 M1 依次为实质反保守、未定、实用校准与实质保守。该清单只记录预设格点的观测状态，不估计连续临界步长。
 

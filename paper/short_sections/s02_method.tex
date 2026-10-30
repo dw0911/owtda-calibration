@@ -10,7 +10,7 @@
 本文取 $1\le s\le W$，相邻窗口的名义重叠率为 $1-s/W$。二维观测的窗口点云直接取 $P_i=\{X_t:t\in I_i\}$；标量观测在窗口内构造三维时延点云 $P_i=\{(X_t,X_{t+3},X_{t+6}):t=a_i,\ldots,a_i+W-7\}$，使坐标不跨越窗口边界。点云按固定规则精确去重，所有尺度、网格、核宽与截断参数均预先设定，不使用由整条序列共同估计的自适应参数；该局部性条件在第~\ref{sec:theory} 节用于界定依赖范围。
 
 \subsection{固定网格持续强度表示（BPI）}\label{sec:bpi}
-对每个 $P_i$，在系数域 $\mathbb F_2$ 上按欧氏距离计算 Vietoris--Rips 持续同调\cite{Bauer2021}，保留 $0$ 维与 $1$ 维通道中寿命为正的 birth--death 对 $(b,d)$。零维同调记录连通分支，一维同调记录独立循环；出生与消亡是过滤尺度，寿命 $d-b$ 为尺度跨度，与真实时间上的持续时长不同。过滤按直径约定 $\operatorname{VR}_\varepsilon(P)=\{\sigma\subseteq P:\operatorname{diam}(\sigma)\le\varepsilon\}$ 完整计算，不设数据驱动截断，仅丢弃唯一的无穷 death 分量（计算细节见补充材料 S6）。给定场景固定的尺度上界 $c$，作归一化
+对每个 $P_i$，在系数域 $\mathbb F_2$ 上按欧氏距离计算 Vietoris--Rips 持续同调\cite{Bauer2021}，保留 $0$ 维与 $1$ 维通道中寿命为正的 birth--death 对 $(b,d)$。零维同调记录连通分支，一维同调记录独立循环；出生与消亡是过滤尺度，寿命 $d-b$ 为尺度跨度，与真实时间上的持续时长不同。过滤按直径约定 $\operatorname{VR}_\varepsilon(P)=\{\sigma\subseteq P:\operatorname{diam}(\sigma)\le\varepsilon\}$ 完整计算，不设数据驱动截断，仅丢弃唯一的无穷 death 分量（过滤与持续图计算约定见补充材料第~S6.1~节）。给定场景固定的尺度上界 $c$，作归一化
 \begin{equation}\label{eq:bpi-normalization}
  u=\min(b/c,1),\qquad v=\min\bigl((d-b)/c,1\bigr).
 \end{equation}
@@ -20,7 +20,7 @@
  =\frac{\Delta}{2\pi\sigma^2}\sum_j v_{ij}^{(q)}
  \exp\left\{-\frac{(g_r-u_{ij}^{(q)})^2+(g_\ell-v_{ij}^{(q)})^2}{2\sigma^2}\right\}.
 \end{equation}
-记 $V_i^{(q)}=\operatorname{vec}(Z_i^{(q)})$。每个通道给出 $20\times20=400$ 个坐标，按 $0$、$1$ 维顺序拼接并除以 $\sqrt2$，得到 800 维特征 $Y_i^{\mathrm{BPI}}=2^{-1/2}[V_i^{(0)};V_i^{(1)}]$；空通道记为零向量。N-AR 的时延点云取 $c=6$，圆形模型及其备择取 $c=2.5$。BPI 仅标识本文的固定实现：离散化采用网格中心采样而非逐像素积分，也不构成对随机持续图总体强度密度的估计\cite{Adams2017,WuKimRinaldo2024}。
+记 $V_i^{(q)}=\operatorname{vec}(Z_i^{(q)})$。每个通道给出 $20\times20=400$ 个坐标，按 $0$、$1$ 维顺序拼接并除以 $\sqrt2$，得到 800 维特征 $Y_i^{\mathrm{BPI}}=2^{-1/2}[V_i^{(0)};V_i^{(1)}]$；空通道记为零向量。N-AR 的时延点云取 $c=6$，圆形模型及其备择取 $c=2.5$。BPI 仅标识本文的固定实现：离散化采用网格中心采样而非逐像素积分，也不构成对随机持续图总体强度密度的估计\mcite{Adams2017,WuKimRinaldo2024}。
 
 \subsection{矩表示（MOMENTS）}\label{sec:moments}
 设 $P_i=\{x_{ij}\}_{j=1}^{n_i}\subset\mathbb R^d$，记样本均值 $\bar x_i$ 与协方差 $S_i=n_i^{-1}\sum_j(x_{ij}-\bar x_i)(x_{ij}-\bar x_i)^\top$。对照表示依次连接均值、协方差对角元与按固定字典序排列的 $\sqrt2(S_i)_{ab}$（$a<b$）：
@@ -39,7 +39,7 @@
  \qquad
  \mathcal K_M=\{\lceil0.15M\rceil,\ldots,M-\lceil0.15M\rceil\},
 \end{equation}
-其中边界保护比例 $0.15$ 在确认性分析前固定；记 $Q_M(k)=k(M-k)M^{-1}\|\bar Y_{1:k}-\bar Y_{k+1:M}\|_2^2$ 为式\eqref{eq:scan}最大化内的量，则 $T_M=\max_{k\in\mathcal K_M}Q_M(k)$。等价地，取 $U_M(k)=M^{-1/2}\bigl(\sum_{i\le k}Y_i-\frac{k}{M}\sum_{i\le M}Y_i\bigr)$、$t_k=k/M$，则 $T_M=\max_k\|U_M(k)\|_2^2/[t_k(1-t_k)]$，即标准化部分和型扫描统计量\cite{CsorgoHorvath1997}。该统计量直接响应左右两段特征的均值之差，检验对象是特征均值层面的变化，不构成对任意拓扑变化的一致检出保证。对 BPI 表示，记 $Q_M^{(q)}(k)$ 为把式\eqref{eq:scan}用于第 $q$ 通道特征序列 $V_1^{(q)},\ldots,V_M^{(q)}$ 所得的同一量，由 $Y^{\mathrm{BPI}}=2^{-1/2}[V^{(0)};V^{(1)}]$ 得 $Q_M^{\mathrm{BPI}}(k)=\tfrac12Q_M^{(0)}(k)+\tfrac12Q_M^{(1)}(k)$，但两通道的最大化位置可能不同，因此总扫描一般不等于两个通道最大值的平均；本文合并报告两个通道，未单独分离 $0$ 维与 $1$ 维同调的贡献。位置估计取扫描曲线的最长合格平台（长度并列取最左，再取平台下中位数），并映射回时间轴（规则见 S6）；本文只把定位结果作为补充材料 S7 的次级描述。
+其中边界保护比例 $0.15$ 在确认性分析前固定；记 $Q_M(k)=k(M-k)M^{-1}\|\bar Y_{1:k}-\bar Y_{k+1:M}\|_2^2$ 为式\eqref{eq:scan}最大化内的量，则 $T_M=\max_{k\in\mathcal K_M}Q_M(k)$。等价地，取 $U_M(k)=M^{-1/2}\bigl(\sum_{i\le k}Y_i-\frac{k}{M}\sum_{i\le M}Y_i\bigr)$、$t_k=k/M$，则 $T_M=\max_k\|U_M(k)\|_2^2/[t_k(1-t_k)]$，即标准化部分和型扫描统计量\cite{CsorgoHorvath1997}。该统计量直接响应左右两段特征的均值之差，检验对象是特征均值层面的变化，不构成对任意拓扑变化的一致检出保证。对 BPI 表示，记 $Q_M^{(q)}(k)$ 为把式\eqref{eq:scan}用于第 $q$ 通道特征序列 $V_1^{(q)},\ldots,V_M^{(q)}$ 所得的同一量，由 $Y^{\mathrm{BPI}}=2^{-1/2}[V^{(0)};V^{(1)}]$ 得 $Q_M^{\mathrm{BPI}}(k)=\tfrac12Q_M^{(0)}(k)+\tfrac12Q_M^{(1)}(k)$，但两通道的最大化位置可能不同，因此总扫描一般不等于两个通道最大值的平均；本文合并报告两个通道，未单独分离 $0$ 维与 $1$ 维同调的贡献。位置估计取扫描曲线的最长合格平台（长度并列取最左，再取平台下中位数），并映射回时间轴（平台选点及时间轴映射规则见补充材料第~S6.3~节）；本文只把定位作为次级评价，指标定义与场景汇总分别见补充材料第~S7.3、S7.6~节。
 
 \subsection{两种校准方法}\label{sec:calibration}
 M0 为无约束窗口级置换（即对全部窗口作全局随机置换）：从 $\mathfrak S_M$ 均匀抽取排列并重算式\eqref{eq:scan}，保留经验边际分布但打散原始顺序中的局部依赖。M1 为依赖乘子自助法：令 $\bar Y=M^{-1}\sum_iY_i$、$Z_i=Y_i-\bar Y$，取带宽
@@ -57,4 +57,4 @@ M1 不作循环回绕，对乘子加权序列 $\{\xi_iZ_i\}$ 应用与观测样�
 \begin{equation}\label{eq:mc-pvalue}
  p=\frac{K+1}{B+1}=\frac{K+1}{1000},
 \end{equation}
-当且仅当 $K\le49$ 时以 $p\le0.05$ 拒绝。加一形式避免报告零 $p$ 值\cite{PhipsonSmyth2010}，但不恢复重叠窗口的交换性；依赖乘子的渐近理论\cite{Shao2010,BucherKojadinovic2016}不直接构成完整 BPI 最大扫描的有限样本有效性定理。
+当且仅当 $K\le49$ 时以 $p\le0.05$ 拒绝。加一形式避免报告零 $p$ 值\cite{PhipsonSmyth2010}，但不恢复重叠窗口的交换性；依赖乘子的渐近理论\mcite{Shao2010,BucherKojadinovic2016}不直接构成完整 BPI 最大扫描的有限样本有效性定理。
